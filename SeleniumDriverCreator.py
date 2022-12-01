@@ -8,6 +8,8 @@ class SeleniumDriverCreator:
         chrome_options.add_argument("--mute-audio")
         chrome_options.add_argument("--disable-3d-apis")
         chrome_options.add_argument('--log-level=3')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
 
         return chrome_options
 
