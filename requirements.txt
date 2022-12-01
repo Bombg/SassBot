@@ -1,0 +1,7 @@
+requests==2.25.1
+alluka==0.1.3
+hikari==2.0.0.dev112
+selenium==4.6.1
+uvloop==0.17.0
+hikari-tanjun==2.10.0a1
+beautifulsoup4==4.11.1
