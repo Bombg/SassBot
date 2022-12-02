@@ -67,7 +67,7 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
 @tanjun.as_interval(onlineCheckTimer)
 async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     fans = FansCas()
-    task = asyncio.create_task(FansCas.isCassOnline())
+    task = asyncio.create_task(fans.isCassOnline())
     isOnline = await task
     if isOnline:
         if globals.fansFalse >= Constants.WAIT_BETWEEN_MESSAGES:
