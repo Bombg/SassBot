@@ -3,8 +3,6 @@ from selenium.webdriver.common.by import By
 from SeleniumDriverCreator import SeleniumDriverCreator
 
 class ChaturCas:
-
-
     def __init__(self):
         self.CAS_CHATUR_URL = "https://chaturbate.com/badkittycass/"
 

@@ -198,7 +198,7 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
 
 @component.with_schedule
 @tanjun.as_interval(statusCheckTimer)
-async def checkOnlineTime(bot: alluka.Injected[hikari.GatewayBot]) -> None:
+async def checkOnlineTime() -> None:
     online = checkOnline()
     if online and globals.online != online:
         print("time online starts now")
