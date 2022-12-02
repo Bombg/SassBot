@@ -16,9 +16,6 @@ from multiprocessing.pool import ThreadPool
 
 component = tanjun.Component()
 pool = ThreadPool(processes=3)
-chaturSleep = 25
-onlySleep = 20
-fanSleep = 20
 onlineCheckTimer = 60
 avatarCheckTimer = 90
 statusCheckTimer = 65
@@ -32,10 +29,8 @@ def load(client: tanjun.abc.Client) -> None:
 @tanjun.as_interval(onlineCheckTimer)
 async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     chaturbate = ChaturCas()
-    global pool
-    asyncResult = pool.apply_async(chaturbate.isCassOnline)
-    await asyncio.sleep(chaturSleep)
-    isOnline = asyncResult.get()
+    task = asyncio.create_task(chaturbate.isCassOnline())
+    isOnline = await task
     if isOnline:
         if globals.chaturFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("ChaturBoobies")
@@ -53,10 +48,8 @@ async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
 @tanjun.as_interval(onlineCheckTimer)
 async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     onlyFans = OnlyCas()
-    global pool
-    asyncResult = pool.apply_async(onlyFans.isCassOnline)
-    await asyncio.sleep(onlySleep)
-    isOnline = asyncResult.get()
+    task = asyncio.create_task(onlyFans.isCassOnline())
+    isOnline = await task
     if isOnline:
         if globals.onlyFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("OnlyBoobies")
@@ -74,10 +67,8 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
 @tanjun.as_interval(onlineCheckTimer)
 async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     fans = FansCas()
-    global pool
-    asyncResult = pool.apply_async(fans.isCassOnline)
-    await asyncio.sleep(fanSleep)
-    isOnline = asyncResult.get()
+    task = asyncio.create_task(FansCas.isCassOnline())
+    isOnline = await task
     if isOnline:
         if globals.fansFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("FansBoobies")
