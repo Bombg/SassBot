@@ -16,6 +16,12 @@ from multiprocessing.pool import ThreadPool
 
 component = tanjun.Component()
 pool = ThreadPool(processes=3)
+chaturSleep = 25
+onlySleep = 20
+fanSleep = 20
+onlineCheckTimer = 60
+avatarCheckTimer = 90
+statusCheckTimer = 65
 
 
 @tanjun.as_loader
@@ -23,12 +29,12 @@ def load(client: tanjun.abc.Client) -> None:
     client.add_component(component.copy())
 
 @component.with_schedule
-@tanjun.as_interval(60)
+@tanjun.as_interval(onlineCheckTimer)
 async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     chaturbate = ChaturCas()
     global pool
     asyncResult = pool.apply_async(chaturbate.isCassOnline)
-    await asyncio.sleep(15)
+    await asyncio.sleep(chaturSleep)
     isOnline = asyncResult.get()
     if isOnline:
         if globals.chaturFalse >= Constants.WAIT_BETWEEN_MESSAGES:
@@ -44,12 +50,12 @@ async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(60)
+@tanjun.as_interval(onlineCheckTimer)
 async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     onlyFans = OnlyCas()
     global pool
     asyncResult = pool.apply_async(onlyFans.isCassOnline)
-    await asyncio.sleep(12)
+    await asyncio.sleep(onlySleep)
     isOnline = asyncResult.get()
     if isOnline:
         if globals.onlyFalse >= Constants.WAIT_BETWEEN_MESSAGES:
@@ -65,12 +71,12 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(60)
+@tanjun.as_interval(onlineCheckTimer)
 async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     fans = FansCas()
     global pool
     asyncResult = pool.apply_async(fans.isCassOnline)
-    await asyncio.sleep(12)
+    await asyncio.sleep(fanSleep)
     isOnline = asyncResult.get()
     if isOnline:
         if globals.fansFalse >= Constants.WAIT_BETWEEN_MESSAGES:
@@ -87,7 +93,7 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
 
 
 @component.with_schedule
-@tanjun.as_interval(60)
+@tanjun.as_interval(onlineCheckTimer)
 async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     twitch = TwitchCas()
     isOnline = twitch.isCassOnline()
@@ -105,7 +111,7 @@ async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(60)
+@tanjun.as_interval(onlineCheckTimer)
 async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     youTube = YouCas()
     isOnline = youTube.isCassOnline()
@@ -123,7 +129,7 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(90)
+@tanjun.as_interval(avatarCheckTimer)
 async def changeAvatar(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if (globals.onlyFalse <= 0 or globals.chaturFalse <= 0) and (not globals.bad):
         print("Changed avatar to bad cat")
@@ -162,7 +168,7 @@ async def changeAvatar(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> Non
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(65)
+@tanjun.as_interval(statusCheckTimer)
 async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
     playingString = ""
     if globals.yawn:
@@ -200,7 +206,7 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(65)
+@tanjun.as_interval(statusCheckTimer)
 async def checkOnlineTime(bot: alluka.Injected[hikari.GatewayBot]) -> None:
     online = checkOnline()
     if online and globals.online != online:
