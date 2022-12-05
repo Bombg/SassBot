@@ -10,7 +10,7 @@ class OnlyCas:
         driverCreator = SeleniumDriverCreator()
         driver = driverCreator.createDriver()
         driver.get(self.CAS_ONLY_URL)
-        asyncio.sleep(10)
+        await asyncio.sleep(10)
         online = driver.find_elements(By.XPATH, '/html/body/div/div[2]/main/div[1]/div[1]/div/div[2]/div/div[2]/div[1]/a/span')
         driver.quit()
         isOnline = False
