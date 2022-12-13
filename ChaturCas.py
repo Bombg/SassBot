@@ -1,21 +1,20 @@
 import asyncio
 from selenium.webdriver.common.by import By
-from SeleniumDriverCreator import SeleniumDriverCreator
+import requests
 
 class ChaturCas:
     def __init__(self):
-        self.CAS_CHATUR_URL = "https://chaturbate.com/badkittycass/"
+        self.CAS_CHATUR_URL = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica"
 
     async def isCassOnline(self):
-        driverCreator = SeleniumDriverCreator()
-        driver = driverCreator.createDriver()
-        driver.get(self.CAS_CHATUR_URL)
-        await asyncio.sleep(5)
-        online = driver.find_element(By.XPATH, '/html/body').text
-        driver.quit()
         isOnline = False
-        if 'offline' not in online:
-            isOnline = True
+        onlineModels = requests.get(self.CAS_CHATUR_URL)
+        await asyncio.sleep(3)
+        results = onlineModels.json()["results"]
+        for result in results:
+            #print(result['username'])
+            if result['username'] == 'badkittycass':
+                isOnline = True
 
         return isOnline
 
