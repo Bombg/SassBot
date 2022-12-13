@@ -32,10 +32,6 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
         await ctx.respond("Cass isn't currently streaming")
     else:
         await ctx.respond("Cass is currently streaming on: \n " + streamingOn + "\n Links: https://linktr.ee/kitty_cass_")
-
-@component.with_slash_command
-@tanjun.as_slash_command("stream-time", "When stream started or ended. Also total time streamed", default_to_ephemeral=True)
-async def streamTime(ctx: tanjun.abc.Context) -> None:
     if globals.online:
         asyncResult = pool.apply_async(timeToHoursMinutes,(globals.onTime,))
         hours, minutes = asyncResult.get()
@@ -43,7 +39,7 @@ async def streamTime(ctx: tanjun.abc.Context) -> None:
     else:
         asyncResult = pool.apply_async(timeToHoursMinutes,(globals.offTime,))
         hours, minutes = asyncResult.get()
-        await ctx.respond("Cass has been offline for H:" + str(hours) + " M:" + str(minutes))
+        await ctx.respond("Cass has been offline for H:" + str(hours) + " M:" + str(minutes)) 
 
 def timeToHoursMinutes(newTime):
     totalTime = time.time() - newTime
