@@ -91,7 +91,7 @@ async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     if isOnline:
         if globals.twitchFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("TwitchBoobies")
-            #await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = "Cass is live on Twitch!\nhttps://www.twitch.tv/kitty_cass_") # Not broadcasting twitch for now since streamcord is on it
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = "Cass is live on Twitch!\nhttps://www.twitch.tv/kitty_cass_") 
             globals.twitchFalse = 0
         globals.twitchFalse = globals.twitchFalse - 1
     else:
