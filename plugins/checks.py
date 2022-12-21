@@ -15,8 +15,7 @@ from multiprocessing.pool import ThreadPool
 
 
 component = tanjun.Component()
-pool = ThreadPool(processes=3)
-onlineCheckTimer = 60
+onlineCheckTimer = 180
 avatarCheckTimer = 90
 statusCheckTimer = 65
 
