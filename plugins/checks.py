@@ -16,8 +16,8 @@ from multiprocessing.pool import ThreadPool
 
 component = tanjun.Component()
 onlineCheckTimer = 180
-avatarCheckTimer = 90
-statusCheckTimer = 65
+avatarCheckTimer = 190
+statusCheckTimer = 185
 
 
 @tanjun.as_loader
@@ -33,7 +33,7 @@ async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     if isOnline:
         if globals.chaturFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("ChaturBoobies")
-            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = "Cass is live on Chaturbate!\nhttps://chaturbate.com/badkittycass/")
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.chaturOnlineText)
             globals.chaturFalse = 0
         globals.chaturFalse = globals.chaturFalse - 1
     else:
@@ -52,7 +52,7 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
     if isOnline:
         if globals.onlyFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("OnlyBoobies")
-            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = "Cass is live on Onlyfans!\nhttps://onlyfans.com/badkittycass/live")
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.ofOnlineText)
             globals.onlyFalse = 0
         globals.onlyFalse = globals.onlyFalse - 1
     else:
@@ -71,7 +71,7 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     if isOnline:
         if globals.fansFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("FansBoobies")
-            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = "Cass is live on Fansly!\nhttps://fansly.com/live/user443986457938374656")
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.fansOnlineText)
             globals.fansFalse = 0
         globals.fansFalse = globals.fansFalse - 1
     else:
@@ -90,7 +90,7 @@ async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     if isOnline:
         if globals.twitchFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("TwitchBoobies")
-            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = "Cass is live on Twitch!\nhttps://www.twitch.tv/kitty_cass_") 
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.twitchOnlineText) 
             globals.twitchFalse = 0
         globals.twitchFalse = globals.twitchFalse - 1
     else:
@@ -108,7 +108,7 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if isOnline:
         if globals.ytFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("YTBoobies")
-            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = "Cass is live on YouTube!\nhttps://www.youtube.com/c/kitty_cass_/live")
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.ytOnlineText)
             globals.ytFalse = 0
         globals.ytFalse = globals.ytFalse - 1
     else:
