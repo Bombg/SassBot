@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 
 class YouCas:
     def __init__(self):
-        self.CAS_YT_URL = "https://www.youtube.com/c/@kitty_cass_/live"
+        self.CAS_YT_URL = "https://www.youtube.com/@kitty_cass_/live"
 
     def isCassOnline(self):
         online = False
