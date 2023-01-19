@@ -7,4 +7,4 @@ class Constants:
     ofOnlineText = "@everyone Cass is live on Onlyfans!\nhttps://onlyfans.com/badkittycass/live"
     fansOnlineText = "@everyone Cass is live on Fansly!\nhttps://fansly.com/live/user443986457938374656"
     twitchOnlineText = "@everyone Cass is live on Twitch!\nhttps://www.twitch.tv/kitty_cass_"
-    ytOnlineText = "@everyone Cass is live on YouTube!\nhttps://www.youtube.com/c/kitty_cass_/live"
+    ytOnlineText = "@everyone Cass is live on YouTube!\nhttps://www.youtube.com/@kitty_cass_/live"
