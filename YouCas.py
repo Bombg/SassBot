@@ -20,12 +20,9 @@ class YouCas:
         compJson = json.loads(splitJson[0])
         status = compJson["playabilityStatus"]["status"]
         if live and status != "LIVE_STREAM_OFFLINE": 
-            print("Cass is streaming on youtube")
+            #print("Cass is streaming on youtube")
             online = True
-        else:
-            print("Cass is not streaming on youtube")
+        #else:
+            #print("Cass is not streaming on youtube")
         
         return online
-
-yt = YouCas()
-online = yt.isCassOnline()
