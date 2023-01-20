@@ -21,7 +21,3 @@ class FansCas:
             isOnline = True
 
         return isOnline
-
-fans = FansCas()
-online = fans.isCassOnline()
-print(online)
