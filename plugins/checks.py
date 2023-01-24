@@ -161,8 +161,6 @@ async def changeAvatar(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> Non
 @tanjun.as_interval(statusCheckTimer)
 async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
     playingString = ""
-    if globals.yawn:
-        playingString = playingString + "Yawning"
     if globals.chaturFalse < 0:
         playingString = playingString + "CB "
     if globals.onlyFalse < 0:
@@ -172,7 +170,9 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
     if globals.ytFalse < 0:
         playingString = playingString + "YT "
     if globals.sleep:
-        playingString = playingString + "Sleeping"
+        playingString = playingString + "Fans "
+    if globals.yawn and not playingString:
+        playingString = playingString + "Offline "
     if playingString != globals.globalPlayString:
         print("Updated presence to " + playingString)
         globals.globalPlayString = playingString
