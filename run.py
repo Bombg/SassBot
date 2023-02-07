@@ -10,8 +10,9 @@ if os.name != "nt":
     uvloop.install()
 
 if __name__ == "__main__":
-    try:
-        build_bot().run()
-    except hikari.errors.GatewayConnectionError:
-        time.sleep(30)
-        build_bot().run()
+    while True:
+        try:
+            build_bot().run()
+        except hikari.errors.GatewayConnectionError:
+            print("no internet, sleeping for 30s and then restarting bot")
+            time.sleep(30)
