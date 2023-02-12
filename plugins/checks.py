@@ -10,14 +10,11 @@ from TwitchCas import TwitchCas
 from YouCas import YouCas
 import globals
 import time
-from multiprocessing.pool import ThreadPool
+import StaticMethods
 
 
 
 component = tanjun.Component()
-onlineCheckTimer = 180
-avatarCheckTimer = 190
-statusCheckTimer = 185
 
 
 @tanjun.as_loader
@@ -25,7 +22,7 @@ def load(client: tanjun.abc.Client) -> None:
     client.add_component(component.copy())
 
 @component.with_schedule
-@tanjun.as_interval(onlineCheckTimer)
+@tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     chaturbate = ChaturCas()
     task = asyncio.create_task(chaturbate.isCassOnline())
@@ -44,7 +41,7 @@ async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(onlineCheckTimer)
+@tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     onlyFans = OnlyCas()
     task = asyncio.create_task(onlyFans.isCassOnline())
@@ -63,7 +60,7 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(onlineCheckTimer)
+@tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     fans = FansCas()
     task = asyncio.create_task(fans.isCassOnline())
@@ -83,7 +80,7 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
 
 
 @component.with_schedule
-@tanjun.as_interval(onlineCheckTimer)
+@tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     twitch = TwitchCas()
     isOnline = twitch.isCassOnline()
@@ -101,7 +98,7 @@ async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(onlineCheckTimer)
+@tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     youTube = YouCas()
     isOnline = youTube.isCassOnline()
@@ -119,48 +116,22 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(avatarCheckTimer)
+@tanjun.as_interval(Constants.avatarCheckTimer)
 async def changeAvatar(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if (globals.onlyFalse <= 0 or globals.chaturFalse <= 0) and (not globals.bad):
-        print("Changed avatar to bad cat")
-        await rest.edit_my_user(avatar = 'plugins/avatars/catEvil.png')
-        globals.yawn = False
-        globals.sleep = False
-        globals.game = False
-        globals.bad = True
-    elif globals.fansFalse <= 0 and not globals.sleep and globals.onlyFalse > Constants.MIN_TIME_BEFORE_AVATAR_CHANGE and globals.chaturFalse > Constants.MIN_TIME_BEFORE_AVATAR_CHANGE:
-        print("Changed avatar to sleeping cat")
-        await rest.edit_my_user(avatar = 'plugins/avatars/catSleep.png')
-        globals.sleep = True
-        globals.yawn = False
-        globals.game = False
-        globals.bad = False
-    elif not globals.yawn and globals.onlyFalse > Constants.MIN_TIME_BEFORE_AVATAR_CHANGE and globals.chaturFalse > Constants.MIN_TIME_BEFORE_AVATAR_CHANGE and globals.fansFalse > Constants.MIN_TIME_BEFORE_AVATAR_CHANGE and globals.twitchFalse > Constants.MIN_TIME_BEFORE_AVATAR_CHANGE and globals.ytFalse > Constants.MIN_TIME_BEFORE_AVATAR_CHANGE:
-        print("Changed avatar to yawning cat")
-        await rest.edit_my_user(avatar = 'plugins/avatars/catYawn.png')
-        globals.yawn = True
-        globals.sleep = False
-        globals.game = False
-        globals.bad = False
-    elif not globals.game and globals.twitchFalse <= 0 or globals.ytFalse <= 0:
-        print("Changed avatar to gaming cat")
-        await rest.edit_my_user(avatar = 'plugins/avatars/catGame.png')
-        globals.game = True
-        globals.yawn = False
-        globals.sleep = False
-        globals.bad = False
-    else:
-        print("No change in avatar")
-        print("sleep: " + str(globals.sleep))
-        print("yawn: " + str(globals.yawn))
-        print("game: " + str(globals.game))
-        print("bad: " + str(globals.bad))
-    print("\n")
+    online = StaticMethods.checkOnline()
+    hours, minutes = StaticMethods.timeToHoursMinutes(globals.offTime)
+    if online and not globals.normalAvtar:
+        await rest.edit_my_user(avatar = 'plugins/avatars/calmCass.png')
+        globals.normalAvtar = True
+    if not online and globals.normalAvtar and hours >= Constants.MIN_TIME_BEFORE_AVATAR_CHANGE:
+        await rest.edit_my_user(avatar = 'plugins/avatars/missCass.png')
+        globals.normalAvtar = False
 
 @component.with_schedule
-@tanjun.as_interval(statusCheckTimer)
+@tanjun.as_interval(Constants.statusCheckTimer)
 async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
     playingString = ""
+    online = StaticMethods.checkOnline()
     if globals.chaturFalse < 0:
         playingString = playingString + "CB "
     if globals.onlyFalse < 0:
@@ -169,9 +140,9 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
         playingString = playingString + "Twitch "
     if globals.ytFalse < 0:
         playingString = playingString + "YT "
-    if globals.sleep:
+    if globals.fansFalse < 0:
         playingString = playingString + "Fans "
-    if globals.yawn and not playingString:
+    if not online and not playingString:
         playingString = playingString + "Offline "
     if playingString != globals.globalPlayString:
         print("Updated presence to " + playingString)
@@ -185,20 +156,18 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
         await asyncio.sleep(5)
     else:
         print("No change in status")
-        print("yawn: " + str(globals.yawn))
+        print("Online: " + str(online))
         print("chaturFalse: " + str(globals.chaturFalse))
         print("onlyFalse: " + str(globals.chaturFalse))
         print("twitchFalse: " + str(globals.twitchFalse))
         print("ytFalse: " + str(globals.ytFalse))
         print("fansFalse: " + str(globals.fansFalse))
-        print("Sleep: " + str(globals.sleep))
-        print("bad: " + str(globals.bad))
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(statusCheckTimer)
+@tanjun.as_interval(Constants.statusCheckTimer)
 async def checkOnlineTime() -> None:
-    online = checkOnline()
+    online = StaticMethods.checkOnline()
     if online and globals.online != online:
         print("time online starts now")
         globals.onTime = time.time()
@@ -212,24 +181,4 @@ async def checkOnlineTime() -> None:
         globals.onTime = 0
     elif globals.offTime == 0:
         globals.offTime = time.time()
-    print("\n")
-    
-    
-
-def checkOnline():
-    online = False
-    if globals.chaturFalse <= 0:
-        online = True
-    elif globals.onlyFalse <= 0:
-        online = True
-    elif globals.twitchFalse <= 0:
-        online = True
-    elif globals.ytFalse <= 0:
-        online = True
-    elif globals.fansFalse <= 0:
-        online = True
-    else:
-        online = False
-    return online
-
-        
+    print("\n")        
