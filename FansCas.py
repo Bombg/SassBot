@@ -5,7 +5,7 @@ import time
 
 class FansCas:
     def __init__(self):
-        self.CAS_FANS_URL = "https://fansly.com/user443986457938374656"
+        self.CAS_FANS_URL = "https://fansly.com/BadKittyCass"
         #https://fansly.com/live/user443986457938374656
 
     async def isCassOnline(self):

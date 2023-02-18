@@ -5,7 +5,7 @@ class Constants:
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes
     chaturOnlineText = "Cass is live on Chaturbate!\nhttps://chaturbate.com/badkittycass/"
     ofOnlineText = "Cass is live on Onlyfans!\nhttps://onlyfans.com/badkittycass/live"
-    fansOnlineText = "Cass is live on Fansly!\nhttps://fansly.com/live/user443986457938374656"
+    fansOnlineText = "Cass is live on Fansly!\nhttps://fansly.com/live/BadKittyCass"
     twitchOnlineText = "Cass is live on Twitch!\nhttps://www.twitch.tv/kitty_cass_"
     ytOnlineText = "Cass is live on YouTube!\nhttps://www.youtube.com/@kitty_cass_/live"
     onlineCheckTimer = 60 #Wait time in seconds between checks
