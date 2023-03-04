@@ -15,6 +15,8 @@ def checkOnline():
         online = True
     elif globals.fansFalse <= 0:
         online = True
+    elif globals.kickFalse <= 0:
+        online = True
     else:
         online = False
     return online

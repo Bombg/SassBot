@@ -162,6 +162,8 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
         playingString = playingString + "YT "
     if globals.fansFalse < 0:
         playingString = playingString + "Fans "
+    if globals.kickFalse < 0:
+        playingString = playingString + "Kick "
     if not online and not playingString:
         playingString = playingString + "Offline "
     if playingString != globals.globalPlayString:
