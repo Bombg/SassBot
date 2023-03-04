@@ -7,6 +7,7 @@ from OnlyCas import OnlyCas
 from FansCas import FansCas
 from Constants import Constants
 from TwitchCas import TwitchCas
+from KickCass import KickCass
 from YouCas import YouCas
 import globals
 import time
@@ -113,6 +114,24 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
             globals.ytFalse = 0
         globals.ytFalse = globals.ytFalse + 1
         print("YTOffline:" + str(globals.ytFalse))
+    print("\n")
+
+@component.with_schedule
+@tanjun.as_interval(Constants.onlineCheckTimer)
+async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    kick = KickCass()
+    isOnline = kick.isCassOnline()
+    if isOnline:
+        if globals.kickFalse >= Constants.WAIT_BETWEEN_MESSAGES:
+            print("KickBoobies")
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.kickOnlineText)
+            globals.kickFalse = 0
+        globals.kickFalse = globals.kickFalse - 1
+    else:
+        if globals.kickFalse < 0:
+            globals.kickFalse = 0
+        globals.kickFalse = globals.kickFalse + 1
+        print("KickOffline:" + str(globals.kickFalse))
     print("\n")
 
 @component.with_schedule

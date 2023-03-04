@@ -7,6 +7,7 @@ onlyFalse = WAIT_BETWEEN_MESSAGES
 fansFalse = WAIT_BETWEEN_MESSAGES
 twitchFalse = WAIT_BETWEEN_MESSAGES
 ytFalse = WAIT_BETWEEN_MESSAGES
+kickFalse = WAIT_BETWEEN_MESSAGES
 globalPlayString = ""
 online = False
 offTime = 0

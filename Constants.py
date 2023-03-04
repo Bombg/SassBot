@@ -8,6 +8,7 @@ class Constants:
     fansOnlineText = "Cass is live on Fansly!\nhttps://fansly.com/live/BadKittyCass"
     twitchOnlineText = "Cass is live on Twitch!\nhttps://www.twitch.tv/kitty_cass_"
     ytOnlineText = "Cass is live on YouTube!\nhttps://www.youtube.com/@kitty_cass_/live"
+    kickOnlineText = "Cass is live on Kick!\nhttps://kick.com/kittycass"
     onlineCheckTimer = 60 #Wait time in seconds between checks
     avatarCheckTimer = 70
     statusCheckTimer = 65
