@@ -184,6 +184,7 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
         print("twitchFalse: " + str(globals.twitchFalse))
         print("ytFalse: " + str(globals.ytFalse))
         print("fansFalse: " + str(globals.fansFalse))
+        print("kickFalse: " + str(globals.kickFalse))
     print("\n")
 
 @component.with_schedule
