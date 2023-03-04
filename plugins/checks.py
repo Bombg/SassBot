@@ -120,18 +120,19 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     kick = KickCass()
-    isOnline = kick.isCassOnline()
+    task = asyncio.create_task(kick.isCassOnline())
+    isOnline = await task
     if isOnline:
         if globals.kickFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("KickBoobies")
-            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.kickOnlineText)
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.fansOnlineText)
             globals.kickFalse = 0
         globals.kickFalse = globals.kickFalse - 1
     else:
         if globals.kickFalse < 0:
             globals.kickFalse = 0
         globals.kickFalse = globals.kickFalse + 1
-        print("KickOffline:" + str(globals.kickFalse))
+        print("KickOffline: " + str(globals.kickFalse))
     print("\n")
 
 @component.with_schedule
