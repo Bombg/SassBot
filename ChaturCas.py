@@ -24,11 +24,11 @@ class ChaturCas:
 
         return isOnline
 
-async def test():
-    chat = ChaturCas()
-    task = asyncio.create_task(chat.isCassOnline())
-    isOnline = await task
-    print(isOnline)
+# async def test():
+#     chat = ChaturCas()
+#     task = asyncio.create_task(chat.isCassOnline())
+#     isOnline = await task
+#     print(isOnline)
 
-task = asyncio.run(test())
+# task = asyncio.run(test())
 
