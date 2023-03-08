@@ -17,7 +17,7 @@ class ChaturCas:
         for netReq in driver.requests:
             if m3Match.match(netReq.url):
                 m3List.append(netReq.url)
-        driver.close()
+        driver.quit()
         isOnline = False
         if len(m3List) > 0:
             isOnline = True
