@@ -1,24 +1,25 @@
 import asyncio
-from selenium.webdriver.common.by import By
-from SeleniumDriverCreator import SeleniumDriverCreator
+from SeleniumWireDriverCreator import SeleniumWireDriverCreator
+import re
 
 class ChaturCas:
     def __init__(self):
         self.CAS_CHATUR_URL = "https://chaturbate.com/badkittycass/"
 
     async def isCassOnline(self):
-        driverCreator = SeleniumDriverCreator()
+        ROOT_M3U8_RE = "https://.+\.m3u8"
+        m3Match = re.compile(ROOT_M3U8_RE)
+        driverCreator = SeleniumWireDriverCreator()
         driver = driverCreator.createDriver()
         driver.get(self.CAS_CHATUR_URL)
-        await asyncio.sleep(15)
-        button = driver.find_elements(By.XPATH, '//*[@id="close_entrance_terms"]')
-        if len(button) > 0:
-            button[0].click()
+        m3List = []
         await asyncio.sleep(10)
-        online = driver.find_elements(By.XPATH, '//*[@id="vjs_video_3"]/div[4]/div[9]')
-        driver.quit()
+        for netReq in driver.requests:
+            if m3Match.match(netReq.url):
+                m3List.append(netReq.url)
+        driver.close()
         isOnline = False
-        if len(online) > 0:
+        if len(m3List) > 0:
             isOnline = True
 
         return isOnline
