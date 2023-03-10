@@ -4,7 +4,7 @@ import requests
 
 class ChaturCas:
     def __init__(self):
-        self.CAS_CHATUR_URL = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica"
+        self.CAS_CHATUR_URL = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs"
 
     async def isCassOnline(self):
         isOnline = False
