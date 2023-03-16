@@ -6,7 +6,7 @@ class Constants:
     chaturOnlineText = "Cass is live on Chaturbate!\nhttps://chaturbate.com/badkittycass/"
     ofOnlineText = "Cass is live on Onlyfans!\nhttps://onlyfans.com/badkittycass/live"
     fansOnlineText = "Cass is live on Fansly!\nhttps://fansly.com/live/BadKittyCass"
-    twitchOnlineText = "Cass is live on Twitch!\nhttps://www.twitch.tv/kitty_cass_"
+    twitchOnlineText = "Cass is live on Twitch!\nhttps://www.twitch.tv/kitty_goes_mreow"
     ytOnlineText = "Cass is live on YouTube!\nhttps://www.youtube.com/@kitty_cass_/live"
     kickOnlineText = "Cass is live on Kick!\nhttps://kick.com/kittycass"
     onlineCheckTimer = 60 #Wait time in seconds between checks

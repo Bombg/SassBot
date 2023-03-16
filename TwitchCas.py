@@ -4,7 +4,7 @@ import time
 class TwitchCas:
 
     def __init__(self):
-        self.channelName = 'kitty_cass_'
+        self.channelName = 'kitty_goes_mreow'
         
     # def isCassOnline(self):
     #     online = False
