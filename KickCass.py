@@ -1,5 +1,3 @@
-import requests
-import time
 import asyncio
 from selenium.webdriver.common.by import By
 from SeleniumDriverCreator import SeleniumDriverCreator
@@ -13,7 +11,7 @@ class KickCass:
         driver.get(self.CAS_KICK_URL)
         await asyncio.sleep(10)
         #time.sleep(10)
-        #driver.get_screenshot_as_file("Fansscreenshot.png")
+        driver.get_screenshot_as_file("Kickscreenshot.png")
         online = driver.find_elements(By.XPATH, '/html/body/div/div[1]/div/div/div/div[2]/div[2]/div/div/div[1]/div/div[1]/div[2]/div/div/div[1]/div[1]/div/div[2]')
         driver.quit()
         isOnline = False
