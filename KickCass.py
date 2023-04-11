@@ -18,7 +18,7 @@ class KickCass:
         if len(online) > 0:
             isOnline = True
         elif len(offlineOwnerAvatar) < 1:
-            isOnline = 0
+            isOnline = 3
         return isOnline
 
 async def test():
