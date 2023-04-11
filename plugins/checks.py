@@ -122,7 +122,10 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     kick = KickCass()
     task = asyncio.create_task(kick.isCassOnline())
     isOnline = await task
-    if isOnline == True:
+    if isOnline == 3:
+        # do nothing
+        print("Kick check failed cause bot detection")
+    elif isOnline == True:
         if globals.kickFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("KickBoobies")
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.kickOnlineText)
@@ -133,9 +136,6 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
             globals.kickFalse = 0
         globals.kickFalse = globals.kickFalse + 1
         print("KickOffline: " + str(globals.kickFalse))
-    else:
-        # do nothing
-        print("Kick check failed cause bot detection")
     print("\n")
 
 @component.with_schedule
