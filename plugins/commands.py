@@ -28,6 +28,8 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
         streamingOn = streamingOn + "YouTube, "
     if globals.twitchFalse <= 0:
         streamingOn = streamingOn + "Twitch, "
+    if globals.kickFalse <= 0:
+        streamingOn = streamingOn + "Kick, "
     if streamingOn == "":
         await ctx.respond("Cass isn't currently streaming, but check out her offline content! \n Links: https://linktr.ee/kitty_cass_")
     else:
