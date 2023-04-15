@@ -49,12 +49,12 @@ def load(client: tanjun.abc.Client) -> None:
     client.add_component(component.copy())
 
 component.with_slash_command
-@tanjun.with_int_slash_option("epocStart", "The epoc time in seconds when the subathon started", default=0)
+@tanjun.with_int_slash_option("epocstart", "The epoc time in seconds when the subathon started", default=0)
 @tanjun.as_slash_command("subathon-start", "Start a subathon timer", default_to_ephemeral=True)
-async def subathon_start(ctx: tanjun.abc.SlashContext, epocStart: int):
-    await ctx.respond("Subathon timer has been set to epoc time " + str(epocStart))
+async def subathon_start(ctx: tanjun.abc.SlashContext, epocstart: int):
+    await ctx.respond("Subathon timer has been set to epoc time " + str(epocstart))
     globals.subathon = True
-    globals.subathonStartTime = epocStart
+    globals.subathonStartTime = epocstart
 
 component.with_slash_command
 @tanjun.as_slash_command("subathon-end", "End a subathon timer", default_to_ephemeral=True)
