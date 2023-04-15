@@ -25,12 +25,18 @@ def checkOnline():
 def timeToHoursMinutes(newTime):
     totalTime = time.time() - newTime
     totalTime = int(totalTime)
-    #print(totalTime)
     totalTimeSeconds = int(totalTime % 60)
-    #print(totalTimeSeconds)
     totalTimeMinutes = int((totalTime - totalTimeSeconds) / 60)
     leftoverMinutes = totalTimeMinutes % 60
-    #print(totalTimeMinutes)
     totalTimeHours = int((totalTimeMinutes - leftoverMinutes ) / 60)
 
     return totalTimeHours, leftoverMinutes
+
+@staticmethod
+def timeToSeconds(newTime):
+    totalTime = time.time() - newTime
+    totalTime = int(totalTime)
+    totalTimeSeconds = int(totalTime % 60)
+    
+
+    return totalTimeSeconds

@@ -28,11 +28,17 @@ async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     chaturbate = ChaturCas()
     task = asyncio.create_task(chaturbate.isCassOnline())
     isOnline = await task
+    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.chaturLastOnlineMessage)
     if isOnline:
         if globals.chaturFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("ChaturBoobies")
+            globals.chaturLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.chaturOnlineText)
             globals.chaturFalse = 0
+        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
+            print("LongChaturBoobies")
+            globals.chaturLastOnlineMessage = time.time()
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.chaturOnlineText)
         globals.chaturFalse = globals.chaturFalse - 1
     else:
         if globals.chaturFalse < 0:
@@ -47,11 +53,17 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
     onlyFans = OnlyCas()
     task = asyncio.create_task(onlyFans.isCassOnline())
     isOnline = await task
+    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.fansLastOnlineMessage)
     if isOnline:
         if globals.onlyFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("OnlyBoobies")
+            globals.onlyLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.ofOnlineText)
             globals.onlyFalse = 0
+        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
+            print("LongOnlyBoobies")
+            globals.onlyLastOnlineMessage = time.time()
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.ofOnlineText)
         globals.onlyFalse = globals.onlyFalse - 1
     else:
         if globals.onlyFalse < 0:
@@ -66,11 +78,17 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     fans = FansCas()
     task = asyncio.create_task(fans.isCassOnline())
     isOnline = await task
+    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.fansLastOnlineMessage)
     if isOnline:
         if globals.fansFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("FansBoobies")
+            globals.fansLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.fansOnlineText)
             globals.fansFalse = 0
+        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
+            print("LongFansBoobies")
+            globals.fansLastOnlineMessage = time.time()
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.fansOnlineText)
         globals.fansFalse = globals.fansFalse - 1
     else:
         if globals.fansFalse < 0:
@@ -85,11 +103,17 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
 async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     twitch = TwitchCas()
     isOnline = twitch.isCassOnline()
+    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.twitchLastOnlineMessage)
     if isOnline:
         if globals.twitchFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("TwitchBoobies")
+            globals.twitchLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.twitchOnlineText) 
             globals.twitchFalse = 0
+        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
+            print("LongTwitchBoobies")
+            globals.twitchLastOnlineMessage = time.time()
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.twitchOnlineText)
         globals.twitchFalse = globals.twitchFalse - 1
     else:
         if globals.twitchFalse < 0:
@@ -103,11 +127,17 @@ async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
 async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     youTube = YouCas()
     isOnline = youTube.isCassOnline()
+    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.ytLastOnlineMessage)
     if isOnline:
         if globals.ytFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("YTBoobies")
+            globals.ytLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.ytOnlineText)
             globals.ytFalse = 0
+        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
+            print("LongYTBoobies")
+            globals.ytLastOnlineMessage = time.time()
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.ytOnlineText)
         globals.ytFalse = globals.ytFalse - 1
     else:
         if globals.ytFalse < 0:
@@ -122,14 +152,20 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     kick = KickCass()
     task = asyncio.create_task(kick.isCassOnline())
     isOnline = await task
+    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.kickLastOnlineMessage)
     if isOnline == 3:
         # do nothing
         print("Kick check failed cause bot detection")
     elif isOnline == True:
         if globals.kickFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("KickBoobies")
+            globals.kickLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.kickOnlineText)
             globals.kickFalse = 0
+        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
+            print("LongKickBoobies")
+            globals.kickLastOnlineMessage = time.time()
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.kickOnlineText)
         globals.kickFalse = globals.kickFalse - 1
     elif isOnline == False:
         if globals.kickFalse < 0:

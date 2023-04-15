@@ -8,6 +8,14 @@ fansFalse = WAIT_BETWEEN_MESSAGES
 twitchFalse = WAIT_BETWEEN_MESSAGES
 ytFalse = WAIT_BETWEEN_MESSAGES
 kickFalse = WAIT_BETWEEN_MESSAGES
+
+chaturLastOnlineMessage = 0
+onlyLastOnlineMessage = 0
+fansLastOnlineMessage = 0
+twitchLastOnlineMessage = 0
+ytLastOnlineMessage = 0
+kickLastOnlineMessage = 0
+
 globalPlayString = ""
 online = False
 offTime = 0
