@@ -21,10 +21,10 @@ class KickCass:
             isOnline = 3
         return isOnline
 
-async def test():
-    kick = KickCass()
-    task = asyncio.create_task(kick.isCassOnline())
-    isOnline = await task
-    print(isOnline)
+# async def test():
+#     kick = KickCass()
+#     task = asyncio.create_task(kick.isCassOnline())
+#     isOnline = await task
+#     print(isOnline)
 
-task = asyncio.run(test())
+# task = asyncio.run(test())

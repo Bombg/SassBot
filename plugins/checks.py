@@ -205,7 +205,7 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
         playingString = playingString + "Kick "
     if globals.subathon:
         hours, minutes = StaticMethods.timeToHoursMinutes(globals.subathonStartTime)
-        playingString = playingString + "Subathon H:" + str(hours) + " M:" +str(minutes) + " "
+        playingString = playingString + "athon H:" + str(hours) + "M:" +str(minutes) + " "
     if not online and not playingString:
         playingString = playingString + "Offline "
     if playingString != globals.globalPlayString:

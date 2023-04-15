@@ -3,7 +3,7 @@ import globals
 from multiprocessing.pool import ThreadPool
 import StaticMethods
 import time
-
+from Constants import Constants
 
 nl = "\n"
 component = tanjun.Component()
@@ -48,16 +48,22 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
 @tanjun.with_int_slash_option("epocstart", "The epoc time in seconds when the subathon started", default=0)
 @tanjun.as_slash_command("subathon-start", "Start a subathon timer", default_to_ephemeral=True)
 async def subathon_start(ctx: tanjun.abc.SlashContext, epocstart: int) -> None:
-    await ctx.respond("Subathon timer has been set to epoc time " + str(epocstart))
-    globals.subathon = True
-    globals.subathonStartTime = epocstart
+    if ctx.author.id in Constants.whiteListedIds:
+        await ctx.respond("Subathon timer has been set to epoc time " + str(epocstart))
+        globals.subathon = True
+        globals.subathonStartTime = epocstart
+    else:
+        await ctx.respond("You aren't white listed for that")
 
 @component.with_slash_command
 @tanjun.as_slash_command("subathon-end", "End a subathon timer", default_to_ephemeral=True)
 async def subathon_end(ctx: tanjun.abc.Context)-> None:
-    await ctx.respond("Subathon timer has ended")
-    globals.subathon = False
-    globals.subathonEndTime = time.time()
+    if ctx.author.id in Constants.whiteListedIds:
+        await ctx.respond("Subathon timer has ended")
+        globals.subathon = False
+        globals.subathonEndTime = time.time()
+    else:
+        await ctx.respond("You aren't white listed for that")
 
 @component.with_slash_command
 @tanjun.as_slash_command("subathon", "See subathon status and time online", default_to_ephemeral=True)
