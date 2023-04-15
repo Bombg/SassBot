@@ -44,24 +44,24 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
         hours, minutes = asyncResult.get()
         await ctx.respond("Cass has been offline for H:" + str(hours) + " M:" + str(minutes)) 
 
-component.with_slash_command
+@component.with_slash_command
 @tanjun.with_int_slash_option("epocstart", "The epoc time in seconds when the subathon started", default=0)
 @tanjun.as_slash_command("subathon-start", "Start a subathon timer", default_to_ephemeral=True)
-async def subathon_start(ctx: tanjun.abc.SlashContext, epocstart: int):
+async def subathon_start(ctx: tanjun.abc.SlashContext, epocstart: int) -> None:
     await ctx.respond("Subathon timer has been set to epoc time " + str(epocstart))
     globals.subathon = True
     globals.subathonStartTime = epocstart
 
-component.with_slash_command
+@component.with_slash_command
 @tanjun.as_slash_command("subathon-end", "End a subathon timer", default_to_ephemeral=True)
-async def subathon_end(ctx: tanjun.abc.Context):
+async def subathon_end(ctx: tanjun.abc.Context)-> None:
     await ctx.respond("Subathon timer has ended")
     globals.subathon = False
     globals.subathonEndTime = time.time()
 
-component.with_slash_command
+@component.with_slash_command
 @tanjun.as_slash_command("subathon", "See subathon status and time online", default_to_ephemeral=True)
-async def subathon(ctx: tanjun.abc.Context):
+async def subathon(ctx: tanjun.abc.Context)-> None:
     if globals.subathon:
         hours, minutes = StaticMethods.timeToHoursMinutes(globals.subathonStartTime)
         await ctx.respond("There is currently a subathon running that has been running for " + str(hours) + " hours, and " + str(minutes) + " minutes")
