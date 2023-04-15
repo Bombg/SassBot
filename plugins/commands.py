@@ -44,10 +44,6 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
         hours, minutes = asyncResult.get()
         await ctx.respond("Cass has been offline for H:" + str(hours) + " M:" + str(minutes)) 
 
-@tanjun.as_loader
-def load(client: tanjun.abc.Client) -> None:
-    client.add_component(component.copy())
-
 component.with_slash_command
 @tanjun.with_int_slash_option("epocstart", "The epoc time in seconds when the subathon started", default=0)
 @tanjun.as_slash_command("subathon-start", "Start a subathon timer", default_to_ephemeral=True)
@@ -72,3 +68,7 @@ async def subathon(ctx: tanjun.abc.Context):
     elif globals.subathonEndTime != 0:
         hours, minutes = StaticMethods.timeToHoursMinutes(globals.subathonEndTime)
         await ctx.respond("There currently isn't a subathon running but the last one ran for " + str(hours) + " hours, and " + str(minutes) + " minutes")
+
+@tanjun.as_loader
+def load(client: tanjun.abc.Client) -> None:
+    client.add_component(component.copy())
