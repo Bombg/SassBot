@@ -36,7 +36,4 @@ def timeToHoursMinutes(newTime):
 def timeToSeconds(newTime):
     totalTime = time.time() - newTime
     totalTime = int(totalTime)
-    totalTimeSeconds = int(totalTime % 60)
-    
-
-    return totalTimeSeconds
+    return totalTime
