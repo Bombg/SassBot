@@ -202,7 +202,7 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
     if globals.fansFalse < 0:
         playingString = playingString + "Fans "
     if globals.kickFalse < 0:
-        playingString = playingString + "Kick "
+        playingString = playingString + "Kick"
     if globals.subathon:
         hours, minutes = StaticMethods.timeToHoursMinutes(globals.subathonStartTime)
         playingString = playingString + "athon H:" + str(hours) + "M:" +str(minutes) + " "
