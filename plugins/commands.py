@@ -2,6 +2,7 @@ import tanjun
 import globals
 from multiprocessing.pool import ThreadPool
 import StaticMethods
+import time
 
 
 nl = "\n"
@@ -46,3 +47,28 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
 @tanjun.as_loader
 def load(client: tanjun.abc.Client) -> None:
     client.add_component(component.copy())
+
+component.with_slash_command
+@tanjun.with_int_slash_option("epocStart", "The epoc time in seconds when the subathon started", default=0)
+@tanjun.as_slash_command("subathon-start", "Start a subathon timer", default_to_ephemeral=True)
+async def subathon_start(ctx: tanjun.abc.SlashContext, epocStart: int):
+    await ctx.respond("Subathon timer has been set to epoc time " + str(epocStart))
+    globals.subathon = True
+    globals.subathonStartTime = epocStart
+
+component.with_slash_command
+@tanjun.as_slash_command("subathon-end", "End a subathon timer", default_to_ephemeral=True)
+async def subathon_end(ctx: tanjun.abc.Context):
+    await ctx.respond("Subathon timer has ended")
+    globals.subathon = False
+    globals.subathonEndTime = time.time()
+
+component.with_slash_command
+@tanjun.as_slash_command("subathon", "See subathon status and time online", default_to_ephemeral=True)
+async def subathon(ctx: tanjun.abc.Context):
+    if globals.subathon:
+        hours, minutes = StaticMethods.timeToHoursMinutes(globals.subathonStartTime)
+        await ctx.respond("There is currently a subathon running that has been running for " + str(hours) + " hours, and " + str(minutes) + " minutes")
+    elif globals.subathonEndTime != 0:
+        hours, minutes = StaticMethods.timeToHoursMinutes(globals.subathonEndTime)
+        await ctx.respond("There currently isn't a subathon running but the last one ran for " + str(hours) + " hours, and " + str(minutes) + " minutes")
