@@ -48,22 +48,26 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
 @tanjun.with_int_slash_option("epocstart", "The epoc time in seconds when the subathon started", default=0)
 @tanjun.as_slash_command("subathon-start", "Start a subathon timer", default_to_ephemeral=True)
 async def subathon_start(ctx: tanjun.abc.SlashContext, epocstart: int) -> None:
-    if ctx.author.id in Constants.whiteListedIds:
+    if ctx.author.id in Constants.whiteListedIds and not globals.subathon:
         await ctx.respond("Subathon timer has been set to epoc time " + str(epocstart))
         globals.subathon = True
         globals.subathonStartTime = epocstart
-    else:
+    elif not ctx.author.id in Constants.whiteListedIds:
         await ctx.respond("You aren't white listed for that")
+    else:
+        await ctx.respond("There's a subathon already running")
 
 @component.with_slash_command
 @tanjun.as_slash_command("subathon-end", "End a subathon timer", default_to_ephemeral=True)
 async def subathon_end(ctx: tanjun.abc.Context)-> None:
-    if ctx.author.id in Constants.whiteListedIds:
+    if ctx.author.id in Constants.whiteListedIds and globals.subathon:
         await ctx.respond("Subathon timer has ended")
         globals.subathon = False
         globals.subathonEndTime = time.time()
-    else:
+    elif not ctx.author.id in Constants.whiteListedIds:
         await ctx.respond("You aren't white listed for that")
+    else:
+        await ctx.respond("There isn't a subathon to end")
 
 @component.with_slash_command
 @tanjun.as_slash_command("subathon", "See subathon status and time online", default_to_ephemeral=True)
