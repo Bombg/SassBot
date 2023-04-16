@@ -76,7 +76,8 @@ async def subathon(ctx: tanjun.abc.Context)-> None:
         hours, minutes = StaticMethods.timeToHoursMinutes(globals.subathonStartTime)
         await ctx.respond("There is currently a subathon running that has been running for " + str(hours) + " hours, and " + str(minutes) + " minutes")
     elif globals.subathonEndTime != 0:
-        hours, minutes = StaticMethods.timeToHoursMinutes(globals.subathonEndTime)
+        subathonTime = globals.subathonEndTime - globals.subathonStartTime
+        hours, minutes = StaticMethods.timeToHoursMinutes(subathonTime)
         await ctx.respond("There currently isn't a subathon running but the last one ran for " + str(hours) + " hours, and " + str(minutes) + " minutes")
 
 @tanjun.as_loader
