@@ -1,9 +1,16 @@
 class Constants:
-    GUILD_ID = 852965953309376582 #Guild ID of the discord server
-    STDOUT_CHANNEL_ID = 1074419703533015101 # Channel ID the bot will post notifications to
+    GUILD_ID =852965953309376582 #Guild ID of the discord server
+    STDOUT_CHANNEL_ID =1074419703533015101 # Channel ID the bot will post notifications to
     WAIT_BETWEEN_MESSAGES = 30 # minimum amount of time the stream has to be offline before new notification messages. 1 = one interval of onlineCheckTimer
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
     ONLINE_MESSAGE_REBROADCAST_TIME = 86400 #Time in seconds the stream will be online before another online notification will be broadcasted
+
+    casKickUrl = 'https://kick.com/kittycass'
+    casFansUrl = "https://fansly.com/BadKittyCass"
+    casOnlyUrl = "https://onlyfans.com/badkittycass"
+    casYtUrl = "https://www.youtube.com/@kitty_cass_/live"
+    casChatApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs" #affiliate api link to see online users in cb
+    casTwitchChannelName = 'kitty_goes_mreow' #twitch name, not url
 
     chaturOnlineText = "Cass is live on Chaturbate!\nhttps://chaturbate.com/badkittycass/"
     ofOnlineText = "Cass is live on Onlyfans!\nhttps://onlyfans.com/badkittycass/live"

@@ -4,8 +4,8 @@ import re
 import json
 
 class YouCas:
-    def __init__(self):
-        self.CAS_YT_URL = "https://www.youtube.com/@kitty_cass_/live"
+    def __init__(self, ytUrl):
+        self.CAS_YT_URL = ytUrl
 
     def isCassOnline(self):
         online = False

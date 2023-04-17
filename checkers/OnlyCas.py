@@ -3,8 +3,8 @@ from selenium.webdriver.common.by import By
 from SeleniumDriverCreator import SeleniumDriverCreator
 
 class OnlyCas:
-    def __init__(self):
-        self.CAS_ONLY_URL = "https://onlyfans.com/badkittycass"
+    def __init__(self,ofUrl):
+        self.CAS_ONLY_URL = ofUrl
 
     async def isCassOnline(self):
         driverCreator = SeleniumDriverCreator()

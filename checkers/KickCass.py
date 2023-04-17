@@ -3,8 +3,8 @@ from selenium.webdriver.common.by import By
 from SeleniumDriverCreator import SeleniumDriverCreator
 
 class KickCass:
-    def __init__(self):
-        self.CAS_KICK_URL = 'https://kick.com/kittycass'
+    def __init__(self,kickUrl):
+        self.CAS_KICK_URL = kickUrl
     async def isCassOnline(self):
         driverCreator = SeleniumDriverCreator()
         driver = driverCreator.createDriver()

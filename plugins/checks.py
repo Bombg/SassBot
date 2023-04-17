@@ -2,13 +2,13 @@ import tanjun
 import alluka
 import hikari
 import asyncio
-from ChaturCas import ChaturCas
-from OnlyCas import OnlyCas
-from FansCas import FansCas
+from checkers.ChaturCas import ChaturCas
+from checkers.OnlyCas import OnlyCas
+from checkers.FansCas import FansCas
 from Constants import Constants
-from TwitchCas import TwitchCas
-from KickCass import KickCass
-from YouCas import YouCas
+from checkers.TwitchCas import TwitchCas
+from checkers.KickCass import KickCass
+from checkers.YouCas import YouCas
 import globals
 import time
 import StaticMethods
@@ -25,7 +25,7 @@ def load(client: tanjun.abc.Client) -> None:
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    chaturbate = ChaturCas()
+    chaturbate = ChaturCas(Constants.casChatApiUrl)
     task = asyncio.create_task(chaturbate.isCassOnline())
     isOnline = await task
     secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.chaturLastOnlineMessage)
@@ -50,7 +50,7 @@ async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    onlyFans = OnlyCas()
+    onlyFans = OnlyCas(Constants.casOnlyUrl)
     task = asyncio.create_task(onlyFans.isCassOnline())
     isOnline = await task
     secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.fansLastOnlineMessage)
@@ -75,7 +75,7 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    fans = FansCas()
+    fans = FansCas(Constants.casFansUrl)
     task = asyncio.create_task(fans.isCassOnline())
     isOnline = await task
     secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.fansLastOnlineMessage)
@@ -101,7 +101,7 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    twitch = TwitchCas()
+    twitch = TwitchCas(Constants.casTwitchChannelName)
     isOnline = twitch.isCassOnline()
     secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.twitchLastOnlineMessage)
     if isOnline:
@@ -125,7 +125,7 @@ async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    youTube = YouCas()
+    youTube = YouCas(Constants.casYtUrl)
     isOnline = youTube.isCassOnline()
     secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.ytLastOnlineMessage)
     if isOnline:
@@ -149,7 +149,7 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    kick = KickCass()
+    kick = KickCass(Constants.casKickUrl)
     task = asyncio.create_task(kick.isCassOnline())
     isOnline = await task
     secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.kickLastOnlineMessage)
