@@ -175,6 +175,34 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     print("\n")
 
 @component.with_schedule
+@tanjun.as_interval(Constants.onlineCheckTimer)
+async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    kick = KickCass(Constants.kittiesKickUrl)
+    task = asyncio.create_task(kick.isCassOnline())
+    isOnline = await task
+    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.kittiesKickLastOnlineMessage)
+    if isOnline == 3:
+        # do nothing
+        print("Kick check failed cause bot detection")
+    elif isOnline == True:
+        if globals.kittiesKickFalse >= Constants.WAIT_BETWEEN_MESSAGES:
+            print("KickKitties")
+            globals.kittiesKickLastOnlineMessage = time.time()
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.kittiesKickOnlineText)
+            globals.kittiesKickFalse = 0
+        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
+            print("LongKickKitties")
+            globals.kittiesKickLastOnlineMessage = time.time()
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.kittiesKickOnlineText)
+        globals.kittiesKickFalse = globals.kittiesKickFalse - 1
+    elif isOnline == False:
+        if globals.kittiesKickFalse < 0:
+            globals.kittiesKickFalse = 0
+        globals.kittiesKickFalse = globals.kittiesKickFalse + 1
+        print("KittiesKickOffline: " + str(globals.kittiesKickFalse))
+    print("\n")
+
+@component.with_schedule
 @tanjun.as_interval(Constants.avatarCheckTimer)
 async def changeAvatar(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     online = StaticMethods.checkOnline()
