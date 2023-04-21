@@ -9,9 +9,9 @@ from Constants import Constants
 from checkers.TwitchCas import TwitchCas
 from checkers.KickCass import KickCass
 from checkers.YouCas import YouCas
-import globals
+from .. import globals
 import time
-import StaticMethods
+from .. import StaticMethods
 
 
 
@@ -32,9 +32,9 @@ async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     if isOnline:
         if globals.chaturFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("ChaturBoobies")
+            globals.chaturFalse = 0
             globals.chaturLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.chaturOnlineText)
-            globals.chaturFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongChaturBoobies")
             globals.chaturLastOnlineMessage = time.time()
@@ -44,7 +44,7 @@ async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
         if globals.chaturFalse < 0:
             globals.chaturFalse = 0
         globals.chaturFalse = globals.chaturFalse + 1
-        print("ChaturbateOffline: " + str(globals.chaturFalse))
+    print("ChaturbateOffline: " + str(globals.chaturFalse))
     print("\n")
 
 @component.with_schedule
@@ -57,9 +57,9 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
     if isOnline:
         if globals.onlyFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("OnlyBoobies")
+            globals.onlyFalse = 0
             globals.onlyLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.ofOnlineText)
-            globals.onlyFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongOnlyBoobies")
             globals.onlyLastOnlineMessage = time.time()
@@ -69,7 +69,7 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
         if globals.onlyFalse < 0:
             globals.onlyFalse = 0
         globals.onlyFalse = globals.onlyFalse + 1
-        print("OnlyFansOffline: " + str(globals.onlyFalse))
+    print("OnlyFansOffline: " + str(globals.onlyFalse))
     print("\n")
 
 @component.with_schedule
@@ -82,9 +82,9 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     if isOnline:
         if globals.fansFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("FansBoobies")
+            globals.fansFalse = 0
             globals.fansLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.fansOnlineText)
-            globals.fansFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongFansBoobies")
             globals.fansLastOnlineMessage = time.time()
@@ -94,7 +94,7 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
         if globals.fansFalse < 0:
             globals.fansFalse = 0
         globals.fansFalse = globals.fansFalse + 1
-        print("FanslyOffline: " + str(globals.fansFalse))
+    print("FanslyOffline: " + str(globals.fansFalse))
     print("\n")
 
 
@@ -107,9 +107,9 @@ async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     if isOnline:
         if globals.twitchFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("TwitchBoobies")
+            globals.twitchFalse = 0
             globals.twitchLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.twitchOnlineText) 
-            globals.twitchFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongTwitchBoobies")
             globals.twitchLastOnlineMessage = time.time()
@@ -119,7 +119,7 @@ async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
         if globals.twitchFalse < 0:
             globals.twitchFalse = 0
         globals.twitchFalse = globals.twitchFalse + 1
-        print("TwitchOffline: " + str(globals.twitchFalse))
+    print("TwitchOffline: " + str(globals.twitchFalse))
     print("\n")
 
 @component.with_schedule
@@ -131,9 +131,9 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if isOnline:
         if globals.ytFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("YTBoobies")
+            globals.ytFalse = 0
             globals.ytLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.ytOnlineText)
-            globals.ytFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongYTBoobies")
             globals.ytLastOnlineMessage = time.time()
@@ -143,7 +143,7 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
         if globals.ytFalse < 0:
             globals.ytFalse = 0
         globals.ytFalse = globals.ytFalse + 1
-        print("YTOffline:" + str(globals.ytFalse))
+    print("YTOffline:" + str(globals.ytFalse))
     print("\n")
 
 @component.with_schedule
@@ -159,9 +159,9 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     elif isOnline == True:
         if globals.kickFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("KickBoobies")
+            globals.kickFalse = 0
             globals.kickLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.kickOnlineText)
-            globals.kickFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongKickBoobies")
             globals.kickLastOnlineMessage = time.time()
@@ -171,7 +171,7 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
         if globals.kickFalse < 0:
             globals.kickFalse = 0
         globals.kickFalse = globals.kickFalse + 1
-        print("KickOffline: " + str(globals.kickFalse))
+    print("KickOffline: " + str(globals.kickFalse))
     print("\n")
 
 @component.with_schedule
@@ -187,9 +187,9 @@ async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) ->
     elif isOnline == True:
         if globals.kittiesKickFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("KickKitties")
+            globals.kittiesKickFalse = 0
             globals.kittiesKickLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.kittiesKickOnlineText)
-            globals.kittiesKickFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongKickKitties")
             globals.kittiesKickLastOnlineMessage = time.time()
@@ -199,7 +199,7 @@ async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) ->
         if globals.kittiesKickFalse < 0:
             globals.kittiesKickFalse = 0
         globals.kittiesKickFalse = globals.kittiesKickFalse + 1
-        print("KittiesKickOffline: " + str(globals.kittiesKickFalse))
+    print("KittiesKickOffline: " + str(globals.kittiesKickFalse))
     print("\n")
 
 @component.with_schedule
