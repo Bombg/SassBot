@@ -9,9 +9,9 @@ from Constants import Constants
 from checkers.TwitchCas import TwitchCas
 from checkers.KickCass import KickCass
 from checkers.YouCas import YouCas
-from .. import globals
+import globals
 import time
-from .. import StaticMethods
+import StaticMethods
 
 
 
@@ -53,7 +53,7 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
     onlyFans = OnlyCas(Constants.casOnlyUrl)
     task = asyncio.create_task(onlyFans.isCassOnline())
     isOnline = await task
-    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.fansLastOnlineMessage)
+    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.onlyLastOnlineMessage)
     if isOnline:
         if globals.onlyFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("OnlyBoobies")
