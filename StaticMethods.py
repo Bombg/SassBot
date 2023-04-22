@@ -1,5 +1,6 @@
 import time
 import globals
+import os
 
 
 @staticmethod
@@ -37,3 +38,7 @@ def timeToSeconds(newTime):
     totalTime = time.time() - newTime
     totalTime = int(totalTime)
     return totalTime
+
+@staticmethod
+def rebootServer():
+    os.system('reboot')

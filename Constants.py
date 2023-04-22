@@ -4,6 +4,8 @@ class Constants:
     WAIT_BETWEEN_MESSAGES = 30 # minimum amount of time the stream has to be offline before new notification messages. 1 = one interval of onlineCheckTimer
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
     ONLINE_MESSAGE_REBROADCAST_TIME = 86400 #Time in seconds the stream will be online before another online notification will be broadcasted
+    TIME_BEFORE_BOT_RESTART = 86400 #time in seconds before bot will restart
+    TIME_OFFLINE_BEFORE_RESTART = 1800 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
 
     casKickUrl = 'https://kick.com/kittycass'
     kittiesKickUrl = 'https://kick.com/casskitties'
@@ -24,5 +26,6 @@ class Constants:
     onlineCheckTimer = 120 #Wait time in seconds between checks
     avatarCheckTimer = 130
     statusCheckTimer = 125
+    restartCheckTimer = 300
 
     whiteListedIds = [145802742647095296,427890651510603778,966474683379744849,485741419303010325,278312496131997700,338783926933913602,1069673585884541058,306368812054216704]
