@@ -285,3 +285,6 @@ async def checkRestart() -> None:
         time.sleep(300)
         print("Scheduled restart is happening.\nSleeping for 300 seconds before restart, in case something goes horribly wrong")
         StaticMethods.rebootServer()
+    else:
+        print("TimeSinceRestart: " + str(timeSinceRestart))
+        print("TimeSinceOffline: " + str(timeSinceOffline))
