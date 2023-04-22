@@ -209,9 +209,11 @@ async def changeAvatar(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> Non
     hours, minutes = StaticMethods.timeToHoursMinutes(globals.offTime)
     if online and not globals.normalAvtar:
         await rest.edit_my_user(avatar = 'plugins/avatars/calmCass.png')
+        print("changed avatar to good cass")
         globals.normalAvtar = True
-    if not online and globals.normalAvtar and hours >= Constants.MIN_TIME_BEFORE_AVATAR_CHANGE:
+    if not online and globals.normalAvtar and hours >= Constants.MIN_TIME_BEFORE_AVATAR_CHANGE and globals.offTime != 0:
         await rest.edit_my_user(avatar = 'plugins/avatars/missCass.png')
+        print("changed avatar to bad cass")
         globals.normalAvtar = False
 
 @component.with_schedule
