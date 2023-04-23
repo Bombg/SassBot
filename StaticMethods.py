@@ -42,3 +42,9 @@ def timeToSeconds(newTime):
 @staticmethod
 def rebootServer():
     os.system('reboot')
+
+@staticmethod
+def safeRebootServer():
+    time.sleep(300)
+    print("Scheduled restart is happening.\nSleeping for 300 seconds before restart, in case something goes horribly wrong")
+    rebootServer()

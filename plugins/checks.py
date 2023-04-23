@@ -284,9 +284,7 @@ async def checkRestart() -> None:
     timeSinceRestart = time.time() - globals.botStartTime
     timeSinceOffline = time.time() - globals.offTime
     if not globals.online and timeSinceRestart > Constants.TIME_BEFORE_BOT_RESTART and timeSinceOffline > Constants.TIME_BEFORE_BOT_RESTART:
-        time.sleep(300)
-        print("Scheduled restart is happening.\nSleeping for 300 seconds before restart, in case something goes horribly wrong")
-        StaticMethods.rebootServer()
+        StaticMethods.safeRebootServer()
     else:
         print("TimeSinceRestart: " + str(timeSinceRestart))
         print("TimeSinceOffline: " + str(timeSinceOffline))
