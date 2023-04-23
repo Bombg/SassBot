@@ -80,6 +80,16 @@ async def subathon(ctx: tanjun.abc.Context)-> None:
         hours, minutes = StaticMethods.timeToHoursMinutes(subathonTime)
         await ctx.respond("There currently isn't a subathon running but the last one ran for " + str(hours) + " hours, and " + str(minutes) + " minutes")
 
+@component.with_slash_command
+@tanjun.as_slash_command("reboot", "reboot the bot and its server", default_to_ephemeral=True)
+async def rebootServer(ctx: tanjun.abc.Context)-> None:
+    if ctx.author.id in Constants.whiteListedIds:
+        await ctx.respond("rebooting the server")
+        StaticMethods.rebootServer()
+    elif not ctx.author.id in Constants.whiteListedIds:
+        await ctx.respond("You aren't white listed for that")
+
+
 @tanjun.as_loader
 def load(client: tanjun.abc.Client) -> None:
     client.add_component(component.copy())
