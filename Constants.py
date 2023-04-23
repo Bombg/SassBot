@@ -5,7 +5,7 @@ class Constants:
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
     ONLINE_MESSAGE_REBROADCAST_TIME = 86400 #Time in seconds the stream will be online before another online notification will be broadcasted
     TIME_BEFORE_BOT_RESTART = 86400 #time in seconds before bot will restart
-    TIME_OFFLINE_BEFORE_RESTART = 1800 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
+    TIME_OFFLINE_BEFORE_RESTART = 900 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
 
     casKickUrl = 'https://kick.com/kittycass'
     kittiesKickUrl = 'https://kick.com/casskitties'
