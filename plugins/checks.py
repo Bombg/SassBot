@@ -12,6 +12,7 @@ from checkers.YouCas import YouCas
 import globals
 import time
 import StaticMethods
+from EmbedCreator import EmbedCreator
 
 
 
@@ -57,9 +58,12 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
     if isOnline:
         if globals.onlyFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("OnlyBoobies")
+            embedMaker = EmbedCreator("Cass is live on Onlyfans!", "Naughty time? =)", Constants.casOnlyUrl, 'images/OFImage.jpg', Constants.ofEmbedColor)
+            task = asyncio.create_task(embedMaker.getEmbed())
+            ofEmbed = await task
             globals.onlyFalse = 0
             globals.onlyLastOnlineMessage = time.time()
-            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.ofOnlineText)
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = ofEmbed)
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongOnlyBoobies")
             globals.onlyLastOnlineMessage = time.time()
@@ -82,9 +86,12 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     if isOnline:
         if globals.fansFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("FansBoobies")
+            embedMaker = EmbedCreator("Cass is live on Fansly!", "Naughty Sleep Stream? =)", Constants.casFansUrl, 'images/FansImage.png', Constants.fansEmbedColor)
+            task = asyncio.create_task(embedMaker.getEmbed())
+            fansEmbed = await task
             globals.fansFalse = 0
             globals.fansLastOnlineMessage = time.time()
-            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.fansOnlineText)
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = fansEmbed)
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongFansBoobies")
             globals.fansLastOnlineMessage = time.time()
@@ -151,7 +158,7 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
 async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     kick = KickCass(Constants.casKickUrl)
     task = asyncio.create_task(kick.isCassOnline())
-    isOnline = await task
+    isOnline, title = await task
     secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.kickLastOnlineMessage)
     if isOnline == 3:
         # do nothing
@@ -159,9 +166,12 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     elif isOnline == True:
         if globals.kickFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("KickBoobies")
+            embedMaker = EmbedCreator("Cass is live on Kick!", title, Constants.casKickUrl, 'images/KickImage.png', Constants.kickEmbedColor)
+            task = asyncio.create_task(embedMaker.getEmbed())
+            kickEmbed = await task
             globals.kickFalse = 0
             globals.kickLastOnlineMessage = time.time()
-            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.kickOnlineText)
+            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = kickEmbed)
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongKickBoobies")
             globals.kickLastOnlineMessage = time.time()

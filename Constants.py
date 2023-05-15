@@ -23,6 +23,12 @@ class Constants:
     kickOnlineText = "Cass is live on Kick!\nhttps://kick.com/kittycass"
     kittiesKickOnlineText = "Cass' Kitties are live on Kick!\nhttps://kick.com/casskitties"
 
+    kickEmbedColor = "#52fb19"
+    fansEmbedColor = "#ffffff"
+    ofEmbedColor = "#018ccf"
+
+    twitterUrl = 'https://twitter.com/_kitty_cass_'
+
     onlineCheckTimer = 120 #Wait time in seconds between checks
     avatarCheckTimer = 130
     statusCheckTimer = 125
