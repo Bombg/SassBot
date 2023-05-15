@@ -18,5 +18,5 @@ class TwitterImageGrabber:
             imageSrc = element[0].get_attribute('src')
         else:
             imageSrc = 'plugins/avatars/missCass.png'
-        
+        driver.quit()
         return imageSrc
