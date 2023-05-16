@@ -161,7 +161,7 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
 async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     kick = KickCass(Constants.kittiesKickUrl)
     task = asyncio.create_task(kick.isCassOnline())
-    isOnline = await task
+    isOnline, title = await task
     secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.kittiesKickLastOnlineMessage)
     if isOnline == 3:
         # do nothing
