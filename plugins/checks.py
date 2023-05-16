@@ -42,7 +42,7 @@ async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
         if globals.chaturFalse < 0:
             globals.chaturFalse = 0
         globals.chaturFalse = globals.chaturFalse + 1
-    print("ChaturbateOffline: " + str(globals.chaturFalse))
+    #print("ChaturbateOffline: " + str(globals.chaturFalse))
     print("\n")
 
 @component.with_schedule
@@ -64,7 +64,7 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
         if globals.onlyFalse < 0:
             globals.onlyFalse = 0
         globals.onlyFalse = globals.onlyFalse + 1
-    print("OnlyFansOffline: " + str(globals.onlyFalse))
+    #print("OnlyFansOffline: " + str(globals.onlyFalse))
     print("\n")
 
 @component.with_schedule
@@ -86,7 +86,7 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
         if globals.fansFalse < 0:
             globals.fansFalse = 0
         globals.fansFalse = globals.fansFalse + 1
-    print("FanslyOffline: " + str(globals.fansFalse))
+    #print("FanslyOffline: " + str(globals.fansFalse))
     print("\n")
 
 @component.with_schedule
@@ -107,7 +107,7 @@ async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
         if globals.twitchFalse < 0:
             globals.twitchFalse = 0
         globals.twitchFalse = globals.twitchFalse + 1
-    print("TwitchOffline: " + str(globals.twitchFalse))
+    #print("TwitchOffline: " + str(globals.twitchFalse))
     print("\n")
 
 @component.with_schedule
@@ -128,7 +128,7 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
         if globals.ytFalse < 0:
             globals.ytFalse = 0
         globals.ytFalse = globals.ytFalse + 1
-    print("YTOffline:" + str(globals.ytFalse))
+    #print("YTOffline:" + str(globals.ytFalse))
     print("\n")
 
 @component.with_schedule
@@ -153,7 +153,7 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
         if globals.kickFalse < 0:
             globals.kickFalse = 0
         globals.kickFalse = globals.kickFalse + 1
-    print("KickOffline: " + str(globals.kickFalse))
+    #print("KickOffline: " + str(globals.kickFalse))
     print("\n")
 
 @component.with_schedule
@@ -181,7 +181,7 @@ async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) ->
         if globals.kittiesKickFalse < 0:
             globals.kittiesKickFalse = 0
         globals.kittiesKickFalse = globals.kittiesKickFalse + 1
-    print("KittiesKickOffline: " + str(globals.kittiesKickFalse))
+    #print("KittiesKickOffline: " + str(globals.kittiesKickFalse))
     print("\n")
 
 @component.with_schedule
