@@ -6,7 +6,7 @@ import globals
 
 class Notifications:
     async def OFNotification(rest):
-        embedMaker = EmbedCreator("Cass is live on Onlyfans!", "Naughty time? =)", Constants.casOnlyUrl, 'images/OFImage.jpg', Constants.ofEmbedColor)
+        embedMaker = EmbedCreator("Cass is live on Onlyfans!", "Naughty time? =)", Constants.OfLiveStreamUrl, 'images/OFImage.jpg', Constants.ofEmbedColor)
         task = asyncio.create_task(embedMaker.getEmbed())
         ofEmbed = await task
         globals.onlyFalse = 0
@@ -19,7 +19,7 @@ class Notifications:
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.chaturOnlineText)
 
     async def FansNotification(rest):
-        embedMaker = EmbedCreator("Cass is live on Fansly!", "Naughty Sleep Stream? =)", Constants.casFansUrl, 'images/FansImage.png', Constants.fansEmbedColor)
+        embedMaker = EmbedCreator("Cass is live on Fansly!", "Naughty Sleep Stream? =)", Constants.fansLiveStreamUrl, 'images/FansImage.png', Constants.fansEmbedColor)
         task = asyncio.create_task(embedMaker.getEmbed())
         fansEmbed = await task
         globals.fansFalse = 0
