@@ -213,7 +213,7 @@ async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) ->
             print("LongKickKitties")
             globals.kittiesKickLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.kittiesKickOnlineText)
-        secondsSinceStreamStartTime = StaticMethods.timeToSeconds()
+        secondsSinceStreamStartTime = StaticMethods.timeToSeconds(globals.kittiesStreamStartTime)
         globals.kittiesKickFalse = -1 * secondsSinceStreamStartTime
     elif isOnline == False:
         if globals.kittiesKickFalse < 0:
