@@ -1,7 +1,15 @@
 class Constants:
-    GUILD_ID =852965953309376582 #Guild ID of the discord server
-    STDOUT_CHANNEL_ID =1074419703533015101 # Channel ID the bot will post notifications to
-    WAIT_BETWEEN_MESSAGES = 30 # minimum amount of time the stream has to be offline before new notification messages. 1 = one interval of onlineCheckTimer
+    DEBUG = False
+    TEST_SERVER = False
+
+    if TEST_SERVER:
+        GUILD_ID =313876691082674178 #Guild ID of the discord server
+        STDOUT_CHANNEL_ID =1096895456694505532 # Channel ID the bot will post notifications to
+    else:
+        GUILD_ID =852965953309376582 #Guild ID of the discord server
+        STDOUT_CHANNEL_ID =1074419703533015101 # Channel ID the bot will post notifications to
+
+    WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
     ONLINE_MESSAGE_REBROADCAST_TIME = 86400 #Time in seconds the stream will be online before another online notification will be broadcasted
     TIME_BEFORE_BOT_RESTART = 86400 #time in seconds before bot will restart

@@ -34,16 +34,21 @@ async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
         if globals.chaturFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("ChaturBoobies")
             await Notifications.ChaturNotification(rest)
+            globals.chaturStreamStartTime = time.time()
             globals.chaturFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongChaturBoobies")
             await Notifications.ChaturNotification(rest)
-        globals.chaturFalse = globals.chaturFalse - 1
+        secondsSinceStreamstart = StaticMethods.timeToSeconds(globals.chaturStreamStartTime)
+        globals.chaturFalse = -1 * secondsSinceStreamstart
     else:
         if globals.chaturFalse < 0:
+            globals.chaturStreamEndTime = time.time()
             globals.chaturFalse = 0
-        globals.chaturFalse = globals.chaturFalse + 1
-    #print("ChaturbateOffline: " + str(globals.chaturFalse))
+        secondsSinceStreamEnd = StaticMethods.timeToSeconds(globals.chaturStreamEndTime)
+        globals.chaturFalse = secondsSinceStreamEnd
+    if Constants.DEBUG:
+        print("ChaturbateOffline: " + str(globals.chaturFalse))
     print("\n")
 
 @component.with_schedule
@@ -57,16 +62,21 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
         if globals.onlyFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("OnlyBoobies")
             await Notifications.OFNotification(rest)
+            globals.onlyStreamStartTime = time.time()
             globals.onlyFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongOnlyBoobies")
             await Notifications.OFNotification(rest)
-        globals.onlyFalse = globals.onlyFalse - 1
+        secondsSinceStreamStart = StaticMethods.timeToSeconds(globals.onlyStreamStartTime)
+        globals.onlyFalse = -1 * secondsSinceStreamStart
     else:
         if globals.onlyFalse < 0:
+            globals.onlyStreamEndTime = time.time()
             globals.onlyFalse = 0
-        globals.onlyFalse = globals.onlyFalse + 1
-    #print("OnlyFansOffline: " + str(globals.onlyFalse))
+        secondsSinceStreamEnd = StaticMethods.timeToSeconds(globals.onlyStreamEndTime)
+        globals.onlyFalse = secondsSinceStreamEnd
+    if Constants.DEBUG:
+        print("OnlyFansOffline: " + str(globals.onlyFalse))
     print("\n")
 
 @component.with_schedule
@@ -80,16 +90,21 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
         if globals.fansFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("FansBoobies")
             await Notifications.FansNotification(rest)
+            globals.fansStreamStartTime = time.time()
             globals.fansFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongFansBoobies")
             await Notifications.FansNotification(rest)
-        globals.fansFalse = globals.fansFalse - 1
+        secondsSinceStreamStart = StaticMethods.timeToSeconds(globals.fansStreamStartTime)
+        globals.fansFalse = -1 * secondsSinceStreamStart
     else:
         if globals.fansFalse < 0:
+            globals.fansStreamEndTime = time.time()
             globals.fansFalse = 0
-        globals.fansFalse = globals.fansFalse + 1
-    #print("FanslyOffline: " + str(globals.fansFalse))
+        secondsSinceStreamEnd = StaticMethods.timeToSeconds(globals.fansStreamEndTime)
+        globals.fansFalse = secondsSinceStreamEnd
+    if Constants.DEBUG:
+        print("FanslyOffline: " + str(globals.fansFalse))
     print("\n")
 
 @component.with_schedule
@@ -102,16 +117,21 @@ async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
         if globals.twitchFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("TwitchBoobies")
             await Notifications.TwitchNotification(rest)
+            globals.twitchStreamStartTime = time.time()
             globals.twitchFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongTwitchBoobies")
-            await Notifications.TwitchNotification(rest) 
-        globals.twitchFalse = globals.twitchFalse - 1
+            await Notifications.TwitchNotification(rest)
+        secondsSinceStreamStart = StaticMethods.timeToSeconds(globals.twitchStreamStartTime)
+        globals.twitchFalse = -1 * secondsSinceStreamStart
     else:
         if globals.twitchFalse < 0:
+            globals.twitchStreamEndTime = time.time()
             globals.twitchFalse = 0
-        globals.twitchFalse = globals.twitchFalse + 1
-    #print("TwitchOffline: " + str(globals.twitchFalse))
+        secondsSinceStreamEnd = StaticMethods.timeToSeconds(globals.twitchStreamEndTime)
+        globals.twitchFalse = secondsSinceStreamEnd
+    if Constants.DEBUG:
+        print("TwitchOffline: " + str(globals.twitchFalse))
     print("\n")
 
 @component.with_schedule
@@ -124,16 +144,21 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
         if globals.ytFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("YTBoobies")
             await Notifications.YTNotification(rest)
+            globals.ytStreamStartTime = time.time()
             globals.ytFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongYTBoobies")
             await Notifications.YTNotification(rest)
-        globals.ytFalse = globals.ytFalse - 1
+        secondsSinceStreamStartTime = StaticMethods.timeToSeconds(globals.ytStreamStartTime)
+        globals.ytFalse = -1 * secondsSinceStreamStartTime
     else:
         if globals.ytFalse < 0:
+            globals.ytStreamEndTime = time.time()
             globals.ytFalse = 0
-        globals.ytFalse = globals.ytFalse + 1
-    #print("YTOffline:" + str(globals.ytFalse))
+        secondsSinceStreamEndTime = StaticMethods.timeToSeconds(globals.ytStreamEndTime)
+        globals.ytFalse = secondsSinceStreamEndTime
+    if Constants.DEBUG:
+        print("YTOffline:" + str(globals.ytFalse))
     print("\n")
 
 @component.with_schedule
@@ -150,16 +175,21 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
         if globals.kickFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("KickBoobies")
             await Notifications.KickNotification(rest, title)
+            globals.kickStreamStartTime = time.time()
             globals.kickFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongKickBoobies")
             await Notifications.KickNotification(rest, title)
-        globals.kickFalse = globals.kickFalse - 1
+        secondsSinceStreamStartTime = StaticMethods.timeToSeconds(globals.kickStreamStartTime)
+        globals.kickFalse = -1 * secondsSinceStreamStartTime
     elif isOnline == False:
         if globals.kickFalse < 0:
+            globals.kickStreamEndTime = time.time()
             globals.kickFalse = 0
-        globals.kickFalse = globals.kickFalse + 1
-    #print("KickOffline: " + str(globals.kickFalse))
+        secondsSinceStreamEndTime = StaticMethods.timeToSeconds(globals.kickStreamEndTime)
+        globals.kickFalse = secondsSinceStreamEndTime
+    if Constants.DEBUG:
+        print("KickOffline: " + str(globals.kickFalse))
     print("\n")
 
 @component.with_schedule
@@ -175,6 +205,7 @@ async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) ->
     elif isOnline == True:
         if globals.kittiesKickFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("KickKitties")
+            globals.kittiesStreamStartTime = time.time()
             globals.kittiesKickFalse = 0
             globals.kittiesKickLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.kittiesKickOnlineText)
@@ -182,12 +213,16 @@ async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) ->
             print("LongKickKitties")
             globals.kittiesKickLastOnlineMessage = time.time()
             await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.kittiesKickOnlineText)
-        globals.kittiesKickFalse = globals.kittiesKickFalse - 1
+        secondsSinceStreamStartTime = StaticMethods.timeToSeconds()
+        globals.kittiesKickFalse = -1 * secondsSinceStreamStartTime
     elif isOnline == False:
         if globals.kittiesKickFalse < 0:
+            globals.kittiesStreamEndTime = time.time()
             globals.kittiesKickFalse = 0
-        globals.kittiesKickFalse = globals.kittiesKickFalse + 1
-    #print("KittiesKickOffline: " + str(globals.kittiesKickFalse))
+        secondsSinceStreamEndTime = StaticMethods.timeToSeconds(globals.kittiesStreamEndTime)
+        globals.kittiesKickFalse = secondsSinceStreamEndTime
+    if Constants.DEBUG:
+        print("KittiesKickOffline: " + str(globals.kittiesKickFalse))
     print("\n")
 
 @component.with_schedule
@@ -245,7 +280,7 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
         print("ytFalse: " + str(globals.ytFalse))
         print("fansFalse: " + str(globals.fansFalse))
         print("kickFalse: " + str(globals.kickFalse))
-        print("KittiesFalse" + str(globals.kittiesKickFalse))
+        print("KittiesFalse: " + str(globals.kittiesKickFalse))
     print("\n")
 
 @component.with_schedule

@@ -18,6 +18,22 @@ ytLastOnlineMessage = 0
 kickLastOnlineMessage = 0
 kittiesKickLastOnlineMessage = 0
 
+chaturStreamStartTime = 0
+onlyStreamStartTime = 0
+fansStreamStartTime = 0
+twitchStreamStartTime = 0 
+ytStreamStartTime = 0
+kickStreamStartTime = 0
+kittiesStreamStartTime = 0
+
+chaturStreamEndTime = time.time()
+onlyStreamEndTime = time.time()
+fansStreamEndTime = time.time()
+twitchStreamEndTime = time.time() 
+ytStreamEndTime = time.time()
+kickStreamEndTime = time.time()
+kittiesStreamEndTime = time.time()
+
 globalPlayString = ""
 online = False
 offTime = 0
