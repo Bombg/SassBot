@@ -256,12 +256,14 @@ async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) ->
 @tanjun.as_interval(Constants.avatarCheckTimer)
 async def changeAvatar(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     online = StaticMethods.checkOnline()
-    hours, minutes = StaticMethods.timeToHoursMinutes(globals.offTime)
+    db = Database()
+    onTime, offTime, totalOnTime = db.getStreamTableValues()
+    hours, minutes = StaticMethods.timeToHoursMinutes(offTime)
     if online and not globals.normalAvtar:
         await rest.edit_my_user(avatar = 'plugins/avatars/calmCass.png')
         print("changed avatar to good cass")
         globals.normalAvtar = True
-    if not online and globals.normalAvtar and hours >= Constants.MIN_TIME_BEFORE_AVATAR_CHANGE and globals.offTime != 0:
+    if not online and globals.normalAvtar and hours >= Constants.MIN_TIME_BEFORE_AVATAR_CHANGE and offTime != 0:
         await rest.edit_my_user(avatar = 'plugins/avatars/missCass.png')
         print("changed avatar to bad cass")
         globals.normalAvtar = False
