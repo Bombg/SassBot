@@ -271,6 +271,8 @@ async def changeAvatar(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> Non
 async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
     playingString = ""
     online = StaticMethods.checkOnline()
+    db = Database()
+    subathon,subStart,subEnd = db.getSubathonStatusClean()
     if globals.chaturFalse < 0:
         playingString = playingString + "CB "
     if globals.onlyFalse < 0:
@@ -283,8 +285,8 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
         playingString = playingString + "Fans "
     if globals.kickFalse < 0:
         playingString = playingString + "Kick"
-    if globals.subathon:
-        hours, minutes = StaticMethods.timeToHoursMinutes(globals.subathonStartTime)
+    if subathon:
+        hours, minutes = StaticMethods.timeToHoursMinutes(subStart)
         playingString = playingString + "athon H:" + str(hours) + "M:" +str(minutes) + " "
     if not online and not playingString:
         playingString = playingString + "Offline "

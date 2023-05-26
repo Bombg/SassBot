@@ -34,6 +34,27 @@ def timeToHoursMinutes(newTime):
     return totalTimeHours, leftoverMinutes
 
 @staticmethod
+def timeToHoursMinutesStartEnd(startTime, endTime):
+    totalTime = endTime - startTime
+    totalTime = int(totalTime)
+    totalTimeSeconds = int(totalTime % 60)
+    totalTimeMinutes = int((totalTime - totalTimeSeconds) / 60)
+    leftoverMinutes = totalTimeMinutes % 60
+    totalTimeHours = int((totalTimeMinutes - leftoverMinutes ) / 60)
+
+    return totalTimeHours, leftoverMinutes
+
+@staticmethod
+def timeToHoursMinutesTotalTime(totalTime):
+    totalTime = int(totalTime)
+    totalTimeSeconds = int(totalTime % 60)
+    totalTimeMinutes = int((totalTime - totalTimeSeconds) / 60)
+    leftoverMinutes = totalTimeMinutes % 60
+    totalTimeHours = int((totalTimeMinutes - leftoverMinutes ) / 60)
+
+    return totalTimeHours, leftoverMinutes
+
+@staticmethod
 def timeToSeconds(newTime):
     totalTime = time.time() - newTime
     totalTime = int(totalTime)

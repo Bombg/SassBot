@@ -4,6 +4,8 @@ from multiprocessing.pool import ThreadPool
 import StaticMethods
 import time
 from Constants import Constants
+from Database import Database
+from datetime import datetime
 
 nl = "\n"
 component = tanjun.Component()
@@ -48,10 +50,12 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
 @tanjun.with_int_slash_option("epocstart", "The epoc time in seconds when the subathon started", default=0)
 @tanjun.as_slash_command("subathon-start", "Start a subathon timer", default_to_ephemeral=True)
 async def subathon_start(ctx: tanjun.abc.SlashContext, epocstart: int) -> None:
-    if ctx.author.id in Constants.whiteListedIds and not globals.subathon:
+    db = Database()
+    sub = db.getSubathonStatus()
+    subathon = sub[0]
+    if ctx.author.id in Constants.whiteListedIds and not subathon:
         await ctx.respond("Subathon timer has been set to epoc time " + str(epocstart))
-        globals.subathon = True
-        globals.subathonStartTime = epocstart
+        db.startSubathon(epocstart)
     elif not ctx.author.id in Constants.whiteListedIds:
         await ctx.respond("You aren't white listed for that")
     else:
@@ -60,10 +64,16 @@ async def subathon_start(ctx: tanjun.abc.SlashContext, epocstart: int) -> None:
 @component.with_slash_command
 @tanjun.as_slash_command("subathon-end", "End a subathon timer", default_to_ephemeral=True)
 async def subathon_end(ctx: tanjun.abc.Context)-> None:
-    if ctx.author.id in Constants.whiteListedIds and globals.subathon:
+    db = Database()
+    subathon,subStart,subEndDontUse = db.getSubathonStatusClean()
+    if ctx.author.id in Constants.whiteListedIds and subathon:
         await ctx.respond("Subathon timer has ended")
-        globals.subathon = False
-        globals.subathonEndTime = time.time()
+        subEnd = time.time()
+        db.endSubathon(subEnd)
+        longestSubLength = db.getSubathonLongest()
+        currentSubLength = subEnd - subStart
+        if currentSubLength > longestSubLength:
+            db.setLongestSubathon(currentSubLength,subStart)
     elif not ctx.author.id in Constants.whiteListedIds:
         await ctx.respond("You aren't white listed for that")
     else:
@@ -72,13 +82,18 @@ async def subathon_end(ctx: tanjun.abc.Context)-> None:
 @component.with_slash_command
 @tanjun.as_slash_command("subathon", "See subathon status and time online", default_to_ephemeral=True)
 async def subathon(ctx: tanjun.abc.Context)-> None:
-    if globals.subathon:
-        hours, minutes = StaticMethods.timeToHoursMinutes(globals.subathonStartTime)
+    db = Database()
+    subathon,subStart,subEnd = db.getSubathonStatusClean()
+    longestSub, longestSubTime = db.getSubathonLongestTime()
+    if subathon:
+        hours, minutes = StaticMethods.timeToHoursMinutes(subStart)
         await ctx.respond("There is currently a subathon running that has been running for " + str(hours) + " hours, and " + str(minutes) + " minutes")
-    elif globals.subathonEndTime != 0:
-        subathonTime = globals.subathonEndTime - globals.subathonStartTime
-        hours, minutes = StaticMethods.timeToHoursMinutes(subathonTime)
+    elif subEnd > subStart:
+        hours, minutes = StaticMethods.timeToHoursMinutesStartEnd(subStart, subEnd)
+        lHours, lMinutes = StaticMethods.timeToHoursMinutesTotalTime(longestSub)
+        date = datetime.fromtimestamp(longestSubTime)
         await ctx.respond("There currently isn't a subathon running but the last one ran for " + str(hours) + " hours, and " + str(minutes) + " minutes")
+        await ctx.respond("The longest subathon ran for "+ str(lHours) + " hours, and " + str(lMinutes) + " minutes on " + str(date))
 
 @component.with_slash_command
 @tanjun.as_slash_command("reboot", "reboot the bot and its server", default_to_ephemeral=True)

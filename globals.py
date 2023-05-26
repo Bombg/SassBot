@@ -17,8 +17,4 @@ onTime = 0
 totalOnTime = 0
 normalAvtar = False
 
-subathon = False
-subathonStartTime = 0
-subathonEndTime = 0
-
 botStartTime = time.time()
