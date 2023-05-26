@@ -315,20 +315,19 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
 @component.with_schedule
 @tanjun.as_interval(Constants.statusCheckTimer)
 async def checkOnlineTime() -> None:
+    db = Database()
     online = StaticMethods.checkOnline()
     if online and globals.online != online:
         print("time online starts now")
-        globals.onTime = time.time()
-        globals.offTime = 0
+        db.setStreamLastOnline(time.time())
         globals.online = online
     elif not online and globals.online != online:
         print("offline time starts now")
         globals.online = online
-        globals.offTime = time.time()
-        globals.totalOnTime = globals.totalOnTime + (globals.offTime - globals.onTime)
-        globals.onTime = 0
-    elif globals.offTime == 0:
-        globals.offTime = time.time()
+        db.setStreamLastOffline(time.time())
+        lastOnline,lastOffline,lastTotalStreamLength = db.getStreamTableValues()
+        newTotalStreamLength = lastTotalStreamLength + (lastOffline -  lastOnline)
+        db.setStreamLastStreamLength(newTotalStreamLength)
     print("\n")
 
 @component.with_schedule

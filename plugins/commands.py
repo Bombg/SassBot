@@ -20,6 +20,8 @@ async def whats_my_id(ctx: tanjun.abc.Context) -> None:
 @component.with_slash_command
 @tanjun.as_slash_command("stream-status", "Find out what cass is currently doing", default_to_ephemeral=True)
 async def streamStatus(ctx: tanjun.abc.Context) -> None:
+    db = Database()
+    lastOnline,lastOffline,totalStreamTime = db.getStreamTableValues()
     streamingOn = ""
     if globals.chaturFalse <= 0:
         streamingOn = streamingOn + "Chaturbate, "
@@ -38,13 +40,16 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
     else:
         await ctx.respond("Cass is currently streaming on: \n " + streamingOn + "\n Links: https://linktr.ee/kitty_cass_")
     if globals.online:
-        asyncResult = pool.apply_async(StaticMethods.timeToHoursMinutes,(globals.onTime,))
+        asyncResult = pool.apply_async(StaticMethods.timeToHoursMinutes,(lastOnline,))
         hours, minutes = asyncResult.get()
         await ctx.respond("Cass has been online for H:" + str(hours) + " M:" + str(minutes))
     else:
-        asyncResult = pool.apply_async(StaticMethods.timeToHoursMinutes,(globals.offTime,))
+        asyncResult = pool.apply_async(StaticMethods.timeToHoursMinutes,(lastOffline,))
         hours, minutes = asyncResult.get()
-        await ctx.respond("Cass has been offline for H:" + str(hours) + " M:" + str(minutes)) 
+        await ctx.respond("Cass has been offline for H:" + str(hours) + " M:" + str(minutes))
+    tHours, tMinutes = StaticMethods.timeToHoursMinutesTotalTime(totalStreamTime)
+    date = datetime.fromtimestamp(1684210200)
+    await ctx.respond("Cass has streamed a grand total of H:" + str(tHours) + " M:" + str(tMinutes) + " since records have been kept starting on " + str(date)) 
 
 @component.with_slash_command
 @tanjun.with_int_slash_option("epocstart", "The epoc time in seconds when the subathon started", default=0)

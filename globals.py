@@ -12,9 +12,6 @@ kittiesKickFalse = WAIT_BETWEEN_MESSAGES
 
 globalPlayString = ""
 online = False
-offTime = 0
-onTime = 0
-totalOnTime = 0
 normalAvtar = False
 
 botStartTime = time.time()

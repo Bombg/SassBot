@@ -85,3 +85,36 @@ class Database:
         conn.commit()
         cur.close()
         conn.close()
+    
+    def getStreamTableValues(self):
+        conn,cur = self.connectCursor()
+        exeString = f'''SELECT last_online,last_offline,last_stream_length FROM stream'''
+        cur.execute(exeString)
+        value = cur.fetchall()
+        cur.close()
+        conn.close()
+        return value[0][0],value[0][1],value[0][2]
+    
+    def setStreamLastOnline(self,lastOnline):
+        conn,cur = self.connectCursor()
+        exeString = f'''UPDATE stream SET last_online={lastOnline} '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def setStreamLastOffline(self,lastOffline):
+        conn,cur = self.connectCursor()
+        exeString = f'''UPDATE stream SET last_offline={lastOffline} '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def setStreamLastStreamLength(self,lastStreamLength):
+        conn,cur = self.connectCursor()
+        exeString = f'''UPDATE stream SET last_stream_length={lastStreamLength} '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
