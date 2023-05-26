@@ -335,8 +335,10 @@ async def checkOnlineTime() -> None:
 @component.with_schedule
 @tanjun.as_interval(Constants.restartCheckTimer)
 async def checkRestart() -> None:
+    db = Database()
+    onTime,offTime,totalTime = db.getStreamTableValues()
     timeSinceRestart = time.time() - globals.botStartTime
-    timeSinceOffline = time.time() - globals.offTime
+    timeSinceOffline = time.time() - offTime
     if not globals.online and timeSinceRestart > Constants.TIME_BEFORE_BOT_RESTART and timeSinceOffline > Constants.TIME_BEFORE_BOT_RESTART:
         StaticMethods.safeRebootServer()
     else:
