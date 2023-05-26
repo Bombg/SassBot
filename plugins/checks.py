@@ -13,6 +13,7 @@ import globals
 import time
 import StaticMethods
 from Notifications import Notifications
+from Database import Database
 
 
 
@@ -29,23 +30,27 @@ async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     chaturbate = ChaturCas(Constants.casChatApiUrl)
     task = asyncio.create_task(chaturbate.isCassOnline())
     isOnline = await task
-    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.chaturLastOnlineMessage)
+    db = Database()
+    chaturLastOnlineMessage = db.getTableRowCol("platforms","chaturbate","last_online_message")
+    secondsSinceLastMessage = StaticMethods.timeToSeconds(chaturLastOnlineMessage)
     if isOnline:
         if globals.chaturFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("ChaturBoobies")
             await Notifications.ChaturNotification(rest)
-            globals.chaturStreamStartTime = time.time()
+            db.updateTableRowCol("platforms","chaturbate","last_stream_start_time",time.time())
             globals.chaturFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongChaturBoobies")
             await Notifications.ChaturNotification(rest)
-        secondsSinceStreamstart = StaticMethods.timeToSeconds(globals.chaturStreamStartTime)
+        chaturStreamStartTime = db.getTableRowCol("platforms","chaturbate","last_stream_start_time")
+        secondsSinceStreamstart = StaticMethods.timeToSeconds(chaturStreamStartTime)
         globals.chaturFalse = -1 * secondsSinceStreamstart
     else:
         if globals.chaturFalse < 0:
-            globals.chaturStreamEndTime = time.time()
+            db.updateTableRowCol("platforms","chaturbate","last_stream_end_time",time.time())
             globals.chaturFalse = 0
-        secondsSinceStreamEnd = StaticMethods.timeToSeconds(globals.chaturStreamEndTime)
+        chaturStreamEndTime = db.getTableRowCol("platforms","chaturbate","last_stream_end_time")
+        secondsSinceStreamEnd = StaticMethods.timeToSeconds(chaturStreamEndTime)
         globals.chaturFalse = secondsSinceStreamEnd
     if Constants.DEBUG:
         print("ChaturbateOffline: " + str(globals.chaturFalse))
@@ -57,23 +62,27 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
     onlyFans = OnlyCas(Constants.casOnlyUrl)
     task = asyncio.create_task(onlyFans.isCassOnline())
     isOnline = await task
-    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.onlyLastOnlineMessage)
+    db = Database()
+    onlyLastOnlineMessage = db.getTableRowCol("platforms","onlyfans","last_online_message")
+    secondsSinceLastMessage = StaticMethods.timeToSeconds(onlyLastOnlineMessage)
     if isOnline:
         if globals.onlyFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("OnlyBoobies")
             await Notifications.OFNotification(rest)
-            globals.onlyStreamStartTime = time.time()
+            db.updateTableRowCol("platforms","onlyfans","last_stream_start_time",time.time())
             globals.onlyFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongOnlyBoobies")
             await Notifications.OFNotification(rest)
-        secondsSinceStreamStart = StaticMethods.timeToSeconds(globals.onlyStreamStartTime)
+        onlyStreamStartTime = db.getTableRowCol("platforms","onlyfans","last_stream_start_time")
+        secondsSinceStreamStart = StaticMethods.timeToSeconds(onlyStreamStartTime)
         globals.onlyFalse = -1 * secondsSinceStreamStart
     else:
         if globals.onlyFalse < 0:
-            globals.onlyStreamEndTime = time.time()
+            db.updateTableRowCol("platforms","onlyfans","last_stream_end_time",time.time())
             globals.onlyFalse = 0
-        secondsSinceStreamEnd = StaticMethods.timeToSeconds(globals.onlyStreamEndTime)
+        onlyStreamEndTime = db.getTableRowCol("platforms","onlyfans","last_stream_end_time")
+        secondsSinceStreamEnd = StaticMethods.timeToSeconds(onlyStreamEndTime)
         globals.onlyFalse = secondsSinceStreamEnd
     if Constants.DEBUG:
         print("OnlyFansOffline: " + str(globals.onlyFalse))
@@ -85,23 +94,27 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
     fans = FansCas(Constants.casFansUrl)
     task = asyncio.create_task(fans.isCassOnline())
     isOnline = await task
-    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.fansLastOnlineMessage)
+    db = Database()
+    fansLastOnlineMessage = db.getTableRowCol("platforms","fansly","last_online_message")
+    secondsSinceLastMessage = StaticMethods.timeToSeconds(fansLastOnlineMessage)
     if isOnline:
         if globals.fansFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("FansBoobies")
             await Notifications.FansNotification(rest)
-            globals.fansStreamStartTime = time.time()
+            db.updateTableRowCol("platforms","fansly","last_stream_start_time",time.time())
             globals.fansFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongFansBoobies")
             await Notifications.FansNotification(rest)
-        secondsSinceStreamStart = StaticMethods.timeToSeconds(globals.fansStreamStartTime)
+        fansStreamStartTime = db.getTableRowCol("platforms","fansly","last_stream_start_time")
+        secondsSinceStreamStart = StaticMethods.timeToSeconds(fansStreamStartTime)
         globals.fansFalse = -1 * secondsSinceStreamStart
     else:
         if globals.fansFalse < 0:
-            globals.fansStreamEndTime = time.time()
+            db.updateTableRowCol("platforms","fansly","last_stream_end_time",time.time())
             globals.fansFalse = 0
-        secondsSinceStreamEnd = StaticMethods.timeToSeconds(globals.fansStreamEndTime)
+        fansStreamEndTime = db.getTableRowCol("platforms","fansly","last_stream_end_time")
+        secondsSinceStreamEnd = StaticMethods.timeToSeconds(fansStreamEndTime)
         globals.fansFalse = secondsSinceStreamEnd
     if Constants.DEBUG:
         print("FanslyOffline: " + str(globals.fansFalse))
@@ -112,23 +125,27 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
 async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     twitch = TwitchCas(Constants.casTwitchChannelName)
     isOnline = twitch.isCassOnline()
-    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.twitchLastOnlineMessage)
+    db = Database()
+    twitchLastOnlineMessage = db.getTableRowCol("platforms","twitch","last_online_message")
+    secondsSinceLastMessage = StaticMethods.timeToSeconds(twitchLastOnlineMessage)
     if isOnline:
         if globals.twitchFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("TwitchBoobies")
             await Notifications.TwitchNotification(rest)
-            globals.twitchStreamStartTime = time.time()
+            db.updateTableRowCol("platforms","twitch","last_stream_start_time",time.time())
             globals.twitchFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongTwitchBoobies")
             await Notifications.TwitchNotification(rest)
-        secondsSinceStreamStart = StaticMethods.timeToSeconds(globals.twitchStreamStartTime)
+        twitchStreamStartTime = db.getTableRowCol("platforms","twitch","last_stream_start_time")
+        secondsSinceStreamStart = StaticMethods.timeToSeconds(twitchStreamStartTime)
         globals.twitchFalse = -1 * secondsSinceStreamStart
     else:
         if globals.twitchFalse < 0:
-            globals.twitchStreamEndTime = time.time()
+            db.updateTableRowCol("platforms","twitch","last_stream_end_time",time.time())
             globals.twitchFalse = 0
-        secondsSinceStreamEnd = StaticMethods.timeToSeconds(globals.twitchStreamEndTime)
+        twitchStreamEndTime = db.getTableRowCol("platforms","twitch","last_stream_end_time")
+        secondsSinceStreamEnd = StaticMethods.timeToSeconds(twitchStreamEndTime)
         globals.twitchFalse = secondsSinceStreamEnd
     if Constants.DEBUG:
         print("TwitchOffline: " + str(globals.twitchFalse))
@@ -139,23 +156,27 @@ async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
 async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     youTube = YouCas(Constants.casYtUrl)
     isOnline = youTube.isCassOnline()
-    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.ytLastOnlineMessage)
+    db = Database()
+    ytLastOnlineMessage = db.getTableRowCol("platforms","youtube","last_online_message")
+    secondsSinceLastMessage = StaticMethods.timeToSeconds(ytLastOnlineMessage)
     if isOnline:
         if globals.ytFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("YTBoobies")
             await Notifications.YTNotification(rest)
-            globals.ytStreamStartTime = time.time()
+            db.updateTableRowCol("platforms","youtube","last_stream_start_time",time.time())
             globals.ytFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongYTBoobies")
             await Notifications.YTNotification(rest)
-        secondsSinceStreamStartTime = StaticMethods.timeToSeconds(globals.ytStreamStartTime)
+        ytStreamStartTime = db.getTableRowCol("platforms","youtube","last_stream_start_time")
+        secondsSinceStreamStartTime = StaticMethods.timeToSeconds(ytStreamStartTime)
         globals.ytFalse = -1 * secondsSinceStreamStartTime
     else:
         if globals.ytFalse < 0:
-            globals.ytStreamEndTime = time.time()
+            db.updateTableRowCol("platforms","youtube","last_stream_end_time",time.time())
             globals.ytFalse = 0
-        secondsSinceStreamEndTime = StaticMethods.timeToSeconds(globals.ytStreamEndTime)
+        ytStreamEndTime = db.getTableRowCol("platforms","youtube","last_stream_end_time")
+        secondsSinceStreamEndTime = StaticMethods.timeToSeconds(ytStreamEndTime)
         globals.ytFalse = secondsSinceStreamEndTime
     if Constants.DEBUG:
         print("YTOffline:" + str(globals.ytFalse))
@@ -167,7 +188,9 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     kick = KickCass(Constants.casKickUrl)
     task = asyncio.create_task(kick.isCassOnline())
     isOnline, title = await task
-    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.kickLastOnlineMessage)
+    db = Database()
+    kickLastOnlineMessage = db.getTableRowCol("platforms","kick","last_online_message")
+    secondsSinceLastMessage = StaticMethods.timeToSeconds(kickLastOnlineMessage)
     if isOnline == 3:
         # do nothing
         print("Kick check failed cause bot detection")
@@ -175,18 +198,20 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
         if globals.kickFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("KickBoobies")
             await Notifications.KickNotification(rest, title)
-            globals.kickStreamStartTime = time.time()
+            db.updateTableRowCol("platforms","kick","last_stream_start_time",time.time())
             globals.kickFalse = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongKickBoobies")
             await Notifications.KickNotification(rest, title)
-        secondsSinceStreamStartTime = StaticMethods.timeToSeconds(globals.kickStreamStartTime)
+        kickStreamStartTime = db.getTableRowCol("platforms","kick","last_stream_start_time")
+        secondsSinceStreamStartTime = StaticMethods.timeToSeconds(kickStreamStartTime)
         globals.kickFalse = -1 * secondsSinceStreamStartTime
     elif isOnline == False:
         if globals.kickFalse < 0:
-            globals.kickStreamEndTime = time.time()
+            db.updateTableRowCol("platforms","kick","last_stream_end_time",time.time())
             globals.kickFalse = 0
-        secondsSinceStreamEndTime = StaticMethods.timeToSeconds(globals.kickStreamEndTime)
+        kickStreamEndTime = db.getTableRowCol("platforms","kick","last_stream_end_time")
+        secondsSinceStreamEndTime = StaticMethods.timeToSeconds(kickStreamEndTime)
         globals.kickFalse = secondsSinceStreamEndTime
     if Constants.DEBUG:
         print("KickOffline: " + str(globals.kickFalse))
@@ -198,28 +223,30 @@ async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) ->
     kick = KickCass(Constants.kittiesKickUrl)
     task = asyncio.create_task(kick.isCassOnline())
     isOnline, title = await task
-    secondsSinceLastMessage = StaticMethods.timeToSeconds(globals.kittiesKickLastOnlineMessage)
+    db = Database()
+    kittiesKickLastOnlineMessage = db.getTableRowCol("platforms","kittiesKick","last_online_message")
+    secondsSinceLastMessage = StaticMethods.timeToSeconds(kittiesKickLastOnlineMessage)
     if isOnline == 3:
         # do nothing
         print("Kick check failed cause bot detection")
     elif isOnline == True:
         if globals.kittiesKickFalse >= Constants.WAIT_BETWEEN_MESSAGES:
             print("KickKitties")
-            globals.kittiesStreamStartTime = time.time()
+            db.updateTableRowCol("platforms","kittiesKick","last_stream_start_time",time.time())
             globals.kittiesKickFalse = 0
-            globals.kittiesKickLastOnlineMessage = time.time()
-            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.kittiesKickOnlineText)
+            await Notifications.KittiesKickNotification(rest, title)
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
             print("LongKickKitties")
-            globals.kittiesKickLastOnlineMessage = time.time()
-            await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.kittiesKickOnlineText)
-        secondsSinceStreamStartTime = StaticMethods.timeToSeconds(globals.kittiesStreamStartTime)
+            await Notifications.KittiesKickNotification(rest, title)
+        kittiesStreamStartTime = db.getTableRowCol("platforms","kittiesKick","last_stream_start_time")
+        secondsSinceStreamStartTime = StaticMethods.timeToSeconds(kittiesStreamStartTime)
         globals.kittiesKickFalse = -1 * secondsSinceStreamStartTime
     elif isOnline == False:
         if globals.kittiesKickFalse < 0:
-            globals.kittiesStreamEndTime = time.time()
+            db.updateTableRowCol("platforms","kittiesKick","last_stream_end_time",time.time())
             globals.kittiesKickFalse = 0
-        secondsSinceStreamEndTime = StaticMethods.timeToSeconds(globals.kittiesStreamEndTime)
+        kittiesStreamEndTime = db.getTableRowCol("platforms","kittiesKick","last_stream_end_time")
+        secondsSinceStreamEndTime = StaticMethods.timeToSeconds(kittiesStreamEndTime)
         globals.kittiesKickFalse = secondsSinceStreamEndTime
     if Constants.DEBUG:
         print("KittiesKickOffline: " + str(globals.kittiesKickFalse))
