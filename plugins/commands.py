@@ -6,11 +6,11 @@ import time
 from Constants import Constants
 from Database import Database
 from datetime import datetime
+from decorators.Permissions import Permissions
 
 nl = "\n"
 component = tanjun.Component()
 pool = ThreadPool(processes=3)
-
 
 @component.with_slash_command
 @tanjun.as_slash_command("whats-my-id", "Find out what your User ID is!", default_to_ephemeral=True)
@@ -50,24 +50,25 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
 @component.with_slash_command
 @tanjun.with_int_slash_option("epocstart", "The epoc time in seconds when the subathon started", default=0)
 @tanjun.as_slash_command("subathon-start", "Start a subathon timer", default_to_ephemeral=True)
+@Permissions(Constants.whiteListedRoleIDs)
 async def subathon_start(ctx: tanjun.abc.SlashContext, epocstart: int) -> None:
     db = Database()
     sub = db.getSubathonStatus()
     subathon = sub[0]
-    if ctx.author.id in Constants.whiteListedIds and not subathon:
-        await ctx.respond("Subathon timer has been set to epoc time " + str(epocstart))
+    date = datetime.fromtimestamp(epocstart)
+    if not subathon:
+        await ctx.respond("Subathon timer has been set; starting at " + str(date))
         db.startSubathon(epocstart)
-    elif not ctx.author.id in Constants.whiteListedIds:
-        await ctx.respond("You aren't white listed for that")
     else:
         await ctx.respond("There's a subathon already running")
 
 @component.with_slash_command
 @tanjun.as_slash_command("subathon-end", "End a subathon timer", default_to_ephemeral=True)
+@Permissions(Constants.whiteListedRoleIDs)
 async def subathon_end(ctx: tanjun.abc.Context)-> None:
     db = Database()
     subathon,subStart,subEndDontUse = db.getSubathonStatusClean()
-    if ctx.author.id in Constants.whiteListedIds and subathon:
+    if subathon:
         await ctx.respond("Subathon timer has ended")
         subEnd = time.time()
         db.endSubathon(subEnd)
@@ -75,8 +76,6 @@ async def subathon_end(ctx: tanjun.abc.Context)-> None:
         currentSubLength = subEnd - subStart
         if currentSubLength > longestSubLength:
             db.setLongestSubathon(currentSubLength,subStart)
-    elif not ctx.author.id in Constants.whiteListedIds:
-        await ctx.respond("You aren't white listed for that")
     else:
         await ctx.respond("There isn't a subathon to end")
 
@@ -98,13 +97,10 @@ async def subathon(ctx: tanjun.abc.Context)-> None:
 
 @component.with_slash_command
 @tanjun.as_slash_command("reboot", "reboot the bot and its server", default_to_ephemeral=True)
+@Permissions(Constants.whiteListedRoleIDs)
 async def rebootServer(ctx: tanjun.abc.Context)-> None:
-    if ctx.author.id in Constants.whiteListedIds:
-        await ctx.respond("rebooting the server")
-        StaticMethods.rebootServer()
-    elif not ctx.author.id in Constants.whiteListedIds:
-        await ctx.respond("You aren't white listed for that")
-
+    await ctx.respond("rebooting the server")
+    StaticMethods.rebootServer()
 
 @tanjun.as_loader
 def load(client: tanjun.abc.Client) -> None:

@@ -5,9 +5,11 @@ class Constants:
     if TEST_SERVER:
         GUILD_ID =313876691082674178 #Guild ID of the discord server
         STDOUT_CHANNEL_ID =1096895456694505532 # Channel ID the bot will post notifications to
+        whiteListedRoleIDs = [1096930045685145710]
     else:
         GUILD_ID =852965953309376582 #Guild ID of the discord server
         STDOUT_CHANNEL_ID =1074419703533015101 # Channel ID the bot will post notifications to
+        whiteListedRoleIDs = [852971722424188940,852972290806906920,1045451879901057107]
 
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
@@ -45,4 +47,4 @@ class Constants:
     statusCheckTimer = 125
     restartCheckTimer = 300
 
-    whiteListedIds = [145802742647095296,427890651510603778,966474683379744849,485741419303010325,278312496131997700,338783926933913602,1069673585884541058,306368812054216704]
+    
