@@ -6,7 +6,7 @@ import time
 
 class Notifications:
     async def OFNotification(rest):
-        embedMaker = EmbedCreator("Cass is live on Onlyfans!", "Naughty time? =)", Constants.OfLiveStreamUrl, 'images/OFImage.jpg', Constants.ofEmbedColor)
+        embedMaker = EmbedCreator(Constants.streamerName + " is live on Onlyfans!", "Naughty time? =)", Constants.OfLiveStreamUrl, 'images/OFImage.jpg', Constants.ofEmbedColor)
         task = asyncio.create_task(embedMaker.getEmbed())
         ofEmbed = await task
         db = Database()
@@ -19,7 +19,7 @@ class Notifications:
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.chaturOnlineText)
 
     async def FansNotification(rest):
-        embedMaker = EmbedCreator("Cass is live on Fansly!", "Naughty Sleep Stream? =)", Constants.fansLiveStreamUrl, 'images/FansImage.png', Constants.fansEmbedColor)
+        embedMaker = EmbedCreator(Constants.streamerName + " is live on Fansly!", "Naughty Sleep Stream? =)", Constants.fansLiveStreamUrl, 'images/FansImage.png', Constants.fansEmbedColor)
         task = asyncio.create_task(embedMaker.getEmbed())
         fansEmbed = await task
         db = Database()
@@ -37,7 +37,7 @@ class Notifications:
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = Constants.ytOnlineText)
     
     async def KickNotification(rest, title):
-        embedMaker = EmbedCreator("Cass is live on Kick!", title, Constants.casKickUrl, 'images/KickImage.png', Constants.kickEmbedColor)
+        embedMaker = EmbedCreator(Constants.streamerName + " is live on Kick!", title, Constants.casKickUrl, 'images/KickImage.png', Constants.kickEmbedColor)
         task = asyncio.create_task(embedMaker.getEmbed())
         kickEmbed = await task
         db = Database()

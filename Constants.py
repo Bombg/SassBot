@@ -25,15 +25,21 @@ class Constants:
     casChatApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs" #affiliate api link to see online users in cb
     casTwitchChannelName = 'kitty_goes_mreow' #twitch name, not url
 
+    cbLiveStreamUrl = "https://chaturbate.com/badkittycass/"
     OfLiveStreamUrl = "https://onlyfans.com/badkittycass/live"
     fansLiveStreamUrl = "https://fansly.com/live/BadKittyCass"
+    twitchLiveStreamUrl = "https://www.twitch.tv/kitty_goes_mreow"
+    ytLiveStreamUrl = "https://www.youtube.com/@kitty_cass_/live"
+    kickLiveStreamUrl = "https://kick.com/kittycass"
 
-    chaturOnlineText = "Cass is live on Chaturbate!\nhttps://chaturbate.com/badkittycass/"
-    ofOnlineText = "Cass is live on Onlyfans!\nhttps://onlyfans.com/badkittycass/live"
-    fansOnlineText = "Cass is live on Fansly!\nhttps://fansly.com/live/BadKittyCass"
-    twitchOnlineText = "Cass is live on Twitch!\nhttps://www.twitch.tv/kitty_goes_mreow"
-    ytOnlineText = "Cass is live on YouTube!\nhttps://www.youtube.com/@kitty_cass_/live"
-    kickOnlineText = "Cass is live on Kick!\nhttps://kick.com/kittycass"
+    streamerName = "Cass"
+
+    chaturOnlineText = streamerName + " is live on Chaturbate!\n" + cbLiveStreamUrl
+    ofOnlineText = streamerName + " is live on Onlyfans!\n" + OfLiveStreamUrl
+    fansOnlineText = streamerName + " is live on Fansly!\n" + fansLiveStreamUrl
+    twitchOnlineText = streamerName + " is live on Twitch!\n" + twitchLiveStreamUrl
+    ytOnlineText = streamerName + " is live on YouTube!\n" + ytLiveStreamUrl
+    kickOnlineText = streamerName + " is live on Kick!\n" + kickLiveStreamUrl
     kittiesKickOnlineText = "Cass' Kitties are live on Kick!\nhttps://kick.com/casskitties"
 
     kickEmbedColor = "#52fb19"
@@ -41,6 +47,7 @@ class Constants:
     ofEmbedColor = "#018ccf"
 
     twitterUrl = 'https://twitter.com/_kitty_cass_'
+    linkTreeUrl = "https://linktr.ee/kitty_cass_"
 
     onlineCheckTimer = 120 #Wait time in seconds between checks
     avatarCheckTimer = 130

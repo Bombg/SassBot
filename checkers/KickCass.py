@@ -1,6 +1,7 @@
 import asyncio
 from selenium.webdriver.common.by import By
 from SeleniumDriverCreator import SeleniumDriverCreator
+from Constants import Constants
 
 class KickCass:
     def __init__(self,kickUrl):
@@ -9,7 +10,7 @@ class KickCass:
         driverCreator = SeleniumDriverCreator()
         driver = driverCreator.createDriver()
         isOnline = False
-        title = "Cass is live on Kick!"
+        title = Constants.streamerName + " is live on Kick!"
         offlineOwnerAvatar = []
         driver.get(self.CAS_KICK_URL)
         await asyncio.sleep(5)

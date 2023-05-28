@@ -18,7 +18,7 @@ async def whats_my_id(ctx: tanjun.abc.Context) -> None:
     await ctx.respond(f"Hi {ctx.author.mention}! {nl} Your User ID is: ```{ctx.author.id}```")
 
 @component.with_slash_command
-@tanjun.as_slash_command("stream-status", "Find out what cass is currently doing", default_to_ephemeral=True)
+@tanjun.as_slash_command("stream-status", "Find out what " +Constants.streamerName + " is currently doing", default_to_ephemeral=True)
 async def streamStatus(ctx: tanjun.abc.Context) -> None:
     db = Database()
     lastOnline,lastOffline,totalStreamTime = db.getStreamTableValues()
@@ -38,14 +38,14 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
     if streamingOn == "":
         asyncResult = pool.apply_async(StaticMethods.timeToHoursMinutes,(lastOffline,))
         hours, minutes = asyncResult.get()
-        await ctx.respond("Cass isn't currently streaming and has been offline for H:" + str(hours) + " M:" + str(minutes) + ", but check out her offline content! \n Links: https://linktr.ee/kitty_cass_")
+        await ctx.respond(Constants.streamerName + " isn't currently streaming and has been offline for H:" + str(hours) + " M:" + str(minutes) + ", but check out her offline content! \n Links: "+ Constants.linkTreeUrl)
     else:
         asyncResult = pool.apply_async(StaticMethods.timeToHoursMinutes,(lastOnline,))
         hours, minutes = asyncResult.get()
-        await ctx.respond("Cass is currently streaming on: \n " + streamingOn + " and has been online for" + str(hours) + " M:" + str(minutes) + "\n Links: https://linktr.ee/kitty_cass_")
+        await ctx.respond(Constants.streamerName + " is currently streaming on: \n " + streamingOn + " and has been online for" + str(hours) + " M:" + str(minutes) + "\n Links: " + Constants.linkTreeUrl)
     tHours, tMinutes = StaticMethods.timeToHoursMinutesTotalTime(totalStreamTime)
     date = datetime.fromtimestamp(1684210200)
-    await ctx.respond("Cass has streamed a grand total of H:" + str(tHours) + " M:" + str(tMinutes) + " since records have been kept starting on " + str(date)) 
+    await ctx.respond(Constants.streamerName + " has streamed a grand total of H:" + str(tHours) + " M:" + str(tMinutes) + " since records have been kept starting on " + str(date)) 
 
 @component.with_slash_command
 @tanjun.with_int_slash_option("epocstart", "The epoc time in seconds when the subathon started", default=0)
