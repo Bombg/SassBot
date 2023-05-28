@@ -1,3 +1,5 @@
+#SQL db
+*.db
 #secret stuff
 secrets/
 token
