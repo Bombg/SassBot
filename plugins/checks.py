@@ -288,7 +288,7 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
             url = "https://www.twitch.tv/kitty_cass_"
             ))
         await asyncio.sleep(5)
-    else:
+    elif Constants.DEBUG:
         print("No change in status")
         print("Online: " + str(online))
         print("chaturFalse: " + str(globals.chaturFalse))
