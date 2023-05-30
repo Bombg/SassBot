@@ -1,5 +1,6 @@
 import sqlite3
 import json
+import time
 
 class Database:
     def __init__(self):
@@ -160,4 +161,7 @@ class Database:
 
 db = Database()
 values = db.getStreamTableValues()
+print(values)
+print("testing updating db")
+db.updateTableRowCol("platforms","kittiesKick","last_stream_end_time",time.time())
 
