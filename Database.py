@@ -158,3 +158,12 @@ class Database:
         conn.commit()
         cur.close()
         conn.close()
+
+    def getPlatformsRowValues(self, platformName):
+        conn,cur = self.connectCursor()
+        exeString = f'''SELECT last_online_message,last_stream_start_time,last_stream_end_time FROM platforms WHERE platform_name='{platformName}' '''
+        cur.execute(exeString)
+        value = cur.fetchall()
+        cur.close()
+        conn.close()
+        return value[0][0],value[0][1],value[0][2]
