@@ -158,13 +158,3 @@ class Database:
         conn.commit()
         cur.close()
         conn.close()
-
-db = Database()
-values = db.getStreamTableValues()
-print(values)
-print("testing updating db")
-kittiesStreamEndTime = db.getTableRowCol("platforms","kittiesKick","last_stream_end_time")
-print(kittiesStreamEndTime)
-db.updateTableRowCol("platforms","kittiesKick","last_stream_end_time",time.time())
-kittiesStreamEndTime = db.getTableRowCol("platforms","kittiesKick","last_stream_end_time")
-print(kittiesStreamEndTime)
