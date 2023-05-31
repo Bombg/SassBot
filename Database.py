@@ -120,31 +120,26 @@ class Database:
         conn.commit()
         cur.close()
         conn.close()
-
-    def getTwImgList(self):
-        conn,cur = self.connectCursor()
-        exeString = f'''SELECT tw_img_list FROM stream'''
-        cur.execute(exeString)
-        value = cur.fetchall()
-        listValue = json.loads(value)
-        cur.close()
-        conn.close()
-        return listValue
     
-    def getTwImgQueue(self):
+    def getTwImgStuff(self):
         conn,cur = self.connectCursor()
-        exeString = f'''SELECT tw_img_queue FROM stream'''
+        exeString = f'''SELECT tw_img_list,tw_img_queue FROM stream'''
         cur.execute(exeString)
         value = cur.fetchall()
-        listValue = json.loads(value)
+        if value[0][0] is None or value[0][1] is None:
+            twImgList = []
+            twImgQue =[]
+        else:
+            twImgList = json.loads(value[0][0])
+            twImgQue = json.loads(value[0][1])
         cur.close()
         conn.close()
-        return listValue
+        return twImgList, twImgQue
     
     def setTwImgList(self,twImgList):
         conn,cur = self.connectCursor()
         twImgListDump = json.dumps(twImgList)
-        exeString = f'''UPDATE stream SET tw_img_list={twImgListDump} '''
+        exeString = f'''UPDATE stream SET tw_img_list='{twImgListDump}' '''
         cur.execute(exeString)
         conn.commit()
         cur.close()
@@ -153,7 +148,7 @@ class Database:
     def setTwImgQueue(self,twImgQueue):
         conn,cur = self.connectCursor()
         twImgQueueDump = json.dumps(twImgQueue)
-        exeString = f'''UPDATE stream SET tw_img_queue={twImgQueueDump} '''
+        exeString = f'''UPDATE stream SET tw_img_queue='{twImgQueueDump}' '''
         cur.execute(exeString)
         conn.commit()
         cur.close()

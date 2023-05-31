@@ -15,6 +15,3 @@ online = False
 normalAvtar = False
 
 botStartTime = time.time()
-
-twitImages = []
-twitCycle = 0
