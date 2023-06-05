@@ -54,4 +54,6 @@ class Constants:
     statusCheckTimer = 125
     restartCheckTimer = 300
 
+    recordKeepingStartDate = 1684210200 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
+
     

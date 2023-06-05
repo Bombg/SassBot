@@ -36,15 +36,18 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
     if globals.kickFalse <= 0:
         streamingOn = streamingOn + "Kick, "
     if streamingOn == "":
-        asyncResult = pool.apply_async(StaticMethods.timeToHoursMinutes,(lastOffline,))
-        hours, minutes = asyncResult.get()
-        await ctx.respond(Constants.streamerName + " isn't currently streaming and has been offline for H:" + str(hours) + " M:" + str(minutes) + ", but check out her offline content! \n Links: "+ Constants.linkTreeUrl)
+        if lastOffline == 0:
+            await ctx.respond(Constants.streamerName + " isn't currently streaming , but check out her offline content! \n Links: "+ Constants.linkTreeUrl)
+        else:
+            asyncResult = pool.apply_async(StaticMethods.timeToHoursMinutes,(lastOffline,))
+            hours, minutes = asyncResult.get()
+            await ctx.respond(Constants.streamerName + " isn't currently streaming and has been offline for H:" + str(hours) + " M:" + str(minutes) + ", but check out her offline content! \n Links: "+ Constants.linkTreeUrl)
     else:
         asyncResult = pool.apply_async(StaticMethods.timeToHoursMinutes,(lastOnline,))
         hours, minutes = asyncResult.get()
         await ctx.respond(Constants.streamerName + " is currently streaming on: \n " + streamingOn + " and has been online for" + str(hours) + " M:" + str(minutes) + "\n Links: " + Constants.linkTreeUrl)
     tHours, tMinutes = StaticMethods.timeToHoursMinutesTotalTime(totalStreamTime)
-    date = datetime.fromtimestamp(1684210200)
+    date = datetime.fromtimestamp(Constants.recordKeepingStartDate)
     await ctx.respond(Constants.streamerName + " has streamed a grand total of H:" + str(tHours) + " M:" + str(tMinutes) + " since records have been kept starting on " + str(date)) 
 
 @component.with_slash_command
@@ -94,6 +97,8 @@ async def subathon(ctx: tanjun.abc.Context)-> None:
         date = datetime.fromtimestamp(longestSubTime)
         await ctx.respond("There currently isn't a subathon running but the last one ran for " + str(hours) + " hours, and " + str(minutes) + " minutes")
         await ctx.respond("The longest subathon ran for "+ str(lHours) + " hours, and " + str(lMinutes) + " minutes on " + str(date))
+    elif subEnd == 0:
+        await ctx.respond("There isn't a subathon running and a subathon hasn't been completed yet")
 
 @component.with_slash_command
 @tanjun.as_slash_command("reboot", "reboot the bot and its server", default_to_ephemeral=True)

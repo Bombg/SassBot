@@ -7,4 +7,5 @@ How to set up the bot:
     To easily get both of these IDs, in discord advanced options turn on developer mode. After that you can right click servers/channels and a new option to copy the IDs will be available
 4. Make sure you have python 3.10 or better installed.
     run command 'pip install -r requirements.txt'
-5. Start the server: 'python3 run.py' or 'python run.py'
+5. Generate the database with 'python GenerateDatabase.py' or 'python3 GenerateDatabase.py'
+6. Start the server: 'python3 run.py' or 'python run.py'
