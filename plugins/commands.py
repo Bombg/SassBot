@@ -7,6 +7,7 @@ from Constants import Constants
 from Database import Database
 from datetime import datetime
 from decorators.Permissions import Permissions
+import hikari
 
 nl = "\n"
 component = tanjun.Component()
@@ -106,6 +107,24 @@ async def subathon(ctx: tanjun.abc.Context)-> None:
 async def rebootServer(ctx: tanjun.abc.Context)-> None:
     await ctx.respond("rebooting the server")
     StaticMethods.rebootServer()
+
+@component.with_slash_command
+@tanjun.as_slash_command("rebroadcast", "Resend online notification to your preset discord channel, assuming the streamer is online.", default_to_ephemeral=True)
+@Permissions(Constants.whiteListedRoleIDs)
+async def rebroadcast(ctx: tanjun.abc.Context) -> None:
+    if globals.chaturFalse <= 0:
+        globals.chaturRebroadcast = True
+    if globals.onlyFalse <= 0:
+        globals.onlyRebradcast = True
+    if globals.fansFalse <= 0:
+        globals.fansRebroadcast = True
+    if globals.ytFalse <= 0:
+        globals.ytRebroadcast = True
+    if globals.twitchFalse <= 0:
+        globals.twitchRebroadcast = True
+    if globals.kickFalse <= 0:
+        globals.kickRebroadcast = True
+    await ctx.respond("Online Notifications should be resent soon, assuming " + Constants.streamerName + " is online.")
 
 @tanjun.as_loader
 def load(client: tanjun.abc.Client) -> None:

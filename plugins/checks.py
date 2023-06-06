@@ -38,9 +38,10 @@ async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
             print("ChaturBoobies")
             await Notifications.ChaturNotification(rest)
             db.updateTableRowCol("platforms","chaturbate","last_stream_start_time",time.time())
-        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
+        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME or globals.chaturRebroadcast:
             print("LongChaturBoobies")
             await Notifications.ChaturNotification(rest)
+            globals.chaturRebroadcast = False
         secondsSinceStreamstart = StaticMethods.timeToSeconds(chaturStreamStartTime)
         globals.chaturFalse = -1 * secondsSinceStreamstart
     else:
@@ -66,9 +67,10 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
             print("OnlyBoobies")
             await Notifications.OFNotification(rest)
             db.updateTableRowCol("platforms","onlyfans","last_stream_start_time",time.time())
-        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
+        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME or globals.onlyRebradcast:
             print("LongOnlyBoobies")
             await Notifications.OFNotification(rest)
+            globals.onlyRebradcast = False
         secondsSinceStreamStart = StaticMethods.timeToSeconds(onlyStreamStartTime)
         globals.onlyFalse = -1 * secondsSinceStreamStart
     else:
@@ -94,9 +96,10 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
             print("FansBoobies")
             await Notifications.FansNotification(rest)
             db.updateTableRowCol("platforms","fansly","last_stream_start_time",time.time())
-        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
+        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME or globals.fansRebroadcast:
             print("LongFansBoobies")
             await Notifications.FansNotification(rest)
+            globals.fansRebroadcast = False
         secondsSinceStreamStart = StaticMethods.timeToSeconds(fansStreamStartTime)
         globals.fansFalse = -1 * secondsSinceStreamStart
     else:
@@ -121,9 +124,10 @@ async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
             print("TwitchBoobies")
             await Notifications.TwitchNotification(rest)
             db.updateTableRowCol("platforms","twitch","last_stream_start_time",time.time())
-        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
+        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME or globals.twitchRebroadcast:
             print("LongTwitchBoobies")
             await Notifications.TwitchNotification(rest)
+            globals.twitchRebroadcast = False
         secondsSinceStreamStart = StaticMethods.timeToSeconds(twitchStreamStartTime)
         globals.twitchFalse = -1 * secondsSinceStreamStart
     else:
@@ -148,9 +152,10 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
             print("YTBoobies")
             await Notifications.YTNotification(rest)
             db.updateTableRowCol("platforms","youtube","last_stream_start_time",time.time())
-        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
+        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME or globals.ytRebroadcast:
             print("LongYTBoobies")
             await Notifications.YTNotification(rest)
+            globals.ytRebroadcast = False
         secondsSinceStreamStartTime = StaticMethods.timeToSeconds(ytStreamStartTime)
         globals.ytFalse = -1 * secondsSinceStreamStartTime
     else:
@@ -179,9 +184,10 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
             print("KickBoobies")
             await Notifications.KickNotification(rest, title)
             db.updateTableRowCol("platforms","kick","last_stream_start_time",time.time())
-        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME:
+        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME or globals.kickRebroadcast:
             print("LongKickBoobies")
             await Notifications.KickNotification(rest, title)
+            globals.kickRebroadcast = False
         secondsSinceStreamStartTime = StaticMethods.timeToSeconds(kickStreamStartTime)
         globals.kickFalse = -1 * secondsSinceStreamStartTime
     elif isOnline == False:

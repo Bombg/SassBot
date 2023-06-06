@@ -15,3 +15,10 @@ online = False
 normalAvtar = False
 
 botStartTime = time.time()
+
+chaturRebroadcast = False
+onlyRebradcast = False
+fansRebroadcast = False
+twitchRebroadcast = False
+ytRebroadcast = False
+kickRebroadcast = False
