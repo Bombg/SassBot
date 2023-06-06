@@ -313,6 +313,6 @@ async def checkRestart() -> None:
     timeSinceOffline = time.time() - offTime
     if not globals.online and timeSinceRestart > Constants.TIME_BEFORE_BOT_RESTART and timeSinceOffline > Constants.TIME_OFFLINE_BEFORE_RESTART:
         StaticMethods.safeRebootServer()
-    else:
+    elif Constants.DEBUG:
         print("TimeSinceRestart: " + str(timeSinceRestart))
         print("TimeSinceOffline: " + str(timeSinceOffline))
