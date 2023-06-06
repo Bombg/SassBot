@@ -46,7 +46,7 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
     else:
         asyncResult = pool.apply_async(StaticMethods.timeToHoursMinutes,(lastOnline,))
         hours, minutes = asyncResult.get()
-        await ctx.respond(Constants.streamerName + " is currently streaming on: \n " + streamingOn + " and has been online for" + str(hours) + " M:" + str(minutes) + "\n Links: " + Constants.linkTreeUrl)
+        await ctx.respond(Constants.streamerName + " is currently streaming on: \n " + streamingOn + " and has been online for H:" + str(hours) + " M:" + str(minutes) + "\n Links: " + Constants.linkTreeUrl)
     tHours, tMinutes = StaticMethods.timeToHoursMinutesTotalTime(totalStreamTime)
     date = datetime.fromtimestamp(Constants.recordKeepingStartDate)
     await ctx.respond(Constants.streamerName + " has streamed a grand total of H:" + str(tHours) + " M:" + str(tMinutes) + " since records have been kept starting on " + str(date)) 
