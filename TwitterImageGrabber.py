@@ -33,6 +33,17 @@ class TwitterImageGrabber:
     def getTwImgDb(self, images):
         db = Database()
         twImgList, twImgQue = db.getTwImgStuff()
+        if twImgList:
+            print("TwImglist:")
+            print(twImgList)
+            print("\n")
+        if twImgQue:
+            print("TwimgQue:")
+            print(twImgQue)
+            print("\n")
+        else:
+            print("twimgQue: Empty")
+            print("\n")
         if not twImgList:
             db.setTwImgList(images)
             db.setTwImgQueue(images)
