@@ -311,7 +311,7 @@ async def checkRestart() -> None:
     onTime,offTime,totalTime = db.getStreamTableValues()
     timeSinceRestart = time.time() - globals.botStartTime
     timeSinceOffline = time.time() - offTime
-    if not globals.online and timeSinceRestart > Constants.TIME_BEFORE_BOT_RESTART and timeSinceOffline > Constants.TIME_BEFORE_BOT_RESTART:
+    if not globals.online and timeSinceRestart > Constants.TIME_BEFORE_BOT_RESTART and timeSinceOffline > Constants.TIME_OFFLINE_BEFORE_RESTART:
         StaticMethods.safeRebootServer()
     else:
         print("TimeSinceRestart: " + str(timeSinceRestart))
