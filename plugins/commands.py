@@ -7,7 +7,7 @@ from Constants import Constants
 from Database import Database
 from datetime import datetime
 from decorators.Permissions import Permissions
-import hikari
+from decorators.CommandLogger import CommandLogger
 
 nl = "\n"
 component = tanjun.Component()
@@ -20,6 +20,7 @@ async def whats_my_id(ctx: tanjun.abc.Context) -> None:
 
 @component.with_slash_command
 @tanjun.as_slash_command("stream-status", "Find out what " +Constants.streamerName + " is currently doing", default_to_ephemeral=True)
+@CommandLogger
 async def streamStatus(ctx: tanjun.abc.Context) -> None:
     db = Database()
     lastOnline,lastOffline,totalStreamTime = db.getStreamTableValues()
@@ -55,6 +56,7 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
 @tanjun.with_int_slash_option("epocstart", "The epoc time in seconds when the subathon started", default=0)
 @tanjun.as_slash_command("subathon-start", "Start a subathon timer", default_to_ephemeral=True)
 @Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
 async def subathon_start(ctx: tanjun.abc.SlashContext, epocstart: int) -> None:
     db = Database()
     sub = db.getSubathonStatus()
@@ -69,6 +71,7 @@ async def subathon_start(ctx: tanjun.abc.SlashContext, epocstart: int) -> None:
 @component.with_slash_command
 @tanjun.as_slash_command("subathon-end", "End a subathon timer", default_to_ephemeral=True)
 @Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
 async def subathon_end(ctx: tanjun.abc.Context)-> None:
     db = Database()
     subathon,subStart,subEndDontUse = db.getSubathonStatusClean()
@@ -85,6 +88,7 @@ async def subathon_end(ctx: tanjun.abc.Context)-> None:
 
 @component.with_slash_command
 @tanjun.as_slash_command("subathon", "See subathon status and time online", default_to_ephemeral=True)
+@CommandLogger
 async def subathon(ctx: tanjun.abc.Context)-> None:
     db = Database()
     subathon,subStart,subEnd = db.getSubathonStatusClean()
@@ -104,6 +108,7 @@ async def subathon(ctx: tanjun.abc.Context)-> None:
 @component.with_slash_command
 @tanjun.as_slash_command("reboot", "reboot the bot and its server", default_to_ephemeral=True)
 @Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
 async def rebootServer(ctx: tanjun.abc.Context)-> None:
     await ctx.respond("rebooting the server")
     StaticMethods.rebootServer()
@@ -111,6 +116,7 @@ async def rebootServer(ctx: tanjun.abc.Context)-> None:
 @component.with_slash_command
 @tanjun.as_slash_command("rebroadcast", "Resend online notification to your preset discord channel, assuming the streamer is online.", default_to_ephemeral=True)
 @Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
 async def rebroadcast(ctx: tanjun.abc.Context) -> None:
     if globals.chaturFalse <= 0:
         globals.chaturRebroadcast = True
