@@ -23,6 +23,7 @@ class Constants:
     casOnlyUrl = "https://onlyfans.com/badkittycass"
     casYtUrl = "https://www.youtube.com/@kitty_cass_/live"
     casChatApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs" #affiliate api link to see online users in cb
+    cbUserName = 'badkittycass'
     casTwitchChannelName = 'kitty_goes_mreow' #twitch name, not url
 
     cbLiveStreamUrl = "https://chaturbate.com/badkittycass/"

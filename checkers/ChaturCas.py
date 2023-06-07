@@ -1,6 +1,7 @@
 import asyncio
 from selenium.webdriver.common.by import By
 import requests
+from Constants import Constants
 
 class ChaturCas:
     def __init__(self, chaturApiUrl):
@@ -13,7 +14,7 @@ class ChaturCas:
         results = onlineModels.json()["results"]
         for result in results:
             #print(result['username'])
-            if result['username'] == 'badkittycass':
+            if result['username'] == Constants.cbUserName:
                 isOnline = True
 
         return isOnline
