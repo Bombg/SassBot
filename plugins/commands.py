@@ -9,14 +9,49 @@ from datetime import datetime
 from decorators.Permissions import Permissions
 from decorators.CommandLogger import CommandLogger
 
-nl = "\n"
 component = tanjun.Component()
 pool = ThreadPool(processes=3)
 
 @component.with_slash_command
-@tanjun.as_slash_command("whats-my-id", "Find out what your User ID is!", default_to_ephemeral=True)
-async def whats_my_id(ctx: tanjun.abc.Context) -> None:
-    await ctx.respond(f"Hi {ctx.author.mention}! {nl} Your User ID is: ```{ctx.author.id}```")
+@tanjun.as_slash_command("show-img-list", "Show urls of images that are on the list to be embedded", default_to_ephemeral=True)
+@Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
+async def showImgList(ctx: tanjun.abc.Context) -> None:
+    db = Database()
+    twImgList, twImgQue = db.getTwImgStuff()
+    await ctx.respond(twImgList)
+
+@component.with_slash_command
+@tanjun.with_str_slash_option("url", "Url of the image you wish to be added to the image embed list")
+@tanjun.as_slash_command("add-img-list", "Add an image to the list of images to be embedded", default_to_ephemeral=True)
+@Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
+async def addImgList(ctx: tanjun.abc.SlashContext, url: str) -> None:
+    db = Database()
+    twImgList, twImgQue = db.getTwImgStuff()
+    twImgList.insert(0, url)
+    db.setTwImgList(twImgList)
+    twImgQue.insert(0,url)
+    db.setTwImgQueue(twImgQue)
+    await ctx.respond(f"Added {url} to the embed image list")
+
+@component.with_slash_command
+@tanjun.with_str_slash_option("url", "Url of the image you wish to remove from the image embed list")
+@tanjun.as_slash_command("remove-img-list", "Remove an image from the list of images that will be in embedded notifications", default_to_ephemeral=True)
+@Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
+async def remImgList(ctx: tanjun.abc.SlashContext, url: str) -> None:
+    db = Database()
+    twImgList, twImgQue = db.getTwImgStuff()
+    if url in twImgList:
+        twImgList.remove(url)
+        await ctx.respond(f"Removed {url} from the embed image list")
+        db.setTwImgList(twImgList)
+        if url in twImgQue:
+            twImgQue.remove(url)
+            db.setTwImgQueue(twImgQue)
+    else:
+        await ctx.respond(f"{url} could not be found in the image embed list. Nothing was removed.")
 
 @component.with_slash_command
 @tanjun.as_slash_command("stream-status", "Find out what " +Constants.streamerName + " is currently doing", default_to_ephemeral=True)
