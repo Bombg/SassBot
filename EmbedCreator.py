@@ -1,6 +1,5 @@
 import hikari
-from Constants import Constants
-from TwitterImageGrabber import TwitterImageGrabber
+import TwitterImageGrabber
 import asyncio
 
 class EmbedCreator:
@@ -12,9 +11,7 @@ class EmbedCreator:
         self.color = color
 
     async def getEmbed(self):
-        twitImgGrab = TwitterImageGrabber()
-        task = asyncio.create_task(twitImgGrab.getImage())
-        twitImg = await task
+        twitImg = await asyncio.get_running_loop().run_in_executor(None,TwitterImageGrabber.getImage)
         embed = (
             hikari.Embed(
             title = self.title ,

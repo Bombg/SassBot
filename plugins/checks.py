@@ -3,11 +3,11 @@ import alluka
 import hikari
 import asyncio
 from checkers.ChaturCas import ChaturCas
-from checkers.OnlyCas import OnlyCas
-from checkers.FansCas import FansCas
+import checkers.OnlyCas as OnlyCas
+import checkers.FansCas as FansCas
 from Constants import Constants
 from checkers.TwitchCas import TwitchCas
-from checkers.KickCass import KickCass
+import checkers.KickCass as KickCass
 from checkers.YouCas import YouCas
 import globals
 import time
@@ -56,9 +56,7 @@ async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    onlyFans = OnlyCas(Constants.casOnlyUrl)
-    task = asyncio.create_task(onlyFans.isCassOnline())
-    isOnline = await task
+    isOnline = await asyncio.get_running_loop().run_in_executor(None,OnlyCas.isCassOnline,Constants.casOnlyUrl)
     db = Database()
     onlyLastOnlineMessage,onlyStreamStartTime,onlyStreamEndTime = db.getPlatformsRowValues("onlyfans")
     secondsSinceLastMessage = StaticMethods.timeToSeconds(onlyLastOnlineMessage)
@@ -85,9 +83,7 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    fans = FansCas(Constants.casFansUrl)
-    task = asyncio.create_task(fans.isCassOnline())
-    isOnline = await task
+    isOnline = await asyncio.get_running_loop().run_in_executor(None,FansCas.isCassOnline,Constants.casFansUrl)
     db = Database()
     fansLastOnlineMessage,fansStreamStartTime,fansStreamEndTime = db.getPlatformsRowValues("fansly")
     secondsSinceLastMessage = StaticMethods.timeToSeconds(fansLastOnlineMessage)
@@ -170,9 +166,7 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    kick = KickCass(Constants.casKickUrl)
-    task = asyncio.create_task(kick.isCassOnline())
-    isOnline, title = await task
+    isOnline, title = await asyncio.get_running_loop().run_in_executor(None,KickCass.isCassOnline,Constants.casKickUrl)
     db = Database()
     kickLastOnlineMessage,kickStreamStartTime,kickStreamEndTime = db.getPlatformsRowValues("kick")
     secondsSinceLastMessage = StaticMethods.timeToSeconds(kickLastOnlineMessage)
@@ -202,9 +196,7 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    kick = KickCass(Constants.kittiesKickUrl)
-    task = asyncio.create_task(kick.isCassOnline())
-    isOnline, title = await task
+    isOnline, title = await asyncio.get_running_loop().run_in_executor(None,KickCass.isCassOnline,Constants.kittiesKickUrl)
     db = Database()
     kittiesKickLastOnlineMessage, kittiesStreamStartTime,kittiesStreamEndTime  = db.getPlatformsRowValues('kittiesKick')
     secondsSinceLastMessage = StaticMethods.timeToSeconds(kittiesKickLastOnlineMessage)
