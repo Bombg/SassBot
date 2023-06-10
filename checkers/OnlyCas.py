@@ -12,4 +12,4 @@ def isCassOnline(CAS_ONLY_URL):
     isOnline = False
     if len(online) > 0:
         isOnline = True
-    return isOnline
+    return isOnline, "Naughty time? =)"

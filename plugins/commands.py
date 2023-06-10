@@ -8,6 +8,7 @@ from Database import Database
 from datetime import datetime
 from decorators.Permissions import Permissions
 from decorators.CommandLogger import CommandLogger
+import asyncio
 
 component = tanjun.Component()
 pool = ThreadPool(processes=3)
@@ -59,20 +60,8 @@ async def remImgList(ctx: tanjun.abc.SlashContext, url: str) -> None:
 async def streamStatus(ctx: tanjun.abc.Context) -> None:
     db = Database()
     lastOnline,lastOffline,totalStreamTime = db.getStreamTableValues()
-    streamingOn = ""
-    if globals.chaturFalse <= 0:
-        streamingOn = streamingOn + "Chaturbate, "
-    if globals.onlyFalse <= 0:
-        streamingOn = streamingOn + "Onlyfans, "
-    if globals.fansFalse <= 0:
-        streamingOn = streamingOn + "Fansly, "
-    if globals.ytFalse <= 0:
-        streamingOn = streamingOn + "YouTube, "
-    if globals.twitchFalse <= 0:
-        streamingOn = streamingOn + "Twitch, "
-    if globals.kickFalse <= 0:
-        streamingOn = streamingOn + "Kick, "
-    if streamingOn == "":
+    streamingOn = StaticMethods.checkOnline(db)
+    if not streamingOn:
         if lastOffline == 0:
             await ctx.respond(Constants.streamerName + " isn't currently streaming , but check out her offline content! \n Links: "+ Constants.linkTreeUrl)
         else:
@@ -153,19 +142,10 @@ async def rebootServer(ctx: tanjun.abc.Context)-> None:
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def rebroadcast(ctx: tanjun.abc.Context) -> None:
-    if globals.chaturFalse <= 0:
-        globals.chaturRebroadcast = True
-    if globals.onlyFalse <= 0:
-        globals.onlyRebradcast = True
-    if globals.fansFalse <= 0:
-        globals.fansRebroadcast = True
-    if globals.ytFalse <= 0:
-        globals.ytRebroadcast = True
-    if globals.twitchFalse <= 0:
-        globals.twitchRebroadcast = True
-    if globals.kickFalse <= 0:
-        globals.kickRebroadcast = True
+    globals.rebroadcast = True
     await ctx.respond("Online Notifications should be resent soon, assuming " + Constants.streamerName + " is online.")
+    await asyncio.sleep(Constants.onlineCheckTimer)
+    globals.rebroadcast = False
 
 @tanjun.as_loader
 def load(client: tanjun.abc.Client) -> None:

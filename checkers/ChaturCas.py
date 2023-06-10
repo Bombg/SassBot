@@ -1,21 +1,17 @@
-import asyncio
+import time
 from selenium.webdriver.common.by import By
 import requests
 from Constants import Constants
 
-class ChaturCas:
-    def __init__(self, chaturApiUrl):
-        self.CAS_CHATUR_URL = chaturApiUrl
+def isCassOnline(CAS_CHATUR_URL):
+    isOnline = False
+    onlineModels = requests.get(CAS_CHATUR_URL)
+    time.sleep(3)
+    results = onlineModels.json()["results"]
+    for result in results:
+        #print(result['username'])
+        if result['username'] == Constants.cbUserName:
+            isOnline = True
 
-    async def isCassOnline(self):
-        isOnline = False
-        onlineModels = requests.get(self.CAS_CHATUR_URL)
-        await asyncio.sleep(3)
-        results = onlineModels.json()["results"]
-        for result in results:
-            #print(result['username'])
-            if result['username'] == Constants.cbUserName:
-                isOnline = True
-
-        return isOnline
+    return isOnline, "placeholder cb title"
 

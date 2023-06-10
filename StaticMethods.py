@@ -1,26 +1,30 @@
 import time
-import globals
 import os
+import Database
 
 
 @staticmethod
-def checkOnline():
-    online = False
-    if globals.chaturFalse <= 0:
-        online = True
-    elif globals.onlyFalse <= 0:
-        online = True
-    elif globals.twitchFalse <= 0:
-        online = True
-    elif globals.ytFalse <= 0:
-        online = True
-    elif globals.fansFalse <= 0:
-        online = True
-    elif globals.kickFalse <= 0:
-        online = True
-    else:
-        online = False
-    return online
+def checkOnline(db):
+    playingString = ""
+    cbLastOnlineMessage,cbStreamStartTime,cbStreamEndTime = db.getPlatformsRowValues('chaturbate')
+    ofLastOnlineMessage,ofStreamStartTime,ofStreamEndTime = db.getPlatformsRowValues('onlyfans')
+    twitchLastOnlineMessage,twitchStreamStartTime,twitchStreamEndTime = db.getPlatformsRowValues('twitch')
+    ytLastOnlineMessage,ytStreamStartTime,ytStreamEndTime = db.getPlatformsRowValues('youtube')
+    fansLastOnlineMessage,fansStreamStartTime,fansStreamEndTime = db.getPlatformsRowValues('fansly')
+    kickLastOnlineMessage,kickStreamStartTime,kickStreamEndTime = db.getPlatformsRowValues('kick')
+    if cbStreamStartTime > cbStreamEndTime:
+        playingString = playingString + "CB "
+    if ofStreamStartTime > ofStreamEndTime:
+        playingString = playingString + "OF "
+    if twitchStreamStartTime > twitchStreamEndTime:
+        playingString = playingString + "Twitch "
+    if ytStreamStartTime > ytStreamEndTime:
+        playingString = playingString + "YT "
+    if fansStreamStartTime > fansStreamEndTime:
+        playingString = playingString + "Fans "
+    if kickStreamStartTime > kickStreamEndTime:
+        playingString = playingString + "Kick"
+    return playingString
 
 @staticmethod
 def timeToHoursMinutes(newTime):
