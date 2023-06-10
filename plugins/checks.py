@@ -35,7 +35,7 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, ur
         # do nothing
         print(f"{platformName} check failed cause bot detection")
     elif isOnline == True:
-        if secondsSinceStreamEndTime >= Constants.WAIT_BETWEEN_MESSAGES and secondsSinceLastMessage >= Constants.WAIT_BETWEEN_MESSAGES:
+        if secondsSinceStreamEndTime >= Constants.WAIT_BETWEEN_MESSAGES and secondsSinceLastMessage >= Constants.WAIT_BETWEEN_MESSAGES and streamEndTime > streamStartTime:
             print(f"{platformName}Boobies")
             await platformNotifFunc(rest, title)
             db.updateTableRowCol("platforms",platformName,"last_stream_start_time",time.time())
