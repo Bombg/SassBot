@@ -1,10 +1,8 @@
 import time
 import os
-import Database
+from Database import Database
 
-
-@staticmethod
-def checkOnline(db):
+def checkOnline(db: Database) -> str:
     playingString = ""
     cbLastOnlineMessage,cbStreamStartTime,cbStreamEndTime = db.getPlatformsRowValues('chaturbate')
     ofLastOnlineMessage,ofStreamStartTime,ofStreamEndTime = db.getPlatformsRowValues('onlyfans')
@@ -26,50 +24,41 @@ def checkOnline(db):
         playingString = playingString + "Kick"
     return playingString
 
-@staticmethod
-def timeToHoursMinutes(newTime):
+def timeToHoursMinutes(newTime: float) -> int:
     totalTime = time.time() - newTime
     totalTime = int(totalTime)
     totalTimeSeconds = int(totalTime % 60)
     totalTimeMinutes = int((totalTime - totalTimeSeconds) / 60)
     leftoverMinutes = totalTimeMinutes % 60
     totalTimeHours = int((totalTimeMinutes - leftoverMinutes ) / 60)
-
     return totalTimeHours, leftoverMinutes
 
-@staticmethod
-def timeToHoursMinutesStartEnd(startTime, endTime):
+def timeToHoursMinutesStartEnd(startTime: float, endTime: float) -> int:
     totalTime = endTime - startTime
     totalTime = int(totalTime)
     totalTimeSeconds = int(totalTime % 60)
     totalTimeMinutes = int((totalTime - totalTimeSeconds) / 60)
     leftoverMinutes = totalTimeMinutes % 60
     totalTimeHours = int((totalTimeMinutes - leftoverMinutes ) / 60)
-
     return totalTimeHours, leftoverMinutes
 
-@staticmethod
-def timeToHoursMinutesTotalTime(totalTime):
+def timeToHoursMinutesTotalTime(totalTime: float) -> int:
     totalTime = int(totalTime)
     totalTimeSeconds = int(totalTime % 60)
     totalTimeMinutes = int((totalTime - totalTimeSeconds) / 60)
     leftoverMinutes = totalTimeMinutes % 60
     totalTimeHours = int((totalTimeMinutes - leftoverMinutes ) / 60)
-
     return totalTimeHours, leftoverMinutes
 
-@staticmethod
-def timeToSeconds(newTime):
+def timeToSeconds(newTime: float) -> int:
     totalTime = time.time() - newTime
     totalTime = int(totalTime)
     return totalTime
 
-@staticmethod
-def rebootServer():
+def rebootServer() -> None:
     os.system('reboot')
 
-@staticmethod
-def safeRebootServer():
+def safeRebootServer() -> None:
     time.sleep(300)
     print("Scheduled restart is happening.\nSleeping for 300 seconds before restart, in case something goes horribly wrong")
     rebootServer()
