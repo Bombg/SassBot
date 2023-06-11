@@ -38,15 +38,17 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, ur
             print(f"{platformName}Boobies")
             await platformNotifFunc(rest, title)
             db.updateTableRowCol("platforms",platformName,"last_stream_start_time",time.time())
-        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME or globals.rebroadcast:
+        elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME or globals.rebroadcast[platformName]:
             print(f"Long{platformName}Boobies")
             await platformNotifFunc(rest, title)
             lastOnlineMessage = time.time()
+            globals.rebroadcast[platformName] = 0
         elif streamEndTime > streamStartTime:
             db.updateTableRowCol("platforms",platformName,"last_stream_start_time",time.time())
     elif isOnline == False:
         if streamEndTime <= streamStartTime:
             db.updateTableRowCol("platforms",platformName,"last_stream_end_time",time.time())
+        globals.rebroadcast[platformName] = 0
     print("\n")
 
 @component.with_schedule

@@ -9,12 +9,17 @@ def unPin() -> None:
     db = Database()
     db.setImgPin(0, "")
 
-async def setRebroadcast() -> None:
-    globals.rebroadcast = True
+def setRebroadcast() -> None:
     print("rebroadcast: On")
-    await asyncio.sleep(Constants.onlineCheckTimer + 20)
-    globals.rebroadcast = False
-    print("rebroadcast: Off")
+    globals.rebroadcast = {
+        "chaturbate":1,
+        "onlyfans":1,
+        "fansly":1,
+        "twitch":1,
+        "youtube":1,
+        "kick": 1,
+        "kittiesKick":1
+}
 
 def addImageListQue(url: str) -> None:
     db = Database()

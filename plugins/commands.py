@@ -48,8 +48,7 @@ async def pinImage(ctx: tanjun.abc.SlashContext, imgurl: str, hours: int) -> Non
 @CommandLogger
 async def rebroadcast(ctx: tanjun.abc.Context) -> None:
     await ctx.respond("Online Notifications should be resent within the next " + str(Constants.onlineCheckTimer) +  " seconds (or less), assuming " + Constants.streamerName + " is online. But may take longer if Kick bot checking is being annoying")
-    task = asyncio.create_task(StaticMethods.setRebroadcast())
-    await task
+    StaticMethods.setRebroadcast()
 
 @component.with_slash_command
 @tanjun.with_str_slash_option("imgurl", "Url of the image you wish to be embedded. Will also be pinned")
@@ -59,8 +58,7 @@ async def rebroadcast(ctx: tanjun.abc.Context) -> None:
 async def rebroadcastWithImage(ctx: tanjun.abc.SlashContext, imgurl: str) -> None:
     await ctx.respond(f"Added {imgurl} to the embed image list and will rebroadcast within the next {Constants.onlineCheckTimer} seconds. But may take longer if Kick bot checking is being annoying")
     StaticMethods.pinImage(imgurl, Constants.pinTimeShort)
-    task = asyncio.create_task(StaticMethods.setRebroadcast())
-    await task
+    StaticMethods.setRebroadcast()
 
 @component.with_slash_command
 @tanjun.as_slash_command("image-list-show", "Show urls of images that are on the list to be embedded", default_to_ephemeral=True)
