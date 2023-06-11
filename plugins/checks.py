@@ -32,7 +32,6 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, ur
     if Constants.DEBUG:
         print(platformName + "Offline: " + str((-1 * secondsSinceStreamStartTime) if isOnline else secondsSinceStreamEndTime))
     if isOnline == 3:
-        # do nothing
         print(f"{platformName} check failed cause bot detection")
     elif isOnline == True:
         if secondsSinceStreamEndTime >= Constants.WAIT_BETWEEN_MESSAGES and secondsSinceLastMessage >= Constants.WAIT_BETWEEN_MESSAGES and streamEndTime >= streamStartTime:

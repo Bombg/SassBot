@@ -123,9 +123,13 @@ class Database:
     
     def getTwImgStuff(self):
         conn,cur = self.connectCursor()
-        exeString = f'''SELECT tw_img_list,tw_img_queue FROM stream'''
+        exeString = f'''SELECT tw_img_list,tw_img_queue, img_banned_list FROM stream'''
         cur.execute(exeString)
         value = cur.fetchall()
+        if value[0][2] is None:
+            bannedList = []
+        else:
+            bannedList = json.loads(value[0][2])
         if value[0][0] is None or value[0][1] is None:
             twImgList = []
             twImgQue =[]
@@ -134,7 +138,16 @@ class Database:
             twImgQue = json.loads(value[0][1])
         cur.close()
         conn.close()
-        return twImgList, twImgQue
+        return twImgList, twImgQue, bannedList
+    
+    def setBannedList(self, bannedList):
+        conn,cur = self.connectCursor()
+        bannedListDump = json.dumps(bannedList)
+        exeString = f'''UPDATE stream SET img_banned_list='{bannedListDump}' '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
     
     def setTwImgList(self,twImgList):
         conn,cur = self.connectCursor()
@@ -162,3 +175,20 @@ class Database:
         cur.close()
         conn.close()
         return value[0][0],value[0][1],value[0][2]
+
+    def setImgPin(self, epochTime: int, url: str) -> None:
+        conn,cur = self.connectCursor()
+        exeString = f'''UPDATE stream SET img_pin={epochTime}, img_pin_url='{url}' '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def getImgPin(self):
+        conn,cur = self.connectCursor()
+        exeString = f'''SELECT img_pin, img_pin_url FROM stream '''
+        cur.execute(exeString)
+        value = cur.fetchall()
+        cur.close()
+        conn.close()
+        return value[0][0],value[0][1]

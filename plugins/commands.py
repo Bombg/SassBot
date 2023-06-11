@@ -13,43 +13,57 @@ import asyncio
 component = tanjun.Component()
 pool = ThreadPool(processes=3)
 
-async def setRebroadcast() -> None:
-    globals.rebroadcast = True
-    print("rebroadcast: On")
-    await asyncio.sleep(Constants.onlineCheckTimer + 20)
-    globals.rebroadcast = False
-    print("rebroadcast: Off")
+@component.with_slash_command
+@tanjun.as_slash_command("image-check-pin", "Check to see if an image is pinned", default_to_ephemeral= True)
+@Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
+async def checkPin(ctx: tanjun.abc.SlashContext) -> None:
+    url = StaticMethods.checkImagePin()
+    if url:
+        await ctx.respond(f"{url} is currently pinned")
+    else:
+        await ctx.respond("There is currently no image pinned")
 
-def addImageListQue(url: str) -> None:
-    db = Database()
-    twImgList, twImgQue = db.getTwImgStuff()
-    twImgList.insert(0, url)
-    db.setTwImgList(twImgList)
-    twImgQue.insert(0,url)
-    db.setTwImgQueue(twImgQue)
+@component.with_slash_command
+@tanjun.as_slash_command("image-unpin", "if an image is pinned, it will be unpinned", default_to_ephemeral= True)
+@Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
+async def unPinImage(ctx: tanjun.abc.SlashContext) -> None:
+    await ctx.respond("Unpinning any iamge that may be pinned")
+    StaticMethods.unPin()
+
+@component.with_slash_command
+@tanjun.with_str_slash_option("imgurl", "Url of the image you wish to be pinned")
+@tanjun.with_int_slash_option("hours", "number of hours you wish the image to be pinned for")
+@tanjun.as_slash_command("image-pin", "set default embed image for set amount of time in hours", default_to_ephemeral=True)
+@Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
+async def pinImage(ctx: tanjun.abc.SlashContext, imgurl: str, hours: int) -> None:
+    await ctx.respond(f"Pinning {imgurl} for {hours} hours")
+    StaticMethods.pinImage(imgurl, hours)
 
 @component.with_slash_command
 @tanjun.as_slash_command("rebroadcast", "Resend online notification to your preset discord channel, assuming the streamer is online.", default_to_ephemeral=True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def rebroadcast(ctx: tanjun.abc.Context) -> None:
-    await ctx.respond("Online Notifications should be resent within the next " + str(Constants.onlineCheckTimer) +  " seconds (or less), assuming " + Constants.streamerName + " is online.")
-    task = asyncio.create_task(setRebroadcast())
+    await ctx.respond("Online Notifications should be resent within the next " + str(Constants.onlineCheckTimer) +  " seconds (or less), assuming " + Constants.streamerName + " is online. But may take longer if Kick bot checking is being annoying")
+    task = asyncio.create_task(StaticMethods.setRebroadcast())
     await task
 
 @component.with_slash_command
-@tanjun.with_str_slash_option("imgurl", "Url of the image you wish to be embedded. Will also be added to embed list")
-@tanjun.as_slash_command("rebroadcast-with-image", "Rebroadcast with a url, image will be embedded in the new announcement", default_to_ephemeral=True)
+@tanjun.with_str_slash_option("imgurl", "Url of the image you wish to be embedded. Will also be pinned")
+@tanjun.as_slash_command("rebroadcast-image", "Rebroadcast with a url, image will be embedded in the new announcement", default_to_ephemeral=True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def rebroadcastWithImage(ctx: tanjun.abc.SlashContext, imgurl: str) -> None:
-    await ctx.respond(f"Added {imgurl} to the embed image list and will rebroadcast within the next {Constants.onlineCheckTimer} seconds")
-    addImageListQue(imgurl)
-    task = asyncio.create_task(setRebroadcast())
+    await ctx.respond(f"Added {imgurl} to the embed image list and will rebroadcast within the next {Constants.onlineCheckTimer} seconds. But may take longer if Kick bot checking is being annoying")
+    StaticMethods.pinImage(imgurl, Constants.pinTimeShort)
+    task = asyncio.create_task(StaticMethods.setRebroadcast())
     await task
 
 @component.with_slash_command
-@tanjun.as_slash_command("show-img-list", "Show urls of images that are on the list to be embedded", default_to_ephemeral=True)
+@tanjun.as_slash_command("image-list-show", "Show urls of images that are on the list to be embedded", default_to_ephemeral=True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def showImgList(ctx: tanjun.abc.Context) -> None:
@@ -59,22 +73,27 @@ async def showImgList(ctx: tanjun.abc.Context) -> None:
 
 @component.with_slash_command
 @tanjun.with_str_slash_option("url", "Url of the image you wish to be added to the image embed list")
-@tanjun.as_slash_command("add-img-list", "Add an image to the list of images to be embedded", default_to_ephemeral=True)
+@tanjun.as_slash_command("image-list-add", "Add an image to the list of images to be embedded", default_to_ephemeral=True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def addImgList(ctx: tanjun.abc.SlashContext, url: str) -> None:
-    addImageListQue(url)
+    StaticMethods.addImageListQue(url)
     await ctx.respond(f"Added {url} to the embed image list")
 
 @component.with_slash_command
 @tanjun.with_str_slash_option("url", "Url of the image you wish to remove from the image embed list")
-@tanjun.as_slash_command("remove-img-list", "Remove an image from the list of images that will be in embedded notifications", default_to_ephemeral=True)
+@tanjun.as_slash_command("image-list-remove", "Remove an image from the list of images that will be in embedded notifications", default_to_ephemeral=True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def remImgList(ctx: tanjun.abc.SlashContext, url: str) -> None:
     db = Database()
-    twImgList, twImgQue = db.getTwImgStuff()
+    twImgList, twImgQue, bannedList = db.getTwImgStuff()
+    pinUrl = StaticMethods.checkImagePin()
+    if pinUrl:
+        StaticMethods.unPin()
     if url in twImgList:
+        bannedList.append(url)
+        db.setBannedList(bannedList)
         twImgList.remove(url)
         await ctx.respond(f"Removed {url} from the embed image list")
         db.setTwImgList(twImgList)

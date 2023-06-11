@@ -4,6 +4,7 @@ import time
 from Constants import Constants
 import re
 from Database import Database
+import StaticMethods
 
 
 
@@ -28,18 +29,22 @@ def getImage():
 
 def getTwImgDb(images):
     db = Database()
-    twImgList, twImgQue = db.getTwImgStuff()
+    twImgList, twImgQue, bannedList = db.getTwImgStuff()
     if not twImgList:
         db.setTwImgList(images)
         db.setTwImgQueue(images)
         twImgList = images
         twImgQue = images
-    elif images[0] not in twImgList:
+    elif images[0] not in twImgList and images[0] not in bannedList:
+        StaticMethods.pinImage(images[0],Constants.pinTimeLong)
         twImgList.insert(0, images[0])
         db.setTwImgList(twImgList)
-        twImgQue.insert(0,images[0])
     elif not twImgQue:
         twImgQue = twImgList
-    imageSrc = twImgQue.pop(0)
-    db.setTwImgQueue(twImgQue)
+    url = StaticMethods.checkImagePin()
+    if url:
+        imageSrc = url
+    else:
+        imageSrc = twImgQue.pop(0)
+        db.setTwImgQueue(twImgQue)
     return imageSrc

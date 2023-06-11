@@ -34,7 +34,10 @@ cur.execute('''CREATE TABLE IF NOT EXISTS stream
                     last_offline REAL,
                     last_stream_length REAL,
                     tw_img_list TEXT,
-                    tw_img_queue TEXT
+                    tw_img_queue TEXT,
+                    img_pin INTEGER,
+                    img_pin_url TEXT,
+                    img_banned_list TEXT
                 )
             ''')
 

@@ -1,5 +1,5 @@
 class Constants:
-    DEBUG = True
+    DEBUG = False
     TEST_SERVER = False
 
     if TEST_SERVER:
@@ -56,5 +56,8 @@ class Constants:
     restartCheckTimer = 300
 
     recordKeepingStartDate = 1684210200 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
+
+    pinTimeLong = 16 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
+    pinTimeShort = 1
 
     
