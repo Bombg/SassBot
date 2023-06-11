@@ -13,6 +13,41 @@ import asyncio
 component = tanjun.Component()
 pool = ThreadPool(processes=3)
 
+async def setRebroadcast() -> None:
+    globals.rebroadcast = True
+    print("rebroadcast: On")
+    await asyncio.sleep(Constants.onlineCheckTimer + 20)
+    globals.rebroadcast = False
+    print("rebroadcast: Off")
+
+def addImageListQue(url: str) -> None:
+    db = Database()
+    twImgList, twImgQue = db.getTwImgStuff()
+    twImgList.insert(0, url)
+    db.setTwImgList(twImgList)
+    twImgQue.insert(0,url)
+    db.setTwImgQueue(twImgQue)
+
+@component.with_slash_command
+@tanjun.as_slash_command("rebroadcast", "Resend online notification to your preset discord channel, assuming the streamer is online.", default_to_ephemeral=True)
+@Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
+async def rebroadcast(ctx: tanjun.abc.Context) -> None:
+    await ctx.respond("Online Notifications should be resent within the next " + str(Constants.onlineCheckTimer) +  " seconds (or less), assuming " + Constants.streamerName + " is online.")
+    task = asyncio.create_task(setRebroadcast())
+    await task
+
+@component.with_slash_command
+@tanjun.with_str_slash_option("imgurl", "Url of the image you wish to be embedded. Will also be added to embed list")
+@tanjun.as_slash_command("rebroadcast-with-image", "Rebroadcast with a url, image will be embedded in the new announcement", default_to_ephemeral=True)
+@Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
+async def rebroadcastWithImage(ctx: tanjun.abc.SlashContext, imgurl: str) -> None:
+    await ctx.respond(f"Added {imgurl} to the embed image list and will rebroadcast within the next {Constants.onlineCheckTimer} seconds")
+    addImageListQue(imgurl)
+    task = asyncio.create_task(setRebroadcast())
+    await task
+
 @component.with_slash_command
 @tanjun.as_slash_command("show-img-list", "Show urls of images that are on the list to be embedded", default_to_ephemeral=True)
 @Permissions(Constants.whiteListedRoleIDs)
@@ -28,12 +63,7 @@ async def showImgList(ctx: tanjun.abc.Context) -> None:
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def addImgList(ctx: tanjun.abc.SlashContext, url: str) -> None:
-    db = Database()
-    twImgList, twImgQue = db.getTwImgStuff()
-    twImgList.insert(0, url)
-    db.setTwImgList(twImgList)
-    twImgQue.insert(0,url)
-    db.setTwImgQueue(twImgQue)
+    addImageListQue(url)
     await ctx.respond(f"Added {url} to the embed image list")
 
 @component.with_slash_command
@@ -136,16 +166,6 @@ async def subathon(ctx: tanjun.abc.Context)-> None:
 async def rebootServer(ctx: tanjun.abc.Context)-> None:
     await ctx.respond("rebooting the server")
     StaticMethods.rebootServer()
-
-@component.with_slash_command
-@tanjun.as_slash_command("rebroadcast", "Resend online notification to your preset discord channel, assuming the streamer is online.", default_to_ephemeral=True)
-@Permissions(Constants.whiteListedRoleIDs)
-@CommandLogger
-async def rebroadcast(ctx: tanjun.abc.Context) -> None:
-    globals.rebroadcast = True
-    await ctx.respond("Online Notifications should be resent soon, assuming " + Constants.streamerName + " is online.")
-    await asyncio.sleep(Constants.onlineCheckTimer)
-    globals.rebroadcast = False
 
 @tanjun.as_loader
 def load(client: tanjun.abc.Client) -> None:
