@@ -82,7 +82,7 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     await platformChecker(KickCass.isCassOnline, Notifications.KickNotification,Constants.casKickUrl,"kick",rest)
 
 @component.with_schedule
-@tanjun.as_interval(Constants.onlineCheckTimer)
+@tanjun.as_interval(Constants.longOnlineCheckTimer)
 async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     await platformChecker(KickCass.isCassOnline, Notifications.KittiesKickNotification,Constants.kittiesKickUrl,"kittiesKick",rest)
 

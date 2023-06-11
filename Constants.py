@@ -51,6 +51,7 @@ class Constants:
     linkTreeUrl = "https://linktr.ee/kitty_cass_"
 
     onlineCheckTimer = 120 #Wait time in seconds between checks
+    longOnlineCheckTimer =False
     avatarCheckTimer = 130
     statusCheckTimer = 125
     restartCheckTimer = 300
