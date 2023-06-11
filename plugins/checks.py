@@ -43,6 +43,8 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, ur
             print(f"Long{platformName}Boobies")
             await platformNotifFunc(rest, title)
             lastOnlineMessage = time.time()
+        if streamEndTime > streamStartTime:
+            db.updateTableRowCol("platforms",platformName,"last_stream_start_time",time.time())
     elif isOnline == False:
         if streamEndTime <= streamStartTime:
             db.updateTableRowCol("platforms",platformName,"last_stream_end_time",time.time())
