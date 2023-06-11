@@ -1,6 +1,6 @@
 class Constants:
-    DEBUG = False
-    TEST_SERVER = False
+    DEBUG = True
+    TEST_SERVER = True
 
     if TEST_SERVER:
         GUILD_ID =313876691082674178 #Guild ID of the discord server
@@ -51,7 +51,7 @@ class Constants:
     linkTreeUrl = "https://linktr.ee/kitty_cass_"
 
     onlineCheckTimer = 120 #Wait time in seconds between checks
-    longOnlineCheckTimer =False
+    longOnlineCheckTimer = 600
     avatarCheckTimer = 130
     statusCheckTimer = 125
     restartCheckTimer = 300
