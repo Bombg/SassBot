@@ -207,7 +207,8 @@ class Database:
     
     def setPing(self, ifPing: bool) -> None:
         conn,cur = self.connectCursor()
-        exeString = f'''UPDATE stream SET everyone_ping={ifPing} '''
+        ping = 1 if ifPing else 0
+        exeString = f'''UPDATE stream SET everyone_ping={ping} '''
         cur.execute(exeString)
         conn.commit()
         cur.close()
