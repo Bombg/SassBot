@@ -25,6 +25,7 @@ class Constants:
     casYtUrl = "https://www.youtube.com/@kitty_cass_/live" # https://www.youtube.com/@PUT_YOUTUBE_CHANNEL_NAME_HERE/live
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
     # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. if not applicable leave an empty string ex. casKickUrl = ""
+    # I've found this responds more reliably when you narrow down the search more. So add region, and any tags your model always uses
     casChatApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs" 
     cbUserName = 'badkittycass'
     casTwitchChannelName = 'kitty_goes_mreow' #twitch name, not url
