@@ -1,5 +1,18 @@
 # Cassbot
 ## Discord bot for your favorite e-girl
+### Platforms Supported:
+- Twitch
+- Kick
+- Youtube
+- Onlyfans
+- Fansly
+- Chaturbate
+### Features
+- Get notifications when your streamer is online sent to a discord channel
+- Auto embed images from Twitter into notifications
+- Add/remove images yourself to embed into notifications via image commands. Images are rotated through, so add as many as you like.
+- Rebroadcast online notifications with rebroadcast commands
+- Subathon online timers via subathon commands
 ### How to set up the bot:
 
 1. Go to https://discord.com/developers and set up an app and get a token. Put that token in a file called token (no file extension needed), and put that file in a subfolder called secrets.
