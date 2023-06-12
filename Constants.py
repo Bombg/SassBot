@@ -17,15 +17,19 @@ class Constants:
     TIME_BEFORE_BOT_RESTART = 604800 #time in seconds before bot will restart
     TIME_OFFLINE_BEFORE_RESTART = 900 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
 
+    #Links to model pages - not necessarily the live streaming page
     casKickUrl = 'https://kick.com/kittycass'
     kittiesKickUrl = 'https://kick.com/casskitties'
     casFansUrl = "https://fansly.com/BadKittyCass"
     casOnlyUrl = "https://onlyfans.com/badkittycass"
     casYtUrl = "https://www.youtube.com/@kitty_cass_/live"
-    casChatApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs" #affiliate api link to see online users in cb
+    #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
+    # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself
+    casChatApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs" 
     cbUserName = 'badkittycass'
     casTwitchChannelName = 'kitty_goes_mreow' #twitch name, not url
 
+    # Links directly to the model's live stream - used for discord announcements
     cbLiveStreamUrl = "https://chaturbate.com/badkittycass/"
     OfLiveStreamUrl = "https://onlyfans.com/badkittycass/live"
     fansLiveStreamUrl = "https://fansly.com/live/BadKittyCass"
