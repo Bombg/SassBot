@@ -51,7 +51,9 @@ class Constants:
     fansEmbedColor = "#ffffff"
     ofEmbedColor = "#018ccf"
 
-    twitterUrl = 'https://twitter.com/_kitty_cass_' # pulls images from the twitter page, so if your streamer shares other stuff that isn't photos of her, probably don't use it. And just add the images yourself
+    #Leave empty string if you don't use. twitterUrl = ""
+    # pulls images from the twitter page, so if your streamer shares other stuff that isn't photos of her, probably don't use it. And just add the images yourself, or remove ones you don't want
+    twitterUrl = 'https://twitter.com/_kitty_cass_' 
     
     linkTreeUrl = "https://linktr.ee/kitty_cass_"
 

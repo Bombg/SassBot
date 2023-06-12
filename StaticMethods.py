@@ -1,9 +1,23 @@
 import time
 import os
 from Database import Database
-import asyncio
-from Constants import Constants
 import globals
+
+def getEmbedImage() -> str:
+    db = Database()
+    twImgList, twImgQue, bannedList = db.getTwImgStuff()
+    url = checkImagePin()
+    if not twImgList:
+        imageSrc = 'images/twitErrImg.jpg'
+        print("adding default image for embed since nothing is on the list.")
+    elif not twImgQue:
+        twImgQue = twImgList
+    elif url:
+        imageSrc = url
+    else:
+        imageSrc = twImgQue.pop(0)
+        db.setTwImgQueue(twImgQue)
+    return imageSrc
 
 def unPin() -> None:
     db = Database()
