@@ -44,7 +44,7 @@ def setRebroadcast() -> None:
 
 def addImageListQue(url: str) -> None:
     db = Database()
-    twImgList, twImgQue = db.getTwImgStuff()
+    twImgList, twImgQue,bannedList = db.getTwImgStuff()
     twImgList.insert(0, url)
     db.setTwImgList(twImgList)
     twImgQue.insert(0,url)
