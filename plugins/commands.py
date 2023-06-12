@@ -10,7 +10,7 @@ from decorators.CommandLogger import CommandLogger
 component = tanjun.Component()
 
 @component.with_slash_command
-@tanjun.as_slash_command("image-check-pin", "Check to see if an image is pinned", default_to_ephemeral= True)
+@tanjun.as_slash_command("image-check-pin", "Check to see if an image is pinned", default_to_ephemeral= True, always_defer= True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def checkPin(ctx: tanjun.abc.SlashContext) -> None:
@@ -21,7 +21,7 @@ async def checkPin(ctx: tanjun.abc.SlashContext) -> None:
         await ctx.respond("There is currently no image pinned")
 
 @component.with_slash_command
-@tanjun.as_slash_command("image-unpin", "if an image is pinned, it will be unpinned", default_to_ephemeral= True)
+@tanjun.as_slash_command("image-unpin", "if an image is pinned, it will be unpinned", default_to_ephemeral= True, always_defer= True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def unPinImage(ctx: tanjun.abc.SlashContext) -> None:
@@ -31,7 +31,7 @@ async def unPinImage(ctx: tanjun.abc.SlashContext) -> None:
 @component.with_slash_command
 @tanjun.with_str_slash_option("imgurl", "Url of the image you wish to be pinned")
 @tanjun.with_int_slash_option("hours", "number of hours you wish the image to be pinned for")
-@tanjun.as_slash_command("image-pin", "set default embed image for set amount of time in hours", default_to_ephemeral=True)
+@tanjun.as_slash_command("image-pin", "set default embed image for set amount of time in hours", default_to_ephemeral=True, always_defer= True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def pinImage(ctx: tanjun.abc.SlashContext, imgurl: str, hours: int) -> None:
@@ -39,7 +39,7 @@ async def pinImage(ctx: tanjun.abc.SlashContext, imgurl: str, hours: int) -> Non
     StaticMethods.pinImage(imgurl, hours)
 
 @component.with_slash_command
-@tanjun.as_slash_command("rebroadcast", "Resend online notification to your preset discord channel, assuming the streamer is online.", default_to_ephemeral=True)
+@tanjun.as_slash_command("rebroadcast", "Resend online notification to your preset discord channel, assuming the streamer is online.", default_to_ephemeral=True, always_defer= True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def rebroadcast(ctx: tanjun.abc.Context) -> None:
@@ -48,7 +48,7 @@ async def rebroadcast(ctx: tanjun.abc.Context) -> None:
 
 @component.with_slash_command
 @tanjun.with_str_slash_option("imgurl", "Url of the image you wish to be embedded. Will also be pinned")
-@tanjun.as_slash_command("rebroadcast-image", "Rebroadcast with a url, image will be embedded in the new announcement", default_to_ephemeral=True)
+@tanjun.as_slash_command("rebroadcast-image", "Rebroadcast with a url, image will be embedded in the new announcement", default_to_ephemeral=True, always_defer= True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def rebroadcastWithImage(ctx: tanjun.abc.SlashContext, imgurl: str) -> None:
@@ -57,7 +57,7 @@ async def rebroadcastWithImage(ctx: tanjun.abc.SlashContext, imgurl: str) -> Non
     StaticMethods.setRebroadcast()
 
 @component.with_slash_command
-@tanjun.as_slash_command("image-list-show", "Show urls of images that are on the list to be embedded", default_to_ephemeral=True)
+@tanjun.as_slash_command("image-list-show", "Show urls of images that are on the list to be embedded", default_to_ephemeral=True, always_defer= True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def showImgList(ctx: tanjun.abc.Context) -> None:
@@ -67,7 +67,7 @@ async def showImgList(ctx: tanjun.abc.Context) -> None:
 
 @component.with_slash_command
 @tanjun.with_str_slash_option("url", "Url of the image you wish to be added to the image embed list")
-@tanjun.as_slash_command("image-list-add", "Add an image to the list of images to be embedded", default_to_ephemeral=True)
+@tanjun.as_slash_command("image-list-add", "Add an image to the list of images to be embedded", default_to_ephemeral=True, always_defer= True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def addImgList(ctx: tanjun.abc.SlashContext, url: str) -> None:
@@ -76,7 +76,7 @@ async def addImgList(ctx: tanjun.abc.SlashContext, url: str) -> None:
 
 @component.with_slash_command
 @tanjun.with_str_slash_option("url", "Url of the image you wish to remove from the image embed list")
-@tanjun.as_slash_command("image-list-remove", "Remove an image from the list of images that will be in embedded notifications", default_to_ephemeral=True)
+@tanjun.as_slash_command("image-list-remove", "Remove an image from the list of images that will be in embedded notifications", default_to_ephemeral=True, always_defer= True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def remImgList(ctx: tanjun.abc.SlashContext, url: str) -> None:
@@ -98,7 +98,7 @@ async def remImgList(ctx: tanjun.abc.SlashContext, url: str) -> None:
         await ctx.respond(f"{url} could not be found in the image embed list. Nothing was removed.")
 
 @component.with_slash_command
-@tanjun.as_slash_command("stream-status", "Find out what " +Constants.streamerName + " is currently doing", default_to_ephemeral=True)
+@tanjun.as_slash_command("stream-status", "Find out what " +Constants.streamerName + " is currently doing", default_to_ephemeral=True, always_defer= True)
 @CommandLogger
 async def streamStatus(ctx: tanjun.abc.Context) -> None:
     db = Database()
@@ -119,7 +119,7 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
 
 @component.with_slash_command
 @tanjun.with_int_slash_option("epocstart", "The epoc time in seconds when the subathon started", default=0)
-@tanjun.as_slash_command("subathon-start", "Start a subathon timer", default_to_ephemeral=True)
+@tanjun.as_slash_command("subathon-start", "Start a subathon timer", default_to_ephemeral=True, always_defer= True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def subathon_start(ctx: tanjun.abc.SlashContext, epocstart: int) -> None:
@@ -134,7 +134,7 @@ async def subathon_start(ctx: tanjun.abc.SlashContext, epocstart: int) -> None:
         await ctx.respond("There's a subathon already running")
 
 @component.with_slash_command
-@tanjun.as_slash_command("subathon-end", "End a subathon timer", default_to_ephemeral=True)
+@tanjun.as_slash_command("subathon-end", "End a subathon timer", default_to_ephemeral=True, always_defer= True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def subathon_end(ctx: tanjun.abc.Context)-> None:
@@ -152,7 +152,7 @@ async def subathon_end(ctx: tanjun.abc.Context)-> None:
         await ctx.respond("There isn't a subathon to end")
 
 @component.with_slash_command
-@tanjun.as_slash_command("subathon", "See subathon status and time online", default_to_ephemeral=True)
+@tanjun.as_slash_command("subathon", "See subathon status and time online", default_to_ephemeral=True, always_defer= True)
 @CommandLogger
 async def subathon(ctx: tanjun.abc.Context)-> None:
     db = Database()
@@ -171,7 +171,7 @@ async def subathon(ctx: tanjun.abc.Context)-> None:
         await ctx.respond("There isn't a subathon running and a subathon hasn't been completed yet")
 
 @component.with_slash_command
-@tanjun.as_slash_command("reboot", "reboot the bot and its server", default_to_ephemeral=True)
+@tanjun.as_slash_command("reboot", "reboot the bot and its server", default_to_ephemeral=True, always_defer= True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def rebootServer(ctx: tanjun.abc.Context)-> None:
