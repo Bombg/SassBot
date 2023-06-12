@@ -1,6 +1,7 @@
 class Constants:
     DEBUG = False
     TEST_SERVER = False
+    PING_EVERYONE = False #@everyone ping during an online announcement
 
     if TEST_SERVER:
         GUILD_ID =313876691082674178 #Guild ID of the discord server
@@ -41,11 +42,11 @@ class Constants:
     streamerName = "Cass"
 
     chaturOnlineText = streamerName + " is live on Chaturbate!\n" + cbLiveStreamUrl
-    ofOnlineText = streamerName + " is live on Onlyfans!\n" + OfLiveStreamUrl
-    fansOnlineText = streamerName + " is live on Fansly!\n" + fansLiveStreamUrl
+    ofOnlineText = streamerName + " is live on Onlyfans!\n<" + OfLiveStreamUrl + ">"
+    fansOnlineText = streamerName + " is live on Fansly!\n<" + fansLiveStreamUrl + ">"
     twitchOnlineText = streamerName + " is live on Twitch!\n" + twitchLiveStreamUrl
     ytOnlineText = streamerName + " is live on YouTube!\n" + ytLiveStreamUrl
-    kickOnlineText = streamerName + " is live on Kick!\n" + kickLiveStreamUrl
+    kickOnlineText = streamerName + " is live on Kick!\n<" + kickLiveStreamUrl + ">"
     kittiesKickOnlineText = "Cass' Kitties are live on Kick!\nhttps://kick.com/casskitties"
 
     kickEmbedColor = "#52fb19"
