@@ -3,6 +3,13 @@ import os
 from Database import Database
 import globals
 
+def setOfflineAddTime():
+    db = Database()
+    db.setStreamLastOffline(time.time())
+    lastOnline,lastOffline,lastTotalStreamLength = db.getStreamTableValues()
+    newTotalStreamLength = lastTotalStreamLength + (lastOffline -  lastOnline)
+    db.setStreamLastStreamLength(newTotalStreamLength)
+
 def getEmbedImage() -> str:
     db = Database()
     twImgList, twImgQue, bannedList = db.getTwImgStuff()

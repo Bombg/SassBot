@@ -10,6 +10,15 @@ from decorators.CommandLogger import CommandLogger
 component = tanjun.Component()
 
 @component.with_slash_command
+@tanjun.as_slash_command("shutdown-bot", "Shut down the bot before restarting it so some info can be saved to the database", default_to_ephemeral= True, always_defer= True)
+@Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
+async def shutDown(ctx: tanjun.abc.SlashContext) -> None:
+    await ctx.respond("Shutting down the bot saving stuff to database before shtudown")
+    StaticMethods.setOfflineAddTime()
+    exit()
+
+@component.with_slash_command
 @tanjun.as_slash_command("image-check-pin", "Check to see if an image is pinned", default_to_ephemeral= True, always_defer= True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
