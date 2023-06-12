@@ -149,7 +149,7 @@ async def checkOnlineTime() -> None:
     elif not online and globals.online != online:
         print("offline time starts now")
         globals.online = online
-        StaticMethods.setOfflineAddTime(online)
+        StaticMethods.setOfflineAddTime()
     print("\n")
 
 @component.with_schedule
