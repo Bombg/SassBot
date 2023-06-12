@@ -17,19 +17,19 @@ class Constants:
     TIME_BEFORE_BOT_RESTART = 604800 #time in seconds before bot will restart
     TIME_OFFLINE_BEFORE_RESTART = 900 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
 
-    #Links to model pages - not necessarily the live streaming page
+    #Links to model pages - not necessarily the live streaming page - if not applicable leave an empty string ex. casKickUrl = ""
     casKickUrl = 'https://kick.com/kittycass'
     kittiesKickUrl = 'https://kick.com/casskitties'
     casFansUrl = "https://fansly.com/BadKittyCass"
     casOnlyUrl = "https://onlyfans.com/badkittycass"
-    casYtUrl = "https://www.youtube.com/@kitty_cass_/live"
+    casYtUrl = "https://www.youtube.com/@kitty_cass_/live" # https://www.youtube.com/@PUT_YOUTUBE_CHANNEL_NAME_HERE/live
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
-    # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself
+    # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. if not applicable leave an empty string ex. casKickUrl = ""
     casChatApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs" 
     cbUserName = 'badkittycass'
     casTwitchChannelName = 'kitty_goes_mreow' #twitch name, not url
 
-    # Links directly to the model's live stream - used for discord announcements
+    # Links directly to the model's live stream - used for discord announcements. if not applicable leave an empty string ex. casKickUrl = ""
     cbLiveStreamUrl = "https://chaturbate.com/badkittycass/"
     OfLiveStreamUrl = "https://onlyfans.com/badkittycass/live"
     fansLiveStreamUrl = "https://fansly.com/live/BadKittyCass"
@@ -51,7 +51,8 @@ class Constants:
     fansEmbedColor = "#ffffff"
     ofEmbedColor = "#018ccf"
 
-    twitterUrl = 'https://twitter.com/_kitty_cass_'
+    twitterUrl = 'https://twitter.com/_kitty_cass_' # pulls images from the twitter page, so if your streamer shares other stuff that isn't photos of her, probably don't use it. And just add the images yourself
+    
     linkTreeUrl = "https://linktr.ee/kitty_cass_"
 
     onlineCheckTimer = 120 #Wait time in seconds between checks

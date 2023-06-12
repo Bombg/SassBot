@@ -55,38 +55,44 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, ur
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    await platformChecker(ChaturCas.isCassOnline, Notifications.ChaturNotification,Constants.casChatApiUrl,"chaturbate",rest)
+    if Constants.casChatApiUrl:
+        await platformChecker(ChaturCas.isCassOnline, Notifications.ChaturNotification,Constants.casChatApiUrl,"chaturbate",rest)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    await platformChecker(OnlyCas.isCassOnline, Notifications.OFNotification,Constants.casOnlyUrl,"onlyfans",rest)
+    if Constants.casOnlyUrl:
+        await platformChecker(OnlyCas.isCassOnline, Notifications.OFNotification,Constants.casOnlyUrl,"onlyfans",rest)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    await platformChecker(FansCas.isCassOnline, Notifications.FansNotification,Constants.casFansUrl,"fansly",rest)
+    if Constants.casFansUrl:
+        await platformChecker(FansCas.isCassOnline, Notifications.FansNotification,Constants.casFansUrl,"fansly",rest)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    await platformChecker(TwitchCas.isCassOnline, Notifications.TwitchNotification,Constants.casTwitchChannelName,"twitch",rest)
+    if Constants.casTwitchChannelName:
+        await platformChecker(TwitchCas.isCassOnline, Notifications.TwitchNotification,Constants.casTwitchChannelName,"twitch",rest)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    await platformChecker(YouCas.isCassOnline, Notifications.YTNotification,Constants.casYtUrl,"youtube",rest)
+    if Constants.casYtUrl:
+        await platformChecker(YouCas.isCassOnline, Notifications.YTNotification,Constants.casYtUrl,"youtube",rest)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    await platformChecker(KickCass.isCassOnline, Notifications.KickNotification,Constants.casKickUrl,"kick",rest)
+    if Constants.casKickUrl:
+        await platformChecker(KickCass.isCassOnline, Notifications.KickNotification,Constants.casKickUrl,"kick",rest)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.longOnlineCheckTimer)
 async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    await platformChecker(KickCass.isCassOnline, Notifications.KittiesKickNotification,Constants.kittiesKickUrl,"kittiesKick",rest)
-
+    if Constants.kittiesKickUrl:
+        await platformChecker(KickCass.isCassOnline, Notifications.KittiesKickNotification,Constants.kittiesKickUrl,"kittiesKick",rest)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.avatarCheckTimer)

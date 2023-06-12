@@ -1,4 +1,6 @@
-How to set up the bot:
+# Cassbot
+## Discord bot for your favorite e-girl
+### How to set up the bot:
 
 1. Go to https://discord.com/developers and set up an app and get a token. Put that token in a file called token (no file extension needed), and put that file in a subfolder called secrets.
 2. At https://discord.com/developers/ - generate an invite code under oauth2 to invite your bot to your server. Under scope make sure bot is checked, and maybe commands?
@@ -8,4 +10,5 @@ How to set up the bot:
 4. Make sure you have python 3.10 or better installed.
     run command 'pip install -r requirements.txt'
 5. Generate the database with 'python GenerateDatabase.py' or 'python3 GenerateDatabase.py'
-6. Start the server: 'python3 run.py' or 'python run.py'
+6. Edit Constants.py with the information for your streamer. 
+7. Start the server: 'python3 run.py' or 'python run.py'
