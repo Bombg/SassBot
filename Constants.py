@@ -1,7 +1,6 @@
 class Constants:
     DEBUG = False
     TEST_SERVER = False
-    PING_EVERYONE = False #@everyone ping during an online announcement
 
     if TEST_SERVER:
         GUILD_ID =313876691082674178 #Guild ID of the discord server

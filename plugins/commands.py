@@ -10,6 +10,17 @@ from decorators.CommandLogger import CommandLogger
 component = tanjun.Component()
 
 @component.with_slash_command
+@tanjun.with_bool_slash_option("pingtruefalse", "True sets pings/everyone mentions on, False turns them off")
+@tanjun.as_slash_command("everyone-ping-toggle", "Toggle for @everyone pings in the announcements channel", default_to_ephemeral=True, always_defer=True)
+@Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
+async def togglePing(ctx: tanjun.abc.SlashContext, pingtruefalse: bool) -> None:
+    db = Database()
+    db.setPing(pingtruefalse)
+    onOff = "ON" if pingtruefalse else "OFF"
+    await ctx.respond(f"Everyone mention pings have been turned {onOff}.")
+
+@component.with_slash_command
 @tanjun.as_slash_command("shutdown-bot", "Shut down the bot before restarting it so some info can be saved to the database", default_to_ephemeral= True, always_defer= True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger

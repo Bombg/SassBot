@@ -192,3 +192,23 @@ class Database:
         cur.close()
         conn.close()
         return value[0][0],value[0][1]
+    
+    def getPing(self):
+        conn,cur = self.connectCursor()
+        exeString = f'''SELECT everyone_ping FROM stream '''
+        cur.execute(exeString)
+        value = cur.fetchall()
+        ping = False
+        if value[0][0]:
+            ping = True
+        cur.close()
+        conn.close()
+        return ping
+    
+    def setPing(self, ifPing: bool) -> None:
+        conn,cur = self.connectCursor()
+        exeString = f'''UPDATE stream SET everyone_ping={ifPing} '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()

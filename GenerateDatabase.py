@@ -37,7 +37,8 @@ cur.execute('''CREATE TABLE IF NOT EXISTS stream
                     tw_img_queue TEXT,
                     img_pin INTEGER,
                     img_pin_url TEXT,
-                    img_banned_list TEXT
+                    img_banned_list TEXT,
+                    everyone_ping INTEGER
                 )
             ''')
 
