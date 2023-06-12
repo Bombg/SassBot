@@ -59,6 +59,6 @@ class Constants:
     recordKeepingStartDate = 1684210200 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
 
     pinTimeLong = 16 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
-    pinTimeShort = 1
+    pinTimeShort = 1 # same as above but this is used for images added via rebroadcast-image command
 
     
