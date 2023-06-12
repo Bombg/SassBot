@@ -1,6 +1,4 @@
 import tanjun
-import globals
-from multiprocessing.pool import ThreadPool
 import StaticMethods
 import time
 from Constants import Constants
@@ -8,10 +6,8 @@ from Database import Database
 from datetime import datetime
 from decorators.Permissions import Permissions
 from decorators.CommandLogger import CommandLogger
-import asyncio
 
 component = tanjun.Component()
-pool = ThreadPool(processes=3)
 
 @component.with_slash_command
 @tanjun.as_slash_command("image-check-pin", "Check to see if an image is pinned", default_to_ephemeral= True)
@@ -112,12 +108,10 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
         if lastOffline == 0:
             await ctx.respond(Constants.streamerName + " isn't currently streaming , but check out her offline content! \n Links: "+ Constants.linkTreeUrl)
         else:
-            asyncResult = pool.apply_async(StaticMethods.timeToHoursMinutes,(lastOffline,))
-            hours, minutes = asyncResult.get()
+            hours, minutes = StaticMethods.timeToHoursMinutes(lastOffline)
             await ctx.respond(Constants.streamerName + " isn't currently streaming and has been offline for H:" + str(hours) + " M:" + str(minutes) + ", but check out her offline content! \n Links: "+ Constants.linkTreeUrl)
     else:
-        asyncResult = pool.apply_async(StaticMethods.timeToHoursMinutes,(lastOnline,))
-        hours, minutes = asyncResult.get()
+        hours, minutes = StaticMethods.timeToHoursMinutes(lastOnline)
         await ctx.respond(Constants.streamerName + " is currently streaming on: \n " + streamingOn + " and has been online for H:" + str(hours) + " M:" + str(minutes) + "\n Links: " + Constants.linkTreeUrl)
     tHours, tMinutes = StaticMethods.timeToHoursMinutesTotalTime(totalStreamTime)
     date = datetime.fromtimestamp(Constants.recordKeepingStartDate)
