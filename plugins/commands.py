@@ -62,7 +62,7 @@ async def rebroadcastWithImage(ctx: tanjun.abc.SlashContext, imgurl: str) -> Non
 @CommandLogger
 async def showImgList(ctx: tanjun.abc.Context) -> None:
     db = Database()
-    twImgList, twImgQue = db.getTwImgStuff()
+    twImgList, twImgQue, bannedImages = db.getTwImgStuff()
     await ctx.respond(twImgList)
 
 @component.with_slash_command
