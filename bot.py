@@ -33,6 +33,7 @@ def make_client(bot: hikari.GatewayBot) -> tanjun.Client:
 
     client.load_modules("plugins.checks")
     client.load_modules("plugins.commands")
+    client.load_modules("plugins.listeners")
 
 
     return client

@@ -1,0 +1,23 @@
+import hikari
+import alluka
+import tanjun
+from Constants import Constants 
+from datetime import datetime
+import time
+
+component = tanjun.Component()
+
+@component.with_listener(hikari.MessageDeleteEvent)
+async def printDelete(event: hikari.MessageDeleteEvent, rest: alluka.Injected[hikari.impl.RESTClientImpl]):
+    #await rest.create_message(channel= Constants.STDOUT_CHANNEL_ID, content = "message deleted yo") - output this to a specific channel in the future maybe
+    try:
+        file = open("deletedMessageLogs.txt", 'a')
+        date = datetime.fromtimestamp(time.time())
+        file.write(f"{date} Author: {event.old_message.author.id}-{event.old_message.author.username} - deleted: {event.old_message.content} in {event.channel_id} \n")
+        file.close()
+    except(AttributeError):
+        pass
+
+@tanjun.as_loader
+def load(client: tanjun.abc.Client) -> None:
+    client.add_component(component.copy())
