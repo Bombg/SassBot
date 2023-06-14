@@ -13,7 +13,7 @@ async def printDelete(event: hikari.MessageDeleteEvent, rest: alluka.Injected[hi
     try:
         file = open("deletedMessageLogs.txt", 'a')
         date = datetime.fromtimestamp(time.time())
-        file.write(f"{date} Author: {event.old_message.author.id}-{event.old_message.author.username} - deleted: {event.old_message.content} in {event.channel_id} \n")
+        file.write(f"{date} Author: {event.old_message.author.id}-{event.old_message.author.username} - deleted: {event.old_message.content} or {event.old_message.embeds} in {event.channel_id} \n")
         file.close()
     except(AttributeError):
         pass
