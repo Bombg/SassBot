@@ -7,7 +7,7 @@ import hikari
 
 class Notifications:
     async def OFNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail):
-        embedMaker = EmbedCreator(Constants.streamerName + " is live on Onlyfans!", "Naughty time? =)", Constants.OfLiveStreamUrl, 'images/OFImage.jpg', Constants.ofEmbedColor)
+        embedMaker = EmbedCreator(Constants.streamerName + " is live on Onlyfans!", title, Constants.OfLiveStreamUrl, 'images/OFImage.jpg', Constants.ofEmbedColor)
         task = asyncio.create_task(embedMaker.getEmbed())
         ofEmbed = await task
         db = Database()
@@ -27,7 +27,7 @@ class Notifications:
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=cbEmbed, mentions_everyone= PING_EVERYONE)
 
     async def FansNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail):
-        embedMaker = EmbedCreator(Constants.streamerName + " is live on Fansly!", "Naughty Sleep Stream? =)", Constants.fansLiveStreamUrl, 'images/FansImage.png', Constants.fansEmbedColor)
+        embedMaker = EmbedCreator(Constants.streamerName + " is live on Fansly!", title, Constants.fansLiveStreamUrl, 'images/FansImage.png', Constants.fansEmbedColor)
         task = asyncio.create_task(embedMaker.getEmbed())
         fansEmbed = await task
         db = Database()
