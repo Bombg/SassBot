@@ -1,6 +1,7 @@
 import time
 from selenium.webdriver.common.by import By
 from SeleniumDriverCreator import SeleniumDriverCreator
+from Constants import Constants
 
 def isCassOnline(CAS_ONLY_URL):
     driverCreator = SeleniumDriverCreator()
@@ -10,7 +11,7 @@ def isCassOnline(CAS_ONLY_URL):
     online = driver.find_elements(By.XPATH, '/html/body/div/div[2]/main/div[1]/div[1]/div/div[2]/div/div[2]/div[1]/a/span')
     driver.quit()
     isOnline = False
-    title = "Naughty time? =)"
+    title = Constants.ofDefaultTitle
     thumbUrl = ""
     if len(online) > 0:
         isOnline = True

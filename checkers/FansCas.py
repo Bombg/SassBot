@@ -1,6 +1,7 @@
 import time
 from selenium.webdriver.common.by import By
 from SeleniumDriverCreator import SeleniumDriverCreator
+from Constants import Constants
 
 
 def isCassOnline(CAS_FANS_URL):
@@ -12,7 +13,7 @@ def isCassOnline(CAS_FANS_URL):
     online = driver.find_elements(By.XPATH, '/html/body/app-root/div/div[1]/div/app-profile-route/div/div/div/div[1]/div[2]/div[1]/app-account-avatar/div')
     driver.quit()
     isOnline = False
-    title = "Naughty sleep stream? =)"
+    title = Constants.fansDefaultTitle
     thumbUrl = ""
     if len(online) > 0:
         isOnline = True

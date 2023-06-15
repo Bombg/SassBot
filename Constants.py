@@ -17,6 +17,18 @@ class Constants:
     TIME_BEFORE_BOT_RESTART = 604800 #time in seconds before bot will restart
     TIME_OFFLINE_BEFORE_RESTART = 900 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
 
+    onlineCheckTimer = 120 #Wait time in seconds between checks
+    longOnlineCheckTimer = 600
+    avatarCheckTimer = 130
+    statusCheckTimer = 125
+    restartCheckTimer = 300
+
+    recordKeepingStartDate = 1684210200 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
+
+    pinTimeLong = 16 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
+    pinTimeShort = 1 # same as above but this is used for images added via rebroadcast-image command
+
+
     #Links to model pages - not necessarily the live streaming page - if not applicable leave an empty string ex. casKickUrl = ""
     kickUserName = 'kittycass'
     kittiesKickUserName = 'casskitties'
@@ -61,15 +73,5 @@ class Constants:
     
     linkTreeUrl = "https://linktr.ee/kitty_cass_"
 
-    onlineCheckTimer = 120 #Wait time in seconds between checks
-    longOnlineCheckTimer = 600
-    avatarCheckTimer = 130
-    statusCheckTimer = 125
-    restartCheckTimer = 300
-
-    recordKeepingStartDate = 1684210200 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
-
-    pinTimeLong = 16 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
-    pinTimeShort = 1 # same as above but this is used for images added via rebroadcast-image command
-
-    
+    fansDefaultTitle = "Naughty sleep stream? =)"
+    ofDefaultTitle = "Naughty time? =)"
