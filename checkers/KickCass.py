@@ -7,7 +7,6 @@ def isCassOnline(username):
     title = "place holder kick title, this should never show up unless coder fucked up"
     thumbUrl = ""
     apiUrl = f"https://kick.com/api/v1/channels/{username}"
-
     driverCreator = SeleniumDriverCreator()
     driver = driverCreator.createDriver()
     driver.get(apiUrl)
