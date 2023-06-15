@@ -4,6 +4,7 @@ import cloudscraper
 def isCassOnline(username):
     isOnline = False
     title = "place holder kick title, this should never show up unless coder fucked up"
+    thumbUrl = ""
     apiUrl = f"https://kick.com/api/v1/channels/{username}"
     scraper = cloudscraper.create_scraper()
     streamerJson = scraper.get(apiUrl)
@@ -12,4 +13,6 @@ def isCassOnline(username):
     if results['livestream']:
         isOnline = True
         title = results['livestream']['session_title']
-    return isOnline, title
+        thumbUrl = results['livestream']['thumbnail']['url']
+
+    return isOnline, title, thumbUrl

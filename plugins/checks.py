@@ -23,7 +23,7 @@ def load(client: tanjun.abc.Client) -> None:
     client.add_component(component.copy())
 
 async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, urlConstant: str, platformName: str, rest: hikari.impl.RESTClientImpl):
-    isOnline, title = await asyncio.get_running_loop().run_in_executor(None,isOnlineFunc,urlConstant)
+    isOnline, title, thumbUrl = await asyncio.get_running_loop().run_in_executor(None,isOnlineFunc,urlConstant)
     db = Database()
     lastOnlineMessage,streamStartTime,streamEndTime = db.getPlatformsRowValues(platformName)
     secondsSinceLastMessage = StaticMethods.timeToSeconds(lastOnlineMessage)

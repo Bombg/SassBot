@@ -4,6 +4,8 @@ import json
 
 def isCassOnline(CAS_YT_URL):
     online = False
+    title =  "placeholder youtube title"
+    thumbUrl = ""
     page = requests.get(CAS_YT_URL, cookies={'CONSENT': 'YES+42'})
     soup = BeautifulSoup(page.content, "html.parser")
     live = soup.find("link", {"rel": "canonical"})
@@ -20,4 +22,4 @@ def isCassOnline(CAS_YT_URL):
     #else:
         #print("Cass is not streaming on youtube")
         
-    return online, "placeholder youtube title"
+    return online,title, thumbUrl

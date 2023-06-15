@@ -9,9 +9,11 @@ def isCassOnline(CAS_CHATUR_URL):
     time.sleep(3)
     results = onlineModels.json()["results"]
     title = "placeholder cb title"
+    thumbUrl = ""
     for result in results:
         #print(result['username'])
         if result['username'] == Constants.cbUserName:
             isOnline = True
             title = result['room_subject']
-    return isOnline, title
+            thumbUrl = result['image_url']
+    return isOnline, title, thumbUrl

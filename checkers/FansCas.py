@@ -12,7 +12,9 @@ def isCassOnline(CAS_FANS_URL):
     online = driver.find_elements(By.XPATH, '/html/body/app-root/div/div[1]/div/app-profile-route/div/div/div/div[1]/div[2]/div[1]/app-account-avatar/div')
     driver.quit()
     isOnline = False
+    title = "Naughty sleep stream? =)"
+    thumbUrl = ""
     if len(online) > 0:
         isOnline = True
-    return isOnline, "Naughty sleep stream? =)"
+    return isOnline, title, thumbUrl
     
