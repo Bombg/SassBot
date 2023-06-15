@@ -14,11 +14,11 @@ def getEmbedImage() -> str:
     db = Database()
     twImgList, twImgQue, bannedList = db.getTwImgStuff()
     url = checkImagePin()
+    if not twImgQue and twImgList:
+        twImgQue = twImgList
     if not twImgList:
         imageSrc = 'images/twitErrImg.jpg'
         print("adding default image for embed since nothing is on the list.")
-    elif not twImgQue:
-        twImgQue = twImgList
     elif url:
         imageSrc = url
     else:
