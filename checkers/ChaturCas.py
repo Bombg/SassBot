@@ -8,10 +8,10 @@ def isCassOnline(CAS_CHATUR_URL):
     onlineModels = requests.get(CAS_CHATUR_URL)
     time.sleep(3)
     results = onlineModels.json()["results"]
+    title = "placeholder cb title"
     for result in results:
         #print(result['username'])
         if result['username'] == Constants.cbUserName:
             isOnline = True
-
-    return isOnline, "placeholder cb title"
-
+            title = result['room_subject']
+    return isOnline, title
