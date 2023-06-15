@@ -18,8 +18,10 @@ class Constants:
     TIME_OFFLINE_BEFORE_RESTART = 900 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
 
     #Links to model pages - not necessarily the live streaming page - if not applicable leave an empty string ex. casKickUrl = ""
-    casKickUrl = 'https://kick.com/kittycass'
-    kittiesKickUrl = 'https://kick.com/casskitties'
+    kickUserName = 'kittycass'
+    kittiesKickUserName = 'casskitties'
+    casKickUrl = f'https://kick.com/{kickUserName}'
+    kittiesKickUrl = f'https://kick.com/{kittiesKickUserName}'
     casFansUrl = "https://fansly.com/BadKittyCass"
     casOnlyUrl = "https://onlyfans.com/badkittycass"
     casYtUrl = "https://www.youtube.com/@kitty_cass_/live" # https://www.youtube.com/@PUT_YOUTUBE_CHANNEL_NAME_HERE/live
@@ -36,7 +38,7 @@ class Constants:
     fansLiveStreamUrl = "https://fansly.com/live/BadKittyCass"
     twitchLiveStreamUrl = "https://www.twitch.tv/kitty_goes_mreow"
     ytLiveStreamUrl = "https://www.youtube.com/@kitty_cass_/live"
-    kickLiveStreamUrl = "https://kick.com/kittycass"
+    kickLiveStreamUrl = f"https://kick.com/{kickUserName}"
 
     streamerName = "Cass"
 

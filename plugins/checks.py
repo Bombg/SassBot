@@ -86,13 +86,13 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
 @tanjun.as_interval(Constants.onlineCheckTimer)
 async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.casKickUrl:
-        await platformChecker(KickCass.isCassOnline, Notifications.KickNotification,Constants.casKickUrl,"kick",rest)
+        await platformChecker(KickCass.isCassOnline, Notifications.KickNotification,Constants.kickUserName,"kick",rest)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.longOnlineCheckTimer)
 async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.kittiesKickUrl:
-        await platformChecker(KickCass.isCassOnline, Notifications.KittiesKickNotification,Constants.kittiesKickUrl,"kittiesKick",rest)
+        await platformChecker(KickCass.isCassOnline, Notifications.KittiesKickNotification,Constants.kittiesKickUserName,"kittiesKick",rest)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.avatarCheckTimer)
