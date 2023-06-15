@@ -53,6 +53,7 @@ class Constants:
     kickEmbedColor = "#52fb19"
     fansEmbedColor = "#ffffff"
     ofEmbedColor = "#018ccf"
+    cbEmbedColor = "#f6922f"
 
     #Leave empty string if you don't use. twitterUrl = ""
     # pulls images from the twitter page, so if your streamer shares other stuff that isn't photos of her, probably don't use it. And just add the images yourself, or remove ones you don't want

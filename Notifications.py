@@ -17,11 +17,14 @@ class Notifications:
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed = ofEmbed, mentions_everyone= PING_EVERYONE)
 
     async def ChaturNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail):
+        embedMaker = EmbedCreator(f"{Constants.streamerName} is live on Chaturbate!", title, Constants.cbLiveStreamUrl, 'images/cbImage.png', Constants.cbEmbedColor, largeThumbnail= largeThumbnail, useTwitter=False)
+        task = asyncio.create_task(embedMaker.getEmbed())
+        cbEmbed = await task
         db = Database()
         db.updateTableRowCol("platforms","chaturbate","last_online_message",time.time())
         PING_EVERYONE = db.getPing()
         messageContent = "@everyone " + Constants.chaturOnlineText if PING_EVERYONE else Constants.chaturOnlineText
-        await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, mentions_everyone= PING_EVERYONE)
+        await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=cbEmbed, mentions_everyone= PING_EVERYONE)
 
     async def FansNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail):
         embedMaker = EmbedCreator(Constants.streamerName + " is live on Fansly!", "Naughty Sleep Stream? =)", Constants.fansLiveStreamUrl, 'images/FansImage.png', Constants.fansEmbedColor)
