@@ -14,9 +14,6 @@ def isCassOnline(username):
     time.sleep(3)
     content = driver.page_source.split('<body>')
     jsonText = content[1].split('</body></html>')
-    # file = open("kickjsontest.txt", 'w')
-    # file.write(jsonText[0])
-    # file.close()
     results = json.loads(jsonText[0])
     if results['livestream']:
         isOnline = True
