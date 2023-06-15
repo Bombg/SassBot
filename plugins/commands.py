@@ -63,7 +63,7 @@ async def pinImage(ctx: tanjun.abc.SlashContext, imgurl: str, hours: int) -> Non
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def rebroadcast(ctx: tanjun.abc.Context) -> None:
-    await ctx.respond("Online Notifications should be resent within the next " + str(Constants.onlineCheckTimer) +  " seconds (or less), assuming " + Constants.streamerName + " is online. But may take longer if Kick bot checking is being annoying")
+    await ctx.respond("Online Notifications should be resent within the next " + str(Constants.onlineCheckTimer) +  " seconds (or less), assuming " + Constants.streamerName + " is online.")
     StaticMethods.setRebroadcast()
 
 @component.with_slash_command
