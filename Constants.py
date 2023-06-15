@@ -48,7 +48,7 @@ class Constants:
     twitchOnlineText = streamerName + " is live on Twitch!\n" + twitchLiveStreamUrl
     ytOnlineText = streamerName + " is live on YouTube!\n" + ytLiveStreamUrl
     kickOnlineText = streamerName + " is live on Kick!\n<" + kickLiveStreamUrl + ">"
-    kittiesKickOnlineText = "Cass' Kitties are live on Kick!\nhttps://kick.com/casskitties"
+    kittiesKickOnlineText = "Cass' Kitties are live on Kick!\n<https://kick.com/casskitties>"
 
     kickEmbedColor = "#52fb19"
     fansEmbedColor = "#ffffff"
