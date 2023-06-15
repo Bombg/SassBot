@@ -58,8 +58,11 @@ class Notifications:
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=kickEmbed, mentions_everyone= PING_EVERYONE)
     
     async def KittiesKickNotification(rest: hikari.impl.RESTClientImpl,title, largeThumbnail):
+        embedMaker = EmbedCreator("CassKitties is live on Kick!", title, Constants.kittiesKickUrl, 'images/KickImage.png', Constants.kickEmbedColor, largeThumbnail= largeThumbnail, useTwitter=False)
+        task = asyncio.create_task(embedMaker.getEmbed())
+        kickEmbed = await task
         db = Database()
         db.updateTableRowCol("platforms","kittiesKick","last_online_message",time.time())
         PING_EVERYONE = db.getPing()
         messageContent = "@everyone " + Constants.kittiesKickOnlineText if PING_EVERYONE else Constants.kittiesKickOnlineText
-        await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, mentions_everyone= PING_EVERYONE)
+        await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent,embed=kickEmbed, mentions_everyone= PING_EVERYONE)
