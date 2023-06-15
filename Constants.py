@@ -54,7 +54,7 @@ class Constants:
 
     streamerName = "Cass"
 
-    chaturOnlineText = streamerName + " is live on Chaturbate!\n" + cbLiveStreamUrl
+    chaturOnlineText = streamerName + " is live on Chaturbate!\n<" + cbLiveStreamUrl + ">"
     ofOnlineText = streamerName + " is live on Onlyfans!\n<" + OfLiveStreamUrl + ">"
     fansOnlineText = streamerName + " is live on Fansly!\n<" + fansLiveStreamUrl + ">"
     twitchOnlineText = streamerName + " is live on Twitch!\n" + twitchLiveStreamUrl
