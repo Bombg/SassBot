@@ -72,7 +72,7 @@ async def rebroadcast(ctx: tanjun.abc.Context) -> None:
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def rebroadcastWithImage(ctx: tanjun.abc.SlashContext, imgurl: str) -> None:
-    await ctx.respond(f"Added {imgurl} to the embed image list and will rebroadcast within the next {Constants.onlineCheckTimer} seconds. But may take longer if Kick bot checking is being annoying")
+    await ctx.respond(f"Added {imgurl} to the embed image list and will rebroadcast within the next {Constants.onlineCheckTimer} seconds.")
     StaticMethods.pinImage(imgurl, Constants.pinTimeShort)
     StaticMethods.setRebroadcast()
 
