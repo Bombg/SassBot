@@ -11,7 +11,6 @@ def isCassOnline(CAS_CHATUR_URL):
     title = "placeholder cb title"
     thumbUrl = ""
     for result in results:
-        #print(result['username'])
         if result['username'] == Constants.cbUserName:
             isOnline = True
             title = result['room_subject']
