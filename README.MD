@@ -9,10 +9,32 @@
 - Chaturbate
 ### Features
 - Get notifications when your streamer is online sent to a discord channel
+- Bot's status reflects what the streamer is doing. Offline or streaming on Kick, yt, etc.
 - Auto embed images from Twitter into notifications
+- White list commands to certain roles.
+- Log who uses what commands
 - Add/remove images yourself to embed into notifications via image commands. Images are rotated through, so add as many as you like.
 - Rebroadcast online notifications with rebroadcast commands
 - Subathon online timers via subathon commands
+- ... and many more!
+### Commands
+- /stream-status - See if your streamer is currently offline or online. Shows time online/offline and total time streamed.
+- /everyone-ping-toggle - Toggle for @everyone pings in the announcements channel
+- Image list commands - Images can be pulled from twitter and/or manually added. These images are used for embeds for Kick/CB/OF/Fans. Twitch/YT currently use their own default embeds.
+    - /image-list-show - show the list of image urls that will be rotated through during online announcements
+    - /image-list-add -  add an image url to the image list
+    - /image-list-remove -  remove an image from the image list. Must provide the url
+- Pin image commands -  If there is no pinned image, Kick and CB will use thumbnail images from the video feed, OF/Fans will embed images from the image list. YT/Twitch still use their own default embeds.
+    - /image-pin - pin an image for a number of hours you choose. Pinned images will be embedded into notifications in the announcements channel.
+    - /image-check-pin  - Check to see if an image is pinned
+    - /image-unpin  - unpin an image if it is pinned.
+- /rebroadcast - Send out online notifications to the announcements channel IF the streamer is online. Isn't isntant but goes off when the next online check is made.
+    - /rebroadcast-image  - same as above but you can attach a URL of an image to embed into the new announcement(s)
+- Subathon Commands - apart from commands, subathon status is also displayed in the Bot's status.
+    - /subathon - check the status of the current subathon, if there is one.
+    - /subathon-start - start a subathon timer
+    - /subathon-end - end a subathon timer
+
 ### How to set up the bot:
 
 1. Go to https://discord.com/developers and set up an app and get a token. Put that token in a file called token (no file extension needed), and put that file in a subfolder called secrets.
