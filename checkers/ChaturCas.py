@@ -14,5 +14,5 @@ def isCassOnline(CAS_CHATUR_URL):
         if result['username'] == Constants.cbUserName:
             isOnline = True
             title = result['room_subject']
-            thumbUrl = result['image_url']
+            thumbUrl = result['image_url'] + "?" + str(int(time.time()))
     return isOnline, title, thumbUrl

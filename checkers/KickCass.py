@@ -17,6 +17,6 @@ def isCassOnline(username):
     if results['livestream']:
         isOnline = True
         title = results['livestream']['session_title']
-        thumbUrl = results['livestream']['thumbnail']['url']
+        thumbUrl = results['livestream']['thumbnail']['url']+ "?" + str(int(time.time()))
 
     return isOnline, title, thumbUrl
