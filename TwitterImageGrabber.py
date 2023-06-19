@@ -21,9 +21,14 @@ def getImage():
         for ele in element:
             if re.search(reString,ele.get_attribute('src')):
                 images.append(ele.get_attribute('src'))
-        imageSrc = getTwImgDb(images)
+        if len(images) > 0:
+            imageSrc = getTwImgDb(images)
+        else:
+            imageSrc = 'images/twitErrImg.jpg'
+            print("twitter image grabber isn't working for some reason. No images in element")
     else:
         imageSrc = 'images/twitErrImg.jpg'
+        print("twitter image grabber isn't working for some reason. No elements")
     driver.quit()
     return imageSrc
 
