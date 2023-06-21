@@ -5,7 +5,7 @@ from Constants import Constants
 import StaticMethods
 
 class EmbedCreator:
-    def __init__(self,title,description,url,thumbnail,color,largeThumbnail = "",useTwitter = True) -> None:
+    def __init__(self,description,title,url,thumbnail,color,icon,username,largeThumbnail = "",useTwitter = True) -> None:
         self.title = title
         self.description = description
         self.url = url
@@ -13,6 +13,8 @@ class EmbedCreator:
         self.color = color
         self.largeThumbnail = largeThumbnail
         self.useTwitter = useTwitter
+        self.icon = icon
+        self.username = username
 
     async def getEmbed(self):
         pinUrl = StaticMethods.checkImagePin()
@@ -31,5 +33,6 @@ class EmbedCreator:
             color = self.color
             ).set_image(embedImg)
             .set_thumbnail(self.thumbnail)
+            .set_author(name = self.username, url = self.url, icon = self.icon)
         )
         return embed

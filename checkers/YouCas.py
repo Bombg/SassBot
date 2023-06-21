@@ -6,6 +6,7 @@ def isCassOnline(CAS_YT_URL):
     online = False
     title =  "placeholder youtube title"
     thumbUrl = ""
+    icon = 'images/errIcon.png'
     page = requests.get(CAS_YT_URL, cookies={'CONSENT': 'YES+42'})
     soup = BeautifulSoup(page.content, "html.parser")
     live = soup.find("link", {"rel": "canonical"})
@@ -16,4 +17,4 @@ def isCassOnline(CAS_YT_URL):
     status = compJson["playabilityStatus"]["status"]
     if live and status != "LIVE_STREAM_OFFLINE": 
         online = True    
-    return online,title, thumbUrl
+    return online,title, thumbUrl, icon

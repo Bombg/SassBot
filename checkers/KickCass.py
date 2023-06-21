@@ -6,6 +6,7 @@ def isCassOnline(username):
     isOnline = False
     title = "place holder kick title, this should never show up unless coder fucked up"
     thumbUrl = ""
+    icon = 'images/errIcon.png'
     apiUrl = f"https://kick.com/api/v1/channels/{username}"
     driverCreator = SeleniumDriverCreator()
     driver = driverCreator.createDriver()
@@ -18,5 +19,5 @@ def isCassOnline(username):
         isOnline = True
         title = results['livestream']['session_title']
         thumbUrl = results['livestream']['thumbnail']['url']+ "?" + str(int(time.time()))
-
-    return isOnline, title, thumbUrl
+        icon = results['user']['profile_pic']
+    return isOnline, title, thumbUrl, icon

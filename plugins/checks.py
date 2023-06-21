@@ -23,7 +23,7 @@ def load(client: tanjun.abc.Client) -> None:
     client.add_component(component.copy())
 
 async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, urlConstant: str, platformName: str, rest: hikari.impl.RESTClientImpl):
-    isOnline, title, thumbUrl = await asyncio.get_running_loop().run_in_executor(None,isOnlineFunc,urlConstant)
+    isOnline, title, thumbUrl, icon = await asyncio.get_running_loop().run_in_executor(None,isOnlineFunc,urlConstant)
     db = Database()
     lastOnlineMessage,streamStartTime,streamEndTime = db.getPlatformsRowValues(platformName)
     secondsSinceLastMessage = StaticMethods.timeToSeconds(lastOnlineMessage)
@@ -36,12 +36,12 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, ur
     elif isOnline == True:
         if secondsSinceStreamEndTime >= Constants.WAIT_BETWEEN_MESSAGES and secondsSinceLastMessage >= Constants.WAIT_BETWEEN_MESSAGES and streamEndTime >= streamStartTime:
             print(f"{platformName}Boobies")
-            await platformNotifFunc(rest, title, thumbUrl)
+            await platformNotifFunc(rest, title, thumbUrl, icon)
             db.updateTableRowCol("platforms",platformName,"last_stream_start_time",time.time())
             globals.rebroadcast[platformName] = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME or globals.rebroadcast[platformName]:
             print(f"Long{platformName}Boobies")
-            await platformNotifFunc(rest, title, thumbUrl)
+            await platformNotifFunc(rest, title, thumbUrl, icon)
             lastOnlineMessage = time.time()
             globals.rebroadcast[platformName] = 0
         elif streamEndTime > streamStartTime:

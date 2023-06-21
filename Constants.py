@@ -28,31 +28,36 @@ class Constants:
     pinTimeLong = 16 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
     pinTimeShort = 1 # same as above but this is used for images added via rebroadcast-image command
 
+    streamerName = "Cass"
 
-    #Links to model pages - not necessarily the live streaming page - if not applicable leave an empty string ex. casKickUrl = ""
     kickUserName = 'kittycass'
     kittiesKickUserName = 'casskitties'
+    cbUserName = 'badkittycass'
+    fansUserName = 'BadKittyCass'
+    onlyUserName = 'badkittycass'
+    ytUserName = 'kitty_cass_'
+    casTwitchChannelName = 'kitty_goes_mreow'
+
+
+    #Links to model pages - not necessarily the live streaming page - if not applicable leave an empty string ex. casKickUrl = ""
     casKickUrl = f'https://kick.com/{kickUserName}'
     kittiesKickUrl = f'https://kick.com/{kittiesKickUserName}'
-    casFansUrl = "https://fansly.com/BadKittyCass"
-    casOnlyUrl = "https://onlyfans.com/badkittycass"
-    casYtUrl = "https://www.youtube.com/@kitty_cass_/live" # https://www.youtube.com/@PUT_YOUTUBE_CHANNEL_NAME_HERE/live
+    casFansUrl = f"https://fansly.com/{fansUserName}"
+    casOnlyUrl = f"https://onlyfans.com/{onlyUserName}"
+    casYtUrl = f"https://www.youtube.com/@{ytUserName}/live"
+
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
     # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. if not applicable leave an empty string ex. casKickUrl = ""
     # I've found this responds more reliably when you narrow down the search more. So add region, and any tags your model always uses
     casChatApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs" 
-    cbUserName = 'badkittycass'
-    casTwitchChannelName = 'kitty_goes_mreow' #twitch name, not url
 
     # Links directly to the model's live stream - used for discord announcements. if not applicable leave an empty string ex. casKickUrl = ""
-    cbLiveStreamUrl = "https://chaturbate.com/badkittycass/"
-    OfLiveStreamUrl = "https://onlyfans.com/badkittycass/live"
-    fansLiveStreamUrl = "https://fansly.com/live/BadKittyCass"
-    twitchLiveStreamUrl = "https://www.twitch.tv/kitty_goes_mreow"
-    ytLiveStreamUrl = "https://www.youtube.com/@kitty_cass_/live"
+    cbLiveStreamUrl = f"https://chaturbate.com/{cbUserName}/"
+    OfLiveStreamUrl = f"https://onlyfans.com/{onlyUserName}/live"
+    fansLiveStreamUrl = f"https://fansly.com/live/{fansUserName}"
+    twitchLiveStreamUrl = f"https://www.twitch.tv/{casTwitchChannelName}"
+    ytLiveStreamUrl = f"https://www.youtube.com/@{ytUserName}/live"
     kickLiveStreamUrl = f"https://kick.com/{kickUserName}"
-
-    streamerName = "Cass"
 
     chaturOnlineText = streamerName + " is live on Chaturbate!\n<" + cbLiveStreamUrl + ">"
     ofOnlineText = streamerName + " is live on Onlyfans!\n<" + OfLiveStreamUrl + ">"
