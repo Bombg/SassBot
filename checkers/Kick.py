@@ -2,12 +2,12 @@ import time
 from SeleniumDriverCreator import SeleniumDriverCreator
 import json
 
-def isCassOnline(username):
+def isModelOnline(kickUserName):
     isOnline = False
     title = "place holder kick title, this should never show up unless coder fucked up"
     thumbUrl = ""
     icon = 'images/errIcon.png'
-    apiUrl = f"https://kick.com/api/v1/channels/{username}"
+    apiUrl = f"https://kick.com/api/v1/channels/{kickUserName}"
     driverCreator = SeleniumDriverCreator()
     driver = driverCreator.createDriver()
     driver.get(apiUrl)

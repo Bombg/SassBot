@@ -5,14 +5,14 @@ from Constants import Constants
 import StaticMethods
 
 
-def isCassOnline(CAS_FANS_URL):
+def isModelOnline(fansUrl):
     thumbUrl = ""
     icon = 'images/errIcon.png'
     isOnline = False
     title = Constants.fansDefaultTitle
     driverCreator = SeleniumDriverCreator()
     driver = driverCreator.createDriver()
-    driver.get(CAS_FANS_URL)
+    driver.get(fansUrl)
     time.sleep(10)
     #driver.get_screenshot_as_file("Fansscreenshot.png")
     online = driver.find_elements(By.XPATH, '/html/body/app-root/div/div[1]/div/app-profile-route/div/div/div/div[1]/div[2]/div[1]/app-account-avatar/div')

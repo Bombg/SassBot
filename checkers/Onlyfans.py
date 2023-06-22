@@ -4,14 +4,14 @@ from SeleniumDriverCreator import SeleniumDriverCreator
 from Constants import Constants
 import re
 
-def isCassOnline(CAS_ONLY_URL):
+def isModelOnline(ofUrl):
     title = Constants.ofDefaultTitle
     thumbUrl = ""
     icon = 'images/errIcon.png'
     reString = r'^https:\/\/.+avatar.jpg$'
     driverCreator = SeleniumDriverCreator()
     driver = driverCreator.createDriver()
-    driver.get(CAS_ONLY_URL)
+    driver.get(ofUrl)
     time.sleep(10)
     online = driver.find_elements(By.XPATH, '/html/body/div/div[2]/main/div[1]/div[1]/div/div[2]/div/div[2]/div[1]/a/span')
     iconEle = driver.find_elements(By.TAG_NAME, 'img')

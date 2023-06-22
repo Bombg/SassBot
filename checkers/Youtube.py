@@ -2,12 +2,12 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
-def isCassOnline(CAS_YT_URL):
+def isModelOnline(ytUrl):
     online = False
     title =  "placeholder youtube title"
     thumbUrl = ""
     icon = 'images/errIcon.png'
-    page = requests.get(CAS_YT_URL, cookies={'CONSENT': 'YES+42'})
+    page = requests.get(ytUrl, cookies={'CONSENT': 'YES+42'})
     soup = BeautifulSoup(page.content, "html.parser")
     live = soup.find("link", {"rel": "canonical"})
     scripts = soup.find_all('script')

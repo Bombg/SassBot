@@ -3,9 +3,9 @@ from selenium.webdriver.common.by import By
 import requests
 from Constants import Constants
 
-def isCassOnline(CAS_CHATUR_URL):
+def isModelOnline(cbApiUrl):
     isOnline = False
-    onlineModels = requests.get(CAS_CHATUR_URL)
+    onlineModels = requests.get(cbApiUrl)
     time.sleep(3)
     results = onlineModels.json()["results"]
     title = "placeholder cb title"
