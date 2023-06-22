@@ -34,32 +34,32 @@ class Constants:
     kittiesKickUserName = 'casskitties'
     cbUserName = 'badkittycass'
     fansUserName = 'BadKittyCass'
-    onlyUserName = 'badkittycass'
+    ofUserName = 'badkittycass'
     ytUserName = 'kitty_cass_'
-    casTwitchChannelName = 'kitty_goes_mreow'
+    twitchChannelName = 'kitty_goes_mreow'
 
 
     #Links to model pages - not necessarily the live streaming page - if not applicable leave an empty string ex. casKickUrl = ""
-    casKickUrl = f'https://kick.com/{kickUserName}'
+    kickUrl = f'https://kick.com/{kickUserName}'
     kittiesKickUrl = f'https://kick.com/{kittiesKickUserName}'
-    casFansUrl = f"https://fansly.com/{fansUserName}"
-    casOnlyUrl = f"https://onlyfans.com/{onlyUserName}"
-    casYtUrl = f"https://www.youtube.com/@{ytUserName}/live"
+    fansUrl = f"https://fansly.com/{fansUserName}"
+    ofUrl = f"https://onlyfans.com/{ofUserName}"
+    ytUrl = f"https://www.youtube.com/@{ytUserName}/live"
 
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
     # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. if not applicable leave an empty string ex. casKickUrl = ""
     # I've found this responds more reliably when you narrow down the search more. So add region, and any tags your model always uses
-    casChatApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs" 
+    cbApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs" 
 
     # Links directly to the model's live stream - used for discord announcements. if not applicable leave an empty string ex. casKickUrl = ""
     cbLiveStreamUrl = f"https://chaturbate.com/{cbUserName}/"
-    OfLiveStreamUrl = f"https://onlyfans.com/{onlyUserName}/live"
+    OfLiveStreamUrl = f"https://onlyfans.com/{ofUserName}/live"
     fansLiveStreamUrl = f"https://fansly.com/live/{fansUserName}"
-    twitchLiveStreamUrl = f"https://www.twitch.tv/{casTwitchChannelName}"
+    twitchLiveStreamUrl = f"https://www.twitch.tv/{twitchChannelName}"
     ytLiveStreamUrl = f"https://www.youtube.com/@{ytUserName}/live"
     kickLiveStreamUrl = f"https://kick.com/{kickUserName}"
 
-    chaturOnlineText = streamerName + " is live on Chaturbate!\n<" + cbLiveStreamUrl + ">"
+    cbOnlineText = streamerName + " is live on Chaturbate!\n<" + cbLiveStreamUrl + ">"
     ofOnlineText = streamerName + " is live on Onlyfans!\n<" + OfLiveStreamUrl + ">"
     fansOnlineText = streamerName + " is live on Fansly!\n<" + fansLiveStreamUrl + ">"
     twitchOnlineText = streamerName + " is live on Twitch!\n" + twitchLiveStreamUrl

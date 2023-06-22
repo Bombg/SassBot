@@ -7,7 +7,7 @@ import hikari
 
 class Notifications:
     async def OFNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon):
-        embedMaker = EmbedCreator(Constants.streamerName + " is now live on Onlyfans!", title, Constants.OfLiveStreamUrl, 'images/OFImage.jpg', Constants.ofEmbedColor, icon, Constants.onlyUserName)
+        embedMaker = EmbedCreator(Constants.streamerName + " is now live on Onlyfans!", title, Constants.OfLiveStreamUrl, 'images/OFImage.jpg', Constants.ofEmbedColor, icon, Constants.ofUserName)
         task = asyncio.create_task(embedMaker.getEmbed())
         ofEmbed = await task
         db = Database()
@@ -23,7 +23,7 @@ class Notifications:
         db = Database()
         db.updateTableRowCol("platforms","chaturbate","last_online_message",time.time())
         PING_EVERYONE = db.getPing()
-        messageContent = "@everyone " + Constants.chaturOnlineText if PING_EVERYONE else Constants.chaturOnlineText
+        messageContent = "@everyone " + Constants.cbOnlineText if PING_EVERYONE else Constants.cbOnlineText
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=cbEmbed, mentions_everyone= PING_EVERYONE)
 
     async def FansNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon):
@@ -51,7 +51,7 @@ class Notifications:
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, mentions_everyone= PING_EVERYONE)
     
     async def KickNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon):
-        embedMaker = EmbedCreator(Constants.streamerName + " is now live on Kick!", title, Constants.casKickUrl, 'images/KickImage.png', Constants.kickEmbedColor, icon, Constants.kickUserName, largeThumbnail= largeThumbnail)
+        embedMaker = EmbedCreator(Constants.streamerName + " is now live on Kick!", title, Constants.kickUrl, 'images/KickImage.png', Constants.kickEmbedColor, icon, Constants.kickUserName, largeThumbnail= largeThumbnail)
         task = asyncio.create_task(embedMaker.getEmbed())
         kickEmbed = await task
         db = Database()
