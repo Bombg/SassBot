@@ -5,11 +5,11 @@ class Constants:
     if TEST_SERVER:
         GUILD_ID =313876691082674178 #Guild ID of the discord server
         STDOUT_CHANNEL_ID =1096895456694505532 # Channel ID the bot will post notifications to
-        whiteListedRoleIDs = [1096930045685145710]
+        whiteListedRoleIDs = [1096930045685145710] # IDs of Roles you wish to be white listed for some commands
     else:
         GUILD_ID =852965953309376582 #Guild ID of the discord server
         STDOUT_CHANNEL_ID =1074419703533015101 # Channel ID the bot will post notifications to
-        whiteListedRoleIDs = [852971722424188940,852972290806906920,1045451879901057107]
+        whiteListedRoleIDs = [852971722424188940,852972290806906920,1045451879901057107] # IDs of Roles you wish to be white listed for some commands
 
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
@@ -25,7 +25,7 @@ class Constants:
 
     recordKeepingStartDate = 1684210200 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
 
-    pinTimeLong = 16 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
+    pinTimeLong = 4 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
     pinTimeShort = 1 # same as above but this is used for images added via rebroadcast-image command
 
     streamerName = "Cass"
