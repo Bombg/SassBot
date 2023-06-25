@@ -17,16 +17,16 @@ class Constants:
     TIME_BEFORE_BOT_RESTART = 604800 #time in seconds before bot will restart
     TIME_OFFLINE_BEFORE_RESTART = 900 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
 
-    onlineCheckTimer = 120 #Wait time in seconds between checks
-    longOnlineCheckTimer = 600
-    avatarCheckTimer = 130
-    statusCheckTimer = 125
-    restartCheckTimer = 300
+    ONLINE_CHECK_TIMER = 120 #Wait time in seconds between checks
+    LONG_ONLINE_CHECK_TIMER = 600
+    AVATAR_CHECK_TIMER = 130
+    STATUS_CHECK_TIMER = 125
+    RESTART_CHECK_TIMER = 300
 
-    recordKeepingStartDate = 1684210200 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
+    RECORD_KEEPING_START_DATE = 1684210200 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
 
-    pinTimeLong = 4 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
-    pinTimeShort = 1 # same as above but this is used for images added via rebroadcast-image command
+    PIN_TIME_LONG = 4 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
+    PIN_TIME_SHORT = 1 # same as above but this is used for images added via rebroadcast-image command
 
     streamerName = "Cass"
 

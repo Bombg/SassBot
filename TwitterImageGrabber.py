@@ -48,7 +48,7 @@ def getTwImgDb(images):
         twImgList = images
         twImgQue = images
     elif images[0] not in twImgList and images[0] not in bannedList:
-        StaticMethods.pinImage(images[0],Constants.pinTimeLong)
+        StaticMethods.pinImage(images[0],Constants.PIN_TIME_LONG)
         twImgList.insert(0, images[0])
         db.setTwImgList(twImgList)
     elif not twImgQue:

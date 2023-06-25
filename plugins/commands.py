@@ -63,7 +63,7 @@ async def pinImage(ctx: tanjun.abc.SlashContext, imgurl: str, hours: int) -> Non
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def rebroadcast(ctx: tanjun.abc.Context) -> None:
-    await ctx.respond("Online Notifications should be resent within the next " + str(Constants.onlineCheckTimer) +  " seconds (or less), assuming " + Constants.streamerName + " is online.")
+    await ctx.respond("Online Notifications should be resent within the next " + str(Constants.ONLINE_CHECK_TIMER) +  " seconds (or less), assuming " + Constants.streamerName + " is online.")
     StaticMethods.setRebroadcast()
 
 @component.with_slash_command
@@ -72,8 +72,8 @@ async def rebroadcast(ctx: tanjun.abc.Context) -> None:
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def rebroadcastWithImage(ctx: tanjun.abc.SlashContext, imgurl: str) -> None:
-    await ctx.respond(f"Added {imgurl} to the embed image list and will rebroadcast within the next {Constants.onlineCheckTimer} seconds.")
-    StaticMethods.pinImage(imgurl, Constants.pinTimeShort)
+    await ctx.respond(f"Added {imgurl} to the embed image list and will rebroadcast within the next {Constants.ONLINE_CHECK_TIMER} seconds.")
+    StaticMethods.pinImage(imgurl, Constants.PIN_TIME_SHORT)
     StaticMethods.setRebroadcast()
 
 @component.with_slash_command
@@ -134,7 +134,7 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
         hours, minutes = StaticMethods.timeToHoursMinutes(lastOnline)
         await ctx.respond(Constants.streamerName + " is currently streaming on: \n " + streamingOn + " and has been online for H:" + str(hours) + " M:" + str(minutes) + "\n Links: " + Constants.linkTreeUrl)
     tHours, tMinutes = StaticMethods.timeToHoursMinutesTotalTime(totalStreamTime)
-    date = datetime.fromtimestamp(Constants.recordKeepingStartDate)
+    date = datetime.fromtimestamp(Constants.RECORD_KEEPING_START_DATE)
     await ctx.respond(Constants.streamerName + " has streamed a grand total of H:" + str(tHours) + " M:" + str(tMinutes) + " since records have been kept starting on " + str(date)) 
 
 @component.with_slash_command

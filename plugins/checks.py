@@ -53,49 +53,49 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, ur
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(Constants.onlineCheckTimer)
+@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.cbApiUrl:
         await platformChecker(Chaturbate.isModelOnline, Notifications.ChaturNotification,Constants.cbApiUrl,"chaturbate",rest)
 
 @component.with_schedule
-@tanjun.as_interval(Constants.onlineCheckTimer)
+@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.ofUrl:
         await platformChecker(Onlyfans.isModelOnline, Notifications.OFNotification,Constants.ofUrl,"onlyfans",rest)
 
 @component.with_schedule
-@tanjun.as_interval(Constants.onlineCheckTimer)
+@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.fansUrl:
         await platformChecker(Fansly.isModelOnline, Notifications.FansNotification,Constants.fansUrl,"fansly",rest)
 
 @component.with_schedule
-@tanjun.as_interval(Constants.onlineCheckTimer)
+@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.twitchChannelName:
         await platformChecker(Twitch.isModelOnline, Notifications.TwitchNotification,Constants.twitchChannelName,"twitch",rest)
 
 @component.with_schedule
-@tanjun.as_interval(Constants.onlineCheckTimer)
+@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.ytUrl:
         await platformChecker(Youtube.isModelOnline, Notifications.YTNotification,Constants.ytUrl,"youtube",rest)
 
 @component.with_schedule
-@tanjun.as_interval(Constants.onlineCheckTimer)
+@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.kickUrl:
         await platformChecker(Kick.isModelOnline, Notifications.KickNotification,Constants.kickUserName,"kick",rest)
 
 @component.with_schedule
-@tanjun.as_interval(Constants.longOnlineCheckTimer)
+@tanjun.as_interval(Constants.LONG_ONLINE_CHECK_TIMER)
 async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.kittiesKickUrl:
         await platformChecker(Kick.isModelOnline, Notifications.KittiesKickNotification,Constants.kittiesKickUserName,"kittiesKick",rest)
 
 @component.with_schedule
-@tanjun.as_interval(Constants.avatarCheckTimer)
+@tanjun.as_interval(Constants.AVATAR_CHECK_TIMER)
 async def changeAvatar(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     db = Database()
     online = StaticMethods.checkOnline(db)
@@ -111,7 +111,7 @@ async def changeAvatar(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> Non
         globals.normalAvtar = False
 
 @component.with_schedule
-@tanjun.as_interval(Constants.statusCheckTimer)
+@tanjun.as_interval(Constants.STATUS_CHECK_TIMER)
 async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
     db = Database()
     subathon,subStart,subEnd = db.getSubathonStatusClean()
@@ -134,7 +134,7 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(Constants.statusCheckTimer)
+@tanjun.as_interval(Constants.STATUS_CHECK_TIMER)
 async def checkOnlineTime() -> None:
     db = Database()
     online = StaticMethods.checkOnline(db)
@@ -153,7 +153,7 @@ async def checkOnlineTime() -> None:
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(Constants.restartCheckTimer)
+@tanjun.as_interval(Constants.RESTART_CHECK_TIMER)
 async def checkRestart() -> None:
     db = Database()
     onTime,offTime,totalTime = db.getStreamTableValues()
