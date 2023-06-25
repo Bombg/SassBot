@@ -12,9 +12,10 @@ def getImage():
     driverCreator = SeleniumDriverCreator()
     driver = driverCreator.createDriver()
     driver.get(Constants.twitterUrl)
-    time.sleep(8)
+    time.sleep(15)
+    checkForAdultButton(driver)
     driver.get_screenshot_as_file("twitterShot.png")
-    element = driver.find_elements(By.CLASS_NAME, 'css-9pa8cd')
+    element = driver.find_elements(By.TAG_NAME, 'img')
     if len(element) > 0:
         reString = r'^https:\/\/pbs.twimg.com\/media\/.+small$'
         images = []
@@ -25,12 +26,18 @@ def getImage():
             imageSrc = getTwImgDb(images)
         else:
             imageSrc = 'images/twitErrImg.jpg'
-            print("twitter image grabber isn't working for some reason. No images in element")
+            print("twitter image grabber isn't working for some reason. No images in element. All models images may be marked as 18+.")
     else:
         imageSrc = 'images/twitErrImg.jpg'
-        print("twitter image grabber isn't working for some reason. No elements")
+        print("twitter image grabber isn't working for some reason. No elements.")
     driver.quit()
     return imageSrc
+
+def checkForAdultButton(driver):
+    button = driver.find_elements(By.XPATH, "/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[3]/div/div/div[2]/div/div[3]")
+    if len(button) > 0:
+        button[0].click()
+        time.sleep(10)
 
 def getTwImgDb(images):
     db = Database()
