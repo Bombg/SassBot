@@ -1,6 +1,8 @@
 import sqlite3
 import json
 import time
+import datetime
+from datetime import date
 
 class Database:
     def __init__(self):
@@ -213,3 +215,52 @@ class Database:
         conn.commit()
         cur.close()
         conn.close()
+    
+    def isExists(self,query: str) -> bool:
+        conn,cur = self.connectCursor()
+        exists = f"SELECT EXISTS({query})"
+        cur.execute(exists)
+        value = cur.fetchall()
+        cur.close()
+        conn.close()
+        return value[0][0]
+    
+    def getPresenceDay(self,dataDate: date) -> dict:
+        conn,cur = self.connectCursor()
+        presenceDict = {}
+        exeString = f'''SELECT user_presences FROM user_presence_stats WHERE date='{dataDate}' '''
+        if self.isExists(exeString):
+            cur.execute(exeString)
+            value = cur.fetchall()
+            presenceDict = json.loads(value[0][0])
+        else:
+            for i in range(144):
+                hour = int(i/6)
+                minute = i%6
+                minute = minute * 10
+                hourMinute = f'{hour}:{minute}'
+                presenceDict[hourMinute] = 0
+            self.setNewPresenceDay(date.today(),datetime.datetime.now().weekday(),presenceDict)
+        cur.close()
+        conn.close()
+        return presenceDict
+    
+    def setPresenceDay(self, dataDate: date, presenceDict: dict) -> None:
+        conn,cur = self.connectCursor()
+        presenceDictDump = json.dumps(presenceDict)
+        exeString = f'''UPDATE user_presence_stats SET user_presences='{presenceDictDump}' WHERE date = '{dataDate}' '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def setNewPresenceDay(self, dataDate: date, dataWeekDay: int, presenceDict: dict) -> None:
+        conn,cur = self.connectCursor()
+        presenceDictDump = json.dumps(presenceDict)
+        rowVals =(dataDate, dataWeekDay, presenceDictDump)
+        cur.execute('INSERT INTO user_presence_stats (date, week_day, user_presences) VALUES (?,?,?)',rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    

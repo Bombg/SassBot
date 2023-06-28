@@ -15,6 +15,8 @@ import StaticMethods
 from Notifications import Notifications
 from Database import Database
 from typing import Callable
+from datetime import date
+import datetime
 
 component = tanjun.Component()
 
@@ -164,3 +166,26 @@ async def checkRestart() -> None:
     elif Constants.DEBUG:
         print("TimeSinceRestart: " + str(timeSinceRestart))
         print("TimeSinceOffline: " + str(timeSinceOffline))
+
+@component.with_schedule
+@tanjun.as_time_schedule(minutes=[0,10,20,30,40,50])
+async def presenceGrabber(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    members = rest.fetch_members(Constants.GUILD_ID)
+    db = Database()
+    presencesDict = db.getPresenceDay(date.today())
+    hour = datetime.datetime.now().hour
+    minute = datetime.datetime.now().minute
+    minute = minute - (minute%10)
+    hourMinute = f"{hour}:{minute}"
+    statusCounts = {}
+    async for member in members:
+        presence = member.get_presence()
+        if presence != None:
+            status = presence.visible_status
+            statusStr = str(status)
+            if statusStr in statusCounts:
+                statusCounts[statusStr] += 1
+            else:
+                statusCounts[statusStr] = 1
+    presencesDict[hourMinute] = statusCounts
+    db.setPresenceDay(date.today(), presencesDict)

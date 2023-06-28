@@ -16,7 +16,7 @@ def getToken():
 def build_bot() -> hikari.GatewayBot:
     TOKEN = getToken()
     bot = hikari.GatewayBot(TOKEN,
-                            intents=hikari.Intents.ALL_UNPRIVILEGED | hikari.Intents.MESSAGE_CONTENT
+                            intents=hikari.Intents.ALL_UNPRIVILEGED | hikari.Intents.MESSAGE_CONTENT | hikari.Intents.GUILD_MEMBERS | hikari.Intents.GUILD_PRESENCES
                             )
 
     make_client(bot)

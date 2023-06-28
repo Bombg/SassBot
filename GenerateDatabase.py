@@ -42,6 +42,14 @@ cur.execute('''CREATE TABLE IF NOT EXISTS stream
                 )
             ''')
 
+cur.execute('''CREATE TABLE IF NOT EXISTS user_presence_stats
+                (
+                    date TEXT PRIMARY KEY, 
+                    weeek_day INTEGER,
+                    user_presences TEXT
+                )
+            ''')
+
 
 platform_list =[
                 ("chaturbate",0,0,time.time()),
