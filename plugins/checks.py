@@ -140,17 +140,16 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
 async def checkOnlineTime() -> None:
     db = Database()
     online = StaticMethods.checkOnline(db)
+    lastOnline,lastOffline,totalStreamTime = db.getStreamTableValues()
     if online:
         online = True
     else:
         online = False
-    if online and globals.online != online:
+    if online and lastOffline > lastOnline:
         print("time online starts now")
         db.setStreamLastOnline(time.time())
-        globals.online = online
-    elif not online and globals.online != online:
+    elif not online and lastOffline < lastOnline:
         print("offline time starts now")
-        globals.online = online
         StaticMethods.setOfflineAddTime()
     print("\n")
 
@@ -159,9 +158,10 @@ async def checkOnlineTime() -> None:
 async def checkRestart() -> None:
     db = Database()
     onTime,offTime,totalTime = db.getStreamTableValues()
+    online = StaticMethods.checkOnline(db)
     timeSinceRestart = time.time() - globals.botStartTime
     timeSinceOffline = time.time() - offTime
-    if not globals.online and timeSinceRestart > Constants.TIME_BEFORE_BOT_RESTART and timeSinceOffline > Constants.TIME_OFFLINE_BEFORE_RESTART:
+    if not online and timeSinceRestart > Constants.TIME_BEFORE_BOT_RESTART and timeSinceOffline > Constants.TIME_OFFLINE_BEFORE_RESTART:
         StaticMethods.safeRebootServer()
     elif Constants.DEBUG:
         print("TimeSinceRestart: " + str(timeSinceRestart))
