@@ -6,8 +6,31 @@ from Database import Database
 from datetime import datetime
 from decorators.Permissions import Permissions
 from decorators.CommandLogger import CommandLogger
+from datetime import date
+import DataGrapher
+import hikari
+import re
 
 component = tanjun.Component()
+
+@component.with_slash_command
+@tanjun.with_str_slash_option("date", "Date in yyyy-mm-dd format. If you don't enter anything today's date will be used", default = date.today())
+@tanjun.as_slash_command("users-graph", "get agraph for the active users. Date in yyyy-mm-dd format, or todays date if no input",default_to_ephemeral= True, always_defer=True)
+@Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
+async def activeDailyUsersGraph(ctx: tanjun.abc.SlashContext, date: str) -> None:
+    date = str(date)
+    restring = r"([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))"
+    if re.search(restring, date):
+        db = Database()
+        if db.isPresDateExists(date):
+            DataGrapher.createUserDayGraph(date)
+            file = hikari.File(f"graphs/{date}.png")
+            await ctx.respond(file)
+        else:
+            await ctx.respond("There is no data for this date")
+    else:
+        await ctx.respond("Improper date format, use yyyy-mm-dd")
 
 @component.with_slash_command
 @tanjun.with_bool_slash_option("pingtruefalse", "True sets pings/everyone mentions on, False turns them off")

@@ -225,6 +225,11 @@ class Database:
         conn.close()
         return value[0][0]
     
+    def isPresDateExists(self, dataDate: date) -> bool:
+        exeString = f'''SELECT user_presences FROM user_presence_stats WHERE date='{dataDate}' '''
+        isExists = self.isExists(exeString)
+        return isExists
+    
     def getPresenceDay(self,dataDate: date) -> dict:
         conn,cur = self.connectCursor()
         presenceDict = {}
@@ -233,7 +238,7 @@ class Database:
             cur.execute(exeString)
             value = cur.fetchall()
             presenceDict = json.loads(value[0][0])
-        else:
+        elif str(dataDate) == str(date.today()):
             for i in range(144):
                 hour = int(i/6)
                 minute = i%6
