@@ -14,18 +14,19 @@ import re
 component = tanjun.Component()
 
 @component.with_slash_command
-@tanjun.with_str_slash_option("date", "Date in yyyy-mm-dd format. If you don't enter anything today's date will be used", default = date.today())
+@tanjun.with_str_slash_option("inputdate", "Date in yyyy-mm-dd format. If you don't enter anything today's date will be used", default = "")
 @tanjun.as_slash_command("users-graph", "get agraph for the active users. Date in yyyy-mm-dd format, or todays date if no input",default_to_ephemeral= True, always_defer=True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
-async def activeDailyUsersGraph(ctx: tanjun.abc.SlashContext, date: str) -> None:
-    date = str(date)
+async def activeDailyUsersGraph(ctx: tanjun.abc.SlashContext, inputdate: str) -> None:
+    if not inputdate:
+        inputdate = str(date.today())
     restring = r"([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))"
-    if re.search(restring, date):
+    if re.search(restring, inputdate):
         db = Database()
-        if db.isPresDateExists(date):
-            DataGrapher.createUserDayGraph(date)
-            file = hikari.File(f"graphs/{date}.png")
+        if db.isPresDateExists(inputdate):
+            DataGrapher.createUserDayGraph(inputdate)
+            file = hikari.File(f"graphs/{inputdate}.png")
             await ctx.respond(file)
         else:
             await ctx.respond("There is no data for this date")
