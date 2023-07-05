@@ -188,7 +188,7 @@ async def presenceGrabber(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> 
     db.setPresenceDay(date.today(), presencesDict)
 
 @component.with_schedule
-@tanjun.as_time_schedule()
+@tanjun.as_time_schedule(minutes = [1,11,21,31,41,51])
 async def smartAlert(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     db = Database()
     presencesDict = db.getPresenceDay(date.today())
