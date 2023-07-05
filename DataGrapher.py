@@ -13,7 +13,7 @@ def createUserDayGraph(date: str) -> None:
     yIdle = []
     for k, v in presencesDict.items():
         if v:
-            x.append(k)
+            x.append(str(k))
             totalUsers = 0
             dnd = 0
             online = 0
@@ -26,10 +26,10 @@ def createUserDayGraph(date: str) -> None:
                     online += vals
                 elif keys == 'idle':
                     idle += vals
-            yTotalUsers.append(totalUsers)
-            yDnd.append(dnd)
-            yOnline.append(online)
-            yIdle.append(idle)
+            yTotalUsers.append(int(totalUsers))
+            yDnd.append(int(dnd))
+            yOnline.append(int(online))
+            yIdle.append(int(idle))
     plt.figure(figsize=(15, 5))
     plt.plot(x,yTotalUsers, label = "Total users(logged in to discord)")
     plt.plot(x,yDnd, label ="dnd", color = 'red')
@@ -38,7 +38,7 @@ def createUserDayGraph(date: str) -> None:
     plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
     plt.xlabel("Time")
     plt.ylabel("Users")
-    plt.title(date)
+    plt.title(str(date))
     ax = plt.gca()
     temp = ax.xaxis.get_ticklabels()
     temp = list(set(temp) - set(temp[::6]))
