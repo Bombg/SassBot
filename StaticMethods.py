@@ -3,6 +3,35 @@ import os
 from Database import Database
 import globals
 import base64
+import datetime
+from Constants import Constants
+
+def smartRebroadcast() -> None:
+    platforms = ['chaturbate','onlyfans','fansly','twitch','youtube','kick']
+    db = Database()
+    for platform in platforms:
+        lastOnlineMessage,streamStartTime,streamEndTime = db.getPlatformsRowValues(platform)
+        secondsSinceLastMessage = timeToSeconds(lastOnlineMessage)
+        if secondsSinceLastMessage >= Constants.SECONDS_BETWEEN_SMART_ALERTS and streamStartTime > streamEndTime:
+            print(f"Smart alert for {platform}")
+            globals.rebroadcast[platform] = 1
+
+def getMaxOnlineInPresenceDict(presDict: dict) -> int:
+    maxOnline = 0
+    for k, v in presDict.items():
+        if v:
+            maxOnline = max(v["online"], maxOnline)
+    return maxOnline
+
+
+def getHourMinuteString(offset = 0):
+    hour = datetime.datetime.now().hour
+    hour += offset
+    hour %= 24
+    minute = datetime.datetime.now().minute
+    minute = minute - (minute%10)
+    hourMinute = f"{hour}:{minute}"
+    return hourMinute
 
 def get_file_content_chrome(driver, uri):
     result = driver.execute_async_script("""

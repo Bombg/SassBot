@@ -173,10 +173,7 @@ async def presenceGrabber(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> 
     members = rest.fetch_members(Constants.GUILD_ID)
     db = Database()
     presencesDict = db.getPresenceDay(date.today())
-    hour = datetime.datetime.now().hour
-    minute = datetime.datetime.now().minute
-    minute = minute - (minute%10)
-    hourMinute = f"{hour}:{minute}"
+    hourMinute = StaticMethods.getHourMinuteString()
     statusCounts = {}
     async for member in members:
         presence = member.get_presence()
@@ -189,3 +186,21 @@ async def presenceGrabber(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> 
                 statusCounts[statusStr] = 1
     presencesDict[hourMinute] = statusCounts
     db.setPresenceDay(date.today(), presencesDict)
+
+@component.with_schedule
+@tanjun.as_time_schedule()
+async def smartAlert(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    db = Database()
+    presencesDict = db.getPresenceDay(date.today())
+    lastWeekPresenceDict = db.getLastWeeksDayPresenceData()
+    hourMinute = StaticMethods.getHourMinuteString()
+    lookAheadHourMinute = StaticMethods.getHourMinuteString(offset=Constants.SMART_ALERT_LOOK_AHEAD)
+    if lastWeekPresenceDict:
+        maxOnlineLastWeek = StaticMethods.getMaxOnlineInPresenceDict(lastWeekPresenceDict)
+        if presencesDict[hourMinute] and lastWeekPresenceDict[lookAheadHourMinute]:
+            lookAheadOnline = lastWeekPresenceDict[lookAheadHourMinute]['online']
+            nowOnline = presencesDict[hourMinute]['online']
+            onlineThreshold = int(maxOnlineLastWeek * Constants.PERCENTAGE_OF_MAX)
+            if nowOnline >= onlineThreshold and lookAheadOnline >= onlineThreshold:
+                StaticMethods.smartRebroadcast()
+        

@@ -268,4 +268,24 @@ class Database:
         cur.close()
         conn.close()
 
+    def getLastWeeksDayPresenceData(self) -> dict:
+        conn,cur = self.connectCursor()
+        weekday = datetime.datetime.now().weekday()
+        yesterdayWeekDay = (datetime.datetime.now().weekday() + 6) % 7
+        today = str(date.today())
+        value = 0
+        weekAgoQuery = f'SELECT date, week_day, user_presences FROM user_presence_stats WHERE week_day={weekday} EXCEPT SELECT date, week_day, user_presences FROM user_presence_stats WHERE date = \'{today}\' ORDER BY date DESC LIMIT 1'
+        yesterdayQuery = f'SELECT date, week_day, user_presences FROM user_presence_stats WHERE week_day={yesterdayWeekDay} ORDER BY date DESC LIMIT 1'
+        if self.isExists(weekAgoQuery):
+            cur.execute(weekAgoQuery)
+            value = cur.fetchall()
+            value = json.loads(value[0][2])
+        elif self.isExists(yesterdayQuery):
+            cur.execute(yesterdayQuery)
+            value = cur.fetchall()
+            value = json.loads(value[0][2])
+        cur.close()
+        conn.close()
+        return value
+
     
