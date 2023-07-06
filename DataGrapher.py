@@ -2,7 +2,7 @@ from Database import Database
 import matplotlib.pyplot as plt
 import os
 from datetime import date
-from random import randrange
+from Constants import Constants
 
 def createUserDayGraph(inputDate: str) -> None:
     db = Database()
@@ -35,12 +35,17 @@ def createUserDayGraph(inputDate: str) -> None:
 
 def addOnlineCols(presencesDict):
     dictKeys = list(presencesDict)
+    label = False
     for k, v in presencesDict.items():
         if v:
             if 'streaming' in v.keys():
                 try:
                     nextkey = dictKeys[dictKeys.index(k) + 1]
-                    plt.axvspan(k, nextkey, facecolor='g', alpha=0.25,zorder=3)
+                    if not label:
+                        plt.axvspan(k, nextkey, facecolor='g', alpha=0.25,zorder=3, label = Constants.streamerName + " Streaming")
+                        label = True
+                    else:
+                        plt.axvspan(k, nextkey, facecolor='g', alpha=0.25,zorder=3)
                 except (ValueError, IndexError):
                     pass
 
