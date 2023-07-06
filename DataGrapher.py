@@ -6,6 +6,45 @@ def createUserDayGraph(date: str) -> None:
     db = Database()
     yyyyDashMmDashDd = date
     presencesDict = db.getPresenceDay(yyyyDashMmDashDd)
+    lastWeekPresencesDict = db.getLastWeeksDayPresenceData()
+    x, yTotalUsers, yDnd, yOnline, yIdle = getTodaysLists(presencesDict)
+    yTotalUsersLastWeek = getLastWeekList(lastWeekPresencesDict, x)
+    plt.figure(figsize=(15, 5))
+    if lastWeekPresencesDict: 
+        plt.plot(x,yTotalUsersLastWeek, label = "Total users(same day last week)", color = "cyan")
+    plt.plot(x,yTotalUsers, label = "Total users(logged in to discord)", color = "blue")
+    plt.plot(x,yDnd, label ="dnd", color = 'red')
+    plt.plot(x,yOnline, label = "online", color = "green")
+    plt.plot(x, yIdle, label = "idle", color = "orange")
+    plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
+    plt.xlabel("Time")
+    plt.ylabel("Users")
+    plt.title(str(date))
+    ax = plt.gca()
+    temp = ax.xaxis.get_ticklabels()
+    temp = list(set(temp) - set(temp[::6]))
+    for label in temp:
+        label.set_visible(False)
+    if not os.path.exists("graphs"):
+        os.makedirs("graphs")
+    plt.tight_layout()    
+    plt.savefig(f"graphs/{yyyyDashMmDashDd}.png")
+
+def getLastWeekList(lastWeekPresencesDict, x):
+    if lastWeekPresencesDict:
+        yTotalUsersLastWeek = []
+        for k, v in lastWeekPresencesDict.items():
+            if v:
+                if k in x:
+                    totalUsers = 0
+                    for ke, va in v.items():
+                        totalUsers += va
+                    yTotalUsersLastWeek.append(totalUsers)
+            elif k in x:
+                yTotalUsersLastWeek.append(None)
+    return yTotalUsersLastWeek
+
+def getTodaysLists(presencesDict):
     x = []
     yTotalUsers = []
     yDnd = []
@@ -30,21 +69,4 @@ def createUserDayGraph(date: str) -> None:
             yDnd.append(int(dnd))
             yOnline.append(int(online))
             yIdle.append(int(idle))
-    plt.figure(figsize=(15, 5))
-    plt.plot(x,yTotalUsers, label = "Total users(logged in to discord)")
-    plt.plot(x,yDnd, label ="dnd", color = 'red')
-    plt.plot(x,yOnline, label = "online", color = "green")
-    plt.plot(x, yIdle, label = "idle", color = "orange")
-    plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
-    plt.xlabel("Time")
-    plt.ylabel("Users")
-    plt.title(str(date))
-    ax = plt.gca()
-    temp = ax.xaxis.get_ticklabels()
-    temp = list(set(temp) - set(temp[::6]))
-    for label in temp:
-        label.set_visible(False)
-    if not os.path.exists("graphs"):
-        os.makedirs("graphs")
-    plt.tight_layout()    
-    plt.savefig(f"graphs/{yyyyDashMmDashDd}.png")
+    return x,yTotalUsers,yDnd,yOnline,yIdle
