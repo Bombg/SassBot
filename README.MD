@@ -16,6 +16,7 @@
 - Add/remove images yourself to embed into notifications via image commands. Images are rotated through, so add as many as you like.
 - Rebroadcast online notifications with rebroadcast commands
 - Subathon online timers via subathon commands
+- Send alerts during peak discord usage times
 - ... and many more!
 ### Commands
 - /stream-status - See if your streamer is currently offline or online. Shows time online/offline and total time streamed.
@@ -34,6 +35,8 @@
     - /subathon - check the status of the current subathon, if there is one.
     - /subathon-start - start a subathon timer
     - /subathon-end - end a subathon timer
+- Graphs
+    - /users-graph Get a graph of online/dnd/idle/ users in your discord. The data is mainly used to send out alerts but why not use it for graphs as well!
 
 ### How to set up the bot:
 
