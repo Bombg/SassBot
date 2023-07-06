@@ -177,7 +177,7 @@ async def presenceGrabber(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> 
     hourMinute = StaticMethods.getHourMinuteString()
     statusCounts = {}
     if online:
-        statusCounts["streaming"] = True
+        statusCounts["streaming"] = online
     async for member in members:
         presence = member.get_presence()
         if presence != None:
