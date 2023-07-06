@@ -72,7 +72,8 @@ def getTodaysLists(presencesDict):
             online = 0
             idle = 0
             for keys, vals in v.items():
-                totalUsers += vals
+                if isinstance(vals,int):
+                    totalUsers += vals
                 if keys == 'dnd':
                     dnd += vals
                 elif keys == 'online':
