@@ -1,16 +1,17 @@
 from Database import Database
 import matplotlib.pyplot as plt
 import os
+from datetime import date
 
-def createUserDayGraph(date: str) -> None:
+def createUserDayGraph(inputDate: str) -> None:
     db = Database()
-    yyyyDashMmDashDd = date
+    yyyyDashMmDashDd = inputDate
     presencesDict = db.getPresenceDay(yyyyDashMmDashDd)
     lastWeekPresencesDict = db.getLastWeeksDayPresenceData()
     x, yTotalUsers, yDnd, yOnline, yIdle = getTodaysLists(presencesDict)
     yTotalUsersLastWeek = getLastWeekList(lastWeekPresencesDict, x)
     plt.figure(figsize=(15, 5))
-    if lastWeekPresencesDict: 
+    if lastWeekPresencesDict and str(date.today()) == yyyyDashMmDashDd: 
         plt.plot(x,yTotalUsersLastWeek, label = "Total users(same day last week)", color = "cyan")
     plt.plot(x,yTotalUsers, label = "Total users(logged in to discord)", color = "blue")
     plt.plot(x,yDnd, label ="dnd", color = 'red')
@@ -19,7 +20,7 @@ def createUserDayGraph(date: str) -> None:
     plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
     plt.xlabel("Time")
     plt.ylabel("Users")
-    plt.title(str(date))
+    plt.title(str(inputDate))
     ax = plt.gca()
     temp = ax.xaxis.get_ticklabels()
     temp = list(set(temp) - set(temp[::6]))
