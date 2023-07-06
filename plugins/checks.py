@@ -172,9 +172,12 @@ async def checkRestart() -> None:
 async def presenceGrabber(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     members = rest.fetch_members(Constants.GUILD_ID)
     db = Database()
+    online = StaticMethods.checkOnline(db)
     presencesDict = db.getPresenceDay(date.today())
     hourMinute = StaticMethods.getHourMinuteString()
     statusCounts = {}
+    if online:
+        statusCounts["streaming"] = True
     async for member in members:
         presence = member.get_presence()
         if presence != None:

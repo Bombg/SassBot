@@ -2,6 +2,7 @@ from Database import Database
 import matplotlib.pyplot as plt
 import os
 from datetime import date
+from random import randrange
 
 def createUserDayGraph(inputDate: str) -> None:
     db = Database()
@@ -17,6 +18,7 @@ def createUserDayGraph(inputDate: str) -> None:
     plt.plot(x,yDnd, label ="dnd", color = 'red')
     plt.plot(x,yOnline, label = "online", color = "green")
     plt.plot(x, yIdle, label = "idle", color = "orange")
+    addOnlineCols(presencesDict)
     plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
     plt.xlabel("Time")
     plt.ylabel("Users")
@@ -30,6 +32,17 @@ def createUserDayGraph(inputDate: str) -> None:
         os.makedirs("graphs")
     plt.tight_layout()    
     plt.savefig(f"graphs/{yyyyDashMmDashDd}.png")
+
+def addOnlineCols(presencesDict):
+    dictKeys = list(presencesDict)
+    for k, v in presencesDict.items():
+        if v:
+            if 'streaming' in v.keys():
+                try:
+                    nextkey = dictKeys[dictKeys.index(k) + 1]
+                    plt.axvspan(k, nextkey, facecolor='g', alpha=0.25,zorder=3)
+                except (ValueError, IndexError):
+                    pass
 
 def getLastWeekList(lastWeekPresencesDict, x):
     if lastWeekPresencesDict:
