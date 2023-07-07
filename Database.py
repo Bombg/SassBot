@@ -219,11 +219,16 @@ class Database:
     def isExists(self,query: str) -> bool:
         conn,cur = self.connectCursor()
         exists = f"SELECT EXISTS({query})"
-        cur.execute(exists)
-        value = cur.fetchall()
+        isExists = False
+        try:
+            cur.execute(exists)
+            value = cur.fetchall()
+            isExists = value[0][0]
+        except sqlite3.OperationalError:
+            print("error when checking if col exists, perhaps no data yet")
         cur.close()
         conn.close()
-        return value[0][0]
+        return isExists
     
     def isPresDateExists(self, dataDate: date) -> bool:
         exeString = f'''SELECT user_presences FROM user_presence_stats WHERE date='{dataDate}' '''

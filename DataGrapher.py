@@ -50,8 +50,8 @@ def addOnlineCols(presencesDict):
                     pass
 
 def getLastWeekList(lastWeekPresencesDict, x):
+    yTotalUsersLastWeek = []
     if lastWeekPresencesDict:
-        yTotalUsersLastWeek = []
         for k, v in lastWeekPresencesDict.items():
             if v:
                 if k in x:
