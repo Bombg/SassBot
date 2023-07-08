@@ -35,8 +35,9 @@
     - /subathon - check the status of the current subathon, if there is one.
     - /subathon-start - start a subathon timer
     - /subathon-end - end a subathon timer
-- Graphs
+- Stats
     - /users-graph Get a graph of online/dnd/idle/ users in your discord. The data is mainly used to send out alerts but why not use it for graphs as well!
+    - /stream-stats Shows total time streamed for the week, two weeks, and four weeks for each platform.
 
 ### How to set up the bot:
 
