@@ -11,6 +11,7 @@ def createUserDayGraph(inputDate: str) -> None:
     lastWeekPresencesDict = db.getLastWeeksDayPresenceData()
     x, yTotalUsers, yDnd, yOnline, yIdle = getTodaysLists(presencesDict)
     yTotalUsersLastWeek = getLastWeekList(lastWeekPresencesDict, x)
+    totalMembers = addTotalMembers(presencesDict)
     plt.figure(figsize=(15, 5))
     if lastWeekPresencesDict and str(date.today()) == yyyyDashMmDashDd: 
         plt.plot(x,yTotalUsersLastWeek, label = "Total users(same day last week)", color = "cyan")
@@ -28,10 +29,25 @@ def createUserDayGraph(inputDate: str) -> None:
     temp = list(set(temp) - set(temp[::6]))
     for label in temp:
         label.set_visible(False)
+    ax2 = ax.twinx()
+    ax2.plot(x,totalMembers, color = "violet", label = "All members(offline and online)")
+    ax2.set_ylabel("All members", color = "violet")
+    ax2.legend(bbox_to_anchor=(1.05, 0.68), loc='upper left')
+    ax2.tick_params(axis='y', labelcolor="violet")
     if not os.path.exists("graphs"):
         os.makedirs("graphs")
     plt.tight_layout()    
     plt.savefig(f"graphs/{yyyyDashMmDashDd}.png")
+
+def addTotalMembers(presencesDict: dict):
+    totalMembers = []
+    for k, v in presencesDict.items():
+        if v:
+            if 'members' in v.keys():
+                totalMembers.append(v['members'])
+            else:
+                totalMembers.append(None)
+    return totalMembers
 
 def addOnlineCols(presencesDict):
     dictKeys = list(presencesDict)
@@ -77,7 +93,7 @@ def getTodaysLists(presencesDict):
             online = 0
             idle = 0
             for keys, vals in v.items():
-                if isinstance(vals,int):
+                if isinstance(vals,int) and keys != 'members':
                     totalUsers += vals
                 if keys == 'dnd':
                     dnd += vals
