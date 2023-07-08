@@ -5,6 +5,47 @@ import globals
 import base64
 import datetime
 from Constants import Constants
+from datetime import timedelta
+from datetime import date
+
+def replaceIntsWithString(minsDict: dict) -> dict:
+    popKeys = []
+    for k, v in minsDict.items():
+        if minsDict[k] == 0:
+            popKeys.append(k)
+        else:
+            minsDict[k] = minutesToHourMinString(minsDict[k])
+    for key in popKeys:
+        minsDict.pop(key)
+    return minsDict
+
+def minutesToHourMinString(minutes: int) -> str:
+    hours = int(minutes / 60)
+    mins = int(minutes % 60)
+    return f"{hours}:{mins}"
+
+def getWeekStreamingMinutes(startingDate: date, minutesDict = {}):
+    db = Database()
+    minutesBetweenOnlineChecks = 10
+    daysInWeek = 7
+    weekMinutes = {"CB":0,"OF":0,"Twitch":0,"YT":0,"Fans":0,"Kick":0,"TotalTimeStreaming":0} if not minutesDict else dict(minutesDict)
+    platforms = list(weekMinutes)
+    platforms.remove("TotalTimeStreaming")
+    for i in range(daysInWeek):
+        pastDate = startingDate - timedelta(days = i)
+        dayData = db.getPresenceDay(pastDate)
+        if dayData:
+            for k, v in dayData.items():
+                if v:
+                    if 'streaming' in v.keys():
+                        weekMinutes["TotalTimeStreaming"] += minutesBetweenOnlineChecks
+                        if isinstance(v['streaming'],str):
+                            for platform in platforms:
+                                if platform in v['streaming']:
+                                    weekMinutes[platform] += minutesBetweenOnlineChecks
+                        else:
+                            weekMinutes["Kick"] += minutesBetweenOnlineChecks
+    return weekMinutes
 
 def smartRebroadcast() -> None:
     platforms = ['chaturbate','onlyfans','fansly','twitch','youtube','kick']

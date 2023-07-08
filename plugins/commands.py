@@ -7,11 +7,27 @@ from datetime import datetime
 from decorators.Permissions import Permissions
 from decorators.CommandLogger import CommandLogger
 from datetime import date
+from datetime import timedelta
 import DataGrapher
 import hikari
 import re
 
 component = tanjun.Component()
+
+@component.with_slash_command
+@tanjun.as_slash_command("stream-stats", f"Get stats on how much {Constants.streamerName} has been streaming.", default_to_ephemeral=True, always_defer=True)
+@Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
+async def streamStats(ctx: tanjun.abc.SlashContext) -> None:
+    weekData = StaticMethods.getWeekStreamingMinutes(date.today())
+    twoWeekData = StaticMethods.getWeekStreamingMinutes(date.today() - timedelta(days = 7), weekData)
+    threeWeekData = StaticMethods.getWeekStreamingMinutes(date.today() - timedelta(days = 14), twoWeekData)
+    fourWeekData = StaticMethods.getWeekStreamingMinutes(date.today() - timedelta(days = 21), threeWeekData)
+    weekData = StaticMethods.replaceIntsWithString(weekData)
+    twoWeekData = StaticMethods.replaceIntsWithString(twoWeekData)
+    threeWeekData = StaticMethods.replaceIntsWithString(threeWeekData)
+    fourWeekData = StaticMethods.replaceIntsWithString(fourWeekData)
+    await ctx.respond(f"One Week Totals:{weekData}\nTwo Week Totals:{twoWeekData}\nFour Week Totals:{fourWeekData}")
 
 @component.with_slash_command
 @tanjun.with_str_slash_option("inputdate", "Date in yyyy-mm-dd format. If you don't enter anything today's date will be used", default = "")
