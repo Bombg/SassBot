@@ -27,7 +27,7 @@ async def streamStats(ctx: tanjun.abc.SlashContext) -> None:
     twoWeekData = StaticMethods.replaceIntsWithString(twoWeekData)
     threeWeekData = StaticMethods.replaceIntsWithString(threeWeekData)
     fourWeekData = StaticMethods.replaceIntsWithString(fourWeekData)
-    await ctx.respond(f"One Week Totals:{weekData}\nTwo Week Totals:{twoWeekData}\nFour Week Totals:{fourWeekData}")
+    await ctx.respond(f"One Week Totals:{weekData}\nTwo Week Totals:{twoWeekData}\nFour Week Totals:{fourWeekData}\nChecks are made once every 10 min, so figures not exact")
 
 @component.with_slash_command
 @tanjun.with_str_slash_option("inputdate", "Date in yyyy-mm-dd format. If you don't enter anything today's date will be used", default = "")
