@@ -1,4 +1,4 @@
-# Cassbot
+# Sassbot
 ## Discord bot for your favorite e-girl
 ### Platforms Supported:
 - Twitch
