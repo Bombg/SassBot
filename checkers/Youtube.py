@@ -12,9 +12,12 @@ def isModelOnline(ytUrl):
     live = soup.find("link", {"rel": "canonical"})
     scripts = soup.find_all('script')
     ytJson = str(scripts).split('var ytInitialPlayerResponse = ')
-    splitJson = str(ytJson[1]).split(";</script>")
-    compJson = json.loads(splitJson[0])
-    status = compJson["playabilityStatus"]["status"]
-    if live and status != "LIVE_STREAM_OFFLINE": 
-        online = True    
+    try:
+        splitJson = str(ytJson[1]).split(";</script>")
+        compJson = json.loads(splitJson[0])
+        status = compJson["playabilityStatus"]["status"]
+        if live and status != "LIVE_STREAM_OFFLINE": 
+            online = True
+    except IndexError:
+        pass    
     return online,title, thumbUrl, icon
