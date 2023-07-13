@@ -73,7 +73,8 @@ def getLastWeekList(lastWeekPresencesDict, x):
                 if k in x:
                     totalUsers = 0
                     for ke, va in v.items():
-                        totalUsers += va
+                        if isinstance(va,int) and ke != 'members':
+                            totalUsers += va
                     yTotalUsersLastWeek.append(totalUsers)
             elif k in x:
                 yTotalUsersLastWeek.append(None)
