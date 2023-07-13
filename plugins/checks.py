@@ -198,7 +198,7 @@ async def presenceGrabber(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> 
 async def smartAlert(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     db = Database()
     presencesDict = db.getPresenceDay(date.today())
-    lastWeekPresenceDict = db.getLastWeeksDayPresenceData()
+    lastWeekPresenceDict = db.getLastWeeksDayPresenceData(date.today())
     hourMinute = StaticMethods.getHourMinuteString()
     lookAheadHourMinute = StaticMethods.getHourMinuteString(offset=Constants.SMART_ALERT_LOOK_AHEAD)
     if lastWeekPresenceDict:
