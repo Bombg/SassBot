@@ -91,12 +91,6 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
         await platformChecker(Kick.isModelOnline, Notifications.KickNotification,Constants.kickUserName,"kick",rest)
 
 @component.with_schedule
-@tanjun.as_interval(Constants.LONG_ONLINE_CHECK_TIMER)
-async def checkKittiesKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if Constants.kittiesKickUrl:
-        await platformChecker(Kick.isModelOnline, Notifications.KittiesKickNotification,Constants.kittiesKickUserName,"kittiesKick",rest)
-
-@component.with_schedule
 @tanjun.as_interval(Constants.AVATAR_CHECK_TIMER)
 async def changeAvatar(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     db = Database()

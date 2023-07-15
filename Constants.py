@@ -35,7 +35,6 @@ class Constants:
     streamerName = "Cass"
 
     kickUserName = 'kittycass'
-    kittiesKickUserName = 'casskitties'
     cbUserName = 'badkittycass'
     fansUserName = 'BadKittyCass'
     ofUserName = 'badkittycass'
@@ -45,7 +44,6 @@ class Constants:
 
     #Links to model pages - not necessarily the live streaming page - if not applicable leave an empty string ex. casKickUrl = ""
     kickUrl = f'https://kick.com/{kickUserName}'
-    kittiesKickUrl = f'https://kick.com/{kittiesKickUserName}'
     fansUrl = f"https://fansly.com/{fansUserName}"
     ofUrl = f"https://onlyfans.com/{ofUserName}"
     ytUrl = f"https://www.youtube.com/@{ytUserName}/live"
@@ -70,7 +68,6 @@ class Constants:
     twitchOnlineText = streamerName + " is live on Twitch!\n" + twitchLiveStreamUrl
     ytOnlineText = streamerName + " is live on YouTube!\n" + ytLiveStreamUrl
     kickOnlineText = streamerName + " is live on Kick!\n<" + kickLiveStreamUrl + ">"
-    kittiesKickOnlineText = "Cass' Kitties are live on Kick!\n<https://kick.com/casskitties>"
 
     kickEmbedColor = "#52fb19"
     fansEmbedColor = "#ffffff"

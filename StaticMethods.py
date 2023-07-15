@@ -125,8 +125,7 @@ def setRebroadcast() -> None:
         "fansly":1,
         "twitch":1,
         "youtube":1,
-        "kick": 1,
-        "kittiesKick":1
+        "kick": 1
 }
 
 def addImageListQue(url: str) -> None:
