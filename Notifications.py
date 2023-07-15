@@ -7,7 +7,7 @@ import hikari
 
 class Notifications:
     async def OFNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon):
-        embedMaker = EmbedCreator(Constants.streamerName + " is now live on Onlyfans!", title, Constants.OfLiveStreamUrl, 'images/OFImage.jpg', Constants.ofEmbedColor, icon, Constants.ofUserName)
+        embedMaker = EmbedCreator(Constants.streamerName + " is now live on Onlyfans!", title, Constants.OfLiveStreamUrl, 'images/platformImages/OFImage.jpg', Constants.ofEmbedColor, icon, Constants.ofUserName)
         task = asyncio.create_task(embedMaker.getEmbed())
         ofEmbed = await task
         db = Database()
@@ -17,7 +17,7 @@ class Notifications:
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed = ofEmbed, mentions_everyone= PING_EVERYONE)
 
     async def ChaturNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon):
-        embedMaker = EmbedCreator(f"{Constants.streamerName} is now live on Chaturbate!", title, Constants.cbLiveStreamUrl, 'images/cbImage.png', Constants.cbEmbedColor, icon, Constants.cbUserName, largeThumbnail= largeThumbnail, useTwitter=False)
+        embedMaker = EmbedCreator(f"{Constants.streamerName} is now live on Chaturbate!", title, Constants.cbLiveStreamUrl, 'images/platformImages/CbImage.png', Constants.cbEmbedColor, icon, Constants.cbUserName, largeThumbnail= largeThumbnail, useTwitter=False)
         task = asyncio.create_task(embedMaker.getEmbed())
         cbEmbed = await task
         db = Database()
@@ -27,7 +27,7 @@ class Notifications:
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=cbEmbed, mentions_everyone= PING_EVERYONE)
 
     async def FansNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon):
-        embedMaker = EmbedCreator(Constants.streamerName + " is now live on Fansly!", title, Constants.fansLiveStreamUrl, 'images/FansImage.png', Constants.fansEmbedColor, icon, Constants.fansUserName)
+        embedMaker = EmbedCreator(Constants.streamerName + " is now live on Fansly!", title, Constants.fansLiveStreamUrl, 'images/platformImages/FansImage.png', Constants.fansEmbedColor, icon, Constants.fansUserName)
         task = asyncio.create_task(embedMaker.getEmbed())
         fansEmbed = await task
         db = Database()
@@ -51,7 +51,7 @@ class Notifications:
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, mentions_everyone= PING_EVERYONE)
     
     async def KickNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon):
-        embedMaker = EmbedCreator(Constants.streamerName + " is now live on Kick!", title, Constants.kickUrl, 'images/KickImage.png', Constants.kickEmbedColor, icon, Constants.kickUserName, largeThumbnail= largeThumbnail)
+        embedMaker = EmbedCreator(Constants.streamerName + " is now live on Kick!", title, Constants.kickUrl, 'images/platformImages/KickImage.png', Constants.kickEmbedColor, icon, Constants.kickUserName, largeThumbnail= largeThumbnail)
         task = asyncio.create_task(embedMaker.getEmbed())
         kickEmbed = await task
         db = Database()
@@ -61,7 +61,7 @@ class Notifications:
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=kickEmbed, mentions_everyone= PING_EVERYONE)
     
     async def KittiesKickNotification(rest: hikari.impl.RESTClientImpl,title, largeThumbnail, icon):
-        embedMaker = EmbedCreator("CassKitties is now live on Kick!", title, Constants.kittiesKickUrl, 'images/KickImage.png', Constants.kickEmbedColor, icon, Constants.kittiesKickUserName, largeThumbnail= largeThumbnail, useTwitter=False)
+        embedMaker = EmbedCreator("CassKitties is now live on Kick!", title, Constants.kittiesKickUrl, 'images/platformImages/KickImage.png', Constants.kickEmbedColor, icon, Constants.kittiesKickUserName, largeThumbnail= largeThumbnail, useTwitter=False)
         task = asyncio.create_task(embedMaker.getEmbed())
         kickEmbed = await task
         db = Database()
