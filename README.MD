@@ -12,6 +12,7 @@
 - There's a minimum time between notifications, so your discord members won't get spammed if you're having connection issues.
 - Bot's status reflects what the streamer is doing. Offline or streaming on Kick, yt, etc.
 - Auto embed images from Twitter into notifications
+    - feature is busted for now until Twitter allows people to see tweets without being logged in once again.
 - White list commands to certain roles.
 - Log who uses what commands
 - Add/remove images yourself to embed into notifications via image commands. Images are rotated through, so add as many as you like.
@@ -52,4 +53,9 @@
 5. Make sure you have python 3.10 or better installed.
     run command 'pip install -r requirements.txt'
 6. Generate the database with 'python GenerateDatabase.py' or 'python3 GenerateDatabase.py' 
-7. Start the server: 'python3 run.py' or 'python run.py'
+7. Replace images in the image folder with those of your streamer, but keep same file names.
+    - images/errIcon.png - icon used for embeds if there is an issue getting one from the platform, or if one doesn't exist
+    - images/twitErrImg.jpg - default photo used for embeds if no other thumbnail or photo can be grabbed.
+    - images/avatars/calmStreamer.png - Bot avatar if streamer has streamed within the MIN_TIME_BEFORE_AVATAR_CHANGE time frame (default 48 hours)
+    - images/avatars/pissedStreamer.png - Bot avatar if streamer hasn't streamed within the MIN_TIME_BEFORE_AVATAR_CHANGE time frame
+8. Start the server: 'python3 run.py' or 'python run.py'
