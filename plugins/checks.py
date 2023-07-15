@@ -75,8 +75,8 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if Constants.twitchChannelName:
-        await platformChecker(Twitch.isModelOnline, Notifications.TwitchNotification,Constants.twitchChannelName,"twitch",rest)
+    if Constants.twitchUserName:
+        await platformChecker(Twitch.isModelOnline, Notifications.TwitchNotification,Constants.twitchUserName,"twitch",rest)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
@@ -130,7 +130,7 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
         await bot.update_presence(activity=hikari.Activity(
             name = playingString, 
             type = hikari.ActivityType.STREAMING, 
-            url = "https://www.twitch.tv/kitty_cass_"
+            url = Constants.twitchUrl
             ))
         await asyncio.sleep(5)
     print("\n")
