@@ -70,9 +70,11 @@ class Constants:
     kickOnlineText = streamerName + " is live on Kick!\n<" + kickLiveStreamUrl + ">"
 
     kickEmbedColor = "#52fb19"
-    fansEmbedColor = "#ffffff"
+    fansEmbedColor = "#a0816c"
     ofEmbedColor = "#018ccf"
     cbEmbedColor = "#f6922f"
+    ytEmbedColor = "#ff0000"
+    twitchEmbedColor = "#9146FF"
 
     #Leave empty string if you don't use. twitterUrl = ""
     # pulls images from the twitter page, so if your streamer shares other stuff that isn't photos of her, probably don't use it. And just add the images yourself, or remove ones you don't want

@@ -34,7 +34,7 @@ def createUserDayGraph(inputDate: str) -> None:
     ax2 = ax.twinx()
     ax2.plot(x,totalMembers, color = "violet", label = "All members(offline and online)")
     ax2.set_ylabel("All members", color = "violet")
-    ax2.legend(bbox_to_anchor=(1.05, 0.68), loc='upper left')
+    ax2.legend(bbox_to_anchor=(1.05, 0.25), loc='upper left')
     ax2.tick_params(axis='y', labelcolor="violet")
     if not os.path.exists("graphs"):
         os.makedirs("graphs")
@@ -53,19 +53,36 @@ def addTotalMembers(presencesDict: dict):
 
 def addOnlineCols(presencesDict):
     dictKeys = list(presencesDict)
-    label = False
+    labels = []
     for k, v in presencesDict.items():
         if v:
             if 'streaming' in v.keys():
                 try:
+                    newFaceColor = getFaceColor(v['streaming'])
                     nextkey = dictKeys[dictKeys.index(k) + 1]
-                    if not label:
-                        plt.axvspan(k, nextkey, facecolor='g', alpha=0.25,zorder=3, label = Constants.streamerName + " Streaming")
-                        label = True
+                    if newFaceColor not in labels:
+                        plt.axvspan(k, nextkey, facecolor=newFaceColor, alpha=0.25,zorder=3, label = Constants.streamerName + " Streaming " + v['streaming'] )
+                        labels.append(newFaceColor)
                     else:
-                        plt.axvspan(k, nextkey, facecolor='g', alpha=0.25,zorder=3)
+                        plt.axvspan(k, nextkey, facecolor=newFaceColor, alpha=0.25,zorder=3)
                 except (ValueError, IndexError):
                     pass
+
+def getFaceColor(streamingValues: str):
+    faceColor = 'g'
+    if 'Kick' in streamingValues:
+        faceColor = "g"
+    elif "OF" in streamingValues:
+        faceColor = Constants.ofEmbedColor
+    elif "Fans" in streamingValues:
+        faceColor = Constants.fansEmbedColor
+    elif "CB" in streamingValues:
+        faceColor = Constants.cbEmbedColor
+    elif "YT" in streamingValues:
+        faceColor = Constants.ytEmbedColor
+    elif "Twitch" in streamingValues:
+        faceColor = Constants.ytEmbedColor
+    return faceColor
 
 def getLastWeekList(lastWeekPresencesDict, x):
     yTotalUsersLastWeek = []
