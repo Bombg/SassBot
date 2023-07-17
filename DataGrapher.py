@@ -22,7 +22,7 @@ def createUserDayGraph(inputDate: str) -> None:
     plt.plot(x,yOnline, label = "online", color = "green")
     plt.plot(x, yIdle, label = "idle", color = "orange")
     addOnlineCols(presencesDict)
-    plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
+    plt.legend(bbox_to_anchor=(1.075, 1.0), loc='upper left')
     plt.xlabel("Time")
     plt.ylabel("Users")
     plt.title(str(inputDate))
@@ -34,7 +34,7 @@ def createUserDayGraph(inputDate: str) -> None:
     ax2 = ax.twinx()
     ax2.plot(x,totalMembers, color = "violet", label = "All members(offline and online)")
     ax2.set_ylabel("All members", color = "violet")
-    ax2.legend(bbox_to_anchor=(1.05, 0.25), loc='upper left')
+    ax2.legend(bbox_to_anchor=(1.075, 0.4), loc='upper left')
     ax2.tick_params(axis='y', labelcolor="violet")
     if not os.path.exists("graphs"):
         os.makedirs("graphs")
