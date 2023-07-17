@@ -1,16 +1,24 @@
 import requests
+import json
+from bs4 import BeautifulSoup
+import time
 
 def isModelOnline(twitchChannelName):
-    url = "https://gql.twitch.tv/gql"
-    query = "query {\n  user(login: \""+ twitchChannelName +"\") {\n    stream {\n      id\n    }\n  }\n}"
     title = "placeholder twitch title"
-    thumbUrl = f'https://static-cdn.jtvnw.net/previews-ttv/live_user_{twitchChannelName}-1920x1080.jpg'
+    thumbUrl = ''
     isOnline = False
     icon = 'images/errIcon.png'
-    req = requests.request("POST", url, json={"query": query, "variables": {}}, headers={"client-id": "kimne78kx3ncx6brgo4mv6wki5h1ko"})
+    page = requests.get(f'https://www.twitch.tv/{twitchChannelName}')
+    time.sleep(1)
+    soup = BeautifulSoup(page.content, "html.parser")
     try:
-        if req.json()["data"]["user"]["stream"]:
-            isOnline = True
-        return isOnline, title,thumbUrl, icon
-    except(TypeError):
-        return isOnline, title, thumbUrl, icon
+        firstSplit = soup.prettify().split('<script type=\"application/ld+json\">\n    [')
+        jsonSplit = firstSplit[1].split(']\n   </script>')
+        twitchJson = json.loads(jsonSplit[0])
+        thumbnail = twitchJson['thumbnailUrl'][2]
+        isOnline = twitchJson['publication']['isLiveBroadcast']
+        title = twitchJson['description']
+    except IndexError:
+        pass
+    
+    return isOnline, title, thumbUrl, icon
