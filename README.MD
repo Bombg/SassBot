@@ -24,7 +24,7 @@
 ### Commands
 - /stream-status - See if your streamer is currently offline or online. Shows time online/offline and total time streamed.
 - /everyone-ping-toggle - Toggle for @everyone pings in the announcements channel
-- Image list commands - Images can be pulled from twitter and/or manually added. These images are used for embeds for Kick/CB/OF/Fans. Twitch/YT currently use their own default embeds.
+- Image list commands - Images can be pulled from twitter and/or manually added. These images are used for embeds for all supported platforms.
     - /image-list-show - show the list of image urls that will be rotated through during online announcements
     - /image-list-add -  add an image url to the image list
     - /image-list-remove -  remove an image from the image list. Must provide the url
