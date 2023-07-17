@@ -65,8 +65,8 @@ class Constants:
     cbOnlineText = streamerName + " is live on Chaturbate!\n<" + cbLiveStreamUrl + ">"
     ofOnlineText = streamerName + " is live on Onlyfans!\n<" + OfLiveStreamUrl + ">"
     fansOnlineText = streamerName + " is live on Fansly!\n<" + fansLiveStreamUrl + ">"
-    twitchOnlineText = streamerName + " is live on Twitch!\n" + twitchLiveStreamUrl
-    ytOnlineText = streamerName + " is live on YouTube!\n" + ytLiveStreamUrl
+    twitchOnlineText = streamerName + " is live on Twitch!\n<" + twitchLiveStreamUrl + ">"
+    ytOnlineText = streamerName + " is live on YouTube!\n<" + ytLiveStreamUrl + ">"
     kickOnlineText = streamerName + " is live on Kick!\n<" + kickLiveStreamUrl + ">"
 
     kickEmbedColor = "#52fb19"

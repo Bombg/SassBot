@@ -7,7 +7,7 @@ import hikari
 
 class Notifications:
     async def OFNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon):
-        embedMaker = EmbedCreator(Constants.streamerName + " is now live on Onlyfans!", title, Constants.OfLiveStreamUrl, 'images/platformImages/OFImage.jpg', Constants.ofEmbedColor, icon, Constants.ofUserName)
+        embedMaker = EmbedCreator(Constants.streamerName + " is now live on Onlyfans!", title, Constants.OfLiveStreamUrl, 'images/platformImages/OFImage.png', Constants.ofEmbedColor, icon, Constants.ofUserName)
         task = asyncio.create_task(embedMaker.getEmbed())
         ofEmbed = await task
         db = Database()
@@ -37,18 +37,24 @@ class Notifications:
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed = fansEmbed, mentions_everyone=PING_EVERYONE)
 
     async def TwitchNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon):
+        embedMaker = EmbedCreator(Constants.streamerName + " is now live on Twitch!", title, Constants.twitchUrl, 'images/platformImages/twitchImage.png', Constants.twitchEmbedColor, icon, Constants.twitchUserName, largeThumbnail= largeThumbnail)
+        task = asyncio.create_task(embedMaker.getEmbed())
+        twitchEmbed = await task
         db = Database()
         db.updateTableRowCol("platforms","twitch","last_online_message",time.time())
         PING_EVERYONE = db.getPing()
         messageContent = "@everyone " + Constants.twitchOnlineText if PING_EVERYONE else Constants.twitchOnlineText
-        await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent,mentions_everyone= PING_EVERYONE)
+        await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=twitchEmbed, mentions_everyone= PING_EVERYONE)
     
     async def YTNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon):
+        embedMaker = EmbedCreator(Constants.streamerName + " is now live on YouTube!", title, Constants.ytUrl, 'images/platformImages/ytImage.png', Constants.ytEmbedColor, icon, Constants.ytUserName, largeThumbnail= largeThumbnail)
+        task = asyncio.create_task(embedMaker.getEmbed())
+        ytEmbed = await task
         db = Database()
         db.updateTableRowCol("platforms","youtube","last_online_message",time.time())
         PING_EVERYONE = db.getPing()
         messageContent = "@everyone " + Constants.ytOnlineText if PING_EVERYONE else Constants.ytOnlineText
-        await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, mentions_everyone= PING_EVERYONE)
+        await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=ytEmbed, mentions_everyone= PING_EVERYONE)
     
     async def KickNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon):
         embedMaker = EmbedCreator(Constants.streamerName + " is now live on Kick!", title, Constants.kickUrl, 'images/platformImages/KickImage.png', Constants.kickEmbedColor, icon, Constants.kickUserName, largeThumbnail= largeThumbnail)
