@@ -7,6 +7,12 @@ import datetime
 from Constants import Constants
 from datetime import timedelta
 from datetime import date
+import re
+
+def isRerun(title:str) -> bool:
+    reString = "(?i).*(^|!|\s|-|\()+((rerun|rr))(\s|-|\)|$)+.*"
+    rerun = re.search(reString,title)
+    return rerun
 
 def replaceIntsWithString(minsDict: dict) -> dict:
     popKeys = []

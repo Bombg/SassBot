@@ -1,6 +1,7 @@
 import time
 from SeleniumDriverCreator import SeleniumDriverCreator
 import json
+import StaticMethods
 
 def isModelOnline(kickUserName):
     isOnline = False
@@ -19,8 +20,10 @@ def isModelOnline(kickUserName):
         jsonText = content[1].split('</body></html>')
         results = json.loads(jsonText[0])
         if results['livestream']:
-            isOnline = True
             title = results['livestream']['session_title']
             thumbUrl = results['livestream']['thumbnail']['url']+ "?" + str(int(time.time()))
             icon = results['user']['profile_pic']
+            rerun = StaticMethods.isRerun(title)
+            if not rerun:
+                isOnline = True
     return isOnline, title, thumbUrl, icon
