@@ -12,16 +12,32 @@ def isModelOnline(twitchChannelName):
     page = requests.get(f'https://www.twitch.tv/{twitchChannelName}')
     time.sleep(1)
     soup = BeautifulSoup(page.content, "html.parser")
+    twitchJson = getTwitchJson(soup)
+    if twitchJson:
+        title = twitchJson['description']
+        thumbUrl = twitchJson['thumbnailUrl'][2]
+        reticon = getIcon(soup)
+        if reticon:
+            icon = reticon
+        rerun = StaticMethods.isRerun(title)
+        if not rerun:
+            isOnline = twitchJson['publication']['isLiveBroadcast']
+    return isOnline, title, thumbUrl, icon
+
+def getTwitchJson(soup):
+    twitchJson = 0
     try:
         firstSplit = soup.prettify().split('<script type=\"application/ld+json\">\n    [')
         jsonSplit = firstSplit[1].split(']\n   </script>')
         twitchJson = json.loads(jsonSplit[0])
-        title = twitchJson['description']
-        thumbnail = twitchJson['thumbnailUrl'][2]
-        rerun = StaticMethods.isRerun(title)
-        if not rerun:
-            isOnline = twitchJson['publication']['isLiveBroadcast']
     except IndexError:
         pass
-    
-    return isOnline, title, thumbUrl, icon
+    return twitchJson
+
+def getIcon(soup):
+    icon = 0
+    try:
+        icon = soup.find("meta", property="og:image")['content']
+    except IndexError:
+        pass
+    return icon
