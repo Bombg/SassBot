@@ -9,7 +9,7 @@
 - Chaturbate
 ### Features
 - Get notifications when your streamer is online sent to a discord channel
-- If twitch/kick title contain a variation of rerun/rr/not live then a notification will not be sent
+- If twitch/kick title contains a variation of rerun/rr/not live then a notification will not be sent
 - There's a minimum time between notifications, so your discord members won't get spammed if you're having connection issues.
 - Bot's status reflects what the streamer is doing. Offline or streaming on Kick, yt, etc.
 - Auto embed images from Twitter into notifications
