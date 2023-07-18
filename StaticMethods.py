@@ -10,7 +10,7 @@ from datetime import date
 import re
 
 def isRerun(title:str) -> bool:
-    reString = "(?i).*([^a-zA-Z]|^)+((rerun|rr))([^a-zA-Z]|$)+.*"
+    reString = "(?i).*([^a-zA-Z]|^)+((rerun|rr|𝓡𝓡|𝓡𝓔𝓡𝓤𝓝|not live))([^a-zA-Z]|$)+.*"
     rerun = re.search(reString,title)
     return rerun
 
