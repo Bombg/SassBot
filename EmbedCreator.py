@@ -17,6 +17,20 @@ class EmbedCreator:
         self.username = username
 
     async def getEmbed(self):
+        thumbnailImage = await self.getThumbnailImage()
+        embed = (
+            hikari.Embed(
+            title = self.title ,
+            description = self.description,
+            url = self.url,
+            color = self.color
+            ).set_image(thumbnailImage)
+            .set_thumbnail(self.thumbnail)
+            .set_author(name = self.username, url = self.url, icon = self.icon)
+        )
+        return embed
+
+    async def getThumbnailImage(self):
         pinUrl = StaticMethods.checkImagePin()
         if Constants.twitterUrl and self.useTwitter:
             embedImg = await asyncio.get_running_loop().run_in_executor(None,TwitterImageGrabber.getImage)
@@ -24,15 +38,4 @@ class EmbedCreator:
             embedImg = self.largeThumbnail
         else:
             embedImg = StaticMethods.getEmbedImage()
-
-        embed = (
-            hikari.Embed(
-            title = self.title ,
-            description = self.description,
-            url = self.url,
-            color = self.color
-            ).set_image(embedImg)
-            .set_thumbnail(self.thumbnail)
-            .set_author(name = self.username, url = self.url, icon = self.icon)
-        )
-        return embed
+        return embedImg
