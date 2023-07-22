@@ -24,7 +24,7 @@ class Constants:
     RESTART_CHECK_TIMER = 300
 
     SMART_ALERT_LOOK_AHEAD = 3 #number of hours smart alert looks ahead to make sure conditions are still met (to make sure alerts are made too late into a stream)
-    PERCENTAGE_OF_MAX = 0.90 # Percent of maximum users online before a smart alert goes off
+    PERCENTAGE_OF_MAX = 0.85 # Percent of maximum users online before a smart alert goes off
     SECONDS_BETWEEN_SMART_ALERTS = 21600 # minimum number of seconds before another smart alert goes off
 
     RECORD_KEEPING_START_DATE = 1684210200 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
