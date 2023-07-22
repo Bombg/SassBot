@@ -28,7 +28,7 @@
     - /image-list-show - show the list of image urls that will be rotated through during online announcements
     - /image-list-add -  add an image url to the image list
     - /image-list-remove -  remove an image from the image list. Must provide the url
-- Pin image commands -  If there is no pinned image, Kick and CB will use thumbnail images from the video feed, OF/Fans will embed images from the image list. YT/Twitch still use their own default embeds.
+- Pin image commands -  If there is no pinned image, Kick and CB will use thumbnail images from the video feed, OF/Fans will embed images from the image list. 
     - /image-pin - pin an image for a number of hours you choose. Pinned images will be embedded into notifications in the announcements channel.
     - /image-check-pin  - Check to see if an image is pinned
     - /image-unpin  - unpin an image if it is pinned.
