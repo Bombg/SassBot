@@ -6,13 +6,13 @@ import json.decoder
 
 def isModelOnline(cbApiUrl):
     isOnline = False
+    title = "placeholder cb title"
+    thumbUrl = ""
+    icon = 'images/errIcon.png'
     onlineModels = requests.get(cbApiUrl)
     time.sleep(3)
     try:
         results = onlineModels.json()["results"]
-        title = "placeholder cb title"
-        thumbUrl = ""
-        icon = 'images/errIcon.png'
         for result in results:
             if result['username'] == Constants.cbUserName:
                 isOnline = True
