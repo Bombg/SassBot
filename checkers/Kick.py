@@ -4,10 +4,7 @@ import json
 import StaticMethods
 
 def isModelOnline(kickUserName):
-    isOnline = False
-    title = "place holder kick title, this should never show up unless coder fucked up"
-    thumbUrl = ""
-    icon = 'images/errIcon.png'
+    isOnline, title, thumbUrl, icon = setDefaultStreamValues()
     apiUrl = f"https://kick.com/api/v1/channels/{kickUserName}"
     driverCreator = SeleniumDriverCreator()
     driver = driverCreator.createDriver()
@@ -18,6 +15,18 @@ def isModelOnline(kickUserName):
         print("error with kick checker. user is banned or wrong username supplied")
     else:
         jsonText = content[1].split('</body></html>')
+        isOnline, title, thumbUrl, icon = getStreamInfo(jsonText)
+    return isOnline, title, thumbUrl, icon
+
+def setDefaultStreamValues():
+    isOnline = False
+    title = "place holder kick title, this should never show up unless coder fucked up"
+    thumbUrl = ""
+    icon = 'images/errIcon.png'
+    return isOnline, title, thumbUrl, icon
+
+def getStreamInfo(jsonText):
+    try:
         results = json.loads(jsonText[0])
         if results['livestream']:
             title = results['livestream']['session_title']
@@ -26,4 +35,7 @@ def isModelOnline(kickUserName):
             rerun = StaticMethods.isRerun(title)
             if not rerun:
                 isOnline = True
-    return isOnline, title, thumbUrl, icon
+    except json.decoder.JSONDecodeError:
+        print("no json at kick api, bot detection or site down?")
+        isOnline, title, thumbUrl, icon = setDefaultStreamValues()
+    return isOnline,title,thumbUrl,icon
