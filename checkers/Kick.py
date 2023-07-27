@@ -26,6 +26,7 @@ def setDefaultStreamValues():
     return isOnline, title, thumbUrl, icon
 
 def getStreamInfo(jsonText):
+    isOnline, title, thumbUrl, icon = setDefaultStreamValues()
     try:
         results = json.loads(jsonText[0])
         if results['livestream']:
@@ -37,5 +38,4 @@ def getStreamInfo(jsonText):
                 isOnline = True
     except json.decoder.JSONDecodeError:
         print("no json at kick api, bot detection or site down?")
-        isOnline, title, thumbUrl, icon = setDefaultStreamValues()
     return isOnline,title,thumbUrl,icon
