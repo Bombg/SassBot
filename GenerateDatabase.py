@@ -5,7 +5,7 @@ import time
 #TEXT = string
 #BLOB = bytes
 #NULL = none
-conn = sqlite3.connect("cassBot.db")
+conn = sqlite3.connect("sassBot.db")
 
 cur = conn.cursor()
 

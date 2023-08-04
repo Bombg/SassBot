@@ -27,7 +27,7 @@ class Database:
         return value[0][0]
 
     def connectCursor(self):
-        conn = sqlite3.connect("cassBot.db")
+        conn = sqlite3.connect("sassBot.db")
         cur = conn.cursor()
         return conn, cur
     
