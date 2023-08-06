@@ -57,7 +57,7 @@ class Constants:
     if ytUserName:
         ytUrl = f"https://www.youtube.com/@{ytUserName}/live"
     else:
-        yturl = ""
+        ytUrl = ""
     if twitchUserName:
         twitchUrl = f"https://www.twitch.tv/{twitchUserName}"
     else:
