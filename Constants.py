@@ -4,12 +4,12 @@ class Constants:
 
     if TEST_SERVER:
         GUILD_ID =313876691082674178 #Guild ID of the discord server
-        STDOUT_CHANNEL_ID =1096895456694505532 # Channel ID the bot will post notifications to
+        STDOUT_CHANNEL_ID =1137599805787480214 # Channel ID the bot will post notifications to
         whiteListedRoleIDs = [1096930045685145710] # IDs of Roles you wish to be white listed for some commands
     else:
-        GUILD_ID =852965953309376582 #Guild ID of the discord server
-        STDOUT_CHANNEL_ID =1074419703533015101 # Channel ID the bot will post notifications to
-        whiteListedRoleIDs = [852971722424188940,852972290806906920,1045451879901057107] # IDs of Roles you wish to be white listed for some commands
+        GUILD_ID =313876691082674178 #Guild ID of the discord server
+        STDOUT_CHANNEL_ID =1137599805787480214 # Channel ID the bot will post notifications to
+        whiteListedRoleIDs = [1096930045685145710] # IDs of Roles you wish to be white listed for some commands
 
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
@@ -32,27 +32,44 @@ class Constants:
     PIN_TIME_LONG = 4 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
     PIN_TIME_SHORT = 1 # same as above but this is used for images added via rebroadcast-image command
 
-    streamerName = "Cass"
+    streamerName = "LitneySpears"
 
-    kickUserName = 'kittycass'
-    cbUserName = 'badkittycass'
-    fansUserName = 'BadKittyCass'
-    ofUserName = 'badkittycass'
-    ytUserName = 'kitty_cass_'
-    twitchUserName = 'kitty_cass_'
+    #Links to model pages - not necessarily the live streaming page - if not applicable leave an empty string
+    kickUserName = 'LitneySpears'
+    cbUserName = ''
+    fansUserName = 'Litneyspearsx'
+    ofUserName = 'litneyspearsx'
+    ytUserName = ''
+    twitchUserName = 'litneyspears_'
 
-
-    #Links to model pages - not necessarily the live streaming page - if not applicable leave an empty string ex. casKickUrl = ""
-    kickUrl = f'https://kick.com/{kickUserName}'
-    fansUrl = f"https://fansly.com/{fansUserName}"
-    ofUrl = f"https://onlyfans.com/{ofUserName}"
-    ytUrl = f"https://www.youtube.com/@{ytUserName}/live"
-    twitchUrl = f"https://www.twitch.tv/{twitchUserName}"
+    if kickUserName:
+        kickUrl = f'https://kick.com/{kickUserName}'
+    else:
+        kickUrl = ""
+    if fansUserName:
+        fansUrl = f"https://fansly.com/{fansUserName}"
+    else:
+        fansUrl = ""
+    if ofUserName:
+        ofUrl = f"https://onlyfans.com/{ofUserName}"
+    else:
+        ofUrl = ""
+    if ytUserName:
+        ytUrl = f"https://www.youtube.com/@{ytUserName}/live"
+    else:
+        yturl = ""
+    if twitchUserName:
+        twitchUrl = f"https://www.twitch.tv/{twitchUserName}"
+    else:
+        twitchur = ""
     
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
-    # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. if not applicable leave an empty string ex. casKickUrl = ""
+    # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. 
     # I've found this responds more reliably when you narrow down the search more. So add region, and any tags your model always uses
-    cbApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs" 
+    if cbUserName:
+        cbApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs"
+    else:
+        cbApiUrl = ""
 
     # Links directly to the model's live stream - used for discord announcements. if not applicable leave an empty string ex. casKickUrl = ""
     cbLiveStreamUrl = f"https://chaturbate.com/{cbUserName}/"
@@ -78,9 +95,9 @@ class Constants:
 
     #Leave empty string if you don't use. twitterUrl = ""
     # pulls images from the twitter page, so if your streamer shares other stuff that isn't photos of her, probably don't use it. And just add the images yourself, or remove ones you don't want
-    twitterUrl = 'https://twitter.com/_kitty_cass_' 
+    twitterUrl = 'https://twitter.com/Litney_Spears_' 
     
-    linkTreeUrl = "https://linktr.ee/kitty_cass_"
+    linkTreeUrl = "https://allmylinks.com/litneyspears"
 
     fansDefaultTitle = "Naughty sleep stream? =)"
     ofDefaultTitle = "Naughty time? =)"
