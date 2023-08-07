@@ -52,10 +52,7 @@ class Constants:
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
     # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. 
     # I've found this responds more reliably when you narrow down the search more. So add region, and any tags your model always uses
-    if cbUserName:
-        cbApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs"
-    else:
-        cbApiUrl = ""
+    cbApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs"
 
     # Links directly to the model's live stream - used for discord announcements. if not applicable leave an empty string ex. casKickUrl = ""
     cbLiveStreamUrl = f"https://chaturbate.com/{cbUserName}/"
