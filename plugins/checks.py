@@ -57,19 +57,19 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, ur
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if Constants.cbApiUrl:
+    if Constants.cbUserName:
         await platformChecker(Chaturbate.isModelOnline, Notifications.ChaturNotification,Constants.cbApiUrl,"chaturbate",rest)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if Constants.ofUrl:
+    if Constants.ofUserName:
         await platformChecker(Onlyfans.isModelOnline, Notifications.OFNotification,Constants.ofUrl,"onlyfans",rest)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if Constants.fansUrl:
+    if Constants.fansUserName:
         await platformChecker(Fansly.isModelOnline, Notifications.FansNotification,Constants.fansUrl,"fansly",rest)
 
 @component.with_schedule
@@ -81,13 +81,13 @@ async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if Constants.ytUrl:
+    if Constants.ytUserName:
         await platformChecker(Youtube.isModelOnline, Notifications.YTNotification,Constants.ytUrl,"youtube",rest)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if Constants.kickUrl:
+    if Constants.kickUserName:
         await platformChecker(Kick.isModelOnline, Notifications.KickNotification,Constants.kickUserName,"kick",rest)
 
 @component.with_schedule

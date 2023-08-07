@@ -42,26 +42,12 @@ class Constants:
     ytUserName = ''
     twitchUserName = 'litneyspears_'
 
-    if kickUserName:
-        kickUrl = f'https://kick.com/{kickUserName}'
-    else:
-        kickUrl = ""
-    if fansUserName:
-        fansUrl = f"https://fansly.com/{fansUserName}"
-    else:
-        fansUrl = ""
-    if ofUserName:
-        ofUrl = f"https://onlyfans.com/{ofUserName}"
-    else:
-        ofUrl = ""
-    if ytUserName:
-        ytUrl = f"https://www.youtube.com/@{ytUserName}/live"
-    else:
-        ytUrl = ""
-    if twitchUserName:
-        twitchUrl = f"https://www.twitch.tv/{twitchUserName}"
-    else:
-        twitchur = ""
+    kickUrl = f'https://kick.com/{kickUserName}'
+    fansUrl = f"https://fansly.com/{fansUserName}"
+    ofUrl = f"https://onlyfans.com/{ofUserName}"
+    ytUrl = f"https://www.youtube.com/@{ytUserName}/live"
+    twitchUrl = f"https://www.twitch.tv/{twitchUserName}"
+
     
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
     # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. 
