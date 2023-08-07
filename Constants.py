@@ -34,7 +34,7 @@ class Constants:
 
     streamerName = "LitneySpears"
 
-    #Links to model pages - not necessarily the live streaming page - if not applicable leave an empty string
+    #Usernames associated with each platform - if not applicable leave an empty string. i.e. cbUserName = ''
     kickUserName = 'LitneySpears'
     cbUserName = ''
     fansUserName = 'Litneyspearsx'
