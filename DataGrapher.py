@@ -82,6 +82,8 @@ def getFaceColor(streamingValues: str):
         faceColor = Constants.ytEmbedColor
     elif "Twitch" in streamingValues:
         faceColor = Constants.ytEmbedColor
+    elif "Cam4" in streamingValues:
+        faceColor = Constants.cam4EmbedColor
     return faceColor
 
 def getLastWeekList(lastWeekPresencesDict, x):

@@ -34,7 +34,7 @@ def getWeekStreamingMinutes(startingDate: date, minutesDict = {}):
     db = Database()
     minutesBetweenOnlineChecks = 10
     daysInWeek = 7
-    weekMinutes = {"CB":0,"OF":0,"Twitch":0,"YT":0,"Fans":0,"Kick":0,"TotalTimeStreaming":0} if not minutesDict else dict(minutesDict)
+    weekMinutes = {"CB":0,"OF":0,"Twitch":0,"YT":0,"Fans":0,"Kick":0,"Cam4":0,"TotalTimeStreaming":0} if not minutesDict else dict(minutesDict)
     platforms = list(weekMinutes)
     platforms.remove("TotalTimeStreaming")
     for i in range(daysInWeek):
@@ -49,12 +49,10 @@ def getWeekStreamingMinutes(startingDate: date, minutesDict = {}):
                             for platform in platforms:
                                 if platform in v['streaming']:
                                     weekMinutes[platform] += minutesBetweenOnlineChecks
-                        else:
-                            weekMinutes["Kick"] += minutesBetweenOnlineChecks
     return weekMinutes
 
 def smartRebroadcast() -> None:
-    platforms = ['chaturbate','onlyfans','fansly','twitch','youtube','kick']
+    platforms = ['chaturbate','onlyfans','fansly','twitch','youtube','kick','cam4']
     db = Database()
     for platform in platforms:
         lastOnlineMessage,streamStartTime,streamEndTime = db.getPlatformsRowValues(platform)
@@ -131,7 +129,8 @@ def setRebroadcast() -> None:
         "fansly":1,
         "twitch":1,
         "youtube":1,
-        "kick": 1
+        "kick":1,
+        "cam4":1
 }
 
 def addImageListQue(url: str) -> None:
@@ -167,6 +166,7 @@ def checkOnline(db: Database) -> str:
     ytLastOnlineMessage,ytStreamStartTime,ytStreamEndTime = db.getPlatformsRowValues('youtube')
     fansLastOnlineMessage,fansStreamStartTime,fansStreamEndTime = db.getPlatformsRowValues('fansly')
     kickLastOnlineMessage,kickStreamStartTime,kickStreamEndTime = db.getPlatformsRowValues('kick')
+    cam4LastOnlineMessage,cam4StreamStartTime,cam4StreamEndTime = db.getPlatformsRowValues('cam4')
     if cbStreamStartTime > cbStreamEndTime:
         playingString = playingString + "CB "
     if ofStreamStartTime > ofStreamEndTime:
@@ -179,6 +179,8 @@ def checkOnline(db: Database) -> str:
         playingString = playingString + "Fans "
     if kickStreamStartTime > kickStreamEndTime:
         playingString = playingString + "Kick"
+    if cam4StreamStartTime > cam4StreamEndTime:
+        playingString = playingString + "Cam4"
     return playingString
 
 def timeToHoursMinutes(newTime: float) -> int:

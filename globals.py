@@ -12,5 +12,6 @@ rebroadcast = {
     "fansly":0,
     "twitch":0,
     "youtube":0,
-    "kick": 0
+    "kick":0,
+    "cam4":0
 }

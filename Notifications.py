@@ -118,3 +118,22 @@ class Notifications:
         PING_EVERYONE = db.getPing()
         messageContent = "@everyone " + Constants.kickOnlineText if PING_EVERYONE else Constants.kickOnlineText
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=kickEmbed, mentions_everyone= PING_EVERYONE)
+
+    async def Cam4Notification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon):
+        embedMaker = EmbedCreator(
+                                    Constants.streamerName + " is now live on Cam4!", 
+                                    title, 
+                                    Constants.cam4Url, 
+                                    'images/platformImages/cam4Image.png', 
+                                    Constants.cam4EmbedColor, 
+                                    icon, 
+                                    Constants.cam4UserName, 
+                                    largeThumbnail= largeThumbnail
+                                )
+        task = asyncio.create_task(embedMaker.getEmbed())
+        cam4Embed = await task
+        db = Database()
+        db.updateTableRowCol("platforms","cam4","last_online_message",time.time())
+        PING_EVERYONE = db.getPing()
+        messageContent = "@everyone " + Constants.cam4OnlineText if PING_EVERYONE else Constants.cam4OnlineText
+        await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=cam4Embed, mentions_everyone= PING_EVERYONE)

@@ -57,7 +57,8 @@ platform_list =[
                 ("fansly",0,0,time.time()),
                 ("twitch",0,0,time.time()),
                 ("youtube",0,0,time.time()),
-                ("kick",0,0,time.time())
+                ("kick",0,0,time.time()),
+                ("cam4",0,0,time.time())
             ]
 subathon_values =[
                 (0,0,0,0,None)

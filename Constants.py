@@ -41,12 +41,14 @@ class Constants:
     ofUserName = 'litneyspearsx'
     ytUserName = ''
     twitchUserName = 'litneyspears_'
+    cam4UserName = ''
 
     kickUrl = f'https://kick.com/{kickUserName}'
     fansUrl = f"https://fansly.com/{fansUserName}"
     ofUrl = f"https://onlyfans.com/{ofUserName}"
     ytUrl = f"https://www.youtube.com/@{ytUserName}/live"
     twitchUrl = f"https://www.twitch.tv/{twitchUserName}"
+    cam4Url = f"https://www.cam4.com/{cam4UserName}"
 
     
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
@@ -61,6 +63,7 @@ class Constants:
     twitchLiveStreamUrl = f"https://www.twitch.tv/{twitchUserName}"
     ytLiveStreamUrl = f"https://www.youtube.com/@{ytUserName}/live"
     kickLiveStreamUrl = f"https://kick.com/{kickUserName}"
+    cam4LiveStreamUrl = f"https://www.cam4.com/{cam4UserName}"
 
     cbOnlineText = streamerName + " is live on Chaturbate!\n<" + cbLiveStreamUrl + ">"
     ofOnlineText = streamerName + " is live on Onlyfans!\n<" + OfLiveStreamUrl + ">"
@@ -68,6 +71,7 @@ class Constants:
     twitchOnlineText = streamerName + " is live on Twitch!\n<" + twitchLiveStreamUrl + ">"
     ytOnlineText = streamerName + " is live on YouTube!\n<" + ytLiveStreamUrl + ">"
     kickOnlineText = streamerName + " is live on Kick!\n<" + kickLiveStreamUrl + ">"
+    cam4OnlineText = streamerName + " is live on Cam4!\n<" + cam4LiveStreamUrl + ">"
 
     kickEmbedColor = "#52fb19"
     fansEmbedColor = "#a0816c"
@@ -75,6 +79,7 @@ class Constants:
     cbEmbedColor = "#f6922f"
     ytEmbedColor = "#ff0000"
     twitchEmbedColor = "#9146FF"
+    cam4EmbedColor = "#dd5d2c"
 
     #Leave empty string if you don't use. twitterUrl = ""
     # pulls images from the twitter page, so if your streamer shares other stuff that isn't photos of her, probably don't use it. And just add the images yourself, or remove ones you don't want
@@ -84,3 +89,4 @@ class Constants:
 
     fansDefaultTitle = "Naughty sleep stream? =)"
     ofDefaultTitle = "Naughty time? =)"
+    cam4DefaultTitle = "Cam4 Naughty Time."

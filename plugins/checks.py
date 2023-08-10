@@ -9,6 +9,7 @@ from Constants import Constants
 import checkers.Twitch as Twitch
 import checkers.Kick as Kick
 import checkers.Youtube as Youtube
+import checkers.Cam4 as Cam4
 import globals
 import time
 import StaticMethods
@@ -89,6 +90,12 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
 async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.kickUserName:
         await platformChecker(Kick.isModelOnline, Notifications.KickNotification,Constants.kickUserName,"kick",rest)
+
+@component.with_schedule
+@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
+async def checkCam4(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    if Constants.cam4UserName:
+        await platformChecker(Cam4.isModelOnline, Notifications.Cam4Notification,Constants.cam4UserName,"cam4",rest)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.AVATAR_CHECK_TIMER)
