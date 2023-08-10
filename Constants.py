@@ -56,7 +56,7 @@ class Constants:
     # I've found this responds more reliably when you narrow down the search more. So add region, and any tags your model always uses
     cbApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs"
 
-    # Links directly to the model's live stream - used for discord announcements. if not applicable leave an empty string ex. casKickUrl = ""
+    # Links directly to the model's live stream - used for discord announcements.
     cbLiveStreamUrl = f"https://chaturbate.com/{cbUserName}/"
     OfLiveStreamUrl = f"https://onlyfans.com/{ofUserName}/live"
     fansLiveStreamUrl = f"https://fansly.com/live/{fansUserName}"
