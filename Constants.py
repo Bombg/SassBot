@@ -14,7 +14,7 @@ class Constants:
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
     ONLINE_MESSAGE_REBROADCAST_TIME = 86400 #Time in seconds the stream will be online before another online notification will be broadcasted
-    TIME_BEFORE_BOT_RESTART = 604800 #time in seconds before bot will restart
+    TIME_BEFORE_BOT_RESTART = 86400 #time in seconds before bot will restart
     TIME_OFFLINE_BEFORE_RESTART = 900 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
 
     ONLINE_CHECK_TIMER = 120 #Wait time in seconds between checks
