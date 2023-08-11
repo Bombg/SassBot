@@ -34,7 +34,7 @@ def getWeekStreamingMinutes(startingDate: date, minutesDict = {}):
     db = Database()
     minutesBetweenOnlineChecks = 10
     daysInWeek = 7
-    weekMinutes = {"CB":0,"OF":0,"Twitch":0,"YT":0,"Fans":0,"Kick":0,"Cam4":0,"TotalTimeStreaming":0} if not minutesDict else dict(minutesDict)
+    weekMinutes = {"CB":0,"OF":0,"Twitch":0,"YT":0,"Fans":0,"Kick":0,"Cam4":0, "MFC":0,"TotalTimeStreaming":0} if not minutesDict else dict(minutesDict)
     platforms = list(weekMinutes)
     platforms.remove("TotalTimeStreaming")
     for i in range(daysInWeek):
@@ -52,7 +52,7 @@ def getWeekStreamingMinutes(startingDate: date, minutesDict = {}):
     return weekMinutes
 
 def smartRebroadcast() -> None:
-    platforms = ['chaturbate','onlyfans','fansly','twitch','youtube','kick','cam4']
+    platforms = ['chaturbate','onlyfans','fansly','twitch','youtube','kick','cam4','mfc']
     db = Database()
     for platform in platforms:
         lastOnlineMessage,streamStartTime,streamEndTime = db.getPlatformsRowValues(platform)
@@ -130,7 +130,8 @@ def setRebroadcast() -> None:
         "twitch":1,
         "youtube":1,
         "kick":1,
-        "cam4":1
+        "cam4":1,
+        "mfc":1
 }
 
 def addImageListQue(url: str) -> None:
@@ -167,6 +168,7 @@ def checkOnline(db: Database) -> str:
     fansLastOnlineMessage,fansStreamStartTime,fansStreamEndTime = db.getPlatformsRowValues('fansly')
     kickLastOnlineMessage,kickStreamStartTime,kickStreamEndTime = db.getPlatformsRowValues('kick')
     cam4LastOnlineMessage,cam4StreamStartTime,cam4StreamEndTime = db.getPlatformsRowValues('cam4')
+    mfcLastOnlineMessage,mfcStreamStartTime,mfcStreamEndTime = db.getPlatformsRowValues('mfc')
     if cbStreamStartTime > cbStreamEndTime:
         playingString = playingString + "CB "
     if ofStreamStartTime > ofStreamEndTime:
@@ -181,6 +183,8 @@ def checkOnline(db: Database) -> str:
         playingString = playingString + "Kick"
     if cam4StreamStartTime > cam4StreamEndTime:
         playingString = playingString + "Cam4"
+    if mfcStreamStartTime > mfcStreamEndTime:
+        playingString = playingString + "MFC"
     return playingString
 
 def timeToHoursMinutes(newTime: float) -> int:

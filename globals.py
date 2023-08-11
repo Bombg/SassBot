@@ -13,5 +13,6 @@ rebroadcast = {
     "twitch":0,
     "youtube":0,
     "kick":0,
-    "cam4":0
+    "cam4":0,
+    "mfc":0
 }

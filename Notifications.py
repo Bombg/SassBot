@@ -137,3 +137,22 @@ class Notifications:
         PING_EVERYONE = db.getPing()
         messageContent = "@everyone " + Constants.cam4OnlineText if PING_EVERYONE else Constants.cam4OnlineText
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=cam4Embed, mentions_everyone= PING_EVERYONE)
+
+    async def MfcNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon):
+        embedMaker = EmbedCreator(
+                                    Constants.streamerName + " is now live on MyFreeCams!", 
+                                    title, 
+                                    Constants.mfcUrl, 
+                                    'images/platformImages/mfcImage.png', 
+                                    Constants.mfcEmbedColor, 
+                                    icon, 
+                                    Constants.mfcUserName, 
+                                    largeThumbnail= largeThumbnail
+                                )
+        task = asyncio.create_task(embedMaker.getEmbed())
+        mfcEmbed = await task
+        db = Database()
+        db.updateTableRowCol("platforms","mfc","last_online_message",time.time())
+        PING_EVERYONE = db.getPing()  
+        messageContent = "@everyone " + Constants.mfcOnlineText if PING_EVERYONE else Constants.mfcOnlineText
+        await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=mfcEmbed, mentions_everyone= PING_EVERYONE)

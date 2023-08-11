@@ -84,6 +84,8 @@ def getFaceColor(streamingValues: str):
         faceColor = Constants.ytEmbedColor
     elif "Cam4" in streamingValues:
         faceColor = Constants.cam4EmbedColor
+    elif "MFC" in streamingValues:
+        faceColor = Constants.mfcEmbedColor
     return faceColor
 
 def getLastWeekList(lastWeekPresencesDict, x):

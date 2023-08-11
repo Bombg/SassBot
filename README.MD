@@ -8,6 +8,7 @@
 - Fansly
 - Chaturbate
 - Cam4
+- MyFreeCams
 ### Features
 - Get notifications when your streamer is online sent to a discord channel
 - If twitch/kick title contains a variation of rerun/rr/not live then a notification will not be sent
