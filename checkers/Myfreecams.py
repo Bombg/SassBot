@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 def isModelOnline(mfcUserName):
     isOnline = False
-    title = "placeholder mfc title"
+    title = Constants.mfcDefaultTitle
     thumbUrl = ""
     icon = 'images/errIcon.png'
     request = requests.get(f"https://share.myfreecams.com/{mfcUserName}")
