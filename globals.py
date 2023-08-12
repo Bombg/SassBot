@@ -14,5 +14,6 @@ rebroadcast = {
     "youtube":0,
     "kick":0,
     "cam4":0,
-    "mfc":0
+    "mfc":0,
+    "bongacams":0
 }

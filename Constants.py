@@ -43,6 +43,7 @@ class Constants:
     twitchUserName = 'litneyspears_'
     cam4UserName = ''
     mfcUserName = ''
+    bcUserName = ''
 
     kickUrl = f'https://kick.com/{kickUserName}'
     fansUrl = f"https://fansly.com/{fansUserName}"
@@ -51,6 +52,7 @@ class Constants:
     twitchUrl = f"https://www.twitch.tv/{twitchUserName}"
     cam4Url = f"https://www.cam4.com/{cam4UserName}"
     mfcUrl = f"https://www.myfreecams.com/#{mfcUserName}"
+    bcUrl = f"https://bongacams.com/{bcUserName}"
 
     
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
@@ -67,6 +69,7 @@ class Constants:
     kickLiveStreamUrl = f"https://kick.com/{kickUserName}"
     cam4LiveStreamUrl = f"https://www.cam4.com/{cam4UserName}"
     mfcLiveStreamUrl = f"https://www.myfreecams.com/#{mfcUserName}"
+    bcLiveStreamUrl = f"https://bongacams.com/{bcUserName}"
 
     cbOnlineText = streamerName + " is live on Chaturbate!\n<" + cbLiveStreamUrl + ">"
     ofOnlineText = streamerName + " is live on Onlyfans!\n<" + OfLiveStreamUrl + ">"
@@ -76,6 +79,7 @@ class Constants:
     kickOnlineText = streamerName + " is live on Kick!\n<" + kickLiveStreamUrl + ">"
     cam4OnlineText = streamerName + " is live on Cam4!\n<" + cam4LiveStreamUrl + ">"
     mfcOnlineText = streamerName + " is live on MyFreeCams!\n<" + mfcLiveStreamUrl + ">"
+    bcOnlineText = streamerName + " is live on BongaCams!\n<" + bcLiveStreamUrl + ">"
 
     kickEmbedColor = "#52fb19"
     fansEmbedColor = "#a0816c"
@@ -85,6 +89,7 @@ class Constants:
     twitchEmbedColor = "#9146FF"
     cam4EmbedColor = "#dd5d2c"
     mfcEmbedColor = "#377c1d"
+    bcEmbedColor = "#97323a"
 
     #Leave empty string if you don't use. twitterUrl = ""
     # pulls images from the twitter page, so if your streamer shares other stuff that isn't photos of her, probably don't use it. And just add the images yourself, or remove ones you don't want
@@ -96,3 +101,4 @@ class Constants:
     ofDefaultTitle = "Naughty time? =)"
     cam4DefaultTitle = "Cam4 Naughty Time."
     mfcDefaultTitle = "MFC Fun Time."
+    bcDefaultTitle = "BongaCams Fun Time."

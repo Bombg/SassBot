@@ -6,6 +6,7 @@ import checkers.Chaturbate as Chaturbate
 import checkers.Onlyfans as Onlyfans
 import checkers.Fansly as Fansly
 import checkers.Myfreecams as MFC
+import checkers.Bongacams as BC
 from Constants import Constants
 import checkers.Twitch as Twitch
 import checkers.Kick as Kick
@@ -103,6 +104,12 @@ async def checkCam4(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
 async def checkMfc(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.mfcUserName:
         await platformChecker(MFC.isModelOnline, Notifications.MfcNotification,Constants.mfcUserName,"mfc",rest)
+
+@component.with_schedule
+@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
+async def checkBc(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    if Constants.bcUserName:
+        await platformChecker(BC.isModelOnline, Notifications.BcNotification,Constants.bcUserName,"bongacams",rest)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.AVATAR_CHECK_TIMER)

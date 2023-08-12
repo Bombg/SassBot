@@ -156,3 +156,22 @@ class Notifications:
         PING_EVERYONE = db.getPing()  
         messageContent = "@everyone " + Constants.mfcOnlineText if PING_EVERYONE else Constants.mfcOnlineText
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=mfcEmbed, mentions_everyone= PING_EVERYONE)
+
+    async def BcNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon):
+        embedMaker = EmbedCreator(
+                                    Constants.streamerName + " is now live on BongaCams!", 
+                                    title, 
+                                    Constants.bcUrl, 
+                                    'images/platformImages/bcImage.png', 
+                                    Constants.bcEmbedColor, 
+                                    icon, 
+                                    Constants.bcUserName, 
+                                    largeThumbnail= largeThumbnail
+                                )
+        task = asyncio.create_task(embedMaker.getEmbed())
+        bcEmbed = await task
+        db = Database()
+        db.updateTableRowCol("platforms","bongacams","last_online_message",time.time())
+        PING_EVERYONE = db.getPing()  
+        messageContent = "@everyone " + Constants.mfcOnlineText if PING_EVERYONE else Constants.mfcOnlineText
+        await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=bcEmbed, mentions_everyone= PING_EVERYONE)

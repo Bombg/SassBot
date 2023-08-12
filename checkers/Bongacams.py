@@ -2,9 +2,10 @@ import requests
 import time
 from bs4 import BeautifulSoup
 import json
+from Constants import Constants
 
 def isModelOnline(bcUserName):
-    title = "placeholder bc title"
+    title = Constants.bcDefaultTitle
     thumbUrl = ''
     isOnline = False
     icon = 'images/errIcon.png'
@@ -25,8 +26,8 @@ def isModelOnline(bcUserName):
                 title = title.replace('\r', '')
                 title = title.replace('\n', '')
             icon = bcJson['chatHeaderOptions']['profileImage']
+            icon = "https:" + icon
             isOnline = not bcJson['chatShowStatusOptions']['isOffline']
-            thumbUrl = bcJson['miniProfile']['albums']['albums'][0]['thumbImage']['src']
     return isOnline, title, thumbUrl, icon
 
 
