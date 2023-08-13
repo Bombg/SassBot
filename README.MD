@@ -60,7 +60,7 @@
 6. Generate the database with 'python GenerateDatabase.py' or 'python3 GenerateDatabase.py' 
 7. Replace images in the image folder with those of your streamer, but keep same file names.
     - images/errIcon.png - icon used for embeds if there is an issue getting one from the platform, or if one doesn't exist
-    - images/twitErrImg.jpg - default photo used for embeds if no other thumbnail or photo can be grabbed.
+    - images/twitErrImg.jpg - default photo used for embeds if no other thumbnail or photo can be grabbed from the image list (if its empty)
     - images/avatars/calmStreamer.png - Bot avatar if streamer has streamed within the MIN_TIME_BEFORE_AVATAR_CHANGE time frame (default 48 hours)
     - images/avatars/pissedStreamer.png - Bot avatar if streamer hasn't streamed within the MIN_TIME_BEFORE_AVATAR_CHANGE time frame
 8. Start the server: 'python3 run.py' or 'python run.py'
