@@ -60,7 +60,8 @@ platform_list =[
                 ("kick",0,0,time.time()),
                 ("cam4",0,0,time.time()),
                 ("mfc",0,0,time.time()),
-                ("bongacams",0,0,time.time())
+                ("bongacams",0,0,time.time()),
+                ("stripchat",0,0,time.time())
             ]
 subathon_values =[
                 (0,0,0,0,None)

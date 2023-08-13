@@ -44,6 +44,7 @@ class Constants:
     cam4UserName = ''
     mfcUserName = ''
     bcUserName = ''
+    scUserName = 'big_sensation_21'
 
     kickUrl = f'https://kick.com/{kickUserName}'
     fansUrl = f"https://fansly.com/{fansUserName}"
@@ -53,6 +54,7 @@ class Constants:
     cam4Url = f"https://www.cam4.com/{cam4UserName}"
     mfcUrl = f"https://www.myfreecams.com/#{mfcUserName}"
     bcUrl = f"https://bongacams.com/{bcUserName}"
+    scUrl = f"https://stripchat.com/{scUserName}"
 
     
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
@@ -70,6 +72,7 @@ class Constants:
     cam4LiveStreamUrl = f"https://www.cam4.com/{cam4UserName}"
     mfcLiveStreamUrl = f"https://www.myfreecams.com/#{mfcUserName}"
     bcLiveStreamUrl = f"https://bongacams.com/{bcUserName}"
+    scLiveStreamUrl = f"https://stripchat.com/{scUserName}"
 
     cbOnlineText = streamerName + " is live on Chaturbate!\n<" + cbLiveStreamUrl + ">"
     ofOnlineText = streamerName + " is live on Onlyfans!\n<" + OfLiveStreamUrl + ">"
@@ -80,6 +83,7 @@ class Constants:
     cam4OnlineText = streamerName + " is live on Cam4!\n<" + cam4LiveStreamUrl + ">"
     mfcOnlineText = streamerName + " is live on MyFreeCams!\n<" + mfcLiveStreamUrl + ">"
     bcOnlineText = streamerName + " is live on BongaCams!\n<" + bcLiveStreamUrl + ">"
+    scOnlineText = streamerName + " is live on StripChat!\n<" + scLiveStreamUrl + ">"
 
     kickEmbedColor = "#52fb19"
     fansEmbedColor = "#a0816c"
@@ -90,6 +94,7 @@ class Constants:
     cam4EmbedColor = "#dd5d2c"
     mfcEmbedColor = "#377c1d"
     bcEmbedColor = "#97323a"
+    scEmbedColor = "#a02831"
 
     #Leave empty string if you don't use. twitterUrl = ""
     # pulls images from the twitter page, so if your streamer shares other stuff that isn't photos of her, probably don't use it. And just add the images yourself, or remove ones you don't want
@@ -102,3 +107,4 @@ class Constants:
     cam4DefaultTitle = "Cam4 Naughty Time."
     mfcDefaultTitle = "MFC Fun Time."
     bcDefaultTitle = "BongaCams Fun Time."
+    scDefaultTitle = "StripChat Fun Time."

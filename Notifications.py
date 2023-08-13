@@ -173,5 +173,24 @@ class Notifications:
         db = Database()
         db.updateTableRowCol("platforms","bongacams","last_online_message",time.time())
         PING_EVERYONE = db.getPing()  
-        messageContent = "@everyone " + Constants.mfcOnlineText if PING_EVERYONE else Constants.mfcOnlineText
+        messageContent = "@everyone " + Constants.bcOnlineText if PING_EVERYONE else Constants.bcOnlineText
         await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=bcEmbed, mentions_everyone= PING_EVERYONE)
+
+    async def ScNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon):
+        embedMaker = EmbedCreator(
+                                    Constants.streamerName + " is now live on StripChat!", 
+                                    title, 
+                                    Constants.scUrl, 
+                                    'images/platformImages/scImage.png', 
+                                    Constants.scEmbedColor, 
+                                    icon, 
+                                    Constants.scUserName, 
+                                    largeThumbnail= largeThumbnail
+                                )
+        task = asyncio.create_task(embedMaker.getEmbed())
+        scEmbed = await task
+        db = Database()
+        db.updateTableRowCol("platforms","stripchat","last_online_message",time.time())
+        PING_EVERYONE = db.getPing()  
+        messageContent = "@everyone " + Constants.scOnlineText if PING_EVERYONE else Constants.scOnlineText
+        await rest.create_message(channel = Constants.STDOUT_CHANNEL_ID, content = messageContent, embed=scEmbed, mentions_everyone= PING_EVERYONE)
