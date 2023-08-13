@@ -44,7 +44,7 @@ class Constants:
     cam4UserName = ''
     mfcUserName = ''
     bcUserName = ''
-    scUserName = 'big_sensation_21'
+    scUserName = ''
 
     kickUrl = f'https://kick.com/{kickUserName}'
     fansUrl = f"https://fansly.com/{fansUserName}"
