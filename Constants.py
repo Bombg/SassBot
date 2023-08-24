@@ -39,7 +39,7 @@ class Constants:
     cbUserName = ''
     fansUserName = 'Litneyspearsx'
     ofUserName = 'litneyspearsx'
-    ytUserName = ''
+    ytUserName = 'litneyspears_'
     twitchUserName = 'litneyspears_'
     cam4UserName = ''
     mfcUserName = ''
