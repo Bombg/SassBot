@@ -11,7 +11,7 @@ class Permissions(object):
                 hasPermission = False
                 roles = ctx.member.get_roles()
                 for role in roles:
-                    if role.id in self.rolesList:
+                    if role.id in self.rolesList or ctx.member.id in self.rolesList:
                         hasPermission = True
                 if hasPermission:
                     value = function(*args, **kwds)
