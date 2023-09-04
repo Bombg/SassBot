@@ -27,7 +27,7 @@ class Constants:
     PERCENTAGE_OF_MAX = 0.85 # Percent of maximum users online before a smart alert goes off
     SECONDS_BETWEEN_SMART_ALERTS = 21600 # minimum number of seconds before another smart alert goes off
 
-    RECORD_KEEPING_START_DATE = 1684210200 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
+    RECORD_KEEPING_START_DATE = 1693793231 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
 
     PIN_TIME_LONG = 4 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
     PIN_TIME_SHORT = 1 # same as above but this is used for images added via rebroadcast-image command
