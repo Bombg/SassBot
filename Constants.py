@@ -98,7 +98,7 @@ class Constants:
 
     #Leave empty string if you don't use. twitterUrl = ""
     # pulls images from the twitter page, so if your streamer shares other stuff that isn't photos of her, probably don't use it. And just add the images yourself, or remove ones you don't want
-    twitterUrl = 'https://twitter.com/Litney_Spears_' 
+    twitterUrl = '' 
     
     linkTreeUrl = "https://allmylinks.com/litneyspears"
 
