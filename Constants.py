@@ -71,7 +71,7 @@ class Constants:
     
     linkTreeUrl = "https://allmylinks.com/litneyspears"
 
-    fansDefaultTitle = "Naughty sleep stream? =)"
+    fansDefaultTitle = "Naughty Fansly stream? =)"
     ofDefaultTitle = "Naughty time? =)"
     cam4DefaultTitle = "Cam4 Naughty Time."
     mfcDefaultTitle = "MFC Fun Time."
