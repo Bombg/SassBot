@@ -28,8 +28,8 @@ component = tanjun.Component()
 def load(client: tanjun.abc.Client) -> None:
     client.add_component(component.copy())
 
-async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, urlConstant: str, platformName: str, rest: hikari.impl.RESTClientImpl):
-    isOnline, title, thumbUrl, icon = await asyncio.get_running_loop().run_in_executor(None,isOnlineFunc,urlConstant)
+async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, userName: str, platformName: str, rest: hikari.impl.RESTClientImpl):
+    isOnline, title, thumbUrl, icon = await asyncio.get_running_loop().run_in_executor(None,isOnlineFunc,userName)
     db = Database()
     lastOnlineMessage,streamStartTime,streamEndTime = db.getPlatformsRowValues(platformName)
     secondsSinceLastMessage = StaticMethods.timeToSeconds(lastOnlineMessage)
@@ -42,12 +42,12 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, ur
     elif isOnline == True:
         if secondsSinceStreamEndTime >= Constants.WAIT_BETWEEN_MESSAGES and secondsSinceLastMessage >= Constants.WAIT_BETWEEN_MESSAGES and streamEndTime >= streamStartTime:
             print(f"{platformName}Boobies")
-            await platformNotifFunc(rest, title, thumbUrl, icon)
+            await platformNotifFunc(rest, title, thumbUrl, icon, userName)
             db.updateTableRowCol("platforms",platformName,"last_stream_start_time",time.time())
             globals.rebroadcast[platformName] = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME or globals.rebroadcast[platformName]:
             print(f"Long{platformName}Boobies")
-            await platformNotifFunc(rest, title, thumbUrl, icon)
+            await platformNotifFunc(rest, title, thumbUrl, icon, userName)
             lastOnlineMessage = time.time()
             globals.rebroadcast[platformName] = 0
         elif streamEndTime > streamStartTime:
@@ -62,61 +62,84 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, ur
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.cbUserName:
-        await platformChecker(Chaturbate.isModelOnline, Notifications.ChaturNotification,Constants.cbApiUrl,"chaturbate",rest)
+        for cbUserName in Constants.cbUserName:
+            await platformChecker(Chaturbate.isModelOnline, Notifications.ChaturNotification,cbUserName,"chaturbate",rest)
+            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.cbUserName))
 
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.ofUserName:
-        await platformChecker(Onlyfans.isModelOnline, Notifications.OFNotification,Constants.ofUrl,"onlyfans",rest)
+        for ofUserName in Constants.ofUserName:
+            await platformChecker(Onlyfans.isModelOnline, Notifications.OFNotification,ofUserName,"onlyfans",rest)
+            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.ofUserName))
 
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.fansUserName:
-        await platformChecker(Fansly.isModelOnline, Notifications.FansNotification,Constants.fansUrl,"fansly",rest)
+        for fansUserName in Constants.fansUserName:
+            await platformChecker(Fansly.isModelOnline, Notifications.FansNotification,fansUserName,"fansly",rest)
+            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.fansUserName))
 
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.twitchUserName:
-        await platformChecker(Twitch.isModelOnline, Notifications.TwitchNotification,Constants.twitchUserName,"twitch",rest)
+        for twitchUserName in Constants.twitchUserName:
+            await platformChecker(Twitch.isModelOnline, Notifications.TwitchNotification,twitchUserName,"twitch",rest)
+            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.twitchUserName))
 
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.ytUserName:
-        await platformChecker(Youtube.isModelOnline, Notifications.YTNotification,Constants.ytUrl,"youtube",rest)
+        for ytUserName in Constants.ytUserName:
+            await platformChecker(Youtube.isModelOnline, Notifications.YTNotification,ytUserName,"youtube",rest)
+            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.ytUserName))
 
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.kickUserName:
-        await platformChecker(Kick.isModelOnline, Notifications.KickNotification,Constants.kickUserName,"kick",rest)
+        for kickUserName in Constants.kickUserName:
+            await platformChecker(Kick.isModelOnline, Notifications.KickNotification,kickUserName,"kick",rest)
+            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.kickUserName))
 
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkCam4(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.cam4UserName:
-        await platformChecker(Cam4.isModelOnline, Notifications.Cam4Notification,Constants.cam4UserName,"cam4",rest)
+        for cam4UserName in Constants.cam4UserName:
+            await platformChecker(Cam4.isModelOnline, Notifications.Cam4Notification,cam4UserName,"cam4",rest)
+            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.cam4UserName))
 
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkMfc(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.mfcUserName:
-        await platformChecker(MFC.isModelOnline, Notifications.MfcNotification,Constants.mfcUserName,"mfc",rest)
+        for mfcUserName in Constants.mfcUserName:
+            await platformChecker(MFC.isModelOnline, Notifications.MfcNotification,mfcUserName,"mfc",rest)
+            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.mfcUserName))
+
 
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkBc(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.bcUserName:
-        await platformChecker(BC.isModelOnline, Notifications.BcNotification,Constants.bcUserName,"bongacams",rest)
+        for bcUserName in Constants.bcUserName:
+            await platformChecker(BC.isModelOnline, Notifications.BcNotification,bcUserName,"bongacams",rest)
+            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.bcUserName))
+
 
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
 async def checkSc(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.scUserName:
-        await platformChecker(SC.isModelOnline, Notifications.ScNotification,Constants.scUserName,"stripchat",rest)
+        for scUserName in Constants.scUserName:
+            await platformChecker(SC.isModelOnline, Notifications.ScNotification,scUserName,"stripchat",rest)
+            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.scUserName))
+
 
 @component.with_schedule
 @tanjun.as_interval(Constants.AVATAR_CHECK_TIMER)

@@ -4,17 +4,17 @@ import requests
 from Constants import Constants
 import json.decoder 
 
-def isModelOnline(cbApiUrl):
+def isModelOnline(cbUserName):
     isOnline = False
     title = "placeholder cb title"
     thumbUrl = ""
     icon = 'images/errIcon.png'
-    onlineModels = requests.get(cbApiUrl)
+    onlineModels = requests.get(Constants.cbApiUrl)
     time.sleep(3)
     try:
         results = onlineModels.json()["results"]
         for result in results:
-            if result['username'] == Constants.cbUserName:
+            if result['username'] == cbUserName:
                 isOnline = True
                 title = result['room_subject']
                 thumbUrl = result['image_url'] + "?" + str(int(time.time()))

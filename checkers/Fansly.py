@@ -5,7 +5,8 @@ from Constants import Constants
 import StaticMethods
 
 
-def isModelOnline(fansUrl):
+def isModelOnline(fansUserName):
+    fansUrl = f"https://fansly.com/{fansUserName}"
     thumbUrl = ""
     icon = 'images/errIcon.png'
     isOnline = False

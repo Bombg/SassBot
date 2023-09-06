@@ -4,7 +4,8 @@ from SeleniumDriverCreator import SeleniumDriverCreator
 from Constants import Constants
 import re
 
-def isModelOnline(ofUrl):
+def isModelOnline(ofUserName):
+    ofUrl = f"https://onlyfans.com/{ofUserName}"
     title = Constants.ofDefaultTitle
     thumbUrl = ""
     icon = 'images/errIcon.png'

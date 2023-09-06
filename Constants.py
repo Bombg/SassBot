@@ -34,56 +34,26 @@ class Constants:
 
     streamerName = "LitneySpears"
 
-    #Usernames associated with each platform - if not applicable leave an empty string. i.e. cbUserName = ''
-    kickUserName = 'LitneySpears'
-    cbUserName = ''
-    fansUserName = 'Litneyspearsx'
-    ofUserName = 'litneyspearsx'
-    ytUserName = 'litneyspears_'
-    twitchUserName = 'litneyspears_'
-    cam4UserName = ''
-    mfcUserName = ''
-    bcUserName = ''
-    scUserName = ''
+    #Usernames associated with each platform - if not applicable leave an empty array. i.e. cbUserName = []
+    #If the streamer has multiple accounts for a paltform, add an extra username to the array i.e. cbUserName = ['user1','user2']
+    #if streamer is online with multiple usernames within the same platform at the same time, then only the first notification will be shown for that platform. 
+    kickUserName = ['LitneySpears']
+    cbUserName = []
+    fansUserName = ['Litneyspearsx']
+    ofUserName = ['litneyspearsx','litneyspearsfree']
+    ytUserName = ['litneyspears_']
+    twitchUserName = ['litneyspears_']
+    cam4UserName = []
+    mfcUserName = []
+    bcUserName = []
+    scUserName = []
 
-    kickUrl = f'https://kick.com/{kickUserName}'
-    fansUrl = f"https://fansly.com/{fansUserName}"
-    ofUrl = f"https://onlyfans.com/{ofUserName}"
-    ytUrl = f"https://www.youtube.com/@{ytUserName}/live"
-    twitchUrl = f"https://www.twitch.tv/{twitchUserName}"
-    cam4Url = f"https://www.cam4.com/{cam4UserName}"
-    mfcUrl = f"https://www.myfreecams.com/#{mfcUserName}"
-    bcUrl = f"https://bongacams.com/{bcUserName}"
-    scUrl = f"https://stripchat.com/{scUserName}"
+    twitchUrl = f"https://www.twitch.tv/litneyspears_" #Add a valid twitch URL here even if you streamer doesn't have twitch or else the presence won't update properly
 
-    
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
     # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. 
     # I've found this responds more reliably when you narrow down the search more. So add region, and any tags your model always uses
     cbApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs"
-
-    # Links directly to the model's live stream - used for discord announcements.
-    cbLiveStreamUrl = f"https://chaturbate.com/{cbUserName}/"
-    OfLiveStreamUrl = f"https://onlyfans.com/{ofUserName}/live"
-    fansLiveStreamUrl = f"https://fansly.com/live/{fansUserName}"
-    twitchLiveStreamUrl = f"https://www.twitch.tv/{twitchUserName}"
-    ytLiveStreamUrl = f"https://www.youtube.com/@{ytUserName}/live"
-    kickLiveStreamUrl = f"https://kick.com/{kickUserName}"
-    cam4LiveStreamUrl = f"https://www.cam4.com/{cam4UserName}"
-    mfcLiveStreamUrl = f"https://www.myfreecams.com/#{mfcUserName}"
-    bcLiveStreamUrl = f"https://bongacams.com/{bcUserName}"
-    scLiveStreamUrl = f"https://stripchat.com/{scUserName}"
-
-    cbOnlineText = streamerName + " is live on Chaturbate!\n<" + cbLiveStreamUrl + ">"
-    ofOnlineText = streamerName + " is live on Onlyfans!\n<" + OfLiveStreamUrl + ">"
-    fansOnlineText = streamerName + " is live on Fansly!\n<" + fansLiveStreamUrl + ">"
-    twitchOnlineText = streamerName + " is live on Twitch!\n<" + twitchLiveStreamUrl + ">"
-    ytOnlineText = streamerName + " is live on YouTube!\n<" + ytLiveStreamUrl + ">"
-    kickOnlineText = streamerName + " is live on Kick!\n<" + kickLiveStreamUrl + ">"
-    cam4OnlineText = streamerName + " is live on Cam4!\n<" + cam4LiveStreamUrl + ">"
-    mfcOnlineText = streamerName + " is live on MyFreeCams!\n<" + mfcLiveStreamUrl + ">"
-    bcOnlineText = streamerName + " is live on BongaCams!\n<" + bcLiveStreamUrl + ">"
-    scOnlineText = streamerName + " is live on StripChat!\n<" + scLiveStreamUrl + ">"
 
     kickEmbedColor = "#52fb19"
     fansEmbedColor = "#a0816c"

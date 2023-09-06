@@ -2,7 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
-def isModelOnline(ytUrl):
+def isModelOnline(ytUserName):
+    ytUrl = f"https://www.youtube.com/@{ytUserName}/live"
     online = False
     title =  "placeholder youtube title"
     thumbUrl = ""
