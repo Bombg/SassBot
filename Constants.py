@@ -21,7 +21,6 @@ class Constants:
     LONG_ONLINE_CHECK_TIMER = 600
     AVATAR_CHECK_TIMER = 130
     STATUS_CHECK_TIMER = 125
-    RESTART_CHECK_TIMER = 300
 
     SMART_ALERT_LOOK_AHEAD = 3 #number of hours smart alert looks ahead to make sure conditions are still met (to make sure alerts are made too late into a stream)
     PERCENTAGE_OF_MAX = 0.85 # Percent of maximum users online before a smart alert goes off

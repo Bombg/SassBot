@@ -21,6 +21,7 @@ from Database import Database
 from typing import Callable
 from datetime import date
 import datetime
+from datetime import timedelta
 
 component = tanjun.Component()
 
@@ -199,7 +200,7 @@ async def checkOnlineTime() -> None:
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(Constants.RESTART_CHECK_TIMER)
+@tanjun.as_time_schedule(minutes=[3], hours=[11])
 async def checkRestart() -> None:
     db = Database()
     onTime,offTime,totalTime = db.getStreamTableValues()
