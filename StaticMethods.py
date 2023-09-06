@@ -184,15 +184,17 @@ def checkOnline(db: Database) -> str:
     if fansStreamStartTime > fansStreamEndTime:
         playingString = playingString + "Fans "
     if kickStreamStartTime > kickStreamEndTime:
-        playingString = playingString + "Kick"
+        playingString = playingString + "Kick "
     if cam4StreamStartTime > cam4StreamEndTime:
-        playingString = playingString + "Cam4"
+        playingString = playingString + "Cam4 "
     if mfcStreamStartTime > mfcStreamEndTime:
-        playingString = playingString + "MFC"
+        playingString = playingString + "MFC "
     if bcStreamStartTime > bcStreamEndTime:
-        playingString = playingString + "BC"
+        playingString = playingString + "BC "
     if scStreamStartTime > scStreamEndTime:
-        playingString = playingString + "SC"
+        playingString = playingString + "SC "
+    if playingString[-1] == " ":
+        playingString = playingString[:-1]
     return playingString
 
 def timeToHoursMinutes(newTime: float) -> int:
