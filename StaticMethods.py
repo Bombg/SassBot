@@ -193,7 +193,7 @@ def checkOnline(db: Database) -> str:
         playingString = playingString + "BC "
     if scStreamStartTime > scStreamEndTime:
         playingString = playingString + "SC "
-    if playingString[-1] == " ":
+    if playingString and playingString[-1] == " ":
         playingString = playingString[:-1]
     return playingString
 
