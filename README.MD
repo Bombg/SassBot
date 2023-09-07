@@ -57,7 +57,8 @@
     To easily get both of these IDs, in discord advanced options turn on developer mode. After that you can right click servers/channels and a new option to copy the IDs will be available.
     Also edit and add vairus URLs to your streamer in Constants.py. Everything is described in comments.
 5. Make sure you have python 3.10 or better installed.
-    run command 'pip install -r requirements.txt'
+    - make sure you have chrome and chromedriver installed
+    - run command 'pip install -r requirements.txt'
 6. Generate the database with 'python GenerateDatabase.py' or 'python3 GenerateDatabase.py' 
 7. Replace images in the image folder with those of your streamer, but keep same file names.
     - images/errIcon.png - icon used for embeds if there is an issue getting one from the platform, or if one doesn't exist
