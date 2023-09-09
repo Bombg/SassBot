@@ -28,7 +28,7 @@
 - ... and many more!
 ### Commands
 - /stream-status - See if your streamer is currently offline or online. Shows time online/offline and total time streamed.
-- /everyone-ping-toggle - Toggle for @everyone pings in the announcements channel
+- /ping-toggle - Toggle for role pings in online announcements. This is defaulted to false, so set true if you want role pings
 - Image list commands - Images can be pulled from twitter and/or manually added. These images are used for embeds for all supported platforms.
     - /image-list-show - show the list of image urls that will be rotated through during online announcements
     - /image-list-add -  add an image url to the image list

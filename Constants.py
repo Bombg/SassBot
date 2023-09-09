@@ -108,7 +108,9 @@ class Constants:
     twitterUrl = '' 
     
     linkTreeUrl = "https://allmylinks.com/litneyspears"
-
+    
+    # Titles for announcement embeds
+    # Titles for platforms that have optional titles or no titles at all
     fansDefaultTitle = "Naughty Fansly stream? =)"
     ofDefaultTitle = "Naughty time? =)"
     cam4DefaultTitle = "Cam4 Naughty Time."
