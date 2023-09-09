@@ -51,7 +51,7 @@ class Constants:
     PIN_TIME_LONG = 4 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
     PIN_TIME_SHORT = 1 # same as above but this is used for images added via rebroadcast-image command
 
-    # For role pings to work you will first need to turn them on via the /role-ping-toggle True/False command. 
+    # For role pings to work you will first need to turn them on via the /ping-toggle True/False command. 
     # if you don't want a specific platform to get a ping, just leave an empty string
     # If you wish to ping everyone simply input @everyone, but if you wish to ping a specific role you'll need to get the role ID and assemble it like so <@&putRoleIDHere>
     # for example if the role id is 999 then you'd put ROLES_TO_PING = '<@&999> '
