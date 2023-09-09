@@ -4,12 +4,33 @@ class Constants:
 
     if TEST_SERVER:
         GUILD_ID =313876691082674178 #Guild ID of the discord server
-        STDOUT_CHANNEL_ID =1137599805787480214 # Channel ID the bot will post notifications to
         whiteListedRoleIDs = [145802742647095296] # IDs of Roles you wish to be white listed for some commands. You can also add user IDs if you want to add an individual without a role
+        # Channel ID the bot will post notifications to
+        KICK_NOTIFICATION_CHANNEL_ID = 1137599805787480214
+        CB_NOTIFICATION_CHANNEL_ID = 1137599805787480214
+        FANS_NOTIFICATION_CHANNEL_ID = 1137599805787480214
+        OF_NOTIFICATION_CHANNEL_ID = 1137599805787480214
+        YT_NOTIFICATION_CHANNEL_ID = 1137599805787480214
+        TWITCH_NOTIFICATION_CHANNEL_ID = 1137599805787480214
+        CAM4_NOTIFICATION_CHANNEL_ID = 1137599805787480214
+        MFC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
+        BC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
+        SC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
+        
     else:
         GUILD_ID =1058859922219081778 #Guild ID of the discord server
-        STDOUT_CHANNEL_ID =1069865162573611058 # Channel ID the bot will post notifications to
         whiteListedRoleIDs = [1100148453792813086,1062179283705020486,145802742647095296] # IDs of Roles you wish to be white listed for some commands.  You can also add user IDs if you want to add an individual without a role
+        # Channel ID the bot will post notifications to
+        KICK_NOTIFICATION_CHANNEL_ID = 1069865162573611058
+        CB_NOTIFICATION_CHANNEL_ID = 1069865162573611058
+        FANS_NOTIFICATION_CHANNEL_ID = 1069865162573611058
+        OF_NOTIFICATION_CHANNEL_ID = 1069865162573611058
+        YT_NOTIFICATION_CHANNEL_ID = 1069865162573611058
+        TWITCH_NOTIFICATION_CHANNEL_ID = 1069865162573611058
+        CAM4_NOTIFICATION_CHANNEL_ID = 1069865162573611058
+        MFC_NOTIFICATION_CHANNEL_ID = 1069865162573611058
+        BC_NOTIFICATION_CHANNEL_ID = 1069865162573611058
+        SC_NOTIFICATION_CHANNEL_ID = 1069865162573611058
 
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours

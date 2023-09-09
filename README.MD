@@ -53,7 +53,7 @@
 2. At https://discord.com/developers/ - generate an invite code under oauth2 to invite your bot to your server. Under scope make sure bot is checked, and maybe commands?
     Give the bot permissions you want it to have. At minimum it'll need to be able to post messages
 3. Go to the bot section in the developers portal and turn on all the intents.
-4. In the Constants.py file, change the GUILD_ID value to the guild id of your server, and STDOUT_CHANNEL_ID to the channel ID you want alerts posted to.
+4. In the Constants.py file, change the GUILD_ID value to the guild id of your server, and each platform NOTIFICATION_CHANNEL_ID to the channel ID you want alerts posted to.
     To easily get both of these IDs, in discord advanced options turn on developer mode. After that you can right click servers/channels and a new option to copy the IDs will be available.
     Also edit and add vairus URLs to your streamer in Constants.py. Everything is described in comments.
 5. Make sure you have python 3.10 or better installed.
