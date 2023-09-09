@@ -4,7 +4,6 @@ import os
 from Constants import Constants
 
 GUILD_ID = Constants.GUILD_ID
-STDOUT_CHANNEL_ID = Constants.STDOUT_CHANNEL_ID
 
 def getToken():
     with open("./secrets/token") as file:
