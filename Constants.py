@@ -15,8 +15,7 @@ class Constants:
         CAM4_NOTIFICATION_CHANNEL_ID = 1137599805787480214
         MFC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
         BC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
-        SC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
-        
+        SC_NOTIFICATION_CHANNEL_ID = 1137599805787480214    
     else:
         GUILD_ID =1058859922219081778 #Guild ID of the discord server
         whiteListedRoleIDs = [1100148453792813086,1062179283705020486,145802742647095296] # IDs of Roles you wish to be white listed for some commands.  You can also add user IDs if you want to add an individual without a role
@@ -52,6 +51,24 @@ class Constants:
     PIN_TIME_LONG = 4 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
     PIN_TIME_SHORT = 1 # same as above but this is used for images added via rebroadcast-image command
 
+    # For role pings to work you will first need to turn them on via the /role-ping-toggle True/False command. 
+    # if you don't want a specific platform to get a ping, just leave an empty string
+    # If you wish to ping everyone simply input @everyone, but if you wish to ping a specific role you'll need to get the role ID and assemble it like so <@&putRoleIDHere>
+    # for example if the role id is 999 then you'd put ROLES_TO_PING = '<@&999> '
+    # If you want to ping multiple roles then just put them in the same string. i.e. ROLES_TO_PING = '<@&999> @everyone '
+    # Leave a space at the end of the string i.e ROLES_TO_PING = '@everyone '
+    KICK_ROLES_TO_PING = "@everyone "
+    CB_ROLES_TO_PING = "@everyone "
+    FANS_ROLES_TO_PING = "@everyone "
+    OF_ROLES_TO_PING = "@everyone "
+    YT_ROLES_TO_PING = "@everyone "
+    TWITCH_ROLES_TO_PING = "@everyone "
+    CAM4_ROLES_TO_PING = "@everyone "
+    MFC_ROLES_TO_PING = "@everyone "
+    BC_ROLES_TO_PING = "@everyone "
+    SC_ROLES_TO_PING = "@everyone "
+
+    #Generic name of the streamer that will be used for all notifications
     streamerName = "LitneySpears"
 
     #Usernames associated with each platform - if not applicable leave an empty array. i.e. cbUserName = []
@@ -98,3 +115,30 @@ class Constants:
     mfcDefaultTitle = "MFC Fun Time."
     bcDefaultTitle = "BongaCams Fun Time."
     scDefaultTitle = "StripChat Fun Time."
+    
+    # This is the text that will appear above the embed. Role mentions will be added before this text, and a link to the stream will be added after
+    # i.e. @everyone <AboveEmbedTextGoesHere> https://kick.com/StreamerName
+    kickAboveEmbedText =  f"{streamerName} is live on Kick!"
+    fansAboveEmbedText =  f"{streamerName} is live on Fansly!"
+    ofAboveEmbedText =  f"{streamerName} is live on Onlyfans!"
+    cbAboveEmbedText =  f"{streamerName} is live on Chaturbate!"
+    ytAboveEmbedText =  f"{streamerName} is live on YouTube!"
+    twitchAboveEmbedText =  f"{streamerName} is live on Twitch!"
+    cam4AboveEmbedText =  f"{streamerName} is live on Cam4!"
+    mfcAboveEmbedText =  f"{streamerName} is live on MyFreeCams!"
+    bcAboveEmbedText =  f"{streamerName} is live on BongaCams!"
+    scAboveEmbedText =  f"{streamerName} is live on StripChat!"
+
+    # This is small text that will appear below the title, and above the main image inside the embed.
+    kickBelowTitleText =  f"{streamerName} is now live on Kick!"
+    fansBelowTitleText =  f"{streamerName} is now live on Fansly!"
+    ofBelowTitleText =  f"{streamerName} is now live on Onlyfans!"
+    cbBelowTitleText =  f"{streamerName} is now live on Chaturbate!"
+    ytBelowTitleText =  f"{streamerName} is now live on YouTube!"
+    twitchBelowTitleText =  f"{streamerName} is now live on Twitch!"
+    cam4BelowTitleText =  f"{streamerName} is now live on Cam4!"
+    mfcBelowTitleText =  f"{streamerName} is now live on MyFreeCams!"
+    bcBelowTitleText =  f"{streamerName} is now live on BongaCams!"
+    scBelowTitleText =  f"{streamerName} is now live on StripChat!"
+
+    

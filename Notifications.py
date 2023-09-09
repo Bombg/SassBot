@@ -8,9 +8,9 @@ import hikari
 class Notifications:
     async def OFNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, ofUserName):
         OfLiveStreamUrl = f"https://onlyfans.com/{ofUserName}/live"
-        ofOnlineText = Constants.streamerName + " is live on Onlyfans!\n<" + OfLiveStreamUrl + ">"
+        ofOnlineText = Constants.ofAboveEmbedText +"\n<" + OfLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
-                                    Constants.streamerName + " is now live on Onlyfans!", 
+                                    Constants.ofBelowTitleText, 
                                     title, 
                                     OfLiveStreamUrl, 
                                     'images/platformImages/OFImage.png', 
@@ -22,15 +22,15 @@ class Notifications:
         ofEmbed = await task
         db = Database()
         db.updateTableRowCol("platforms","onlyfans","last_online_message",time.time())
-        PING_EVERYONE = db.getPing()
-        messageContent = "@everyone " + ofOnlineText if PING_EVERYONE else ofOnlineText
-        await rest.create_message(channel = Constants.OF_NOTIFICATION_CHANNEL_ID, content = messageContent, embed = ofEmbed, mentions_everyone= PING_EVERYONE)
+        IS_PING = db.getPing()
+        messageContent = Constants.OF_ROLES_TO_PING + ofOnlineText if IS_PING else ofOnlineText
+        await rest.create_message(channel = Constants.OF_NOTIFICATION_CHANNEL_ID, content = messageContent, embed = ofEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
 
     async def ChaturNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, cbUserName):
         cbLiveStreamUrl = f"https://chaturbate.com/{cbUserName}/"
-        cbOnlineText = Constants.streamerName + " is live on Chaturbate!\n<" + cbLiveStreamUrl + ">"
+        cbOnlineText = Constants.cbAboveEmbedText + "\n<" + cbLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
-                                    f"{Constants.streamerName} is now live on Chaturbate!", 
+                                    Constants.cbBelowTitleText, 
                                     title, 
                                     cbLiveStreamUrl, 
                                     'images/platformImages/CbImage.png', 
@@ -44,15 +44,15 @@ class Notifications:
         cbEmbed = await task
         db = Database()
         db.updateTableRowCol("platforms","chaturbate","last_online_message",time.time())
-        PING_EVERYONE = db.getPing()
-        messageContent = "@everyone " + cbOnlineText if PING_EVERYONE else cbOnlineText
-        await rest.create_message(channel = Constants.CB_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=cbEmbed, mentions_everyone= PING_EVERYONE)
+        IS_PING = db.getPing()
+        messageContent = Constants.CB_ROLES_TO_PING + cbOnlineText if IS_PING else cbOnlineText
+        await rest.create_message(channel = Constants.CB_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=cbEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
 
     async def FansNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, fansUserName):
         fansLiveStreamUrl = f"https://fansly.com/live/{fansUserName}"
-        fansOnlineText = Constants.streamerName + " is live on Fansly!\n<" + fansLiveStreamUrl + ">"
+        fansOnlineText = Constants.fansAboveEmbedText + "\n<" + fansLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
-                                    Constants.streamerName + " is now live on Fansly!", 
+                                    Constants.fansBelowTitleText, 
                                     title, 
                                     fansLiveStreamUrl, 
                                     'images/platformImages/FansImage.png', 
@@ -64,15 +64,15 @@ class Notifications:
         fansEmbed = await task
         db = Database()
         db.updateTableRowCol("platforms","fansly","last_online_message",time.time())
-        PING_EVERYONE = db.getPing()
-        messageContent = "@everyone " + fansOnlineText if PING_EVERYONE else fansOnlineText
-        await rest.create_message(channel = Constants.FANS_NOTIFICATION_CHANNEL_ID, content = messageContent, embed = fansEmbed, mentions_everyone=PING_EVERYONE)
+        IS_PING = db.getPing()
+        messageContent = Constants.FANS_ROLES_TO_PING + fansOnlineText if IS_PING else fansOnlineText
+        await rest.create_message(channel = Constants.FANS_NOTIFICATION_CHANNEL_ID, content = messageContent, embed = fansEmbed, mentions_everyone=IS_PING, role_mentions=IS_PING)
 
     async def TwitchNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, twitchUserName):
         twitchLiveStreamUrl = f"https://www.twitch.tv/{twitchUserName}"
-        twitchOnlineText = Constants.streamerName + " is live on Twitch!\n<" + twitchLiveStreamUrl + ">"
+        twitchOnlineText = Constants.twitchAboveEmbedText + "\n<" + twitchLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
-                                    Constants.streamerName + " is now live on Twitch!", 
+                                    Constants.twitchBelowTitleText, 
                                     title, 
                                     twitchLiveStreamUrl, 
                                     'images/platformImages/twitchImage.png', 
@@ -85,15 +85,15 @@ class Notifications:
         twitchEmbed = await task
         db = Database()
         db.updateTableRowCol("platforms","twitch","last_online_message",time.time())
-        PING_EVERYONE = db.getPing()
-        messageContent = "@everyone " + twitchOnlineText if PING_EVERYONE else twitchOnlineText
-        await rest.create_message(channel = Constants.TWITCH_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=twitchEmbed, mentions_everyone= PING_EVERYONE)
+        IS_PING = db.getPing()
+        messageContent = Constants.TWITCH_ROLES_TO_PING + twitchOnlineText if IS_PING else twitchOnlineText
+        await rest.create_message(channel = Constants.TWITCH_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=twitchEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
     
     async def YTNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, ytUserName):
         ytLiveStreamUrl = f"https://www.youtube.com/@{ytUserName}/live"
-        ytOnlineText = Constants.streamerName + " is live on YouTube!\n<" + ytLiveStreamUrl + ">"
+        ytOnlineText = Constants.ytAboveEmbedText + "\n<" + ytLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
-                                    Constants.streamerName + " is now live on YouTube!", 
+                                    Constants.ytBelowTitleText, 
                                     title, 
                                     ytLiveStreamUrl, 
                                     'images/platformImages/ytImage.png', 
@@ -106,15 +106,15 @@ class Notifications:
         ytEmbed = await task
         db = Database()
         db.updateTableRowCol("platforms","youtube","last_online_message",time.time())
-        PING_EVERYONE = db.getPing()
-        messageContent = "@everyone " + ytOnlineText if PING_EVERYONE else ytOnlineText
-        await rest.create_message(channel = Constants.YT_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=ytEmbed, mentions_everyone= PING_EVERYONE)
+        IS_PING = db.getPing()
+        messageContent = Constants.YT_ROLES_TO_PING + ytOnlineText if IS_PING else ytOnlineText
+        await rest.create_message(channel = Constants.YT_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=ytEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
     
     async def KickNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, kickUserName):
         kickLiveStreamUrl = f"https://kick.com/{kickUserName}"
-        kickOnlineText = Constants.streamerName + " is live on Kick!\n<" + kickLiveStreamUrl + ">"
+        kickOnlineText = Constants.kickAboveEmbedText + "\n<" + kickLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
-                                    Constants.streamerName + " is now live on Kick!", 
+                                    Constants.kickBelowTitleText, 
                                     title, 
                                     kickLiveStreamUrl, 
                                     'images/platformImages/KickImage.png', 
@@ -127,15 +127,15 @@ class Notifications:
         kickEmbed = await task
         db = Database()
         db.updateTableRowCol("platforms","kick","last_online_message",time.time())
-        PING_EVERYONE = db.getPing()
-        messageContent = "@everyone " + kickOnlineText if PING_EVERYONE else kickOnlineText
-        await rest.create_message(channel = Constants.KICK_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=kickEmbed, mentions_everyone= PING_EVERYONE)
+        IS_PING = db.getPing()
+        messageContent = Constants.KICK_ROLES_TO_PING + kickOnlineText if IS_PING else kickOnlineText
+        await rest.create_message(channel = Constants.KICK_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=kickEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
 
     async def Cam4Notification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, cam4UserName):
         cam4LiveStreamUrl = f"https://www.cam4.com/{cam4UserName}"
-        cam4OnlineText = Constants.streamerName + " is live on Cam4!\n<" + cam4LiveStreamUrl + ">"
+        cam4OnlineText = Constants.cam4AboveEmbedText + "\n<" + cam4LiveStreamUrl + ">"
         embedMaker = EmbedCreator(
-                                    Constants.streamerName + " is now live on Cam4!", 
+                                    Constants.cam4BelowTitleText, 
                                     title, 
                                     cam4LiveStreamUrl, 
                                     'images/platformImages/cam4Image.png', 
@@ -148,15 +148,15 @@ class Notifications:
         cam4Embed = await task
         db = Database()
         db.updateTableRowCol("platforms","cam4","last_online_message",time.time())
-        PING_EVERYONE = db.getPing()
-        messageContent = "@everyone " + cam4OnlineText if PING_EVERYONE else cam4OnlineText
-        await rest.create_message(channel = Constants.CAM4_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=cam4Embed, mentions_everyone= PING_EVERYONE)
+        IS_PING = db.getPing()
+        messageContent = Constants.CAM4_ROLES_TO_PING + cam4OnlineText if IS_PING else cam4OnlineText
+        await rest.create_message(channel = Constants.CAM4_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=cam4Embed, mentions_everyone= IS_PING, role_mentions=IS_PING)
 
     async def MfcNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, mfcUserName):
         mfcLiveStreamUrl = f"https://www.myfreecams.com/#{mfcUserName}"
-        mfcOnlineText = Constants.streamerName + " is live on MyFreeCams!\n<" + mfcLiveStreamUrl + ">"
+        mfcOnlineText = Constants.mfcAboveEmbedText + "\n<" + mfcLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
-                                    Constants.streamerName + " is now live on MyFreeCams!", 
+                                    Constants.mfcBelowTitleText, 
                                     title, 
                                     mfcLiveStreamUrl, 
                                     'images/platformImages/mfcImage.png', 
@@ -169,15 +169,15 @@ class Notifications:
         mfcEmbed = await task
         db = Database()
         db.updateTableRowCol("platforms","mfc","last_online_message",time.time())
-        PING_EVERYONE = db.getPing()  
-        messageContent = "@everyone " + mfcOnlineText if PING_EVERYONE else mfcOnlineText
-        await rest.create_message(channel = Constants.MFC_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=mfcEmbed, mentions_everyone= PING_EVERYONE)
+        IS_PING = db.getPing()  
+        messageContent = Constants.MFC_ROLES_TO_PING + mfcOnlineText if IS_PING else mfcOnlineText
+        await rest.create_message(channel = Constants.MFC_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=mfcEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
 
     async def BcNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, bcUserName):
         bcLiveStreamUrl = f"https://bongacams.com/{bcUserName}"
-        bcOnlineText = Constants.streamerName + " is live on BongaCams!\n<" + bcLiveStreamUrl + ">"
+        bcOnlineText = Constants.bcAboveEmbedText + "\n<" + bcLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
-                                    Constants.streamerName + " is now live on BongaCams!", 
+                                    Constants.bcBelowTitleText, 
                                     title, 
                                     bcLiveStreamUrl, 
                                     'images/platformImages/bcImage.png', 
@@ -190,15 +190,15 @@ class Notifications:
         bcEmbed = await task
         db = Database()
         db.updateTableRowCol("platforms","bongacams","last_online_message",time.time())
-        PING_EVERYONE = db.getPing()  
-        messageContent = "@everyone " + bcOnlineText if PING_EVERYONE else bcOnlineText
-        await rest.create_message(channel = Constants.BC_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=bcEmbed, mentions_everyone= PING_EVERYONE)
+        IS_PING = db.getPing()  
+        messageContent = Constants.BC_ROLES_TO_PING + bcOnlineText if IS_PING else bcOnlineText
+        await rest.create_message(channel = Constants.BC_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=bcEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
 
     async def ScNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, scUserName):
         scLiveStreamUrl = f"https://stripchat.com/{scUserName}"
-        scOnlineText = Constants.streamerName + " is live on StripChat!\n<" + scLiveStreamUrl + ">"
+        scOnlineText = Constants.scAboveEmbedText + "\n<" + scLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
-                                    Constants.streamerName + " is now live on StripChat!", 
+                                    Constants.scBelowTitleText, 
                                     title, 
                                     scLiveStreamUrl, 
                                     'images/platformImages/scImage.png', 
@@ -211,6 +211,6 @@ class Notifications:
         scEmbed = await task
         db = Database()
         db.updateTableRowCol("platforms","stripchat","last_online_message",time.time())
-        PING_EVERYONE = db.getPing()  
-        messageContent = "@everyone " + scOnlineText if PING_EVERYONE else scOnlineText
-        await rest.create_message(channel = Constants.SC_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=scEmbed, mentions_everyone= PING_EVERYONE)
+        IS_PING = db.getPing()  
+        messageContent = Constants.SC_ROLES_TO_PING + scOnlineText if IS_PING else scOnlineText
+        await rest.create_message(channel = Constants.SC_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=scEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
