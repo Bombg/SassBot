@@ -187,14 +187,10 @@ async def checkOnlineTime() -> None:
     db = Database()
     online = StaticMethods.checkOnline(db)
     lastOnline,lastOffline,totalStreamTime = db.getStreamTableValues()
-    if online:
-        online = True
-    else:
-        online = False
-    if online and lastOffline > lastOnline:
+    if online and lastOffline >= lastOnline:
         print("time online starts now")
         db.setStreamLastOnline(time.time())
-    elif not online and lastOffline < lastOnline:
+    elif not online and lastOffline <= lastOnline:
         print("offline time starts now")
         StaticMethods.setOfflineAddTime()
     print("\n")
