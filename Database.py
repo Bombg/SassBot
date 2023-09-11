@@ -9,7 +9,13 @@ class Database:
     def __init__(self):
         pass
     
-    def updateTableRowCol(self,table,rowKey,col,newValue):
+    def connectCursor(self):
+        conn = sqlite3.connect("sassBot.db")
+        cur = conn.cursor()
+        return conn, cur
+    
+    # Platform Table Methods
+    def updatePlatformRowCol(self,table,rowKey,col,newValue):
         conn,cur = self.connectCursor()
         exeString = f'''UPDATE {table} SET {col}={newValue} WHERE platform_name='{rowKey}' '''
         cur.execute(exeString)
@@ -25,12 +31,17 @@ class Database:
         cur.close()
         conn.close()
         return value[0][0]
-
-    def connectCursor(self):
-        conn = sqlite3.connect("sassBot.db")
-        cur = conn.cursor()
-        return conn, cur
     
+    def getPlatformsRowValues(self, platformName):
+        conn,cur = self.connectCursor()
+        exeString = f'''SELECT last_online_message,last_stream_start_time,last_stream_end_time FROM platforms WHERE platform_name='{platformName}' '''
+        cur.execute(exeString)
+        value = cur.fetchall()
+        cur.close()
+        conn.close()
+        return value[0][0],value[0][1],value[0][2]
+    
+    # Subathon Table Methods
     def startSubathon(self,epochTime):
         conn,cur = self.connectCursor()
         subTrue = 1
@@ -90,7 +101,8 @@ class Database:
         conn.commit()
         cur.close()
         conn.close()
-    
+
+    # Stream Table Methods
     def getStreamTableValues(self):
         conn,cur = self.connectCursor()
         exeString = f'''SELECT last_online,last_offline,last_stream_length FROM stream'''
@@ -170,15 +182,6 @@ class Database:
         cur.close()
         conn.close()
 
-    def getPlatformsRowValues(self, platformName):
-        conn,cur = self.connectCursor()
-        exeString = f'''SELECT last_online_message,last_stream_start_time,last_stream_end_time FROM platforms WHERE platform_name='{platformName}' '''
-        cur.execute(exeString)
-        value = cur.fetchall()
-        cur.close()
-        conn.close()
-        return value[0][0],value[0][1],value[0][2]
-
     def setImgPin(self, epochTime: int, url: str) -> None:
         conn,cur = self.connectCursor()
         exeString = f'''UPDATE stream SET img_pin={epochTime}, img_pin_url='{url}' '''
@@ -217,20 +220,7 @@ class Database:
         cur.close()
         conn.close()
     
-    def isExists(self,query: str) -> bool:
-        conn,cur = self.connectCursor()
-        exists = f"SELECT EXISTS({query})"
-        isExists = False
-        try:
-            cur.execute(exists)
-            value = cur.fetchall()
-            isExists = value[0][0]
-        except sqlite3.OperationalError:
-            print("error when checking if col exists, perhaps no data yet")
-        cur.close()
-        conn.close()
-        return isExists
-    
+    # User_Presence_Stats Table Methods
     def isPresDateExists(self, dataDate: date) -> bool:
         exeString = f'''SELECT user_presences FROM user_presence_stats WHERE date='{dataDate}' '''
         isExists = self.isExists(exeString)
@@ -284,3 +274,18 @@ class Database:
         cur.close()
         conn.close()
         return value
+    
+    # Helper Functions
+    def isExists(self,query: str) -> bool:
+        conn,cur = self.connectCursor()
+        exists = f"SELECT EXISTS({query})"
+        isExists = False
+        try:
+            cur.execute(exists)
+            value = cur.fetchall()
+            isExists = value[0][0]
+        except sqlite3.OperationalError:
+            print("error when checking if col exists, perhaps no data yet")
+        cur.close()
+        conn.close()
+        return isExists
