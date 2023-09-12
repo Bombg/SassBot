@@ -68,8 +68,5 @@
 8. Start the server: 'python3 run.py' or 'python run.py'
 
 ### Update History
-- 1.0.1 
     - 9/12/2023
         - Alerts can now happen for multiple accounts on the same platform at the same time
-- 1.0
-    - All previous versions prior to 9/12/2023
