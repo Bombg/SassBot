@@ -15,17 +15,17 @@ class Database:
         return conn, cur
     
     # Platform Table Methods
-    def updatePlatformRowCol(self,table,rowKey,col,newValue):
+    def updatePlatformRowCol(self,rowKey,col,newValue):
         conn,cur = self.connectCursor()
-        exeString = f'''UPDATE {table} SET {col}={newValue} WHERE platform_name='{rowKey}' '''
+        exeString = f'''UPDATE platforms SET {col}={newValue} WHERE platform_name='{rowKey}' '''
         cur.execute(exeString)
         conn.commit()
         cur.close()
         conn.close()
 
-    def getTableRowCol(self,table, rowKey, col):
+    def getPlatformsRowCol(self,table, rowKey, col):
         conn,cur = self.connectCursor()
-        exeString = f'''SELECT {col} FROM {table} WHERE platform_name='{rowKey}' '''
+        exeString = f'''SELECT {col} FROM platforms WHERE platform_name='{rowKey}' '''
         cur.execute(exeString)
         value = cur.fetchall()
         cur.close()

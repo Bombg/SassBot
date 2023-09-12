@@ -44,7 +44,7 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, us
         if secondsSinceStreamEndTime >= Constants.WAIT_BETWEEN_MESSAGES and secondsSinceLastMessage >= Constants.WAIT_BETWEEN_MESSAGES and streamEndTime >= streamStartTime:
             print(f"{platformName}Boobies")
             await platformNotifFunc(rest, title, thumbUrl, icon, userName)
-            db.updatePlatformRowCol("platforms",platformName,"last_stream_start_time",time.time())
+            db.updatePlatformRowCol(platformName,"last_stream_start_time",time.time())
             globals.rebroadcast[platformName] = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME or globals.rebroadcast[platformName]:
             print(f"Long{platformName}Boobies")
@@ -52,10 +52,10 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, us
             lastOnlineMessage = time.time()
             globals.rebroadcast[platformName] = 0
         elif streamEndTime > streamStartTime:
-            db.updatePlatformRowCol("platforms",platformName,"last_stream_start_time",time.time())
+            db.updatePlatformRowCol(platformName,"last_stream_start_time",time.time())
     elif isOnline == False:
         if streamEndTime <= streamStartTime:
-            db.updatePlatformRowCol("platforms",platformName,"last_stream_end_time",time.time())
+            db.updatePlatformRowCol(platformName,"last_stream_end_time",time.time())
         globals.rebroadcast[platformName] = 0
     print("\n")
 
