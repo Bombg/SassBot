@@ -32,7 +32,7 @@ def load(client: tanjun.abc.Client) -> None:
 async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, userName: str, platformName: str, rest: hikari.impl.RESTClientImpl):
     isOnline, title, thumbUrl, icon = await asyncio.get_running_loop().run_in_executor(None,isOnlineFunc,userName)
     db = Database()
-    lastOnlineMessage,streamStartTime,streamEndTime = db.getPlatformsRowValues(platformName)
+    lastOnlineMessage,streamStartTime,streamEndTime = db.getPlatformAccountsRowValues(platformName,userName)
     secondsSinceLastMessage = StaticMethods.timeToSeconds(lastOnlineMessage)
     secondsSinceStreamEndTime = StaticMethods.timeToSeconds(streamEndTime)
     secondsSinceStreamStartTime = StaticMethods.timeToSeconds(streamStartTime)
@@ -45,6 +45,7 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, us
             print(f"{platformName}Boobies")
             await platformNotifFunc(rest, title, thumbUrl, icon, userName)
             db.updatePlatformRowCol(platformName,"last_stream_start_time",time.time())
+            db.updatePlatformAccountRowCol(platformName, userName,"last_stream_start_time",time.time())
             globals.rebroadcast[platformName] = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME or globals.rebroadcast[platformName]:
             print(f"Long{platformName}Boobies")
@@ -53,9 +54,11 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, us
             globals.rebroadcast[platformName] = 0
         elif streamEndTime > streamStartTime:
             db.updatePlatformRowCol(platformName,"last_stream_start_time",time.time())
+            db.updatePlatformAccountRowCol(platformName,userName,"last_stream_start_time",time.time())
     elif isOnline == False:
         if streamEndTime <= streamStartTime:
             db.updatePlatformRowCol(platformName,"last_stream_end_time",time.time())
+            db.updatePlatformAccountRowCol(platformName,userName,"last_stream_end_time",time.time())
         globals.rebroadcast[platformName] = 0
     print("\n")
 

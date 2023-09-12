@@ -18,6 +18,18 @@ cur.execute('''CREATE TABLE IF NOT EXISTS platforms
                 )
             ''')
 
+cur.execute('''CREATE TABLE IF NOT EXISTS platform_accounts
+                (
+                    account_name TEXT NOT NULL,
+                    platform_name TEXT NOT NULL, 
+                    last_online_message REAL,
+                    last_stream_start_time REAL,
+                    last_stream_end_time REAL,
+                    PRIMARY KEY (account_name, platform_name),
+                    FOREIGN KEY(platform_name) REFERENCES platforms(platform_name)
+                )
+            ''')
+
 cur.execute('''CREATE TABLE IF NOT EXISTS subathon
                 (
                     subathon INTEGER, 

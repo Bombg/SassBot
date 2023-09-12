@@ -22,6 +22,7 @@ class Notifications:
         ofEmbed = await task
         db = Database()
         db.updatePlatformRowCol("onlyfans","last_online_message",time.time())
+        db.updatePlatformAccountRowCol("onlyfans",ofUserName,"last_online_message",time.time())
         IS_PING = db.getPing()
         messageContent = Constants.OF_ROLES_TO_PING + ofOnlineText if IS_PING else ofOnlineText
         await rest.create_message(channel = Constants.OF_NOTIFICATION_CHANNEL_ID, content = messageContent, embed = ofEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
@@ -44,6 +45,7 @@ class Notifications:
         cbEmbed = await task
         db = Database()
         db.updatePlatformRowCol("chaturbate","last_online_message",time.time())
+        db.updatePlatformAccountRowCol("chaturbate",cbUserName,"last_online_message",time.time())
         IS_PING = db.getPing()
         messageContent = Constants.CB_ROLES_TO_PING + cbOnlineText if IS_PING else cbOnlineText
         await rest.create_message(channel = Constants.CB_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=cbEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
@@ -64,6 +66,7 @@ class Notifications:
         fansEmbed = await task
         db = Database()
         db.updatePlatformRowCol("fansly","last_online_message",time.time())
+        db.updatePlatformAccountRowCol("fansly",fansUserName,"last_online_message",time.time())
         IS_PING = db.getPing()
         messageContent = Constants.FANS_ROLES_TO_PING + fansOnlineText if IS_PING else fansOnlineText
         await rest.create_message(channel = Constants.FANS_NOTIFICATION_CHANNEL_ID, content = messageContent, embed = fansEmbed, mentions_everyone=IS_PING, role_mentions=IS_PING)
@@ -85,6 +88,7 @@ class Notifications:
         twitchEmbed = await task
         db = Database()
         db.updatePlatformRowCol("twitch","last_online_message",time.time())
+        db.updatePlatformAccountRowCol("twitch",twitchUserName,"last_online_message",time.time())
         IS_PING = db.getPing()
         messageContent = Constants.TWITCH_ROLES_TO_PING + twitchOnlineText if IS_PING else twitchOnlineText
         await rest.create_message(channel = Constants.TWITCH_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=twitchEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
@@ -106,6 +110,7 @@ class Notifications:
         ytEmbed = await task
         db = Database()
         db.updatePlatformRowCol("youtube","last_online_message",time.time())
+        db.updatePlatformAccountRowCol("youtube",ytUserName,"last_online_message",time.time())
         IS_PING = db.getPing()
         messageContent = Constants.YT_ROLES_TO_PING + ytOnlineText if IS_PING else ytOnlineText
         await rest.create_message(channel = Constants.YT_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=ytEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
@@ -127,6 +132,7 @@ class Notifications:
         kickEmbed = await task
         db = Database()
         db.updatePlatformRowCol("kick","last_online_message",time.time())
+        db.updatePlatformAccountRowCol("kick",kickUserName,"last_online_message",time.time())
         IS_PING = db.getPing()
         messageContent = Constants.KICK_ROLES_TO_PING + kickOnlineText if IS_PING else kickOnlineText
         await rest.create_message(channel = Constants.KICK_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=kickEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
@@ -148,6 +154,7 @@ class Notifications:
         cam4Embed = await task
         db = Database()
         db.updatePlatformRowCol("cam4","last_online_message",time.time())
+        db.updatePlatformAccountRowCol("cam4",cam4UserName,"last_online_message",time.time())
         IS_PING = db.getPing()
         messageContent = Constants.CAM4_ROLES_TO_PING + cam4OnlineText if IS_PING else cam4OnlineText
         await rest.create_message(channel = Constants.CAM4_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=cam4Embed, mentions_everyone= IS_PING, role_mentions=IS_PING)
@@ -169,6 +176,7 @@ class Notifications:
         mfcEmbed = await task
         db = Database()
         db.updatePlatformRowCol("mfc","last_online_message",time.time())
+        db.updatePlatformAccountRowCol("mfc",mfcUserName,"last_online_message",time.time())
         IS_PING = db.getPing()  
         messageContent = Constants.MFC_ROLES_TO_PING + mfcOnlineText if IS_PING else mfcOnlineText
         await rest.create_message(channel = Constants.MFC_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=mfcEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
@@ -190,6 +198,7 @@ class Notifications:
         bcEmbed = await task
         db = Database()
         db.updatePlatformRowCol("bongacams","last_online_message",time.time())
+        db.updatePlatformAccountRowCol("bongacams",bcUserName,"last_online_message",time.time())
         IS_PING = db.getPing()  
         messageContent = Constants.BC_ROLES_TO_PING + bcOnlineText if IS_PING else bcOnlineText
         await rest.create_message(channel = Constants.BC_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=bcEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
@@ -211,6 +220,7 @@ class Notifications:
         scEmbed = await task
         db = Database()
         db.updatePlatformRowCol("stripchat","last_online_message",time.time())
+        db.updatePlatformAccountRowCol("stripchat",scUserName,"last_online_message",time.time())
         IS_PING = db.getPing()  
         messageContent = Constants.SC_ROLES_TO_PING + scOnlineText if IS_PING else scOnlineText
         await rest.create_message(channel = Constants.SC_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=scEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)

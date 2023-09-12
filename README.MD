@@ -66,3 +66,10 @@
     - images/avatars/calmStreamer.png - Bot avatar if streamer has streamed within the MIN_TIME_BEFORE_AVATAR_CHANGE time frame (default 48 hours)
     - images/avatars/pissedStreamer.png - Bot avatar if streamer hasn't streamed within the MIN_TIME_BEFORE_AVATAR_CHANGE time frame
 8. Start the server: 'python3 run.py' or 'python run.py'
+
+### Update History
+- 1.0.1 
+    - 9/12/2023
+        - Alerts can now happen for multiple accounts on the same platform at the same time
+- 1.0
+    - All previous versions prior to 9/12/2023

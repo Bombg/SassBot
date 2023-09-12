@@ -73,7 +73,6 @@ class Constants:
 
     #Usernames associated with each platform - if not applicable leave an empty array. i.e. cbUserName = []
     #If the streamer has multiple accounts for a paltform, add an extra username to the array i.e. cbUserName = ['user1','user2']
-    #if streamer is online with multiple usernames within the same platform at the same time, then only the first notification will be shown for that platform. 
     kickUserName = ['LitneySpears']
     cbUserName = []
     fansUserName = ['Litneyspearsx']

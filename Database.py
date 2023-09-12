@@ -14,6 +14,54 @@ class Database:
         cur = conn.cursor()
         return conn, cur
     
+    # Platform_Accounts Table Methods
+    def createPlatformAccountsTable(self) -> None:
+        conn,cur = self.connectCursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS platform_accounts
+                (
+                    account_name TEXT NOT NULL,
+                    platform_name TEXT NOT NULL, 
+                    last_online_message REAL,
+                    last_stream_start_time REAL,
+                    last_stream_end_time REAL,
+                    PRIMARY KEY (account_name, platform_name),
+                    FOREIGN KEY(platform_name) REFERENCES platforms(platform_name)
+                )
+            ''')
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def createNewPlatformAccount(self, accountName:str, platformName:str,lastOnlineMessage = 0, lastStreamStartTime = time.time(), lastStreamEndTime = time.time()) -> None:
+        self.createPlatformAccountsTable()
+        conn,cur = self.connectCursor()
+        rowVals =(accountName, platformName, lastOnlineMessage, lastStreamStartTime, lastStreamEndTime)
+        cur.execute('INSERT INTO platform_accounts (account_name, platform_name, last_online_message, last_stream_start_time, last_stream_end_time) VALUES (?,?,?,?,?)',rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def getPlatformAccountsRowValues(self, platformName, accountName):
+        self.createPlatformAccountsTable()
+        conn,cur = self.connectCursor()
+        exeString = f'''SELECT last_online_message,last_stream_start_time,last_stream_end_time FROM platform_accounts WHERE platform_name='{platformName}' AND account_name='{accountName}' '''
+        if not self.isExists(exeString):
+            self.createNewPlatformAccount(accountName, platformName)
+        cur.execute(exeString)
+        value = cur.fetchall()
+        cur.close()
+        conn.close()
+        return value[0][0],value[0][1],value[0][2]
+    
+    def updatePlatformAccountRowCol(self,platformName,accountName,col,newValue):
+        self.createPlatformAccountsTable()
+        conn,cur = self.connectCursor()
+        exeString = f'''UPDATE platform_accounts SET {col}={newValue} WHERE platform_name='{platformName}' AND account_name='{accountName}' '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
     # Platform Table Methods
     def updatePlatformRowCol(self,rowKey,col,newValue):
         conn,cur = self.connectCursor()
@@ -23,7 +71,7 @@ class Database:
         cur.close()
         conn.close()
 
-    def getPlatformsRowCol(self,table, rowKey, col):
+    def getPlatformsRowCol(self, rowKey, col):
         conn,cur = self.connectCursor()
         exeString = f'''SELECT {col} FROM platforms WHERE platform_name='{rowKey}' '''
         cur.execute(exeString)
