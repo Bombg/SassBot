@@ -7,9 +7,8 @@ from datetime import datetime
 
 def createUserDayGraph(inputDate: str) -> None:
     db = Database()
-    yyyyDashMmDashDd = inputDate
     inputDate = datetime.strptime(inputDate, '%Y-%m-%d').date()
-    presencesDict = db.getPresenceDay(yyyyDashMmDashDd)
+    presencesDict = db.getPresenceDay(inputDate)
     lastWeekPresencesDict = db.getLastWeeksDayPresenceData(inputDate)
     x, yTotalUsers, yDnd, yOnline, yIdle = getTodaysLists(presencesDict)
     yTotalUsersLastWeek = getLastWeekList(lastWeekPresencesDict, x)
@@ -27,19 +26,25 @@ def createUserDayGraph(inputDate: str) -> None:
     plt.ylabel("Users")
     plt.title(str(inputDate))
     ax = plt.gca()
-    temp = ax.xaxis.get_ticklabels()
-    temp = list(set(temp) - set(temp[::6]))
-    for label in temp:
-        label.set_visible(False)
+    hideLabels(ax)
+    plotSecondYAxis(x, totalMembers, ax)
+    if not os.path.exists("graphs"):
+        os.makedirs("graphs")
+    plt.tight_layout()    
+    plt.savefig(f"graphs/{inputDate}.png")
+
+def plotSecondYAxis(x, totalMembers, ax):
     ax2 = ax.twinx()
     ax2.plot(x,totalMembers, color = "violet", label = "All members(offline and online)")
     ax2.set_ylabel("All members", color = "violet")
     ax2.legend(bbox_to_anchor=(1.075, 0.4), loc='upper left')
     ax2.tick_params(axis='y', labelcolor="violet")
-    if not os.path.exists("graphs"):
-        os.makedirs("graphs")
-    plt.tight_layout()    
-    plt.savefig(f"graphs/{yyyyDashMmDashDd}.png")
+
+def hideLabels(ax):
+    temp = ax.xaxis.get_ticklabels()
+    temp = list(set(temp) - set(temp[::6])) #x[:a:b:c] - list slicing - a is the starting index, b is the ending index and c is the optional step size. 
+    for label in temp:                      #L[x::y] means a slice of L where the x is the index to start from and y is the step size. 
+        label.set_visible(False)            #temp[::6] means every 6th element from temp. temp = del temp[::6] the same thing?
 
 def addTotalMembers(presencesDict: dict):
     totalMembers = []
