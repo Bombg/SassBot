@@ -54,6 +54,8 @@ def addTotalMembers(presencesDict: dict):
                 totalMembers.append(v['members'])
             else:
                 totalMembers.append(None)
+        else:
+            totalMembers.append(None)
     return totalMembers
 
 def addOnlineCols(presencesDict):
@@ -119,8 +121,8 @@ def getTodaysLists(presencesDict):
     yOnline = []
     yIdle = []
     for k, v in presencesDict.items():
+        x.append(str(k))
         if v:
-            x.append(str(k))
             totalUsers = 0
             dnd = 0
             online = 0
@@ -138,4 +140,9 @@ def getTodaysLists(presencesDict):
             yDnd.append(int(dnd))
             yOnline.append(int(online))
             yIdle.append(int(idle))
+        else:
+            yTotalUsers.append(None)
+            yDnd.append(None)
+            yOnline.append(None)
+            yIdle.append(None)
     return x,yTotalUsers,yDnd,yOnline,yIdle
