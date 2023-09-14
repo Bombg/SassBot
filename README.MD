@@ -45,6 +45,7 @@
     - /subathon-end - end a subathon timer
 - Stats
     - /users-graph Get a graph of online/dnd/idle/ users in your discord. The data is mainly used to send out alerts but why not use it for graphs as well!
+        - Has two optional arguements, InputDate and Days. InputDate defaults to todays date and days (to include in graph) defaults to 1. 
     - /stream-stats Shows total time streamed for the week, two weeks, and four weeks for each platform.
 
 ### How to set up the bot:
@@ -68,5 +69,7 @@
 8. Start the server: 'python3 run.py' or 'python run.py'
 
 ### Update History
+    - 9/14/2023
+        - /users-graph command upgraded to include multiple days in a graph with an optional arguemnt.
     - 9/12/2023
-        - Alerts can now happen for multiple accounts on the same platform at the same time
+        - Alerts can now happen for multiple accounts on the same platform at the same time.

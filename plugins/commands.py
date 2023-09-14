@@ -30,22 +30,28 @@ async def streamStats(ctx: tanjun.abc.SlashContext) -> None:
     await ctx.respond(f"One Week Totals:{weekData}\nTwo Week Totals:{twoWeekData}\nFour Week Totals:{fourWeekData}\nChecks are made once every 10 min, so figures not exact")
 
 @component.with_slash_command
+@tanjun.with_str_slash_option("days", "Number of days back to include in the graph. Default is 1", default = 1)
 @tanjun.with_str_slash_option("inputdate", "Date in yyyy-mm-dd format. If you don't enter anything today's date will be used", default = "")
-@tanjun.as_slash_command("users-graph", "get agraph for the active users. Date in yyyy-mm-dd format, or todays date if no input",default_to_ephemeral= True, always_defer=True)
+@tanjun.as_slash_command("users-graph", "get agraph for the active users. Date in yyyy-mm-dd format, or todays date if no input.",default_to_ephemeral= True, always_defer=True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
-async def activeDailyUsersGraph(ctx: tanjun.abc.SlashContext, inputdate: str) -> None:
+async def activeDailyUsersGraph(ctx: tanjun.abc.SlashContext, inputdate: str, days: int) -> None:
     if not inputdate:
         inputdate = str(date.today())
     restring = r"([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))"
     if re.search(restring, inputdate):
         db = Database()
-        if db.isPresDateExists(inputdate):
-            DataGrapher.createUserDayGraph(inputdate)
-            file = hikari.File(f"graphs/{inputdate}.png")
+        days = int(days)
+        inputDateToDateTime = datetime.strptime(inputdate, '%Y-%m-%d').date()
+        previousDate = inputDateToDateTime - timedelta(days = days - 1)
+        isPresDateExists = db.isPresDateExists(inputdate)
+        if isPresDateExists  and db.isPresDateExists(str(previousDate)):
+            path = DataGrapher.createUserDayGraph(inputdate, days=days)
+            file = hikari.File(path)
             await ctx.respond(file)
         else:
-            await ctx.respond("There is no data for this date")
+            errorString =f"There is no data for {inputdate}" if not isPresDateExists else f"There there is not enough data to go back to {previousDate}."
+            await ctx.respond(errorString)
     else:
         await ctx.respond("Improper date format, use yyyy-mm-dd")
 
