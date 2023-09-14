@@ -78,6 +78,8 @@
         - Can mention other roles other than everyone and each platform can get their own custom mentions
         - everyone-ping-toggle renamed to ping-toggle
         - Can now have a custom notification channel per platform if you wish
+    - 9/06/2023
+        - Can now track multiple accounts per platform
     - 9/01/2023
         - Can now add individual user IDs to command white list as well as roles. 
     - 8/xx/2023
