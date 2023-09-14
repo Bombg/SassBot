@@ -73,3 +73,15 @@
         - /users-graph command upgraded to include multiple days in a graph with an optional arguemnt.
     - 9/12/2023
         - Alerts can now happen for multiple accounts on the same platform at the same time.
+    - 9/09/2023
+        - Stream-status bug fix that was causing it to give strange values and not record data
+        - Can mention other roles other than everyone and each platform can get their own custom mentions
+        - everyone-ping-toggle renamed to ping-toggle
+        - Can now have a custom notification per platform if you wish
+    - 9/01/2023
+        - Can now add individual user IDs to command white list as well as roles. 
+    - 8/xx/2023
+        - Added StripChat Support
+        - Added BongaCams Support
+        - Added MyFreeCamsSupport
+        - Added Cam4 Support
