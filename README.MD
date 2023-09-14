@@ -77,7 +77,7 @@
         - Stream-status bug fix that was causing it to give strange values and not record data
         - Can mention other roles other than everyone and each platform can get their own custom mentions
         - everyone-ping-toggle renamed to ping-toggle
-        - Can now have a custom notification per platform if you wish
+        - Can now have a custom notification channel per platform if you wish
     - 9/01/2023
         - Can now add individual user IDs to command white list as well as roles. 
     - 8/xx/2023
