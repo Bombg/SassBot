@@ -31,6 +31,7 @@ def getStreamInfo(jsonText):
         results = json.loads(jsonText[0])
         if results['livestream']:
             title = results['livestream']['session_title']
+            title = title.replace("&amp;","&")
             thumbUrl = results['livestream']['thumbnail']['url']+ "?" + str(int(time.time()))
             icon = results['user']['profile_pic']
             rerun = StaticMethods.isRerun(title)
