@@ -25,6 +25,8 @@ cur.execute('''CREATE TABLE IF NOT EXISTS platform_accounts
                     last_online_message REAL,
                     last_stream_start_time REAL,
                     last_stream_end_time REAL,
+                    temp_title TEXT,
+                    temp_title_time REAL,
                     PRIMARY KEY (account_name, platform_name),
                     FOREIGN KEY(platform_name) REFERENCES platforms(platform_name)
                 )

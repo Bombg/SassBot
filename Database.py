@@ -15,6 +15,62 @@ class Database:
         return conn, cur
     
     # Platform_Accounts Table Methods
+    def getPlatformTempTitle(self,platform, accountName):
+        self.checkAddTitleCols()
+        title = ""
+        titleTime = 0
+        conn,cur = self.connectCursor()
+        exeString = f'''SELECT temp_title, temp_title_time FROM platform_accounts WHERE platform_name='{platform}' AND account_name='{accountName}' '''
+        cur.execute(exeString)
+        values = cur.fetchall()
+        if values:
+            title = values[0][0]
+            titleTime = values[0][1]
+        cur.close()
+        conn.close()
+        return title, titleTime
+
+    def getPlatformAccountNames(self,platform:str):
+        conn,cur = self.connectCursor()
+        names= []
+        exeString = f'''SELECT account_name FROM platform_accounts WHERE platform_name='{platform}' '''
+        if self.isExists(exeString):
+            cur.execute(exeString)
+            namesList = cur.fetchall()
+            for name in namesList:
+                names.append(name[0])
+        cur.close()
+        conn.close()
+        return names
+
+    def doesAccountExist(self,platform, accountName):
+        isExistString = f'''SELECT temp_title, temp_title_time FROM platform_accounts WHERE platform_name='{platform}' AND account_name='{accountName}' '''
+        accountExist = self.isExists(isExistString)
+        return accountExist
+
+    def addTempTitle(self,title: str, platform: str, accountName: str ) -> None:
+        self.createPlatformAccountsTable()
+        self.checkAddTitleCols()
+        conn,cur = self.connectCursor()
+        if self.doesAccountExist(platform, accountName):
+            exeString = f'''UPDATE platform_accounts SET temp_title='{title}', temp_title_time={time.time()} WHERE platform_name='{platform}' AND account_name='{accountName}' '''
+            cur.execute(exeString)
+            conn.commit()
+            cur.close()
+            conn.close()
+        else:
+            print("given bad account or platform. can't update title")
+
+    def checkAddTitleCols(self):
+        isTitleExist = self.isColExist("platform_accounts","temp_title")
+        if not isTitleExist:
+            conn,cur = self.connectCursor()
+            cur.execute('''ALTER TABLE platform_accounts ADD temp_title TEXT ''')
+            cur.execute('''ALTER TABLE platform_accounts ADD temp_title_time REAL ''')
+            conn.commit()
+            cur.close()
+            conn.close()
+
     def createPlatformAccountsTable(self) -> None:
         conn,cur = self.connectCursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS platform_accounts
@@ -24,6 +80,8 @@ class Database:
                     last_online_message REAL,
                     last_stream_start_time REAL,
                     last_stream_end_time REAL,
+                    temp_title TEXT,
+                    temp_title_time REAL,
                     PRIMARY KEY (account_name, platform_name),
                     FOREIGN KEY(platform_name) REFERENCES platforms(platform_name)
                 )
@@ -337,3 +395,15 @@ class Database:
         cur.close()
         conn.close()
         return isExists
+    
+    def isColExist(self,tableName, colName):
+        isExist = False
+        conn,cur = self.connectCursor()
+        cur.execute(f'PRAGMA table_info({tableName})')
+        retCols = cur.fetchall()
+        for col in retCols:
+            if colName in col:
+                isExist = True
+        cur.close()
+        conn.close()
+        return isExist

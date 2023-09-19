@@ -15,6 +15,36 @@ import re
 component = tanjun.Component()
 
 @component.with_slash_command
+@tanjun.with_str_slash_option("title", "The temporary title you wish to add")
+@tanjun.with_str_slash_option("platform", "The platform you wish to add a temporary title for")
+@tanjun.with_str_slash_option("accountname", "The account name for the platform you wish to create a temp title for. Optional if only 1 account", default="")
+@tanjun.as_slash_command("title", "Add a temporary title for a platform", default_to_ephemeral=True, always_defer=True)
+@Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
+async def tempTitle(ctx: tanjun.abc.SlashContext, title: str, platform: str, accountname: str) -> None:
+    platforms = ['chaturbate','onlyfans','fansly','twitch','youtube','kick','cam4','mfc','bongacams', 'stripchat']
+    db = Database()
+    if platform.lower() in platforms:
+        if not accountname:
+            accounts = db.getPlatformAccountNames(platform)
+            if len(accounts) == 1:
+                accountname = accounts[0]
+            elif len(accounts) == 0:
+                await ctx.respond("No accounts for this platform in the database. Have you added this account in constants.py?")
+            else:
+                await ctx.respond(f"More than one account for this platform. You must input one from this list {accounts}")
+        if accountname and db.doesAccountExist(platform, accountname):
+            if title:
+                db.addTempTitle(title,platform,accountname)
+                await ctx.respond(f"sucessfully input the new temp title: '{title}'")
+            else:
+                await ctx.respond("Entered title is empty")
+        else:
+            await ctx.respond("Bad account name given")
+    else:
+        await ctx.respond(f"platform name input incorrectly. Use one from this list {platforms}")
+
+@component.with_slash_command
 @tanjun.as_slash_command("stream-stats", f"Get stats on how much {Constants.streamerName} has been streaming.", default_to_ephemeral=True, always_defer=True)
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger

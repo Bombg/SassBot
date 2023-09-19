@@ -33,9 +33,13 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, us
     isOnline, title, thumbUrl, icon = await asyncio.get_running_loop().run_in_executor(None,isOnlineFunc,userName)
     db = Database()
     lastOnlineMessage,streamStartTime,streamEndTime = db.getPlatformAccountsRowValues(platformName,userName)
+    tempTitle, tempTitleTime = db.getPlatformTempTitle(platformName, userName)
+    secondsSinceTempTitle = StaticMethods.timeToSeconds(tempTitleTime)
     secondsSinceLastMessage = StaticMethods.timeToSeconds(lastOnlineMessage)
     secondsSinceStreamEndTime = StaticMethods.timeToSeconds(streamEndTime)
     secondsSinceStreamStartTime = StaticMethods.timeToSeconds(streamStartTime)
+    if tempTitle and secondsSinceTempTitle < Constants.TEMP_TITLE_UPTIME:
+        title = tempTitle
     if Constants.DEBUG:
         print(platformName + "Offline: " + str((-1 * secondsSinceStreamStartTime) if isOnline else secondsSinceStreamEndTime))
     if isOnline == 3:

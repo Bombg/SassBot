@@ -69,6 +69,11 @@
 8. Start the server: 'python3 run.py' or 'python run.py'
 
 ### Update History
+    -9/18/2023
+        - /title command added. It allows you to temporarily add a custom title for a platform/username combo.
+            - title and platform arguments are required and with an optional accountName argument that is required if there's more than one account for that platform
+            - TEMP_TITLE_UPTIME in constants.py determines how long a temp title added via /title will be used for. Current default is 16 hours
+        - fix for Kick titles with ampersands
     - 9/14/2023
         - /users-graph command upgraded to include multiple days in a graph with an optional arguemnt.
     - 9/12/2023

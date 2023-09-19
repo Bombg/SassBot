@@ -36,13 +36,14 @@ class Constants:
     ONLINE_MESSAGE_REBROADCAST_TIME = 86400 #Time in seconds the stream will be online before another online notification will be broadcasted
     TIME_BEFORE_BOT_RESTART = 86400 #time in seconds before bot will restart
     TIME_OFFLINE_BEFORE_RESTART = 900 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
+    TEMP_TITLE_UPTIME = 57600 #Time in seconds temp titles will be used before default titles are used
 
     ONLINE_CHECK_TIMER = 120 #Wait time in seconds between checks
     LONG_ONLINE_CHECK_TIMER = 600
     AVATAR_CHECK_TIMER = 130
     STATUS_CHECK_TIMER = 125
 
-    SMART_ALERT_LOOK_AHEAD = 3 #number of hours smart alert looks ahead to make sure conditions are still met (to make sure alerts are made too late into a stream)
+    SMART_ALERT_LOOK_AHEAD = 3 #number of hours smart alert looks ahead to make sure conditions are still met (to make sure alerts aren't made too late into a stream)
     PERCENTAGE_OF_MAX = 0.85 # Percent of maximum users online before a smart alert goes off
     SECONDS_BETWEEN_SMART_ALERTS = 21600 # minimum number of seconds before another smart alert goes off
 
@@ -110,6 +111,7 @@ class Constants:
     
     # Titles for announcement embeds
     # Titles for platforms that have optional titles or no titles at all
+    # You can also use the /title command to create temporary titles for a platform on the fly, but once the TEMP_TITLE_UPTIME time is up then it defaults back to these titles
     fansDefaultTitle = "Naughty Fansly stream? =)"
     ofDefaultTitle = "Naughty time? =)"
     cam4DefaultTitle = "Cam4 Naughty Time."

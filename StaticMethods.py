@@ -224,6 +224,8 @@ def timeToHoursMinutesTotalTime(totalTime: float) -> int:
     return totalTimeHours, leftoverMinutes
 
 def timeToSeconds(newTime: float) -> int:
+    if newTime == None:
+        newTime = 0
     totalTime = time.time() - newTime
     totalTime = int(totalTime)
     return totalTime
