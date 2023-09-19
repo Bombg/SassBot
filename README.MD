@@ -70,26 +70,26 @@
 8. Start the server: 'python3 run.py' or 'python run.py'
 
 ### Update History
-    -9/18/2023
-        - /title command added. It allows you to temporarily add a custom title for a platform/username combo.
-            - title and platform arguments are required and with an optional accountName argument that is required if there's more than one account for that platform
-            - TEMP_TITLE_UPTIME in constants.py determines how long a temp title added via /title will be used for. Current default is 16 hours
-        - fix for Kick titles with ampersands
-    - 9/14/2023
-        - /users-graph command upgraded to include multiple days in a graph with an optional arguemnt.
-    - 9/12/2023
-        - Alerts can now happen for multiple accounts on the same platform at the same time.
-    - 9/09/2023
-        - Stream-status bug fix that was causing it to give strange values and not record data
-        - Can mention other roles other than everyone and each platform can get their own custom mentions
-        - everyone-ping-toggle renamed to ping-toggle
-        - Can now have a custom notification channel per platform if you wish
-    - 9/06/2023
-        - Can now track multiple accounts per platform
-    - 9/01/2023
-        - Can now add individual user IDs to command white list as well as roles. 
-    - 8/xx/2023
-        - Added StripChat Support
-        - Added BongaCams Support
-        - Added MyFreeCamsSupport
-        - Added Cam4 Support
+- 9/18/2023
+    - /title command added. It allows you to temporarily add a custom title for a platform/username combo.
+        - title and platform arguments are required and with an optional accountName argument that is required if there's more than one account for that platform
+        - TEMP_TITLE_UPTIME in constants.py determines how long a temp title added via /title will be used for. Current default is 16 hours
+    - fix for Kick titles with ampersands
+- 9/14/2023
+    - /users-graph command upgraded to include multiple days in a graph with an optional arguemnt.
+- 9/12/2023
+    - Alerts can now happen for multiple accounts on the same platform at the same time.
+- 9/09/2023
+    - Stream-status bug fix that was causing it to give strange values and not record data
+    - Can mention other roles other than everyone and each platform can get their own custom mentions
+    - everyone-ping-toggle renamed to ping-toggle
+    - Can now have a custom notification channel per platform if you wish
+- 9/06/2023
+    - Can now track multiple accounts per platform
+- 9/01/2023
+    - Can now add individual user IDs to command white list as well as roles. 
+- 8/xx/2023
+    - Added StripChat Support
+    - Added BongaCams Support
+    - Added MyFreeCamsSupport
+    - Added Cam4 Support
