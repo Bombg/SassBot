@@ -29,6 +29,7 @@
 ### Commands
 - /stream-status - See if your streamer is currently offline or online. Shows time online/offline and total time streamed.
 - /ping-toggle - Toggle for role pings in online announcements. This is defaulted to false, so set true if you want role pings
+- /title  - Allows you to temporarily add a custom title for a platform/username combo. TEMP_TITLE_UPTIME in constants.py determines how long a temp title added via /title will be used for.
 - Image list commands - Images can be pulled from twitter and/or manually added. These images are used for embeds for all supported platforms.
     - /image-list-show - show the list of image urls that will be rotated through during online announcements
     - /image-list-add -  add an image url to the image list
