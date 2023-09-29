@@ -31,6 +31,8 @@ def load(client: tanjun.abc.Client) -> None:
 
 async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, userName: str, platformName: str, rest: hikari.impl.RESTClientImpl):
     isOnline, title, thumbUrl, icon = await asyncio.get_running_loop().run_in_executor(None,isOnlineFunc,userName)
+    isRerun = False
+    isOnline = True
     db = Database()
     lastOnlineMessage,streamStartTime,streamEndTime = db.getPlatformAccountsRowValues(platformName,userName)
     tempTitle, tempTitleTime = db.getPlatformTempTitle(platformName, userName)
@@ -40,26 +42,29 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, us
     secondsSinceStreamStartTime = StaticMethods.timeToSeconds(streamStartTime)
     if tempTitle and secondsSinceTempTitle < Constants.TEMP_TITLE_UPTIME:
         title = tempTitle
+    if isOnline and StaticMethods.isRerun(title):
+        isOnline = isOnline if db.getRerunAnnounce() else False
+        isRerun = True
     if Constants.DEBUG:
         print(platformName + "Offline: " + str((-1 * secondsSinceStreamStartTime) if isOnline else secondsSinceStreamEndTime))
-    if isOnline == 3:
-        print(f"{platformName} check failed cause bot detection")
-    elif isOnline == True:
+    if isOnline == True:
+        db.setRerun(isRerun, platformName)
         if secondsSinceStreamEndTime >= Constants.WAIT_BETWEEN_MESSAGES and secondsSinceLastMessage >= Constants.WAIT_BETWEEN_MESSAGES and streamEndTime >= streamStartTime:
             print(f"{platformName}Boobies")
-            await platformNotifFunc(rest, title, thumbUrl, icon, userName)
+            await platformNotifFunc(rest, title, thumbUrl, icon, userName, isRerun)
             db.updatePlatformRowCol(platformName,"last_stream_start_time",time.time())
             db.updatePlatformAccountRowCol(platformName, userName,"last_stream_start_time",time.time())
             globals.rebroadcast[platformName] = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME or globals.rebroadcast[platformName]:
             print(f"Long{platformName}Boobies")
-            await platformNotifFunc(rest, title, thumbUrl, icon, userName)
+            await platformNotifFunc(rest, title, thumbUrl, icon, userName, isRerun)
             lastOnlineMessage = time.time()
             globals.rebroadcast[platformName] = 0
-        elif streamEndTime > streamStartTime:
+        elif streamEndTime >= streamStartTime:
             db.updatePlatformRowCol(platformName,"last_stream_start_time",time.time())
             db.updatePlatformAccountRowCol(platformName,userName,"last_stream_start_time",time.time())
     elif isOnline == False:
+        db.setRerun(isRerun, platformName)
         if streamEndTime <= streamStartTime:
             db.updatePlatformRowCol(platformName,"last_stream_end_time",time.time())
             db.updatePlatformAccountRowCol(platformName,userName,"last_stream_end_time",time.time())

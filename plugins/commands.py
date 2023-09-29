@@ -15,6 +15,17 @@ import re
 component = tanjun.Component()
 
 @component.with_slash_command
+@tanjun.with_bool_slash_option("rerunannounce","True if you want rerun pings False if not")
+@tanjun.as_slash_command("announce-rerun-toggle", "Toggle whether or not the bot will announce reruns", default_to_ephemeral=True, always_defer=True)
+@Permissions(Constants.whiteListedRoleIDs)
+@CommandLogger
+async def announceRerunToggle(ctx: tanjun.abc.SlashContext, rerunannounce:bool) -> None:
+    db = Database()
+    db.setRerunAnnounce(rerunannounce)
+    onOff = "ON" if rerunannounce else "OFF"
+    await ctx.respond(f"Rerun announcements have been turned {onOff}.")
+
+@component.with_slash_command
 @tanjun.with_str_slash_option("title", "The temporary title you wish to add")
 @tanjun.with_str_slash_option("platform", "The platform you wish to add a temporary title for")
 @tanjun.with_str_slash_option("accountname", "The account name for the platform you wish to create a temp title for. Optional if only 1 account", default="")

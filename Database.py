@@ -90,7 +90,7 @@ class Database:
         cur.close()
         conn.close()
 
-    def createNewPlatformAccount(self, accountName:str, platformName:str,lastOnlineMessage = 0, lastStreamStartTime = time.time(), lastStreamEndTime = time.time()) -> None:
+    def createNewPlatformAccount(self, accountName:str, platformName:str,lastOnlineMessage = 0, lastStreamStartTime = 0, lastStreamEndTime = 0) -> None:
         self.createPlatformAccountsTable()
         conn,cur = self.connectCursor()
         rowVals =(accountName, platformName, lastOnlineMessage, lastStreamStartTime, lastStreamEndTime)
@@ -121,6 +121,29 @@ class Database:
         conn.close()
     
     # Platform Table Methods
+    def setRerun(self, isRerun, platform):
+        self.checkAddRerunCols()
+        conn,cur = self.connectCursor()
+        tFalse = 1 if isRerun else 0
+        exeString = f'''UPDATE platforms SET rerun_playing={tFalse} WHERE platform_name='{platform}' '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def getRerun(self, platform):
+        isRerun = 0
+        self.checkAddRerunCols()
+        conn, cur = self.connectCursor()
+        exeString = f'''SELECT rerun_playing FROM platforms WHERE platform_name='{platform}' '''
+        cur.execute(exeString)
+        value = cur.fetchall()
+        cur.close()
+        conn.close()
+        if value[0][0] != None:
+            isRerun = value[0][0]
+        return isRerun
+
     def updatePlatformRowCol(self,rowKey,col,newValue):
         conn,cur = self.connectCursor()
         exeString = f'''UPDATE platforms SET {col}={newValue} WHERE platform_name='{rowKey}' '''
@@ -145,7 +168,8 @@ class Database:
         value = cur.fetchall()
         cur.close()
         conn.close()
-        return value[0][0],value[0][1],value[0][2]
+        isRerun = self.getRerun(platformName)
+        return value[0][0],value[0][1],value[0][2], isRerun
     
     # Subathon Table Methods
     def startSubathon(self,epochTime):
@@ -209,6 +233,29 @@ class Database:
         conn.close()
 
     # Stream Table Methods
+    def setRerunAnnounce(self, isAnnounce):
+        self.checkAddRerunCols()
+        conn,cur = self.connectCursor()
+        tFalse = 1 if isAnnounce else 0
+        exeString = f'''UPDATE stream SET rerun_ping={tFalse}'''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def getRerunAnnounce(self):
+        isRerun = 0
+        self.checkAddRerunCols()
+        conn, cur = self.connectCursor()
+        exeString = f'''SELECT rerun_ping FROM stream '''
+        cur.execute(exeString)
+        value = cur.fetchall()
+        cur.close()
+        conn.close()
+        if value[0][0] != None:
+            isRerun = value[0][0]
+        return isRerun
+
     def getStreamTableValues(self):
         conn,cur = self.connectCursor()
         exeString = f'''SELECT last_online,last_offline,last_stream_length FROM stream'''
@@ -407,3 +454,13 @@ class Database:
         cur.close()
         conn.close()
         return isExist
+    
+    def checkAddRerunCols(self):
+        isTitleExist = self.isColExist("stream","rerun_ping")
+        if not isTitleExist:
+            conn,cur = self.connectCursor()
+            cur.execute('''ALTER TABLE stream ADD rerun_ping INTEGER ''')
+            cur.execute('''ALTER TABLE platforms ADD rerun_playing INTEGER ''')
+            conn.commit()
+            cur.close()
+            conn.close()

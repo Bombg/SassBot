@@ -16,6 +16,7 @@ def isRerun(title:str) -> bool:
 
 def replaceIntsWithString(minsDict: dict) -> dict:
     popKeys = []
+    minsDict = minsDict.copy()
     for k, v in minsDict.items():
         if minsDict[k] == 0:
             popKeys.append(k)
@@ -34,9 +35,10 @@ def getWeekStreamingMinutes(startingDate: date, minutesDict = {}):
     db = Database()
     minutesBetweenOnlineChecks = 10
     daysInWeek = 7
-    weekMinutes = {"CB":0,"OF":0,"Twitch":0,"YT":0,"Fans":0,"Kick":0,"Cam4":0, "MFC":0, "BC":0 , "SC":0,"TotalTimeStreaming":0} if not minutesDict else dict(minutesDict)
+    weekMinutes = {"CB":0,"OF":0,"Twitch":0,"YT":0,"Fans":0,"Kick":0,"Cam4":0, "MFC":0, "BC":0 , "SC":0,"TotalTimeStreamingLive":0, "TotalTimeStreamingReruns":0} if not minutesDict else dict(minutesDict)
     platforms = list(weekMinutes)
-    platforms.remove("TotalTimeStreaming")
+    platforms.remove("TotalTimeStreamingLive")
+    platforms.remove("TotalTimeStreamingReruns")
     for i in range(daysInWeek):
         pastDate = startingDate - timedelta(days = i)
         dayData = db.getPresenceDay(pastDate)
@@ -44,11 +46,16 @@ def getWeekStreamingMinutes(startingDate: date, minutesDict = {}):
             for k, v in dayData.items():
                 if v:
                     if 'streaming' in v.keys():
-                        weekMinutes["TotalTimeStreaming"] += minutesBetweenOnlineChecks
+                        notOnlyRerunsFlag = False
                         if isinstance(v['streaming'],str):
+                            if "RR" in v['streaming']:
+                                weekMinutes["TotalTimeStreamingReruns"] += minutesBetweenOnlineChecks
                             for platform in platforms:
-                                if platform in v['streaming']:
+                                if platform in v['streaming'] and not "RR-" + platform in v['streaming']:
                                     weekMinutes[platform] += minutesBetweenOnlineChecks
+                                    notOnlyRerunsFlag = True
+                        if notOnlyRerunsFlag:
+                            weekMinutes["TotalTimeStreamingLive"] += minutesBetweenOnlineChecks
     return weekMinutes
 
 def smartRebroadcast() -> None:
@@ -163,36 +170,36 @@ def checkImagePin():
 
 def checkOnline(db: Database) -> str:
     playingString = ""
-    cbLastOnlineMessage,cbStreamStartTime,cbStreamEndTime = db.getPlatformsRowValues('chaturbate')
-    ofLastOnlineMessage,ofStreamStartTime,ofStreamEndTime = db.getPlatformsRowValues('onlyfans')
-    twitchLastOnlineMessage,twitchStreamStartTime,twitchStreamEndTime = db.getPlatformsRowValues('twitch')
-    ytLastOnlineMessage,ytStreamStartTime,ytStreamEndTime = db.getPlatformsRowValues('youtube')
-    fansLastOnlineMessage,fansStreamStartTime,fansStreamEndTime = db.getPlatformsRowValues('fansly')
-    kickLastOnlineMessage,kickStreamStartTime,kickStreamEndTime = db.getPlatformsRowValues('kick')
-    cam4LastOnlineMessage,cam4StreamStartTime,cam4StreamEndTime = db.getPlatformsRowValues('cam4')
-    mfcLastOnlineMessage,mfcStreamStartTime,mfcStreamEndTime = db.getPlatformsRowValues('mfc')
-    bcLastOnlineMessage,bcStreamStartTime,bcStreamEndTime = db.getPlatformsRowValues('bongacams')
-    scLastOnlineMessage,scStreamStartTime,scStreamEndTime = db.getPlatformsRowValues('stripchat')
+    cbLastOnlineMessage,cbStreamStartTime,cbStreamEndTime, cbIsRerun = db.getPlatformsRowValues('chaturbate')
+    ofLastOnlineMessage,ofStreamStartTime,ofStreamEndTime, ofIsRerun = db.getPlatformsRowValues('onlyfans')
+    twitchLastOnlineMessage,twitchStreamStartTime,twitchStreamEndTime, twitchIsRerun = db.getPlatformsRowValues('twitch')
+    ytLastOnlineMessage,ytStreamStartTime,ytStreamEndTime, ytIsRerun = db.getPlatformsRowValues('youtube')
+    fansLastOnlineMessage,fansStreamStartTime,fansStreamEndTime, fansIsRerun = db.getPlatformsRowValues('fansly')
+    kickLastOnlineMessage,kickStreamStartTime,kickStreamEndTime, kickIsRerun = db.getPlatformsRowValues('kick')
+    cam4LastOnlineMessage,cam4StreamStartTime,cam4StreamEndTime, cam4IsRerun = db.getPlatformsRowValues('cam4')
+    mfcLastOnlineMessage,mfcStreamStartTime,mfcStreamEndTime, mfcIsRerun = db.getPlatformsRowValues('mfc')
+    bcLastOnlineMessage,bcStreamStartTime,bcStreamEndTime, bcIsRerun = db.getPlatformsRowValues('bongacams')
+    scLastOnlineMessage,scStreamStartTime,scStreamEndTime, scIsRerun = db.getPlatformsRowValues('stripchat')
     if cbStreamStartTime > cbStreamEndTime:
-        playingString = playingString + "CB "
+        playingString = playingString + "RR-CB " if cbIsRerun else playingString + "CB "
     if ofStreamStartTime > ofStreamEndTime:
-        playingString = playingString + "OF "
+        playingString = playingString + "RR-OF " if ofIsRerun else playingString + "OF "
     if twitchStreamStartTime > twitchStreamEndTime:
-        playingString = playingString + "Twitch "
+        playingString = playingString + "RR-Twitch " if twitchIsRerun else playingString + "Twitch "
     if ytStreamStartTime > ytStreamEndTime:
-        playingString = playingString + "YT "
+        playingString = playingString + "RR-YT " if ytIsRerun else playingString + "YT "
     if fansStreamStartTime > fansStreamEndTime:
-        playingString = playingString + "Fans "
+        playingString = playingString + "RR-Fans " if fansIsRerun else playingString + "Fans "
     if kickStreamStartTime > kickStreamEndTime:
-        playingString = playingString + "Kick "
+        playingString = playingString + "RR-Kick " if kickIsRerun else playingString + "Kick "
     if cam4StreamStartTime > cam4StreamEndTime:
-        playingString = playingString + "Cam4 "
+        playingString = playingString + "RR-Cam4 " if cam4IsRerun else playingString + "Cam4 "
     if mfcStreamStartTime > mfcStreamEndTime:
-        playingString = playingString + "MFC "
+        playingString = playingString + "RR-MFC " if mfcIsRerun else playingString + "MFC "
     if bcStreamStartTime > bcStreamEndTime:
-        playingString = playingString + "BC "
+        playingString = playingString + "RR-BC " if bcIsRerun else playingString + "BC "
     if scStreamStartTime > scStreamEndTime:
-        playingString = playingString + "SC "
+        playingString = playingString + "RR-SC " if scIsRerun else playingString + "SC "
     if playingString and playingString[-1] == " ":
         playingString = playingString[:-1]
     return playingString

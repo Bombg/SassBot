@@ -34,9 +34,7 @@ def getStreamInfo(jsonText):
             title = title.replace("&amp;","&")
             thumbUrl = results['livestream']['thumbnail']['url']+ "?" + str(int(time.time()))
             icon = results['user']['profile_pic']
-            rerun = StaticMethods.isRerun(title)
-            if not rerun:
-                isOnline = True
+            isOnline = True
     except json.decoder.JSONDecodeError:
         print("no json at kick api, bot detection or site down?")
     return isOnline,title,thumbUrl,icon

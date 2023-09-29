@@ -69,21 +69,38 @@ class Constants:
     BC_ROLES_TO_PING = "@everyone "
     SC_ROLES_TO_PING = "@everyone "
 
+    # For rerun announcements/pings to work you will first need to turn them on via the /announce-rerun-toggle True/False command AND the /ping-toggle True/False command. 
+    # if you don't want a specific platform to get a rerun ping, just leave an empty string (It will still get announced if turned on)
+    # If you wish to ping everyone simply input @everyone, but if you wish to ping a specific role you'll need to get the role ID and assemble it like so <@&putRoleIDHere>
+    # for example if the role id is 999 then you'd put ROLES_TO_PING = '<@&999> '
+    # If you want to ping multiple roles then just put them in the same string. i.e. ROLES_TO_PING = '<@&999> @everyone '
+    # Leave a space at the end of the string i.e ROLES_TO_PING = '@everyone '
+    KICK_RERUN_ROLES_TO_PING = ""
+    CB_RERUN_ROLES_TO_PING = ""
+    FANS_RERUN_ROLES_TO_PING = ""
+    OF_RERUN_ROLES_TO_PING = ""
+    YT_RERUN_ROLES_TO_PING = ""
+    TWITCH_RERUN_ROLES_TO_PING = ""
+    CAM4_RERUN_ROLES_TO_PING = ""
+    MFC_RERUN_ROLES_TO_PING = ""
+    BC_RERUN_ROLES_TO_PING = ""
+    SC_RERUN_ROLES_TO_PING = ""
+
     #Generic name of the streamer that will be used for all notifications
     streamerName = "LitneySpears"
 
     #Usernames associated with each platform - if not applicable leave an empty array. i.e. cbUserName = []
     #If the streamer has multiple accounts for a paltform, add an extra username to the array i.e. cbUserName = ['user1','user2']
     kickUserName = ['LitneySpears']
-    cbUserName = []
+    cbUserName = ['vipervenusx']
     fansUserName = ['Litneyspearsx']
     ofUserName = ['litneyspearsx','litneyspearsfree']
     ytUserName = ['litneyspears_']
     twitchUserName = ['litneyspears_']
-    cam4UserName = []
-    mfcUserName = []
-    bcUserName = []
-    scUserName = []
+    cam4UserName = ['vanessa_hill']
+    mfcUserName = ['LexxiSKOL']
+    bcUserName = ['miiilaa']
+    scUserName = ['amberadventure']
 
     twitchUrl = f"https://www.twitch.tv/litneyspears_" #Add a valid twitch URL here even if you streamer doesn't have twitch or else the presence won't update properly
 
@@ -112,6 +129,7 @@ class Constants:
     # Titles for announcement embeds
     # Titles for platforms that have optional titles or no titles at all
     # You can also use the /title command to create temporary titles for a platform on the fly, but once the TEMP_TITLE_UPTIME time is up then it defaults back to these titles
+    # If the titles contain any variation of RR/Rerun/not live then it will be detected by rerun detection
     fansDefaultTitle = "Naughty Fansly stream? =)"
     ofDefaultTitle = "Naughty time? =)"
     cam4DefaultTitle = "Cam4 Naughty Time."

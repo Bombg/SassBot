@@ -19,9 +19,7 @@ def isModelOnline(twitchChannelName):
         reticon = getIcon(soup)
         if reticon:
             icon = reticon
-        rerun = StaticMethods.isRerun(title)
-        if not rerun:
-            isOnline = twitchJson['publication']['isLiveBroadcast']
+        isOnline = twitchJson['publication']['isLiveBroadcast']
     return isOnline, title, thumbUrl, icon
 
 def getTwitchJson(soup):

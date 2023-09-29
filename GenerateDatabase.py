@@ -14,7 +14,8 @@ cur.execute('''CREATE TABLE IF NOT EXISTS platforms
                     platform_name TEXT PRIMARY KEY, 
                     last_online_message REAL,
                     last_stream_start_time REAL,
-                    last_stream_end_time REAL
+                    last_stream_end_time REAL,
+                    rerun_playing INTEGER
                 )
             ''')
 
@@ -52,7 +53,8 @@ cur.execute('''CREATE TABLE IF NOT EXISTS stream
                     img_pin INTEGER,
                     img_pin_url TEXT,
                     img_banned_list TEXT,
-                    everyone_ping INTEGER
+                    everyone_ping INTEGER,
+                    rerun_ping INTEGER
                 )
             ''')
 
@@ -66,16 +68,16 @@ cur.execute('''CREATE TABLE IF NOT EXISTS user_presence_stats
 
 
 platform_list =[
-                ("chaturbate",0,0,time.time()),
-                ("onlyfans",0,0,time.time()),
-                ("fansly",0,0,time.time()),
-                ("twitch",0,0,time.time()),
-                ("youtube",0,0,time.time()),
-                ("kick",0,0,time.time()),
-                ("cam4",0,0,time.time()),
-                ("mfc",0,0,time.time()),
-                ("bongacams",0,0,time.time()),
-                ("stripchat",0,0,time.time())
+                ("chaturbate",0,0,0),
+                ("onlyfans",0,0,0),
+                ("fansly",0,0,0),
+                ("twitch",0,0,0),
+                ("youtube",0,0,0),
+                ("kick",0,0,0),
+                ("cam4",0,0,0),
+                ("mfc",0,0,0),
+                ("bongacams",0,0,0),
+                ("stripchat",0,0,0)
             ]
 subathon_values =[
                 (0,0,0,0,None)

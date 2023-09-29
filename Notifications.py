@@ -6,7 +6,7 @@ import time
 import hikari
 
 class Notifications:
-    async def OFNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, ofUserName):
+    async def OFNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, ofUserName, isRerun):
         OfLiveStreamUrl = f"https://onlyfans.com/{ofUserName}/live"
         ofOnlineText = Constants.ofAboveEmbedText +"\n<" + OfLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
@@ -24,10 +24,11 @@ class Notifications:
         db.updatePlatformRowCol("onlyfans","last_online_message",time.time())
         db.updatePlatformAccountRowCol("onlyfans",ofUserName,"last_online_message",time.time())
         IS_PING = db.getPing()
-        messageContent = Constants.OF_ROLES_TO_PING + ofOnlineText if IS_PING else ofOnlineText
+        rolesToPing = Constants.OF_RERUN_ROLES_TO_PING if isRerun else Constants.OF_ROLES_TO_PING
+        messageContent = rolesToPing + ofOnlineText if IS_PING else ofOnlineText
         await rest.create_message(channel = Constants.OF_NOTIFICATION_CHANNEL_ID, content = messageContent, embed = ofEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
 
-    async def ChaturNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, cbUserName):
+    async def ChaturNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, cbUserName, isRerun):
         cbLiveStreamUrl = f"https://chaturbate.com/{cbUserName}/"
         cbOnlineText = Constants.cbAboveEmbedText + "\n<" + cbLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
@@ -47,10 +48,11 @@ class Notifications:
         db.updatePlatformRowCol("chaturbate","last_online_message",time.time())
         db.updatePlatformAccountRowCol("chaturbate",cbUserName,"last_online_message",time.time())
         IS_PING = db.getPing()
-        messageContent = Constants.CB_ROLES_TO_PING + cbOnlineText if IS_PING else cbOnlineText
+        rolesToPing = Constants.CB_RERUN_ROLES_TO_PING if isRerun else Constants.CB_ROLES_TO_PING
+        messageContent = rolesToPing + cbOnlineText if IS_PING else cbOnlineText
         await rest.create_message(channel = Constants.CB_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=cbEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
 
-    async def FansNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, fansUserName):
+    async def FansNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, fansUserName, isRerun):
         fansLiveStreamUrl = f"https://fansly.com/live/{fansUserName}"
         fansOnlineText = Constants.fansAboveEmbedText + "\n<" + fansLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
@@ -68,10 +70,11 @@ class Notifications:
         db.updatePlatformRowCol("fansly","last_online_message",time.time())
         db.updatePlatformAccountRowCol("fansly",fansUserName,"last_online_message",time.time())
         IS_PING = db.getPing()
-        messageContent = Constants.FANS_ROLES_TO_PING + fansOnlineText if IS_PING else fansOnlineText
+        rolesToPing = Constants.FANS_RERUN_ROLES_TO_PING if isRerun else Constants.FANS_ROLES_TO_PING
+        messageContent = rolesToPing + fansOnlineText if IS_PING else fansOnlineText
         await rest.create_message(channel = Constants.FANS_NOTIFICATION_CHANNEL_ID, content = messageContent, embed = fansEmbed, mentions_everyone=IS_PING, role_mentions=IS_PING)
 
-    async def TwitchNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, twitchUserName):
+    async def TwitchNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, twitchUserName, isRerun):
         twitchLiveStreamUrl = f"https://www.twitch.tv/{twitchUserName}"
         twitchOnlineText = Constants.twitchAboveEmbedText + "\n<" + twitchLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
@@ -90,10 +93,11 @@ class Notifications:
         db.updatePlatformRowCol("twitch","last_online_message",time.time())
         db.updatePlatformAccountRowCol("twitch",twitchUserName,"last_online_message",time.time())
         IS_PING = db.getPing()
-        messageContent = Constants.TWITCH_ROLES_TO_PING + twitchOnlineText if IS_PING else twitchOnlineText
+        rolesToPing = Constants.TWITCH_RERUN_ROLES_TO_PING if isRerun else Constants.TWITCH_ROLES_TO_PING
+        messageContent = rolesToPing + twitchOnlineText if IS_PING else twitchOnlineText
         await rest.create_message(channel = Constants.TWITCH_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=twitchEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
     
-    async def YTNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, ytUserName):
+    async def YTNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, ytUserName, isRerun):
         ytLiveStreamUrl = f"https://www.youtube.com/@{ytUserName}/live"
         ytOnlineText = Constants.ytAboveEmbedText + "\n<" + ytLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
@@ -112,10 +116,11 @@ class Notifications:
         db.updatePlatformRowCol("youtube","last_online_message",time.time())
         db.updatePlatformAccountRowCol("youtube",ytUserName,"last_online_message",time.time())
         IS_PING = db.getPing()
-        messageContent = Constants.YT_ROLES_TO_PING + ytOnlineText if IS_PING else ytOnlineText
+        rolesToPing = Constants.YT_RERUN_ROLES_TO_PING if isRerun else Constants.YT_ROLES_TO_PING
+        messageContent = rolesToPing + ytOnlineText if IS_PING else ytOnlineText
         await rest.create_message(channel = Constants.YT_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=ytEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
     
-    async def KickNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, kickUserName):
+    async def KickNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, kickUserName, isRerun):
         kickLiveStreamUrl = f"https://kick.com/{kickUserName}"
         kickOnlineText = Constants.kickAboveEmbedText + "\n<" + kickLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
@@ -134,10 +139,11 @@ class Notifications:
         db.updatePlatformRowCol("kick","last_online_message",time.time())
         db.updatePlatformAccountRowCol("kick",kickUserName,"last_online_message",time.time())
         IS_PING = db.getPing()
-        messageContent = Constants.KICK_ROLES_TO_PING + kickOnlineText if IS_PING else kickOnlineText
+        rolesToPing = Constants.KICK_RERUN_ROLES_TO_PING if isRerun else Constants.KICK_ROLES_TO_PING
+        messageContent = rolesToPing + kickOnlineText if IS_PING else kickOnlineText
         await rest.create_message(channel = Constants.KICK_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=kickEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
 
-    async def Cam4Notification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, cam4UserName):
+    async def Cam4Notification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, cam4UserName, isRerun):
         cam4LiveStreamUrl = f"https://www.cam4.com/{cam4UserName}"
         cam4OnlineText = Constants.cam4AboveEmbedText + "\n<" + cam4LiveStreamUrl + ">"
         embedMaker = EmbedCreator(
@@ -156,10 +162,11 @@ class Notifications:
         db.updatePlatformRowCol("cam4","last_online_message",time.time())
         db.updatePlatformAccountRowCol("cam4",cam4UserName,"last_online_message",time.time())
         IS_PING = db.getPing()
-        messageContent = Constants.CAM4_ROLES_TO_PING + cam4OnlineText if IS_PING else cam4OnlineText
+        rolesToPing = Constants.CAM4_RERUN_ROLES_TO_PING if isRerun else Constants.CAM4_ROLES_TO_PING
+        messageContent = rolesToPing + cam4OnlineText if IS_PING else cam4OnlineText
         await rest.create_message(channel = Constants.CAM4_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=cam4Embed, mentions_everyone= IS_PING, role_mentions=IS_PING)
 
-    async def MfcNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, mfcUserName):
+    async def MfcNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, mfcUserName, isRerun):
         mfcLiveStreamUrl = f"https://www.myfreecams.com/#{mfcUserName}"
         mfcOnlineText = Constants.mfcAboveEmbedText + "\n<" + mfcLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
@@ -177,11 +184,12 @@ class Notifications:
         db = Database()
         db.updatePlatformRowCol("mfc","last_online_message",time.time())
         db.updatePlatformAccountRowCol("mfc",mfcUserName,"last_online_message",time.time())
-        IS_PING = db.getPing()  
-        messageContent = Constants.MFC_ROLES_TO_PING + mfcOnlineText if IS_PING else mfcOnlineText
+        IS_PING = db.getPing()
+        rolesToPing = Constants.MFC_RERUN_ROLES_TO_PING if isRerun else Constants.MFC_ROLES_TO_PING
+        messageContent = rolesToPing + mfcOnlineText if IS_PING else mfcOnlineText
         await rest.create_message(channel = Constants.MFC_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=mfcEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
 
-    async def BcNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, bcUserName):
+    async def BcNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, bcUserName, isRerun):
         bcLiveStreamUrl = f"https://bongacams.com/{bcUserName}"
         bcOnlineText = Constants.bcAboveEmbedText + "\n<" + bcLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
@@ -199,11 +207,12 @@ class Notifications:
         db = Database()
         db.updatePlatformRowCol("bongacams","last_online_message",time.time())
         db.updatePlatformAccountRowCol("bongacams",bcUserName,"last_online_message",time.time())
-        IS_PING = db.getPing()  
-        messageContent = Constants.BC_ROLES_TO_PING + bcOnlineText if IS_PING else bcOnlineText
+        IS_PING = db.getPing()
+        rolesToPing = Constants.BC_RERUN_ROLES_TO_PING if isRerun else Constants.BC_ROLES_TO_PING
+        messageContent = rolesToPing + bcOnlineText if IS_PING else bcOnlineText
         await rest.create_message(channel = Constants.BC_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=bcEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
 
-    async def ScNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, scUserName):
+    async def ScNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, scUserName, isRerun):
         scLiveStreamUrl = f"https://stripchat.com/{scUserName}"
         scOnlineText = Constants.scAboveEmbedText + "\n<" + scLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
@@ -221,6 +230,7 @@ class Notifications:
         db = Database()
         db.updatePlatformRowCol("stripchat","last_online_message",time.time())
         db.updatePlatformAccountRowCol("stripchat",scUserName,"last_online_message",time.time())
-        IS_PING = db.getPing()  
-        messageContent = Constants.SC_ROLES_TO_PING + scOnlineText if IS_PING else scOnlineText
+        IS_PING = db.getPing()
+        rolesToPing = Constants.SC_RERUN_ROLES_TO_PING if isRerun else Constants.SC_ROLES_TO_PING
+        messageContent = rolesToPing + scOnlineText if IS_PING else scOnlineText
         await rest.create_message(channel = Constants.SC_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=scEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)

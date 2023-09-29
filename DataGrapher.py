@@ -94,7 +94,9 @@ def addOnlineCols(presencesDict):
 
 def getFaceColor(streamingValues: str):
     faceColor = 'g'
-    if 'Kick' in streamingValues:
+    if 'RR' in streamingValues:
+        faceColor = '#808080'
+    elif 'Kick' in streamingValues:
         faceColor = "g"
     elif "OF" in streamingValues:
         faceColor = Constants.ofEmbedColor
