@@ -92,15 +92,15 @@ class Constants:
     #Usernames associated with each platform - if not applicable leave an empty array. i.e. cbUserName = []
     #If the streamer has multiple accounts for a paltform, add an extra username to the array i.e. cbUserName = ['user1','user2']
     kickUserName = ['LitneySpears']
-    cbUserName = ['vipervenusx']
+    cbUserName = []
     fansUserName = ['Litneyspearsx']
     ofUserName = ['litneyspearsx','litneyspearsfree']
     ytUserName = ['litneyspears_']
     twitchUserName = ['litneyspears_']
-    cam4UserName = ['vanessa_hill']
-    mfcUserName = ['LexxiSKOL']
-    bcUserName = ['miiilaa']
-    scUserName = ['amberadventure']
+    cam4UserName = []
+    mfcUserName = []
+    bcUserName = []
+    scUserName = []
 
     twitchUrl = f"https://www.twitch.tv/litneyspears_" #Add a valid twitch URL here even if you streamer doesn't have twitch or else the presence won't update properly
 
