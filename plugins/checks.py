@@ -32,7 +32,6 @@ def load(client: tanjun.abc.Client) -> None:
 async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, userName: str, platformName: str, rest: hikari.impl.RESTClientImpl):
     isOnline, title, thumbUrl, icon = await asyncio.get_running_loop().run_in_executor(None,isOnlineFunc,userName)
     isRerun = False
-    isOnline = True
     db = Database()
     lastOnlineMessage,streamStartTime,streamEndTime = db.getPlatformAccountsRowValues(platformName,userName)
     tempTitle, tempTitleTime = db.getPlatformTempTitle(platformName, userName)
