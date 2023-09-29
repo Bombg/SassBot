@@ -13,7 +13,8 @@
 - StripChat
 ### Features
 - Get notifications when your streamer is online sent to a discord channel
-- If twitch/kick title contains a variation of rerun/rr/not live then a notification will not be sent
+- Rerun detection/support. If stream titles contains a variation of rerun/rr/not live then it will be detected as a rerun.
+    - by default reruns won't be announced, but you can choose to announce them to custom roles just for reruns
 - Track multiple accounts per platform. (for example, if they have a paid and free account)
 - There's a minimum time between notifications, so your discord members won't get spammed if you're having connection issues.
 - Bot's status reflects what the streamer is doing. Offline or streaming on Kick, yt, etc.
@@ -29,6 +30,7 @@
 ### Commands
 - /stream-status - See if your streamer is currently offline or online. Shows time online/offline and total time streamed.
 - /ping-toggle - Toggle for role pings in online announcements. This is defaulted to false, so set true if you want role pings
+- /announce-rerun-toggle - Toggle if reruns will be announced. If a title contains a variation of rr/rerun/not live then the stream will be detected as a rerun.
 - /title  - Allows you to temporarily add a custom title for a platform/username combo. TEMP_TITLE_UPTIME in constants.py determines how long a temp title added via /title will be used for.
 - Image list commands - Images can be pulled from twitter and/or manually added. These images are used for embeds for all supported platforms.
     - /image-list-show - show the list of image urls that will be rotated through during online announcements
@@ -70,6 +72,11 @@
 8. Start the server: 'python3 run.py' or 'python run.py'
 
 ### Update History
+- 9/29/2023
+    - Expanded rerun support. 
+        - If a title contains a variation of rr/rerun/not live then the stream will be detected as a rerun.
+            - reruns won't be announced by default, but you can turn on rerun-announcements with the /announce-rerun-toggle command
+                - if ping-toggle is turned on you can also set roles to announce reruns to in constants.py
 - 9/18/2023
     - /title command added. It allows you to temporarily add a custom title for a platform/username combo.
         - title and platform arguments are required and with an optional accountName argument that is required if there's more than one account for that platform
