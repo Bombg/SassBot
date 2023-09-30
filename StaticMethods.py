@@ -62,7 +62,7 @@ def smartRebroadcast() -> None:
     platforms = ['chaturbate','onlyfans','fansly','twitch','youtube','kick','cam4','mfc','bongacams', 'stripchat']
     db = Database()
     for platform in platforms:
-        lastOnlineMessage,streamStartTime,streamEndTime = db.getPlatformsRowValues(platform)
+        lastOnlineMessage,streamStartTime,streamEndTime,isRerun = db.getPlatformsRowValues(platform)
         secondsSinceLastMessage = timeToSeconds(lastOnlineMessage)
         if secondsSinceLastMessage >= Constants.SECONDS_BETWEEN_SMART_ALERTS and streamStartTime > streamEndTime:
             print(f"Smart alert for {platform}")
