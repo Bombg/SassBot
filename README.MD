@@ -71,6 +71,11 @@
     - images/avatars/pissedStreamer.png - Bot avatar if streamer hasn't streamed within the MIN_TIME_BEFORE_AVATAR_CHANGE time frame
 8. Start the server: 'python3 run.py' or 'python run.py'
 
+### Known Issues
+
+1. If multiple accounts are streaming on the same platform at the same time, /rebroadcast will only show an announcement for one of the accounts.
+2. Cam4 api may lock you out after a certain number of calls. May need to switch methods in the future.
+
 ### Update History
 - 9/29/2023
     - Expanded rerun support. 
