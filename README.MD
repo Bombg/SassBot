@@ -50,6 +50,10 @@
     - /users-graph Get a graph of online/dnd/idle/ users in your discord. The data is mainly used to send out alerts but why not use it for graphs as well!
         - Has two optional arguements, InputDate and Days. InputDate defaults to todays date and days (to include in graph) defaults to 1. 
     - /stream-stats Shows total time streamed for the week, two weeks, and four weeks for each platform.
+- Anonymous questions/confessions
+    - /confess - unlogged and anonymous confession that a user can post to a channel via the bot. Must be reviewed first
+    - /confess-review - whitelisted roles/people can review submitted confessions and approve or deny them. 
+        - approved confessions/questions are posted to a preset channel immediately
 
 ### How to set up the bot:
 
@@ -77,6 +81,10 @@
 2. Cam4 api may lock you out after a certain number of calls. May need to switch methods in the future.
 
 ### Update History
+- 10/04/2023
+    - Implemented the ability to post anonymous confessions/questions via /confess command.
+        - These are unlogged server side
+        - Must be approved by a whitelisted role/person via /confess-review
 - 9/29/2023
     - Expanded rerun support. 
         - If a title contains a variation of rr/rerun/not live then the stream will be detected as a rerun.

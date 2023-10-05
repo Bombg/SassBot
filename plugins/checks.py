@@ -280,5 +280,5 @@ async def resetUnreviewedConfessions(rest: alluka.Injected[hikari.impl.RESTClien
         alertIntervals = Constants.CONFESSION_ALERT_INTERVALS
         minVal = len(alertIntervals)-1 if minVal > len(alertIntervals)-1 else minVal
         if StaticMethods.timeToSeconds(globals.confessionIds["alert"]) >= alertIntervals[minVal]:
-            rest.create_message(channel=Constants.CONFESSTION_CHANNEL_ID, content=f"There are {len(value)} confessions in need of review =)")
+            rest.create_message(channel=Constants.CONFESSTION_CHANNEL_ID, content=f"There are {len(value)} confessions in need of review =)\n Use /confess-review to review them")
             globals.confessionIds["alert"] = time.time()
