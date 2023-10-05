@@ -287,5 +287,3 @@ async def resetUnreviewedConfessions(rest: alluka.Injected[hikari.impl.RESTClien
             for k, v in globals.confessionIds.items():
                 if v < globals.confessionIds[minAlertsId]:
                     globals.confessionIds[k] = globals.confessionIds[minAlertsId]
-        else:
-            print(f"can't alert for confession yet {alertIntervals[minVal]}")
