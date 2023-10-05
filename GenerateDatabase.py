@@ -66,6 +66,20 @@ cur.execute('''CREATE TABLE IF NOT EXISTS user_presence_stats
                 )
             ''')
 
+cur.execute('''CREATE TABLE IF NOT EXISTS confessions
+                (
+                    confession_id INTEGER PRIMARY KEY,
+                    confession TEXT,
+                    confession_title TEXT,
+                    review_status INTEGER,
+                    reviewer_id INTEGER,
+                    reviewer_name TEXT,
+                    date_added INTEGER,
+                    date_reviewed INTEGER
+                )
+            ''')
+
+
 
 platform_list =[
                 ("chaturbate",0,0,0),

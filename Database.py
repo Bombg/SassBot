@@ -14,6 +14,100 @@ class Database:
         cur = conn.cursor()
         return conn, cur
     
+    # Confessions Table Methods
+    def createConfessionsTable(self):
+        conn,cur = self.connectCursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS confessions
+                (
+                    confession_id INTEGER PRIMARY KEY,
+                    confession TEXT,
+                    confession_title TEXT,
+                    review_status INTEGER,
+                    reviewer_id INTEGER,
+                    reviewer_name TEXT,
+                    date_added INTEGER,
+                    date_reviewed INTEGER
+                )
+            ''')
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def addConfession(self, confession:str, title:str) -> None:
+        self.createConfessionsTable()
+        conn,cur = self.connectCursor()
+        rowVals = (confession, title, time.time())
+        exeString = f'''INSERT INTO confessions (confession,confession_title, date_added) VALUES (?,?,?)'''
+        cur.execute(exeString,rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def getUnreviewedConfession(self):
+        self.createConfessionsTable()
+        confessionId = 0
+        confession = ""
+        title = ""
+        conn,cur = self.connectCursor()
+        exeString = '''SELECT confession_id, confession,confession_title FROM confessions WHERE date_reviewed IS NULL LIMIT 1'''
+        cur.execute(exeString)
+        values = cur.fetchall()
+        if values:
+            confessionId = values[0][0]
+            confession = values[0][1]
+            title = values[0][2]
+        cur.close()
+        conn.close()
+        self.setConfessionDateReviewed(confessionId)
+        return confessionId, confession, title
+    
+    def setConfessionDateReviewed(self, confessionId):
+        self.createConfessionsTable()
+        conn, cur = self.connectCursor()
+        exeString = f'''UPDATE confessions SET date_reviewed={time.time()} WHERE confession_id={confessionId} '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def reviewConfession(self, confessionId: int, approveDeny: int, reviewerId: int, reviewerName: str):
+        self.createConfessionsTable()
+        conn, cur = self.connectCursor()
+        exeString = f'''UPDATE confessions SET review_status={approveDeny}, reviewer_id={reviewerId}, reviewer_name='{reviewerName}', date_reviewed={time.time()} WHERE confession_id={confessionId} '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def getUnfinishedReviews(self):
+        self.createConfessionsTable()
+        conn, cur = self.connectCursor()
+        exeString = f'''SELECT confession_id, date_reviewed FROM confessions WHERE review_status IS NULL AND date_reviewed IS NOT NULL '''
+        cur.execute(exeString)
+        value = cur.fetchall()
+        cur.close()
+        conn.close()
+        return value
+    
+    def resetConfessionDateReviewed(self, confessionId):
+        self.createConfessionsTable()
+        conn, cur = self.connectCursor()
+        exeString = f'''UPDATE confessions SET date_reviewed=NULL WHERE confession_id={confessionId} '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def getAllUnreviewed(self):
+        self.createConfessionsTable()
+        conn,cur = self.connectCursor()
+        exeString = '''SELECT confession_id, confession,confession_title FROM confessions WHERE date_reviewed IS NULL'''
+        cur.execute(exeString)
+        values = cur.fetchall()
+        cur.close()
+        conn.close()
+        return values
+    
     # Platform_Accounts Table Methods
     def getPlatformTempTitle(self,platform, accountName):
         self.checkAddTitleCols()

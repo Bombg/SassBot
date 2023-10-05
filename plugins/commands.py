@@ -11,8 +11,38 @@ from datetime import timedelta
 import DataGrapher
 import hikari
 import re
+import MiruViews
+import alluka
 
 component = tanjun.Component()
+
+@component.with_slash_command
+@tanjun.checks.with_check(StaticMethods.isPermission)
+@tanjun.as_slash_command("confess-review", "View confessions that need to be reviewd for approval or denial",default_to_ephemeral= True, always_defer= True)
+async def confessReview(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    db = Database()
+    confessionId,confession, title = db.getUnreviewedConfession()
+    if confessionId:
+        view = MiruViews.ConfessionReView(confessionId=confessionId, tanCtx=ctx, confession=confession, rest=rest, title=title)
+        content = f"## {confessionId}:{title}\n``` {confession} ```"
+        await ctx.respond(content=content, components=view)
+        message = await ctx.fetch_last_response()
+        await view.start(message)
+        await view.wait()
+        message = await ctx.fetch_last_response()
+        await ctx.interaction.delete_message(message)
+    else:
+        await ctx.respond("There are no confessions in need of review")
+
+@component.with_slash_command
+@tanjun.as_slash_command("confess", "Anonymously post a confession or question to the confessions channel.", always_defer= True, default_to_ephemeral= True)
+async def confess(ctx: tanjun.abc.SlashContext) -> None:
+    view = MiruViews.ConfessionModalView(autodefer=False)
+    await ctx.respond("Pre-type your Confession/Question and then hit the submit button when you are ready to submit it.\n Button will time out after a few mins, so re-type command if it doesn't work", components=view)
+    message = await ctx.fetch_last_response()
+    await view.start(message)
+    await view.wait()
+    await ctx.interaction.delete_initial_response()
 
 @component.with_slash_command
 @tanjun.with_bool_slash_option("rerunannounce","True if you want rerun pings False if not")

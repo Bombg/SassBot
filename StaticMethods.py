@@ -8,6 +8,25 @@ from Constants import Constants
 from datetime import timedelta
 from datetime import date
 import re
+import tanjun
+
+def resetUnfinishedConfessions():
+    db = Database()
+    unFinished = db.getUnfinishedReviews()
+    if unFinished:
+        for row in unFinished:
+            if timeToSeconds(row[1]) >= Constants.TIME_BEFORE_REVIEW_RESET:
+                db.resetConfessionDateReviewed(row[0])
+
+async def isPermission(ctx: tanjun.abc.SlashContext)-> bool:
+    hasPermission = False
+    roles = ctx.member.get_roles()
+    for role in roles:
+        if role.id in Constants.whiteListedRoleIDs or ctx.member.id in Constants.whiteListedRoleIDs:
+            hasPermission = True
+    if not hasPermission:
+        await ctx.respond("You don't have permission to do this",)
+    return hasPermission
 
 def isRerun(title:str) -> bool:
     reString = "(?i).*([^a-zA-Z]|^)+((rerun|rr|𝓡𝓡|𝓡𝓔𝓡𝓤𝓝|not live))([^a-zA-Z]|$)+.*"

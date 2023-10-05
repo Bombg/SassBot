@@ -15,7 +15,8 @@ class Constants:
         CAM4_NOTIFICATION_CHANNEL_ID = 1137599805787480214
         MFC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
         BC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
-        SC_NOTIFICATION_CHANNEL_ID = 1137599805787480214    
+        SC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
+        CONFESSTION_CHANNEL_ID = 1137599805787480214
     else:
         GUILD_ID =1058859922219081778 #Guild ID of the discord server
         whiteListedRoleIDs = [1100148453792813086,1062179283705020486,145802742647095296] # IDs of Roles you wish to be white listed for some commands.  You can also add user IDs if you want to add an individual without a role
@@ -30,6 +31,7 @@ class Constants:
         MFC_NOTIFICATION_CHANNEL_ID = 1069865162573611058
         BC_NOTIFICATION_CHANNEL_ID = 1069865162573611058
         SC_NOTIFICATION_CHANNEL_ID = 1069865162573611058
+        CONFESSTION_CHANNEL_ID = 1158240422997528637
 
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
@@ -37,11 +39,15 @@ class Constants:
     TIME_BEFORE_BOT_RESTART = 86400 #time in seconds before bot will restart
     TIME_OFFLINE_BEFORE_RESTART = 900 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
     TEMP_TITLE_UPTIME = 57600 #Time in seconds temp titles will be used before default titles are used
+    TIME_BEFORE_REVIEW_RESET = 300
 
     ONLINE_CHECK_TIMER = 120 #Wait time in seconds between checks
     LONG_ONLINE_CHECK_TIMER = 600
     AVATAR_CHECK_TIMER = 130
     STATUS_CHECK_TIMER = 125
+    CONFESSION_CHECK_TIMER = 120
+
+    CONFESSION_ALERT_INTERVALS = [0,0,1800,7200,18000,43200] # Seconds between unreveiwed confession alerts. Starts at 1. 1st alert 0 seconds, 2nd alert 1800 etc. New confessions reset count
 
     SMART_ALERT_LOOK_AHEAD = 3 #number of hours smart alert looks ahead to make sure conditions are still met (to make sure alerts aren't made too late into a stream)
     PERCENTAGE_OF_MAX = 0.85 # Percent of maximum users online before a smart alert goes off

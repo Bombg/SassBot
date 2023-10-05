@@ -18,3 +18,5 @@ rebroadcast = {
     "bongacams":0,
     "stripchat":0
 }
+
+confessionIds = {"alert":0}

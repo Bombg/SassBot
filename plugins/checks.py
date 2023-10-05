@@ -262,4 +262,23 @@ async def smartAlert(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
             onlineThreshold = int(maxOnlineLastWeek * Constants.PERCENTAGE_OF_MAX)
             if nowOnline >= onlineThreshold and lookAheadOnline >= onlineThreshold:
                 StaticMethods.smartRebroadcast()
-        
+
+@component.with_schedule
+@tanjun.as_interval(Constants.CONFESSION_CHECK_TIMER)
+async def resetUnreviewedConfessions(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    StaticMethods.resetUnfinishedConfessions()
+    db = Database()
+    value = db.getAllUnreviewed()
+    if value:
+        minVal = 99
+        for val in value:
+            if val[0] not in globals.confessionIds:
+                globals.confessionIds[val[0]] = 1
+            else:
+                globals.confessionIds[val[0]] += 1
+            minVal = min(minVal,globals.confessionIds[val[0]])
+        alertIntervals = Constants.CONFESSION_ALERT_INTERVALS
+        minVal = len(alertIntervals)-1 if minVal > len(alertIntervals)-1 else minVal
+        if StaticMethods.timeToSeconds(globals.confessionIds["alert"]) >= alertIntervals[minVal]:
+            rest.create_message(channel=Constants.CONFESSTION_CHANNEL_ID, content=f"There are {len(value)} confessions in need of review =)")
+            globals.confessionIds["alert"] = time.time()
