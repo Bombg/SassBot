@@ -85,6 +85,7 @@
     - Implemented the ability to post anonymous confessions/questions via /confess command.
         - These are unlogged server side
         - Must be approved by a whitelisted role/person via /confess-review
+    - A new package is required to be installed so install it via the command 'pip install -U -r requirements.txt' 
 - 9/29/2023
     - Expanded rerun support. 
         - If a title contains a variation of rr/rerun/not live then the stream will be detected as a rerun.
