@@ -17,6 +17,9 @@ class Constants:
         BC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
         SC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
         CONFESSTION_CHANNEL_ID = 1137599805787480214
+        
+        CONFESSION_COMMAND_ID = 1159423004346957835
+        CONFESS_REVIEW_COMMAND_ID = 1159423004346957834
     else:
         GUILD_ID =1058859922219081778 #Guild ID of the discord server
         whiteListedRoleIDs = [1100148453792813086,1062179283705020486,145802742647095296] # IDs of Roles you wish to be white listed for some commands.  You can also add user IDs if you want to add an individual without a role
@@ -33,6 +36,9 @@ class Constants:
         SC_NOTIFICATION_CHANNEL_ID = 1069865162573611058
         CONFESSTION_CHANNEL_ID = 1158240422997528637
 
+        CONFESSION_COMMAND_ID = 1159321755270250571
+        CONFESS_REVIEW_COMMAND_ID = 1159321755270250570
+
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
     ONLINE_MESSAGE_REBROADCAST_TIME = 86400 #Time in seconds the stream will be online before another online notification will be broadcasted
@@ -45,7 +51,7 @@ class Constants:
     LONG_ONLINE_CHECK_TIMER = 600
     AVATAR_CHECK_TIMER = 130
     STATUS_CHECK_TIMER = 125
-    CONFESSION_CHECK_TIMER = 120
+    CONFESSION_CHECK_TIMER = 20
 
     CONFESSION_ALERT_INTERVALS = [0,0,1800,7200,18000,43200] # Seconds between unreveiwed confession alerts. Starts at 1. 1st alert 0 seconds, 2nd alert 1800 etc. New confessions reset count
 
