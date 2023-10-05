@@ -271,14 +271,21 @@ async def resetUnreviewedConfessions(rest: alluka.Injected[hikari.impl.RESTClien
     value = db.getAllUnreviewed()
     if value:
         minVal = 99
+        minAlertsId = 0
         for val in value:
             if val[0] not in globals.confessionIds:
                 globals.confessionIds[val[0]] = 1
-            else:
-                globals.confessionIds[val[0]] += 1
-            minVal = min(minVal,globals.confessionIds[val[0]])
+            if minVal > globals.confessionIds[val[0]]:
+                minVal = globals.confessionIds[val[0]]
+                minAlertsId = val[0]
         alertIntervals = Constants.CONFESSION_ALERT_INTERVALS
         minVal = len(alertIntervals)-1 if minVal > len(alertIntervals)-1 else minVal
         if StaticMethods.timeToSeconds(globals.confessionIds["alert"]) >= alertIntervals[minVal]:
+            globals.confessionIds[minAlertsId] += 1
             await rest.create_message(channel=Constants.CONFESSTION_CHANNEL_ID, content=f"There are {len(value)} confessions in need of review =)\n Use </confess-review:{Constants.CONFESS_REVIEW_COMMAND_ID}> to review them")
             globals.confessionIds["alert"] = time.time()
+            for k, v in globals.confessionIds.items():
+                if v < globals.confessionIds[minAlertsId]:
+                    globals.confessionIds[k] = globals.confessionIds[minAlertsId]
+        else:
+            print(f"can't alert for confession yet {alertIntervals[minVal]}")
