@@ -73,8 +73,9 @@ class Database:
     def reviewConfession(self, confessionId: int, approveDeny: int, reviewerId: int, reviewerName: str):
         self.createConfessionsTable()
         conn, cur = self.connectCursor()
-        exeString = f'''UPDATE confessions SET review_status={approveDeny}, reviewer_id={reviewerId}, reviewer_name='{reviewerName}', date_reviewed={time.time()} WHERE confession_id={confessionId} '''
-        cur.execute(exeString)
+        values = (approveDeny, reviewerId, reviewerName, time.time(), confessionId)
+        exeString = f'''UPDATE confessions SET review_status=?, reviewer_id=?, reviewer_name=?, date_reviewed=? WHERE confession_id=? '''
+        cur.execute(exeString,values)
         conn.commit()
         cur.close()
         conn.close()
