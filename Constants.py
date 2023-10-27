@@ -22,7 +22,7 @@ class Constants:
         CONFESS_REVIEW_COMMAND_ID = 1159423004346957834
     else:
         GUILD_ID =1058859922219081778 #Guild ID of the discord server
-        whiteListedRoleIDs = [1100148453792813086,1062179283705020486,145802742647095296] # IDs of Roles you wish to be white listed for some commands.  You can also add user IDs if you want to add an individual without a role
+        whiteListedRoleIDs = [1100148453792813086,1062179283705020486,145802742647095296,181217776965255169,719941993073213480,1000079616414851205,739282461867114527] # IDs of Roles you wish to be white listed for some commands.  You can also add user IDs if you want to add an individual without a role
         # Channel ID the bot will post notifications to
         KICK_NOTIFICATION_CHANNEL_ID = 1069865162573611058
         CB_NOTIFICATION_CHANNEL_ID = 1069865162573611058
