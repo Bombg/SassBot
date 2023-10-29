@@ -15,6 +15,7 @@ def isModelOnline(fansUserName):
     driver = driverCreator.createDriver()
     driver.get(fansUrl)
     time.sleep(10)
+    checkForEnterButton(driver)
     driver.get_screenshot_as_file("Fansscreenshot.png")
     online = driver.find_elements(By.XPATH, '/html/body/app-root/div/div[1]/div/app-profile-route/div/div/div/div[1]/div[2]/div[1]/app-account-avatar/div')
     iconEle = driver.find_elements(By.TAG_NAME, 'img')
@@ -28,6 +29,12 @@ def isModelOnline(fansUserName):
     if len(online) > 0:
         isOnline = True
     return isOnline, title, thumbUrl, icon
+
+def checkForEnterButton(driver):
+    button = driver.find_elements(By.XPATH, "/html/body/app-root/div/div[3]/app-age-gate-modal/div/div/div[4]/div/div[2]")
+    if len(button) > 0:
+        button[0].click()
+        time.sleep(10)
 
 
     
