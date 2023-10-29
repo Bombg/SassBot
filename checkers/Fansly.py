@@ -15,7 +15,7 @@ def isModelOnline(fansUserName):
     driver = driverCreator.createDriver()
     driver.get(fansUrl)
     time.sleep(10)
-    #driver.get_screenshot_as_file("Fansscreenshot.png")
+    driver.get_screenshot_as_file("Fansscreenshot.png")
     online = driver.find_elements(By.XPATH, '/html/body/app-root/div/div[1]/div/app-profile-route/div/div/div/div[1]/div[2]/div[1]/app-account-avatar/div')
     iconEle = driver.find_elements(By.TAG_NAME, 'img')
     if len(iconEle) >= 5:
