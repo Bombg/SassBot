@@ -104,7 +104,7 @@ class Constants:
     #If the streamer has multiple accounts for a paltform, add an extra username to the array i.e. cbUserName = ['user1','user2']
     kickUserName = ['LitneySpears']
     cbUserName = []
-    fansUserName = ['cherrydays']
+    fansUserName = ['Litneyspearsx']
     ofUserName = ['litneyspearsx','litneyspearsfree']
     ytUserName = ['litneyspears_']
     twitchUserName = ['litneyspears_']
