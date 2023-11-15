@@ -1,7 +1,6 @@
 class Constants:
     DEBUG = False
     TEST_SERVER = False
-
     if TEST_SERVER:
         GUILD_ID =313876691082674178 #Guild ID of the discord server
         whiteListedRoleIDs = [145802742647095296] # IDs of Roles you wish to be white listed for some commands. You can also add user IDs if you want to add an individual without a role
@@ -105,7 +104,7 @@ class Constants:
     #If the streamer has multiple accounts for a paltform, add an extra username to the array i.e. cbUserName = ['user1','user2']
     kickUserName = ['LitneySpears']
     cbUserName = []
-    fansUserName = ['Litneyspearsx']
+    fansUserName = ['cherrydays']
     ofUserName = ['litneyspearsx','litneyspearsfree']
     ytUserName = ['litneyspears_']
     twitchUserName = ['litneyspears_']
