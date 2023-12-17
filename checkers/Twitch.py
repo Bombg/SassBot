@@ -20,6 +20,7 @@ def isModelOnline(twitchChannelName):
         if reticon:
             icon = reticon
         isOnline = twitchJson['publication']['isLiveBroadcast']
+        isOnline = False # temporary fix until workaround is found
     return isOnline, title, thumbUrl, icon
 
 def getTwitchJson(soup):
