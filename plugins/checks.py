@@ -94,13 +94,13 @@ async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None
             await platformChecker(Fansly.isModelOnline, Notifications.FansNotification,fansUserName,"fansly",rest)
             await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.fansUserName))
 
-@component.with_schedule
-@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
-async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if Constants.twitchUserName:
-        for twitchUserName in Constants.twitchUserName:
-            await platformChecker(Twitch.isModelOnline, Notifications.TwitchNotification,twitchUserName,"twitch",rest)
-            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.twitchUserName))
+# @component.with_schedule
+# @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
+# async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+#     if Constants.twitchUserName:
+#         for twitchUserName in Constants.twitchUserName:
+#             await platformChecker(Twitch.isModelOnline, Notifications.TwitchNotification,twitchUserName,"twitch",rest)
+#             await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.twitchUserName))
 
 @component.with_schedule
 @tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
