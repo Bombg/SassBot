@@ -2,7 +2,6 @@ import requests
 import json
 from bs4 import BeautifulSoup
 import time
-import StaticMethods
 
 def isModelOnline(twitchChannelName):
     title = "placeholder twitch title"
@@ -19,8 +18,11 @@ def isModelOnline(twitchChannelName):
         reticon = getIcon(soup)
         if reticon:
             icon = reticon
-        isOnline = twitchJson['publication']['isLiveBroadcast']
-        isOnline = False # temporary fix until workaround is found
+        thumbUrlReq = requests.get(thumbUrl,allow_redirects=True)
+        time.sleep(1)
+        isOnlineJson = twitchJson['publication']['isLiveBroadcast']
+        if isOnlineJson and thumbUrl == thumbUrlReq.url:
+            isOnline = True
     return isOnline, title, thumbUrl, icon
 
 def getTwitchJson(soup):

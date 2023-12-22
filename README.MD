@@ -81,6 +81,8 @@
 2. Cam4 api may lock you out after a certain number of calls. May need to switch methods in the future.
 
 ### Update History
+- 12/22/2023
+    - Twitch checking hopefully fixed and turned back on
 - 12/16/2023
     - Temporarily disabling twitch detection until it's fixed. All channels are showing as live
 - 10/04/2023
