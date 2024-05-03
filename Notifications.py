@@ -234,3 +234,26 @@ class Notifications:
         rolesToPing = Constants.SC_RERUN_ROLES_TO_PING if isRerun else Constants.SC_ROLES_TO_PING
         messageContent = rolesToPing + scOnlineText if IS_PING else scOnlineText
         await rest.create_message(channel = Constants.SC_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=scEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
+
+    async def EpNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, epUserName, isRerun):
+        epLiveStreamUrl = f"https://eplay.com/{epUserName}/live"
+        epOnlineText = Constants.epAboveEmbedText + "\n<" + epLiveStreamUrl + ">"
+        embedMaker = EmbedCreator(
+                                    Constants.epBelowTitleText, 
+                                    title, 
+                                    epLiveStreamUrl, 
+                                    'images/platformImages/epImage.png', 
+                                    Constants.epEmbedColor, 
+                                    icon, 
+                                    epUserName, 
+                                    largeThumbnail= largeThumbnail
+                                )
+        task = asyncio.create_task(embedMaker.getEmbed())
+        epEmbed = await task
+        db = Database()
+        db.updatePlatformRowCol("eplay","last_online_message",time.time())
+        db.updatePlatformAccountRowCol("eplay",epUserName,"last_online_message",time.time())
+        IS_PING = db.getPing()
+        rolesToPing = Constants.EP_RERUN_ROLES_TO_PING if isRerun else Constants.EP_ROLES_TO_PING
+        messageContent = rolesToPing + epOnlineText if IS_PING else epOnlineText
+        await rest.create_message(channel = Constants.EP_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=epEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)

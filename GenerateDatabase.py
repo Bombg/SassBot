@@ -91,7 +91,8 @@ platform_list =[
                 ("cam4",0,0,0),
                 ("mfc",0,0,0),
                 ("bongacams",0,0,0),
-                ("stripchat",0,0,0)
+                ("stripchat",0,0,0),
+                ("eplay",0,0,0)
             ]
 subathon_values =[
                 (0,0,0,0,None)

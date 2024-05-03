@@ -54,7 +54,7 @@ def getWeekStreamingMinutes(startingDate: date, minutesDict = {}):
     db = Database()
     minutesBetweenOnlineChecks = 10
     daysInWeek = 7
-    weekMinutes = {"CB":0,"OF":0,"Twitch":0,"YT":0,"Fans":0,"Kick":0,"Cam4":0, "MFC":0, "BC":0 , "SC":0,"TotalTimeStreamingLive":0, "TotalTimeStreamingReruns":0} if not minutesDict else dict(minutesDict)
+    weekMinutes = {"CB":0,"OF":0,"Twitch":0,"YT":0,"Fans":0,"Kick":0,"Cam4":0, "MFC":0, "BC":0 , "SC":0,"EP":0,"TotalTimeStreamingLive":0, "TotalTimeStreamingReruns":0} if not minutesDict else dict(minutesDict)
     platforms = list(weekMinutes)
     platforms.remove("TotalTimeStreamingLive")
     platforms.remove("TotalTimeStreamingReruns")
@@ -78,7 +78,7 @@ def getWeekStreamingMinutes(startingDate: date, minutesDict = {}):
     return weekMinutes
 
 def smartRebroadcast() -> None:
-    platforms = ['chaturbate','onlyfans','fansly','twitch','youtube','kick','cam4','mfc','bongacams', 'stripchat']
+    platforms = ['chaturbate','onlyfans','fansly','twitch','youtube','kick','cam4','mfc','bongacams', 'stripchat','eplay']
     db = Database()
     for platform in platforms:
         lastOnlineMessage,streamStartTime,streamEndTime,isRerun = db.getPlatformsRowValues(platform)
@@ -159,7 +159,8 @@ def setRebroadcast() -> None:
         "cam4":1,
         "mfc":1,
         "bongacams":1,
-        "stripchat":1
+        "stripchat":1,
+        "eplay":1
 }
 
 def addImageListQue(url: str) -> None:
@@ -199,6 +200,7 @@ def checkOnline(db: Database) -> str:
     mfcLastOnlineMessage,mfcStreamStartTime,mfcStreamEndTime, mfcIsRerun = db.getPlatformsRowValues('mfc')
     bcLastOnlineMessage,bcStreamStartTime,bcStreamEndTime, bcIsRerun = db.getPlatformsRowValues('bongacams')
     scLastOnlineMessage,scStreamStartTime,scStreamEndTime, scIsRerun = db.getPlatformsRowValues('stripchat')
+    epLastOnlineMessage,epStreamStartTime,epStreamEndTime, epIsRerun = db.getPlatformsRowValues('eplay')
     if cbStreamStartTime > cbStreamEndTime:
         playingString = playingString + "RR-CB " if cbIsRerun else playingString + "CB "
     if ofStreamStartTime > ofStreamEndTime:
@@ -219,6 +221,8 @@ def checkOnline(db: Database) -> str:
         playingString = playingString + "RR-BC " if bcIsRerun else playingString + "BC "
     if scStreamStartTime > scStreamEndTime:
         playingString = playingString + "RR-SC " if scIsRerun else playingString + "SC "
+    if epStreamStartTime > epStreamEndTime:
+        playingString = playingString + "RR-EP " if epIsRerun else playingString + "EP "
     if playingString and playingString[-1] == " ":
         playingString = playingString[:-1]
     return playingString

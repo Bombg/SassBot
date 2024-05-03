@@ -257,6 +257,7 @@ class Database:
         return value[0][0]
     
     def getPlatformsRowValues(self, platformName):
+        self.checkAddPlatformRow(platformName)
         conn,cur = self.connectCursor()
         exeString = f'''SELECT last_online_message,last_stream_start_time,last_stream_end_time FROM platforms WHERE platform_name='{platformName}' '''
         cur.execute(exeString)
@@ -265,6 +266,17 @@ class Database:
         conn.close()
         isRerun = self.getRerun(platformName)
         return value[0][0],value[0][1],value[0][2], isRerun
+    
+    def checkAddPlatformRow(self,platformName):
+        exeString = f'''SELECT * FROM platforms WHERE platform_name='{platformName}' '''
+        isExists = self.isExists(exeString)
+        if not isExists:
+            conn,cur = self.connectCursor()
+            rowVals =(platformName,0,0,0)
+            cur.execute('INSERT INTO platforms (platform_name, last_online_message,last_stream_start_time,last_stream_end_time) VALUES (?,?,?,?)',rowVals)
+            conn.commit()
+            cur.close()
+            conn.close()
     
     # Subathon Table Methods
     def startSubathon(self,epochTime):

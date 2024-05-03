@@ -116,6 +116,8 @@ def getFaceColor(streamingValues: str):
         faceColor = Constants.bcEmbedColor
     elif "SC" in streamingValues:
         faceColor = Constants.scEmbedColor
+    elif "EP" in streamingValues:
+        faceColor = Constants.epEmbedColor
     return faceColor
 
 def getLastWeekList(lastWeekPresencesDict, x):

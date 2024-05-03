@@ -15,6 +15,7 @@ class Constants:
         MFC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
         BC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
         SC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
+        EP_NOTIFICATION_CHANNEL_ID = 1137599805787480214
         CONFESSTION_CHANNEL_ID = 1137599805787480214
         
         CONFESSION_COMMAND_ID = 1159423004346957835
@@ -33,6 +34,7 @@ class Constants:
         MFC_NOTIFICATION_CHANNEL_ID = 1069865162573611058
         BC_NOTIFICATION_CHANNEL_ID = 1069865162573611058
         SC_NOTIFICATION_CHANNEL_ID = 1069865162573611058
+        EP_NOTIFICATION_CHANNEL_ID = 1069865162573611058
         CONFESSTION_CHANNEL_ID = 1158240422997528637
 
         CONFESSION_COMMAND_ID = 1159321755270250571
@@ -52,7 +54,7 @@ class Constants:
     STATUS_CHECK_TIMER = 125
     CONFESSION_CHECK_TIMER = 20
 
-    CONFESSION_ALERT_INTERVALS = [0,0,1800,7200,18000,43200] # Seconds between unreveiwed confession alerts. Starts at 1. 1st alert 0 seconds, 2nd alert 1800 etc. New confessions reset count
+    CONFESSION_ALERT_INTERVALS = [0,0,1800,7200,18000,43200] # Seconds between unreveiwed confession alerts. Starts at index 1. 1st alert 0 seconds, 2nd alert 1800 etc. New confessions reset count
 
     SMART_ALERT_LOOK_AHEAD = 3 #number of hours smart alert looks ahead to make sure conditions are still met (to make sure alerts aren't made too late into a stream)
     PERCENTAGE_OF_MAX = 0.85 # Percent of maximum users online before a smart alert goes off
@@ -79,6 +81,7 @@ class Constants:
     MFC_ROLES_TO_PING = "@everyone "
     BC_ROLES_TO_PING = "@everyone "
     SC_ROLES_TO_PING = "@everyone "
+    EP_ROLES_TO_PING = "@everyone "
 
     # For rerun announcements/pings to work you will first need to turn them on via the /announce-rerun-toggle True/False command AND the /ping-toggle True/False command. 
     # if you don't want a specific platform to get a rerun ping, just leave an empty string (It will still get announced if turned on)
@@ -96,6 +99,7 @@ class Constants:
     MFC_RERUN_ROLES_TO_PING = ""
     BC_RERUN_ROLES_TO_PING = ""
     SC_RERUN_ROLES_TO_PING = ""
+    EP_RERUN_ROLES_TO_PING = ""
 
     #Generic name of the streamer that will be used for all notifications
     streamerName = "LitneySpears"
@@ -112,6 +116,7 @@ class Constants:
     mfcUserName = []
     bcUserName = []
     scUserName = []
+    epUserName = []
 
     twitchUrl = f"https://www.twitch.tv/litneyspears_" #Add a valid twitch URL here even if you streamer doesn't have twitch or else the presence won't update properly
 
@@ -130,6 +135,7 @@ class Constants:
     mfcEmbedColor = "#377c1d"
     bcEmbedColor = "#97323a"
     scEmbedColor = "#a02831"
+    epEmbedColor = "#f03d4c"
 
     #Leave empty string if you don't use. twitterUrl = ""
     # pulls images from the twitter page, so if your streamer shares other stuff that isn't photos of her, probably don't use it. And just add the images yourself, or remove ones you don't want
@@ -147,6 +153,7 @@ class Constants:
     mfcDefaultTitle = "MFC Fun Time."
     bcDefaultTitle = "BongaCams Fun Time."
     scDefaultTitle = "StripChat Fun Time."
+    epDefaultTitle = "ePlay Fun Time."
     
     # This is the text that will appear above the embed. Role mentions will be added before this text, and a link to the stream will be added after
     # i.e. @everyone <AboveEmbedTextGoesHere> https://kick.com/StreamerName
@@ -160,6 +167,7 @@ class Constants:
     mfcAboveEmbedText =  f"{streamerName} is live on MyFreeCams!"
     bcAboveEmbedText =  f"{streamerName} is live on BongaCams!"
     scAboveEmbedText =  f"{streamerName} is live on StripChat!"
+    epAboveEmbedText =  f"{streamerName} is live on ePlay!"
 
     # This is small text that will appear below the title, and above the main image inside the embed.
     kickBelowTitleText =  f"{streamerName} is now live on Kick!"
@@ -172,5 +180,6 @@ class Constants:
     mfcBelowTitleText =  f"{streamerName} is now live on MyFreeCams!"
     bcBelowTitleText =  f"{streamerName} is now live on BongaCams!"
     scBelowTitleText =  f"{streamerName} is now live on StripChat!"
+    epBelowTitleText =  f"{streamerName} is now live on ePlay!"
 
     

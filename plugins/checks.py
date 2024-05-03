@@ -8,6 +8,7 @@ import checkers.Fansly as Fansly
 import checkers.Myfreecams as MFC
 import checkers.Bongacams as BC
 import checkers.Stripchat as SC
+import checkers.Eplay as EP
 from Constants import Constants
 import checkers.Twitch as Twitch
 import checkers.Kick as Kick
@@ -151,6 +152,14 @@ async def checkSc(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
         for scUserName in Constants.scUserName:
             await platformChecker(SC.isModelOnline, Notifications.ScNotification,scUserName,"stripchat",rest)
             await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.scUserName))
+
+@component.with_schedule
+@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
+async def checkEp(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    if Constants.epUserName:
+        for epUserName in Constants.epUserName:
+            await platformChecker(EP.isModelOnline, Notifications.EpNotification,epUserName,"eplay",rest)
+            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.epUserName))
 
 
 @component.with_schedule

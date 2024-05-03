@@ -11,6 +11,7 @@
 - MyFreeCams
 - BongaCams
 - StripChat
+- ePlay
 ### Features
 - Get notifications when your streamer is online sent to a discord channel
 - Rerun detection/support. If stream titles contains a variation of rerun/rr/not live then it will be detected as a rerun.
@@ -81,6 +82,8 @@
 2. Cam4 api may lock you out after a certain number of calls. May need to switch methods in the future.
 
 ### Update History
+-5/03/2024 
+    - Added ePlay support (80% revenue share for the win)
 - 12/22/2023
     - Twitch checking hopefully fixed and turned back on
 - 12/16/2023
