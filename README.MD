@@ -82,7 +82,7 @@
 2. Cam4 api may lock you out after a certain number of calls. May need to switch methods in the future.
 
 ### Update History
--5/03/2024 
+- 5/03/2024 
     - Added ePlay support (80% revenue share for the win)
 - 12/22/2023
     - Twitch checking hopefully fixed and turned back on
