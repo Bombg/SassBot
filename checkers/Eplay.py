@@ -16,7 +16,7 @@ def isModelOnline(epUserName):
         soup = BeautifulSoup(request.content, "html.parser")
         profileJson = soup.find_all("script", type="application/json")
         profileJson = json.loads(profileJson[0].text)
-        isOnline = profileJson["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["isOnline"]
+        isOnline = profileJson["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["live"]
         title =  profileJson["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["title"]
         thumbUrl = profileJson["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["ss"]
         icon =  profileJson["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["avatar"]
