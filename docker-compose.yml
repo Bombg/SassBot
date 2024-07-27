@@ -1,0 +1,7 @@
+services:
+  sassbot:
+    image: jasmeralia/sassbot:9
+    volumes:
+      - ./Constants.py:/opt/SassBot/Constants.py
+      - ./secrets:/opt/SassBot/secrets
+      - ./sassBot.db:/opt/SassBot/sassBot.db
