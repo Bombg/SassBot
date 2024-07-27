@@ -1,6 +1,6 @@
 services:
   sassbot:
-    image: jasmeralia/sassbot:9
+    image: sassbot:latest
     volumes:
       - ./Constants.py:/opt/SassBot/Constants.py
       - ./secrets:/opt/SassBot/secrets
