@@ -13,8 +13,23 @@ import hikari
 import re
 import MiruViews
 import alluka
+import asyncio
 
 component = tanjun.Component()
+
+@component.with_slash_command
+@tanjun.checks.with_check(StaticMethods.isPermission)
+@tanjun.with_str_slash_option("channelid", "Text channel ID you wish to send a message to in order to test permissions")
+@tanjun.as_slash_command("test-permission", "Test a notification for a specific platform",default_to_ephemeral= True)
+async def testNotification(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[hikari.impl.RESTClientImpl], channelid:int) -> None:
+    messageContent = "Hooray, I can post here! Permissions looking good. Deleting this message after 60 seconds"
+    try:
+        message = await rest.create_message(channel = int(channelid), content = messageContent)
+        await ctx.respond("Success")
+        await asyncio.sleep(60)
+        await message.delete()
+    except:
+        await ctx.respond("Don't have permissions for this channel")
 
 @component.with_slash_command
 @tanjun.checks.with_check(StaticMethods.isPermission)

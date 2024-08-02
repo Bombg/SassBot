@@ -43,7 +43,7 @@
     - /image-unpin  - unpin an image if it is pinned.
 - /rebroadcast - Send out online notifications to the announcements channel IF the streamer is online. Isn't isntant but goes off when the next online check is made.
     - /rebroadcast-image  - same as above but you can attach a URL of an image to embed into the new announcement(s)
-- Subathon Commands - apart from commands, subathon status is also displayed in the Bot's status.
+- Subathon commands - apart from commands, subathon status is also displayed in the Bot's status.
     - /subathon - check the status of the current subathon, if there is one.
     - /subathon-start - start a subathon timer
     - /subathon-end - end a subathon timer
@@ -55,6 +55,8 @@
     - /confess - unlogged and anonymous confession that a user can post to a channel via the bot. Must be reviewed first
     - /confess-review - whitelisted roles/people can review submitted confessions and approve or deny them. 
         - approved confessions/questions are posted to a preset channel immediately
+- Test commands
+    - /test-permission - test if Sassbot has the necessary permissions to post in the specified channel ID. 
 
 ### How to set up the bot:
 
@@ -84,6 +86,7 @@
 ### Update History
 - 8/02/2024
     - Added Docker support - Thanks jasmeralia!
+    - Added /test-permission command that takes the channelId you wish to test permissions with as an input.
 - 5/03/2024 
     - Added ePlay support (80% revenue share for the win)
 - 12/22/2023
