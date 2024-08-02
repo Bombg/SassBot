@@ -22,6 +22,7 @@ component = tanjun.Component()
 @tanjun.with_str_slash_option("channelid", "Text channel ID you wish to send a message to in order to test permissions")
 @tanjun.as_slash_command("test-permission", "Test a notification for a specific platform",default_to_ephemeral= True, always_defer= True)
 async def testNotification(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[hikari.impl.RESTClientImpl], channelid:int) -> None:
+    StaticMethods.logCommand("testNotification", ctx)
     messageContent = "Hooray, I can post here! Permissions looking good. Deleting this message after 60 seconds"
     try:
         message = await rest.create_message(channel = int(channelid), content = messageContent)

@@ -7,8 +7,18 @@ import datetime
 from Constants import Constants
 from datetime import timedelta
 from datetime import date
+from datetime import datetime
 import re
 import tanjun
+
+def logCommand(funcName, ctx) -> None:
+    file = open("commandLogs.txt", 'a')
+    date = datetime.fromtimestamp(time.time())
+    if isinstance(ctx, tanjun.abc.SlashContext):
+        file.write(f"{date} - {funcName} - used by {ctx.member.id} aka {ctx.member.display_name}\n")
+    else:
+        print("didn't get right ctx for logger")
+    file.close()
 
 def resetUnfinishedConfessions():
     db = Database()
