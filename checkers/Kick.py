@@ -9,7 +9,7 @@ def isModelOnline(kickUserName):
     driverCreator = SeleniumDriverCreator()
     driver = driverCreator.createDriver()
     driver.get(apiUrl)
-    time.sleep(3)
+    time.sleep(10)
     driver.get_screenshot_as_file("KickScreenshot.png")
     content = driver.page_source.split('<body>')
     if len(content) < 2:
