@@ -82,6 +82,8 @@
 2. Cam4 api may lock you out after a certain number of calls. May need to switch methods in the future.
 
 ### Update History
+- 8/02/2024
+    - Added Docker support - Thanks jasmeralia!
 - 5/03/2024 
     - Added ePlay support (80% revenue share for the win)
 - 12/22/2023

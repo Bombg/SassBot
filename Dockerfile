@@ -2,7 +2,7 @@
 FROM ubuntu:jammy
 
 ENV DEBIAN_FRONTEND=noninteractive
-ARG GITHUB_REPO="jasmeralia/SassBot"
+ARG GITHUB_REPO="Bombg/SassBot"
 ARG GITHUB_BRANCH="master"
 
 RUN apt-get update && apt-get dist-upgrade -y
