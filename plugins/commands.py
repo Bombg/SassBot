@@ -1,3 +1,4 @@
+import hikari.errors
 import tanjun
 import StaticMethods
 import time
@@ -14,6 +15,7 @@ import re
 import MiruViews
 import alluka
 import asyncio
+from EmbedCreator import EmbedCreator
 
 component = tanjun.Component()
 
@@ -24,12 +26,23 @@ component = tanjun.Component()
 async def testNotification(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[hikari.impl.RESTClientImpl], channelid:int) -> None:
     StaticMethods.logCommand("testNotification", ctx)
     messageContent = "Hooray, I can post here! Permissions looking good. Deleting this message after 60 seconds"
+    embedMaker = EmbedCreator(
+                                    f"{Constants.streamerName} is now live on test platform!", 
+                                    "Test Title", 
+                                    "https://www.google.com/", 
+                                    'images/platformImages/twitchImage.png', 
+                                    Constants.twitchEmbedColor, 
+                                    'images/errIcon.png', 
+                                    "TestUserName"
+                                )
+    task = asyncio.create_task(embedMaker.getEmbed())
     try:
-        message = await rest.create_message(channel = int(channelid), content = messageContent)
+        testEmbed = await task
+        message = await rest.create_message(channel = int(channelid), content = messageContent,embed=testEmbed)
         await ctx.respond("Success")
         await asyncio.sleep(60)
         await message.delete()
-    except:
+    except hikari.errors.ForbiddenError:
         await ctx.respond("Don't have permissions for this channel")
 
 @component.with_slash_command
