@@ -43,7 +43,7 @@ async def testNotification(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[h
         await asyncio.sleep(60)
         await message.delete()
     except hikari.errors.ForbiddenError:
-        await ctx.respond("Don't have permissions for this channel")
+        await ctx.respond("Don't have permissions for this channel. Permissions Needed: View Channel, Post Messages, Embed Links.")
 
 @component.with_slash_command
 @tanjun.checks.with_check(StaticMethods.isPermission)
