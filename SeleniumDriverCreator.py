@@ -1,5 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+import requests
+import json
+import platform
+import re
 
 class SeleniumDriverCreator:
     def createDriverOptions(self):
@@ -17,8 +21,8 @@ class SeleniumDriverCreator:
         chrome_options.add_argument("--proxy-bypass-list=*")
         chrome_options.add_argument("--start-maximized")
         chrome_options.add_argument('--ignore-certificate-errors')
-        user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36'
-        chrome_options.add_argument(f'user-agent={user_agent}')
+        userAgent = self.getUserAgent()
+        chrome_options.add_argument(f'user-agent={userAgent}')
 
         return chrome_options
 
@@ -27,3 +31,18 @@ class SeleniumDriverCreator:
         driver = webdriver.Chrome(options=chrome_options)
 
         return driver
+    
+    def getUserAgent(self):
+        userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/127.0.2651.105"
+        try:
+            page = requests.get('https://jnrbsn.github.io/user-agents/user-agents.json')
+            userAgentsJson = page.json()
+            osName = platform.system()
+            reString = f"^.+\\(.*{osName}.*\\).*Chrome.*$"
+            for agent in userAgentsJson:
+                if re.search(reString, agent):
+                    userAgent = agent
+                    break
+        except:
+            print("Trouble getting user agent from jnrbsn's github. Using default")
+        return userAgent
