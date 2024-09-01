@@ -1,34 +1,38 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import requests
-import json
+import random
 import platform
 import re
 
 class SeleniumDriverCreator:
     def createDriverOptions(self):
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--mute-audio")
-        chrome_options.add_argument("--disable-3d-apis")
-        chrome_options.add_argument('--log-level=3')
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--window-size=1920,1080")
-        chrome_options.add_argument("--disable-extensions")
-        chrome_options.add_argument("--proxy-server='direct://'")
-        chrome_options.add_argument("--proxy-bypass-list=*")
-        chrome_options.add_argument("--start-maximized")
-        chrome_options.add_argument('--ignore-certificate-errors')
+        chromeOptions = Options()
+        chromeOptions.add_argument("--headless")
+        chromeOptions.add_argument("--mute-audio")
+        chromeOptions.add_argument("--disable-3d-apis")
+        chromeOptions.add_argument('--log-level=3')
+        chromeOptions.add_argument('--no-sandbox')
+        chromeOptions.add_argument('--disable-dev-shm-usage')
+        chromeOptions.add_argument("--disable-gpu")
+        chromeOptions.add_argument("--window-size=1920,1080")
+        chromeOptions.add_argument("--disable-extensions")
+        chromeOptions.add_argument("--proxy-server='direct://'")
+        chromeOptions.add_argument("--proxy-bypass-list=*")
+        chromeOptions.add_argument("--start-maximized")
+        chromeOptions.add_argument('--ignore-certificate-errors')
         userAgent = self.getUserAgent()
-        chrome_options.add_argument(f'user-agent={userAgent}')
+        chromeOptions.add_argument(f'user-agent={userAgent}')
+        chromeOptions.add_argument("--disable-blink-features=AutomationControlled")
+        chromeOptions.add_experimental_option("excludeSwitches", ["enable-automation"])
+        chromeOptions.add_experimental_option("useAutomationExtension", False)
 
-        return chrome_options
+        return chromeOptions
 
     def createDriver(self):
-        chrome_options = self.createDriverOptions()
-        driver = webdriver.Chrome(options=chrome_options)
+        chromeOptions = self.createDriverOptions()
+        driver = webdriver.Chrome(options=chromeOptions)
+        driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 
         return driver
     
@@ -37,12 +41,13 @@ class SeleniumDriverCreator:
         try:
             page = requests.get('https://jnrbsn.github.io/user-agents/user-agents.json')
             userAgentsJson = page.json()
-            osName = platform.system()
-            reString = f"^.+\\(.*{osName}.*\\).*Chrome.*$"
-            for agent in userAgentsJson:
-                if re.search(reString, agent):
-                    userAgent = agent
-                    break
+            # osName = platform.system()
+            # reString = f"^.+\\(.*{osName}.*\\).*Chrome.*$"
+            # for agent in userAgentsJson:
+            #     if re.search(reString, agent):
+            #         userAgent = agent
+            #         break
+            userAgent = random.choice(userAgentsJson)
         except:
             print("Trouble getting user agent from jnrbsn's github. Using default")
         return userAgent
