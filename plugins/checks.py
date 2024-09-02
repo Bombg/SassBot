@@ -88,7 +88,7 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
             await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.ofUserName))
 
 @component.with_schedule
-@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
+@tanjun.as_interval(Constants.LONG_ONLINE_CHECK_TIMER) # Fans on a longer timer or page wont load
 async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.fansUserName:
         for fansUserName in Constants.fansUserName:
@@ -120,7 +120,7 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
             await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.kickUserName))
 
 @component.with_schedule
-@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
+@tanjun.as_interval(Constants.LONG_ONLINE_CHECK_TIMER) # Long timer on Cam4, if too quick they'll ban your IP. still unsure if this is 100% safe
 async def checkCam4(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.cam4UserName:
         for cam4UserName in Constants.cam4UserName:

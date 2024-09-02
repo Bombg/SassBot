@@ -49,7 +49,7 @@ class Constants:
     TIME_BEFORE_REVIEW_RESET = 300
 
     ONLINE_CHECK_TIMER = 180 #Wait time in seconds between checks
-    LONG_ONLINE_CHECK_TIMER = 600
+    LONG_ONLINE_CHECK_TIMER = 900
     AVATAR_CHECK_TIMER = 130
     STATUS_CHECK_TIMER = 125
     CONFESSION_CHECK_TIMER = 20
@@ -108,7 +108,7 @@ class Constants:
     #If the streamer has multiple accounts for a paltform, add an extra username to the array i.e. cbUserName = ['user1','user2']
     kickUserName = ['LitneySpears']
     cbUserName = []
-    fansUserName = []
+    fansUserName = ['Litneyspearsx']
     ofUserName = ['litneyspearsx','litneyspearsfree']
     ytUserName = ['litneyspears_']
     twitchUserName = ['litneyspears_']
