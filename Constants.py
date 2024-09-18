@@ -110,7 +110,7 @@ class Constants:
     cbUserName = ['heynicole01']
     fansUserName = ['FlexieFae']
     ofUserName = []
-    ytUserName = []
+    ytUserName = ['FlexieFae']
     twitchUserName = ['flexiefae']
     cam4UserName = []
     mfcUserName = []
