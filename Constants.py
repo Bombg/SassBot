@@ -102,28 +102,28 @@ class Constants:
     EP_RERUN_ROLES_TO_PING = ""
 
     #Generic name of the streamer that will be used for all notifications
-    streamerName = "LitneySpears"
+    streamerName = "FlexieFae"
 
     #Usernames associated with each platform - if not applicable leave an empty array. i.e. cbUserName = []
     #If the streamer has multiple accounts for a paltform, add an extra username to the array i.e. cbUserName = ['user1','user2']
-    kickUserName = ['LitneySpears']
-    cbUserName = []
-    fansUserName = ['Litneyspearsx']
-    ofUserName = ['litneyspearsx','litneyspearsfree']
-    ytUserName = ['litneyspears_']
-    twitchUserName = ['litneyspears_']
+    kickUserName = ['flexiefae']
+    cbUserName = ['heynicole01']
+    fansUserName = ['FlexieFae']
+    ofUserName = []
+    ytUserName = []
+    twitchUserName = ['flexiefae']
     cam4UserName = []
     mfcUserName = []
     bcUserName = []
     scUserName = []
     epUserName = []
 
-    twitchUrl = f"https://www.twitch.tv/litneyspears_" #Add a valid twitch URL here even if you streamer doesn't have twitch or else the presence won't update properly
+    twitchUrl = f"https://www.twitch.tv/flexiefae" #Add a valid twitch URL here even if you streamer doesn't have twitch or else the presence won't update properly
 
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
     # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. 
     # I've found this responds more reliably when you narrow down the search more. So add region, and any tags your model always uses
-    cbApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs"
+    cbApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica"
 
     kickEmbedColor = "#52fb19"
     fansEmbedColor = "#a0816c"
@@ -141,7 +141,7 @@ class Constants:
     # pulls images from the twitter page, so if your streamer shares other stuff that isn't photos of her, probably don't use it. And just add the images yourself, or remove ones you don't want
     twitterUrl = '' 
     
-    linkTreeUrl = "https://allmylinks.com/litneyspears"
+    linkTreeUrl = "https://allmylinks.com/flexiefae"
     
     # Titles for announcement embeds
     # Titles for platforms that have optional titles or no titles at all
