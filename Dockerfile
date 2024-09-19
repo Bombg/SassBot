@@ -5,7 +5,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 ARG GITHUB_REPO="Bombg/SassBot"
 ARG GITHUB_BRANCH="flexiefae"
 
-RUN apt-get update && apt-get dist-upgrade -y
+RUN apt-get update
+RUN apt-get dist-upgrade -y
 
 # Install Google Chrome and dependencies
 RUN apt-get install -y wget gnupg2
