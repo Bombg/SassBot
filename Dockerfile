@@ -3,7 +3,7 @@ FROM ubuntu:jammy
 
 ENV DEBIAN_FRONTEND=noninteractive
 ARG GITHUB_REPO="Bombg/SassBot"
-ARG GITHUB_BRANCH="master"
+ARG GITHUB_BRANCH="flexiefae"
 
 RUN apt-get update && apt-get dist-upgrade -y
 
