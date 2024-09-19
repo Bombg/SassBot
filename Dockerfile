@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
 FROM ubuntu:jammy
+FROM --platform=linux/amd64 node:18-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 ARG GITHUB_REPO="Bombg/SassBot"
