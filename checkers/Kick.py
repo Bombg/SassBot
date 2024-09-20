@@ -11,7 +11,7 @@ async def GetOnlineStatus(kickUserName):
     isOnline, title, thumbUrl, icon = setDefaultStreamValues()
     apiUrl = f"https://kick.com/api/v1/channels/{kickUserName}"
     browser = await uc.start(
-        headless=False,
+        headless=True,
         sandbox=False,
     )
     page = await browser.get(apiUrl)

@@ -13,7 +13,7 @@ async def GetOnlineStatus(fansUserName):
     thumbUrl = ""
     title = Constants.fansDefaultTitle
     browser = await uc.start(
-        headless=False,
+        headless=True,
         sandbox=False,
     )
     page = await browser.get(fansUrl)
