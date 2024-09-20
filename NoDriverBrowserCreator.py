@@ -21,11 +21,14 @@ def getUserAgent():
 
 async def GetBrowser():
     userAgent = getUserAgent()
-    browser = await uc.start(
+    try:
+        browser = await uc.start(
         headless=True,
         sandbox=False,
         browser_args=[f'user-agent={userAgent}']
     )
+    except:
+        killBrowser(browser)
     return browser
 
 def killBrowser(browser):
