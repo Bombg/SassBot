@@ -13,16 +13,19 @@ async def GetOnlineStatus(fansUserName):
     fansUrl = f"https://fansly.com/{fansUserName}"
     thumbUrl = ""
     title = Constants.fansDefaultTitle
-    browser = await ndb.GetBrowser()
-    page = await browser.get(fansUrl)
-    await asyncio.sleep(5)
-    await ClickEnterButton(page)
-    isOnline = await IsLiveBadge(page)
-    await asyncio.sleep(2)
-    icon = await GetIcon(page)
-    await page.save_screenshot("Fansscreenshot.png")
-    await page.close()
-    ndb.killBrowser(browser)
+    try:
+        browser = await ndb.GetBrowser()
+        page = await browser.get(fansUrl)
+        await asyncio.sleep(5)
+        await ClickEnterButton(page)
+        isOnline = await IsLiveBadge(page)
+        await asyncio.sleep(2)
+        icon = await GetIcon(page)
+        await page.save_screenshot("Fansscreenshot.png")
+        await page.close()
+        ndb.killBrowser(browser)
+    except Exception as e:
+        print(f"Error when getting browser for Fansly: {e}")
     return isOnline, title, thumbUrl, icon
 
 async def ClickEnterButton(page:uc.Tab):

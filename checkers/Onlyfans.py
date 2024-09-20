@@ -27,15 +27,20 @@ async def IsLiveBadge(page:uc.Tab):
     return live
 
 async def GetOnlineStatus(ofUserName):
+    isOnline = False
     ofUrl = f"https://onlyfans.com/{ofUserName}"
     title = Constants.ofDefaultTitle
     thumbUrl = ""
-    browser = await ndb.GetBrowser()
-    page = await browser.get(ofUrl)
-    isOnline = await IsLiveBadge(page)
-    icon  = await GetIcon(page)
-    await page.close()
-    ndb.killBrowser(browser)
+    icon = 'images/errIcon.png'
+    try:
+        browser = await ndb.GetBrowser()
+        page = await browser.get(ofUrl)
+        isOnline = await IsLiveBadge(page)
+        icon  = await GetIcon(page)
+        await page.close()
+        ndb.killBrowser(browser)
+    except Exception as e:
+        print(f"Error getting browser for Onylyfans: {e}")
     return isOnline, title, thumbUrl, icon
 
 

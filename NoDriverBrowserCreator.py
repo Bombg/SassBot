@@ -22,9 +22,9 @@ def getUserAgent():
 async def GetBrowser():
     userAgent = getUserAgent()
     browser = await uc.start(
-    headless=True,
-    sandbox=False,
-    browser_args=[f'user-agent={userAgent}']
+        headless=True,
+        sandbox=False,
+        browser_args=[f'user-agent={userAgent}']
     )
     return browser
 
