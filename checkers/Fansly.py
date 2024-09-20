@@ -23,6 +23,7 @@ async def GetOnlineStatus(fansUserName):
     await asyncio.sleep(2)
     icon = await GetIcon(page)
     await page.save_screenshot("Fansscreenshot.png")
+    page.close()
     return isOnline, title, thumbUrl, icon
 
 async def ClickEnterButton(page:uc.Tab):

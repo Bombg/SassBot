@@ -24,6 +24,7 @@ async def GetOnlineStatus(kickUserName):
     else:
         jsonText = content[1].split('</body></html>')
         isOnline, title, thumbUrl, icon = getStreamInfo(jsonText)
+    page.close()
     return isOnline, title, thumbUrl, icon
 
 def setDefaultStreamValues():
