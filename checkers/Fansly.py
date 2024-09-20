@@ -13,6 +13,7 @@ async def GetOnlineStatus(fansUserName):
     fansUrl = f"https://fansly.com/{fansUserName}"
     thumbUrl = ""
     title = Constants.fansDefaultTitle
+    isOnline = False
     try:
         browser = await ndb.GetBrowser()
         page = await browser.get(fansUrl)

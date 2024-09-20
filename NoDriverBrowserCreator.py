@@ -29,6 +29,7 @@ async def GetBrowser():
     )
     except:
         killBrowser(browser)
+        print("error creating browser in GetBrowser")
     return browser
 
 def killBrowser(browser):
