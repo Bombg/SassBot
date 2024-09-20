@@ -13,9 +13,9 @@ async def GetOnlineStatus(kickUserName):
     apiUrl = f"https://kick.com/api/v1/channels/{kickUserName}"
     try:
         browser = await ndb.GetBrowser()
-        asyncio.sleep(10)
+        await asyncio.sleep(10)
         page = await browser.get(apiUrl)
-        asyncio.sleep(30)
+        await asyncio.sleep(30)
         await page.save_screenshot("KickScreenshot.png")
         content = await page.get_content()
         content = content.split('<body>')

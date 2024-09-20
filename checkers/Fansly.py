@@ -17,7 +17,7 @@ async def GetOnlineStatus(fansUserName):
     icon = 'images/errIcon.png'
     try:
         browser = await ndb.GetBrowser()
-        asyncio.sleep(10)
+        await asyncio.sleep(10)
         page = await browser.get(fansUrl)
         await asyncio.sleep(5)
         await ClickEnterButton(page)

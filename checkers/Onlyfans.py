@@ -34,7 +34,7 @@ async def GetOnlineStatus(ofUserName):
     icon = 'images/errIcon.png'
     try:
         browser = await ndb.GetBrowser()
-        asyncio.sleep(10)
+        await asyncio.sleep(10)
         page = await browser.get(ofUrl)
         isOnline = await IsLiveBadge(page)
         icon  = await GetIcon(page)
