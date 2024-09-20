@@ -25,7 +25,7 @@ async def GetBrowser():
         browser = await uc.start(
         headless=True,
         sandbox=False,
-        browser_args=[f'user-agent={userAgent}'],
+        browser_args=[f'user-agent={userAgent}','--mute-audio','--disable-3d-apis','--log-level=3','--disable-dev-shm-usage','--disable-gpu','--window-size=1920,1080','--start-maximized'],
     )
     except Exception as e:
         print(f"error creating browser in GetBrowser: {e}")
