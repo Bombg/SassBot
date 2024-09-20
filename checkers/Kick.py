@@ -1,17 +1,24 @@
-import time
-from SeleniumDriverCreator import SeleniumDriverCreator
+import asyncio
+import nodriver as uc
 import json
-import StaticMethods
+import time
 
 def isModelOnline(kickUserName):
+    isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(kickUserName))
+    return isOnline, title, thumbUrl, icon
+
+async def GetOnlineStatus(kickUserName):
     isOnline, title, thumbUrl, icon = setDefaultStreamValues()
     apiUrl = f"https://kick.com/api/v1/channels/{kickUserName}"
-    driverCreator = SeleniumDriverCreator()
-    driver = driverCreator.createDriver()
-    driver.get(apiUrl)
-    time.sleep(10)
-    driver.get_screenshot_as_file("KickScreenshot.png")
-    content = driver.page_source.split('<body>')
+    browser = await uc.start(
+        headless=False,
+        sandbox=False,
+    )
+    page = await browser.get(apiUrl)
+    asyncio.sleep(10)
+    await page.save_screenshot("KickScreenshot.png")
+    content = await page.get_content()
+    content = content.split('<body>')
     if len(content) < 2:
         print("error with kick checker. user is banned or wrong username supplied")
     else:

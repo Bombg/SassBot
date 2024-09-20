@@ -1,28 +1,45 @@
-import time
-from selenium.webdriver.common.by import By
-from SeleniumDriverCreator import SeleniumDriverCreator
 from Constants import Constants
 import re
+import asyncio
+import nodriver as uc
 
-def isModelOnline(ofUserName):
+async def GetIcon(page:uc.Tab):
+    icon = 'images/errIcon.png'
+    reString = r'^https:\/\/.+avatar.jpg$'
+    try:
+        imageElements = await page.find_all("data-v-325c6981")
+        for element in imageElements:
+            if element.attrs.get("src") and re.search(reString, element.attrs.get("src")):
+                icon = element.attrs.get("src")
+    except:
+        pass
+    return icon
+
+async def IsLiveBadge(page:uc.Tab):
+    live = False
+    try:
+        liveBadge = await page.find("g-avatar__icon m-live", best_match=True)
+        if liveBadge:
+            live = True
+    except TimeoutError:
+        pass
+    return live
+
+async def GetOnlineStatus(ofUserName):
     ofUrl = f"https://onlyfans.com/{ofUserName}"
     title = Constants.ofDefaultTitle
     thumbUrl = ""
-    icon = 'images/errIcon.png'
-    reString = r'^https:\/\/.+avatar.jpg$'
-    driverCreator = SeleniumDriverCreator()
-    driver = driverCreator.createDriver()
-    driver.get(ofUrl)
-    time.sleep(10)
-    online = driver.find_elements(By.XPATH, '/html/body/div/div[2]/main/div[1]/div[1]/div/div[2]/div/div[2]/div[1]/a/span')
-    iconEle = driver.find_elements(By.TAG_NAME, 'img')
-    if len(iconEle) > 0:
-        for ele in iconEle:
-            if re.search(reString, ele.get_attribute('src')):
-                icon = ele.get_attribute('src')
-                break
-    driver.quit()
-    isOnline = False
-    if len(online) > 0:
-        isOnline = True
+    browser = await uc.start(
+        headless=True,
+        sandbox=False,
+    )
+    page = await browser.get(ofUrl)
+    isOnline = await IsLiveBadge(page)
+    icon  = await GetIcon(page)
+    return isOnline, title, thumbUrl, icon
+
+
+def isModelOnline(ofUserName):
+    isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(ofUserName))
+
     return isOnline, title, thumbUrl, icon

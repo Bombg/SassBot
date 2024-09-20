@@ -1,40 +1,58 @@
 import time
-from selenium.webdriver.common.by import By
-from SeleniumDriverCreator import SeleniumDriverCreator
 from Constants import Constants
 import StaticMethods
-
+import asyncio
+import nodriver as uc
 
 def isModelOnline(fansUserName):
-    fansUrl = f"https://fansly.com/{fansUserName}"
-    thumbUrl = ""
-    icon = 'images/errIcon.png'
-    isOnline = False
-    title = Constants.fansDefaultTitle
-    driverCreator = SeleniumDriverCreator()
-    driver = driverCreator.createDriver()
-    driver.get(fansUrl)
-    time.sleep(10)
-    checkForEnterButton(driver)
-    driver.get_screenshot_as_file("Fansscreenshot.png")
-    online = driver.find_elements(By.XPATH, '/html/body/app-root/div/div[1]/div/app-profile-route/div/div/div/div[1]/div[2]/div[1]/app-account-avatar/div')
-    iconEle = driver.find_elements(By.TAG_NAME, 'img')
-    if len(iconEle) >= 5:
-        byte = StaticMethods.get_file_content_chrome(driver, iconEle[4].get_attribute('src'))
-        file = open("images/fansIcon.jpg", 'wb')
-        file.write(byte)
-        file.close()
-        icon = "images/fansIcon.jpg"
-    driver.quit()
-    if len(online) > 0:
-        isOnline = True
+    isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(fansUserName))
     return isOnline, title, thumbUrl, icon
 
-def checkForEnterButton(driver):
-    button = driver.find_elements(By.XPATH, "/html/body/app-root/div/div[3]/app-age-gate-modal/div/div/div[4]/div/div[2]")
-    if len(button) > 0:
-        button[0].click()
-        time.sleep(10)
+async def GetOnlineStatus(fansUserName):
+    fansUrl = f"https://fansly.com/{fansUserName}"
+    thumbUrl = ""
+    title = Constants.fansDefaultTitle
+    browser = await uc.start(
+        headless=False,
+        sandbox=False,
+    )
+    page = await browser.get(fansUrl)
+    await asyncio.sleep(5)
+    await ClickEnterButton(page)
+    isOnline = await IsLiveBadge(page)
+    await asyncio.sleep(2)
+    icon = await GetIcon(page)
+    await page.save_screenshot("Fansscreenshot.png")
+    return isOnline, title, thumbUrl, icon
 
+async def ClickEnterButton(page:uc.Tab):
+    try:
+        enterBtn = await page.find("Enter",best_match=True)
+        if enterBtn:
+            await enterBtn.click()
+            await asyncio.sleep(5)
+    except TimeoutError:
+        pass
 
-    
+async def IsLiveBadge(page:uc.Tab):
+    live = False
+    try:
+        liveBadge = await page.find("live-badge bold font-size-sm", best_match=True)
+        if liveBadge:
+            live = True
+    except TimeoutError:
+        pass
+    return live
+
+async def GetIcon(page:uc.Tab):
+    icon = 'images/errIcon.png'
+    try:
+        iconElements = await page.find_all("image cover")
+        await iconElements[1].click()
+        await asyncio.sleep(2)
+        iconElement = await page.find("image-overlay-flex", best_match=True)
+        await iconElement.save_screenshot( "images/fansIcon.jpg")
+        icon = "images/fansIcon.jpg"
+    except:
+        pass
+    return icon
