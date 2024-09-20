@@ -15,7 +15,7 @@ async def GetOnlineStatus(kickUserName):
         browser = await ndb.GetBrowser()
         await asyncio.sleep(10)
         page = await browser.get(apiUrl)
-        await asyncio.sleep(30)
+        await asyncio.sleep(60)
         await page.save_screenshot("KickScreenshot.png")
         content = await page.get_content()
         content = content.split('<body>')
