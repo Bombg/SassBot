@@ -2,6 +2,7 @@ import asyncio
 import nodriver as uc
 import json
 import time
+import NoDriverBrowserCreator as ndb
 
 def isModelOnline(kickUserName):
     isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(kickUserName))
@@ -10,21 +11,19 @@ def isModelOnline(kickUserName):
 async def GetOnlineStatus(kickUserName):
     isOnline, title, thumbUrl, icon = setDefaultStreamValues()
     apiUrl = f"https://kick.com/api/v1/channels/{kickUserName}"
-    browser = await uc.start(
-        headless=True,
-        sandbox=False,
-    )
+    browser = await ndb.GetBrowser()
     page = await browser.get(apiUrl)
     time.sleep(10)
     await page.save_screenshot("KickScreenshot.png")
     content = await page.get_content()
     content = content.split('<body>')
     if len(content) < 2:
-        print("error with kick checker. user is banned or wrong username supplied")
+        print("error with kick checker. user is banned,wrong username supplied, or cloudflare bot detection")
     else:
         jsonText = content[1].split('</body></html>')
         isOnline, title, thumbUrl, icon = getStreamInfo(jsonText)
     await page.close()
+    ndb.killBrowser(browser)
     return isOnline, title, thumbUrl, icon
 
 def setDefaultStreamValues():

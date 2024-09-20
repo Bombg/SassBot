@@ -3,6 +3,7 @@ from Constants import Constants
 import StaticMethods
 import asyncio
 import nodriver as uc
+import NoDriverBrowserCreator as ndb
 
 def isModelOnline(fansUserName):
     isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(fansUserName))
@@ -12,10 +13,7 @@ async def GetOnlineStatus(fansUserName):
     fansUrl = f"https://fansly.com/{fansUserName}"
     thumbUrl = ""
     title = Constants.fansDefaultTitle
-    browser = await uc.start(
-        headless=True,
-        sandbox=False,
-    )
+    browser = await ndb.GetBrowser()
     page = await browser.get(fansUrl)
     await asyncio.sleep(5)
     await ClickEnterButton(page)
@@ -24,6 +22,7 @@ async def GetOnlineStatus(fansUserName):
     icon = await GetIcon(page)
     await page.save_screenshot("Fansscreenshot.png")
     await page.close()
+    ndb.killBrowser(browser)
     return isOnline, title, thumbUrl, icon
 
 async def ClickEnterButton(page:uc.Tab):

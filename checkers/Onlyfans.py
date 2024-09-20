@@ -2,6 +2,7 @@ from Constants import Constants
 import re
 import asyncio
 import nodriver as uc
+import NoDriverBrowserCreator as ndb
 
 async def GetIcon(page:uc.Tab):
     icon = 'images/errIcon.png'
@@ -29,14 +30,12 @@ async def GetOnlineStatus(ofUserName):
     ofUrl = f"https://onlyfans.com/{ofUserName}"
     title = Constants.ofDefaultTitle
     thumbUrl = ""
-    browser = await uc.start(
-        headless=True,
-        sandbox=False,
-    )
+    browser = await ndb.GetBrowser()
     page = await browser.get(ofUrl)
     isOnline = await IsLiveBadge(page)
     icon  = await GetIcon(page)
     await page.close()
+    ndb.killBrowser(browser)
     return isOnline, title, thumbUrl, icon
 
 
