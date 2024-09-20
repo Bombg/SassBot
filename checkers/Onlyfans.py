@@ -36,7 +36,7 @@ async def GetOnlineStatus(ofUserName):
     page = await browser.get(ofUrl)
     isOnline = await IsLiveBadge(page)
     icon  = await GetIcon(page)
-    page.close()
+    await page.close()
     return isOnline, title, thumbUrl, icon
 
 

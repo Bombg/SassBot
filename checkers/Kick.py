@@ -15,7 +15,7 @@ async def GetOnlineStatus(kickUserName):
         sandbox=False,
     )
     page = await browser.get(apiUrl)
-    await asyncio.sleep(10)
+    await asyncio.sleep(20)
     await page.save_screenshot("KickScreenshot.png")
     content = await page.get_content()
     content = content.split('<body>')
@@ -24,7 +24,7 @@ async def GetOnlineStatus(kickUserName):
     else:
         jsonText = content[1].split('</body></html>')
         isOnline, title, thumbUrl, icon = getStreamInfo(jsonText)
-    page.close()
+    await page.close()
     return isOnline, title, thumbUrl, icon
 
 def setDefaultStreamValues():
