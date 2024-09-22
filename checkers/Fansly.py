@@ -22,7 +22,7 @@ async def GetOnlineStatus(fansUserName):
         browser = await ndb.GetBrowser()
         await asyncio.sleep(10)
         page = await browser.get(fansUrl)
-        await asyncio.sleep(60)
+        await asyncio.sleep(10)
         await ClickEnterButton(page)
         isOnline = await IsLiveBadge(page)
         await asyncio.sleep(2)
