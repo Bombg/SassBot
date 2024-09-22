@@ -19,7 +19,7 @@ async def GetOnlineStatus(kickUserName):
         await asyncio.sleep(10)
         page = await browser.get(apiUrl)
         await asyncio.sleep(60)
-        await page.save_screenshot("KickScreenshot.png")
+        await page.save_screenshot("KickScreenshot.jpg")
         content = await page.get_content()
         content = content.split('<body>')
         if len(content) < 2:
