@@ -41,6 +41,7 @@ async def GetOnlineStatus(ofUserName):
         await asyncio.sleep(10)
         page = await browser.get(ofUrl)
         await asyncio.sleep(10)
+        await page.save_screenshot("Ofscreenshot.jpg")
         isOnline = await IsLiveBadge(page)
         icon  = await GetIcon(page)
         await page.close()
