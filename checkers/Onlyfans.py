@@ -39,7 +39,7 @@ async def GetOnlineStatus(ofUserName):
         display.start()
         browser = await ndb.GetBrowser()
         await asyncio.sleep(10)
-        page = await browser.get(ofUrl)
+        page = await browser.get(ofUrl, new_window=True)
         await asyncio.sleep(10)
         await page.save_screenshot("Ofscreenshot.jpg")
         isOnline = await IsLiveBadge(page)
