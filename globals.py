@@ -21,3 +21,5 @@ rebroadcast = {
 }
 
 confessionIds = {"alert":0}
+
+browserOpen = False

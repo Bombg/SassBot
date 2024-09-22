@@ -4,6 +4,7 @@ import json
 import time
 import NoDriverBrowserCreator as ndb
 from pyvirtualdisplay import Display
+import globals
 
 def isModelOnline(kickUserName):
     isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(kickUserName))
@@ -33,6 +34,7 @@ async def GetOnlineStatus(kickUserName):
         display.stop()
     except Exception as e:
         print(f"error getting browser for Kick: {e}")
+        globals.browserOpen = False
     return isOnline, title, thumbUrl, icon
 
 def setDefaultStreamValues():

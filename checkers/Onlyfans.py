@@ -4,6 +4,7 @@ import asyncio
 import nodriver as uc
 import NoDriverBrowserCreator as ndb
 from pyvirtualdisplay import Display
+import globals
 
 async def GetIcon(page:uc.Tab):
     icon = 'images/errIcon.png'
@@ -49,6 +50,7 @@ async def GetOnlineStatus(ofUserName):
         display.stop()
     except Exception as e:
         print(f"Error getting browser for Onylyfans: {e}")
+        globals.browserOpen = False
     return isOnline, title, thumbUrl, icon
 
 

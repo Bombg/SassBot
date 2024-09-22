@@ -5,6 +5,7 @@ import asyncio
 import nodriver as uc
 import NoDriverBrowserCreator as ndb
 from pyvirtualdisplay import Display
+import globals
 
 def isModelOnline(fansUserName):
     isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(fansUserName))
@@ -34,6 +35,7 @@ async def GetOnlineStatus(fansUserName):
         display.stop()
     except Exception as e:
         print(f"Error when getting browser for Fansly: {e}")
+        globals.browserOpen = False
     return isOnline, title, thumbUrl, icon
 
 async def ClickEnterButton(page:uc.Tab):

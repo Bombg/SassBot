@@ -43,7 +43,7 @@ class Constants:
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
     ONLINE_MESSAGE_REBROADCAST_TIME = 86400 #Time in seconds the stream will be online before another online notification will be broadcasted
-    TIME_BEFORE_BOT_RESTART = 86400 #time in seconds before bot will restart
+    TIME_BEFORE_BOT_RESTART = 7200 #time in seconds before bot will restart
     TIME_OFFLINE_BEFORE_RESTART = 900 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
     TEMP_TITLE_UPTIME = 57600 #Time in seconds temp titles will be used before default titles are used
     TIME_BEFORE_REVIEW_RESET = 300
@@ -60,7 +60,7 @@ class Constants:
     PERCENTAGE_OF_MAX = 0.85 # Percent of maximum users online before a smart alert goes off
     SECONDS_BETWEEN_SMART_ALERTS = 21600 # minimum number of seconds before another smart alert goes off
 
-    RECORD_KEEPING_START_DATE = 1694340841 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
+    RECORD_KEEPING_START_DATE = 1727022585 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
 
     PIN_TIME_LONG = 4 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
     PIN_TIME_SHORT = 1 # same as above but this is used for images added via rebroadcast-image command

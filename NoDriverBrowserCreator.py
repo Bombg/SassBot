@@ -2,6 +2,8 @@ import requests
 import random
 import nodriver as uc
 import psutil
+import globals
+import asyncio
 
 def killPotentialZombies():
     PROCNAME = "chromium"
@@ -29,18 +31,23 @@ def getUserAgent():
         return userAgent
 
 async def GetBrowser():
+    while globals.browserOpen:
+        await asyncio.sleep(10)
     # userAgent = getUserAgent()
     # browser_args=[f'user-agent={userAgent}','--mute-audio','--disable-3d-apis','--log-level=3','--disable-dev-shm-usage','--disable-gpu','--window-size=1920,1080','--start-maximized']
     try:
+        globals.browserOpen = True
         browser = await uc.start(
         headless=False,
         sandbox=True,
     )
     except Exception as e:
         print(f"error creating browser in GetBrowser: {e}")
+        globals.browserOpen = False
     return browser
 
 def killBrowser(browser):
+        globals.browserOpen = False
         try:
             process = psutil.Process(browser._process_pid)
             process.kill()  # Forcefully terminate the process.
