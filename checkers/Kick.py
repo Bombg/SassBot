@@ -3,6 +3,7 @@ import nodriver as uc
 import json
 import time
 import NoDriverBrowserCreator as ndb
+from pyvirtualdisplay import Display
 
 def isModelOnline(kickUserName):
     isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(kickUserName))
@@ -12,6 +13,8 @@ async def GetOnlineStatus(kickUserName):
     isOnline, title, thumbUrl, icon = setDefaultStreamValues()
     apiUrl = f"https://kick.com/api/v1/channels/{kickUserName}"
     try:
+        display = Display(visible=0, size=(1080,720))
+        display.start()
         browser = await ndb.GetBrowser()
         await asyncio.sleep(10)
         page = await browser.get(apiUrl)
@@ -26,6 +29,7 @@ async def GetOnlineStatus(kickUserName):
             isOnline, title, thumbUrl, icon = getStreamInfo(jsonText)
         await page.close()
         ndb.killBrowser(browser)
+        display.stop()
     except Exception as e:
         print(f"error getting browser for Kick: {e}")
     return isOnline, title, thumbUrl, icon
