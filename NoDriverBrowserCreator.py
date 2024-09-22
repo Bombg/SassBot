@@ -26,6 +26,7 @@ async def GetBrowser():
         headless=False,
         sandbox=True,
         browser_args=[f'user-agent={userAgent}','--mute-audio','--disable-3d-apis','--log-level=3','--disable-dev-shm-usage','--disable-gpu','--window-size=1920,1080','--start-maximized'],
+        user_data_dir="./browser"
     )
     except Exception as e:
         print(f"error creating browser in GetBrowser: {e}")
