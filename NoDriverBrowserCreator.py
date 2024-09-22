@@ -7,13 +7,13 @@ import asyncio
 
 def killPotentialZombies():
     PROCNAME = "chromium"
-
+    numZombies = 0
     for proc in psutil.process_iter():
-        numZombies = 0
         # check whether the process name matches
         if proc.name() == PROCNAME:
             numZombies = numZombies + 1
             proc.kill()
+    if numZombies > 0:
         print(f"Killed {numZombies} zombies.")
 
 def getUserAgent():
