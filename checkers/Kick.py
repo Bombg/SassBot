@@ -13,6 +13,7 @@ async def GetOnlineStatus(kickUserName):
     isOnline, title, thumbUrl, icon = setDefaultStreamValues()
     apiUrl = f"https://kick.com/api/v1/channels/{kickUserName}"
     try:
+        ndb.killPotentialZombies()
         display = Display(visible=0, size=(1080,720))
         display.start()
         browser = await ndb.GetBrowser()

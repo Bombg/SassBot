@@ -3,6 +3,15 @@ import random
 import nodriver as uc
 import psutil
 
+def killPotentialZombies():
+    PROCNAME = "chromium"
+
+    for proc in psutil.process_iter():
+        # check whether the process name matches
+        if proc.name() == PROCNAME:
+            print("zombie killed")
+            proc.kill()
+
 def getUserAgent():
         userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/127.0.2651.105"
         try:

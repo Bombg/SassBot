@@ -17,6 +17,7 @@ async def GetOnlineStatus(fansUserName):
     isOnline = False
     icon = 'images/errIcon.png'
     try:
+        ndb.killPotentialZombies()
         display = Display(visible=0, size=(1080,720))
         display.start()
         browser = await ndb.GetBrowser()
