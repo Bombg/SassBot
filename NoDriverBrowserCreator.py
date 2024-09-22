@@ -4,6 +4,7 @@ import nodriver as uc
 import psutil
 import globals
 import asyncio
+import StaticMethods
 
 def killPotentialZombies():
     PROCNAME = "chromium"
@@ -15,6 +16,8 @@ def killPotentialZombies():
             proc.kill()
     if numZombies > 0:
         print(f"Killed {numZombies} zombies.")
+    if numZombies > 15:
+            StaticMethods.rebootServer()
 
 def getUserAgent():
         userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/127.0.2651.105"
