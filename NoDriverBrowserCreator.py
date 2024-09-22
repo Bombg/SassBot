@@ -23,8 +23,8 @@ async def GetBrowser():
     userAgent = getUserAgent()
     try:
         browser = await uc.start(
-        headless=True,
-        sandbox=False,
+        headless=False,
+        sandbox=True,
         browser_args=[f'user-agent={userAgent}','--mute-audio','--disable-3d-apis','--log-level=3','--disable-dev-shm-usage','--disable-gpu','--window-size=1920,1080','--start-maximized'],
     )
     except Exception as e:
