@@ -29,6 +29,7 @@ async def GetOnlineStatus(kickUserName):
             jsonText = content[1].split('</body></html>')
             isOnline, title, thumbUrl, icon = getStreamInfo(jsonText)
         await page.close()
+        await asyncio.sleep(5)
         ndb.killBrowser(browser)
         display.stop()
     except Exception as e:

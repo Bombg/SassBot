@@ -45,6 +45,7 @@ async def GetOnlineStatus(ofUserName):
         isOnline = await IsLiveBadge(page)
         icon  = await GetIcon(page)
         await page.close()
+        await asyncio.sleep(5)
         ndb.killBrowser(browser)
         display.stop()
     except Exception as e:

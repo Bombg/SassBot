@@ -30,6 +30,7 @@ async def GetOnlineStatus(fansUserName):
         icon = await GetIcon(page)
         await page.save_screenshot("Fansscreenshot.jpg")
         await page.close()
+        await asyncio.sleep(5)
         ndb.killBrowser(browser)
         display.stop()
     except Exception as e:
