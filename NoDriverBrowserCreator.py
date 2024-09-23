@@ -6,19 +6,6 @@ import globals
 import asyncio
 import StaticMethods
 
-def killPotentialZombies():
-    PROCNAME = "chromium"
-    numZombies = 0
-    for proc in psutil.process_iter():
-        # check whether the process name matches
-        if proc.name() == PROCNAME:
-            numZombies = numZombies + 1
-            proc.kill()
-    if numZombies > 0:
-        print(f"Killed {numZombies} zombies.")
-    if numZombies > 15:
-            StaticMethods.rebootServer()
-
 def getUserAgent():
         userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/127.0.2651.105"
         try:
@@ -42,7 +29,6 @@ async def GetBrowser():
     # browser_args=[f'user-agent={userAgent}','--mute-audio','--disable-3d-apis','--log-level=3','--disable-dev-shm-usage','--disable-gpu','--window-size=1920,1080','--start-maximized']
     try:
         globals.browserOpen = True
-        killPotentialZombies()
         browser = await uc.start(
         headless=False,
         sandbox=True,
@@ -54,10 +40,10 @@ async def GetBrowser():
 
 def killBrowser(browser):
         globals.browserOpen = False
-        # try:
-        #     process = psutil.Process(browser._process_pid)
-        #     process.kill()  # Forcefully terminate the process.
-        # except psutil.NoSuchProcess:
-        #     pass
-        # except Exception as e:
-        #     print(f"Error terminating process {process.pid}: {e}")
+        try:
+            process = psutil.Process(browser._process_pid)
+            process.kill()  # Forcefully terminate the process.
+        except psutil.NoSuchProcess:
+            pass
+        except Exception as e:
+            print(f"Error terminating process {process.pid}: {e}")
