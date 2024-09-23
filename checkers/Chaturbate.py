@@ -17,7 +17,7 @@ def isModelOnline(cbUserName):
             if result['username'] == cbUserName:
                 isOnline = True
                 title = result['room_subject']
-                thumbUrl = result['image_url'] + "?" + str(int(time.time()))
+                #thumbUrl = result['image_url'] + "?" + str(int(time.time()))
     except json.decoder.JSONDecodeError:
         print("cb api didn't respond")
     return isOnline, title, thumbUrl, icon
