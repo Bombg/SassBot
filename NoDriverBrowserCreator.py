@@ -30,13 +30,3 @@ async def GetBrowser():
         print(f"error creating browser in GetBrowser: {e}")
         globals.browserOpen = False
     return browser
-
-def killBrowser(browser):
-        globals.browserOpen = False
-        try:
-            process = psutil.Process(browser._process_pid)
-            process.kill()  # Forcefully terminate the process.
-        except psutil.NoSuchProcess:
-            pass
-        except Exception as e:
-            print(f"Error terminating process {process.pid}: {e}")
