@@ -1,11 +1,10 @@
-import time
 from Constants import Constants
-import StaticMethods
 import asyncio
 import nodriver as uc
 import NoDriverBrowserCreator as ndb
 from pyvirtualdisplay import Display
 import globals
+import platform
 
 def isModelOnline(fansUserName):
     isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(fansUserName))
@@ -18,8 +17,9 @@ async def GetOnlineStatus(fansUserName):
     isOnline = False
     icon = 'images/errIcon.png'
     try:
-        display = Display(visible=0, size=(1080,720))
-        display.start()
+        if platform.system() == "Linux":
+            display = Display(visible=0, size=(1080,720))
+            display.start()
         browser = await ndb.GetBrowser()
         await asyncio.sleep(10)
         page = await browser.get(fansUrl)
@@ -34,7 +34,7 @@ async def GetOnlineStatus(fansUserName):
         browser.stop()
         await asyncio.sleep(2)
         ndb.killBrowser(browser)
-        display.stop()
+        if display: display.stop()
     except Exception as e:
         print(f"Error when getting browser for Fansly: {e}")
         globals.browserOpen = False

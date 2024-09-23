@@ -5,6 +5,7 @@ import nodriver as uc
 import NoDriverBrowserCreator as ndb
 from pyvirtualdisplay import Display
 import globals
+import platform
 
 async def GetIcon(page:uc.Tab):
     icon = 'images/errIcon.png'
@@ -35,8 +36,9 @@ async def GetOnlineStatus(ofUserName):
     thumbUrl = ""
     icon = 'images/errIcon.png'
     try:
-        display = Display(visible=0, size=(1080,720))
-        display.start()
+        if platform.system() == "Linux":
+            display = Display(visible=0, size=(1080,720))
+            display.start()
         browser = await ndb.GetBrowser()
         await asyncio.sleep(10)
         page = await browser.get(ofUrl, new_window=True)
@@ -49,7 +51,7 @@ async def GetOnlineStatus(ofUserName):
         browser.stop()
         await asyncio.sleep(2)
         ndb.killBrowser(browser)
-        display.stop()
+        if display: display.stop()
     except Exception as e:
         print(f"Error getting browser for Onylyfans: {e}")
         globals.browserOpen = False
