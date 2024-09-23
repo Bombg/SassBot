@@ -50,8 +50,8 @@ async def GetOnlineStatus(ofUserName):
         await asyncio.sleep(2)
         browser.stop()
         await asyncio.sleep(2)
-        ndb.killBrowser(browser)
-        if display: display.stop()
+        globals.browserOpen = False
+        if platform.system() == "Linux": display.stop()
     except Exception as e:
         print(f"Error getting browser for Onylyfans: {e}")
         globals.browserOpen = False
