@@ -4,19 +4,12 @@ import nodriver as uc
 import psutil
 import globals
 import asyncio
-import StaticMethods
 
 def getUserAgent():
         userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/127.0.2651.105"
         try:
             page = requests.get('https://jnrbsn.github.io/user-agents/user-agents.json')
             userAgentsJson = page.json()
-            # osName = platform.system()
-            # reString = f"^.+\\(.*{osName}.*\\).*Chrome.*$"
-            # for agent in userAgentsJson:
-            #     if re.search(reString, agent):
-            #         userAgent = agent
-            #         break
             userAgent = random.choice(userAgentsJson)
         except:
             print("Trouble getting user agent from jnrbsn's github. Using default")
