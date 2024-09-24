@@ -62,7 +62,7 @@ class Constants:
 
     RECORD_KEEPING_START_DATE = 1727022585 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
 
-    PIN_TIME_LONG = 4 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
+    PIN_TIME_LONG = 4 # number in hours. 
     PIN_TIME_SHORT = 1 # same as above but this is used for images added via rebroadcast-image command
 
     # For role pings to work you will first need to turn them on via the /ping-toggle True/False command. 
@@ -138,10 +138,6 @@ class Constants:
     scEmbedColor = "#a02831"
     epEmbedColor = "#f03d4c"
 
-    #Leave empty string if you don't use. twitterUrl = ""
-    # pulls images from the twitter page, so if your streamer shares other stuff that isn't photos of her, probably don't use it. And just add the images yourself, or remove ones you don't want
-    twitterUrl = '' 
-    
     linkTreeUrl = "https://allmylinks.com/flexiefae"
     
     # Titles for announcement embeds
@@ -182,5 +178,3 @@ class Constants:
     bcBelowTitleText =  f"{streamerName} is now live on BongaCams!"
     scBelowTitleText =  f"{streamerName} is now live on StripChat!"
     epBelowTitleText =  f"{streamerName} is now live on ePlay!"
-
-    

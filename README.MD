@@ -19,8 +19,6 @@
 - Track multiple accounts per platform. (for example, if they have a paid and free account)
 - There's a minimum time between notifications, so your discord members won't get spammed if you're having connection issues.
 - Bot's status reflects what the streamer is doing. Offline or streaming on Kick, yt, etc.
-- Auto embed images from Twitter into notifications
-    - feature is busted for now until Twitter allows people to see tweets without being logged in once again.
 - White list commands to certain roles.
 - Log who uses what commands
 - Add/remove images yourself to embed into notifications via image commands. Images are rotated through, so add as many as you like.
@@ -33,7 +31,7 @@
 - /ping-toggle - Toggle for role pings in online announcements. This is defaulted to false, so set true if you want role pings
 - /announce-rerun-toggle - Toggle if reruns will be announced. If a title contains a variation of rr/rerun/not live then the stream will be detected as a rerun.
 - /title  - Allows you to temporarily add a custom title for a platform/username combo. TEMP_TITLE_UPTIME in constants.py determines how long a temp title added via /title will be used for.
-- Image list commands - Images can be pulled from twitter and/or manually added. These images are used for embeds for all supported platforms.
+- Image list commands - Images can be manually added. These images are used for embeds for all supported platforms.
     - /image-list-show - show the list of image urls that will be rotated through during online announcements
     - /image-list-add -  add an image url to the image list
     - /image-list-remove -  remove an image from the image list. Must provide the url

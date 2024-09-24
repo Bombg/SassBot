@@ -39,8 +39,7 @@ class Notifications:
                                     Constants.cbEmbedColor, 
                                     icon, 
                                     cbUserName, 
-                                    largeThumbnail= largeThumbnail, 
-                                    useTwitter=False
+                                    largeThumbnail= largeThumbnail
                                 )
         task = asyncio.create_task(embedMaker.getEmbed())
         cbEmbed = await task
