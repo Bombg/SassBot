@@ -5,12 +5,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 ARG GITHUB_REPO="Bombg/SassBot"
 ARG GITHUB_BRANCH="flexiefae"
 
-RUN apt-get update && apt-get dist-upgrade -y
-
-# Install Google Chrome and dependencies
-RUN apt-get install -y wget gnupg2
+# Install dependencies
 RUN apt-get update
-RUN apt-get install -y chromium xvfb git libgconf-2-4 unzip htop
+RUN apt-get install -y chromium xvfb git 
 
 # Tweak below to disable caching
 RUN echo 1234
