@@ -66,7 +66,7 @@
     To easily get both of these IDs, in discord advanced options turn on developer mode. After that you can right click servers/channels and a new option to copy the IDs will be available.
     Also edit and add vairus URLs to your streamer in Constants.py. Everything is described in comments.
 5. Make sure you have python 3.10 or better installed.
-    - make sure you have chrome and chromedriver installed
+    - make sure you have chrome and Xvfb installed. Xephyr,Xvnc or another browser may work but not tested. 
     - run command 'pip install -r requirements.txt'
 6. Generate the database with 'python GenerateDatabase.py' or 'python3 GenerateDatabase.py' 
 7. Replace images in the image folder with those of your streamer, but keep same file names.
@@ -79,9 +79,15 @@
 ### Known Issues
 
 1. If multiple accounts are streaming on the same platform at the same time, /rebroadcast will only show an announcement for one of the accounts.
-2. Cam4 api may lock you out after a certain number of calls. May need to switch methods in the future.
+2. Cam4 api ban your IP if you make too many calls from the same ip. May need to switch methods in the future.
+3. Fansly will 404 you for a period of time if you make too many requests from the same ip
 
 ### Update History
+- 9/23/2024
+    - Checkers that once used selenium now use nodriver instead. Chromedriver no longer required or supported
+    - Added more reqirements nodriver,PyVirtualDisplay. Install them via the command 'pip install -U -r requirements.txt' 
+    - Xvfb is now required if using Linux. Xephyr or Xvnc may work but not tested.
+    - Fixed a long standing bug with Chaturbate checker I just noticed. Whoops. 
 - 8/02/2024
     - Added Docker support - Thanks jasmeralia!
     - Added /test-permission command that takes the channelId you wish to test permissions with as an input.

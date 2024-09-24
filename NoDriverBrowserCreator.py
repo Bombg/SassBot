@@ -1,7 +1,6 @@
 import requests
 import random
 import nodriver as uc
-import psutil
 import globals
 import asyncio
 
