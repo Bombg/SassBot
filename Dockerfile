@@ -19,7 +19,7 @@ RUN pip3 install -r requirements.txt
 # https://github.com/Bombg/nodriver has a longer wait built in. (hopefully official version will add it as an option later)
 # Clone the above and create a copy of it in your sassbot directory 'cp -r path/to/nodriver/repo ./nodriver'
 COPY ./nodriver /opt/nodriver/
-RUN pip3 install -e /opt/nodriver -U
+RUN pip3 install -e /opt/nodriver
 
 RUN chmod +x docker-entrypoint.sh
     
