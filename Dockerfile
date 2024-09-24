@@ -20,7 +20,7 @@ RUN cd /opt && \
     git clone https://github.com/${GITHUB_REPO}.git && \
     cd /opt/SassBot && \
     git checkout ${GITHUB_BRANCH} && \
-    pip install -r requirements.txt
+    pip3 install -r requirements.txt
 
 WORKDIR /opt/SassBot
 # ENTRYPOINT ["/usr/bin/python3", "-O", "run.py"]
