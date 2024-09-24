@@ -47,6 +47,9 @@ class Constants:
     TIME_OFFLINE_BEFORE_RESTART = 900 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
     TEMP_TITLE_UPTIME = 57600 #Time in seconds temp titles will be used before default titles are used
     TIME_BEFORE_REVIEW_RESET = 300 # Time a whitelisted person has to review a confession before its added back to the queue
+    
+    # Nodriver default for retries is 4, but for slow machines this could require a lot more (raspberry pi 3b+ tested with 20 and still fails occasionally)
+    NODRIVER_BROWSER_CONNECT_RETRIES = 25
 
     # Platform Check Timers - all in seconds
     KICK_CHECK_TIMER = 180

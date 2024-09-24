@@ -7,6 +7,7 @@ import ctypes, os
 import platform
 import psutil
 import StaticMethods
+from Constants import Constants
 
 def killPotentialZombies():
     PROCNAMES = ["google-chrome",
@@ -47,7 +48,8 @@ async def GetBrowser():
         if platform.system() == "Linux":killPotentialZombies()
         browser = await uc.start(
         headless=toHeadless,
-        sandbox= toSandbox
+        sandbox= toSandbox,
+        retries= Constants.NODRIVER_BROWSER_CONNECT_RETRIES
     )
     except Exception as e:
         print(f"error creating browser in GetBrowser: {e}")
