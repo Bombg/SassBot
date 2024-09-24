@@ -22,7 +22,7 @@ RUN cd /opt && \
     git checkout ${GITHUB_BRANCH} && \
     pip install -r requirements.txt
 
-WORKDIR /home/bombg//SassBot
+WORKDIR /opt/SassBot
 # ENTRYPOINT ["/usr/bin/python3", "-O", "run.py"]
 # ENTRYPOINT ["/usr/bin/python3", "-u", "run.py"]
 CMD ["/bin/bash", "-c", "/usr/bin/python3 -u run.py 2>&1"]
