@@ -4,7 +4,7 @@ FROM python:3.11.3-slim
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies
-RUN apt-get update
+RUN apt update -y
 RUN apt-get install -y chromium xvfb
 
 # Tweak below to disable caching
