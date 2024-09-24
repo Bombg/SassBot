@@ -89,6 +89,7 @@
     - Xvfb is now required if using Linux. Xephyr or Xvnc may work but not tested.
     - Fixed a long standing bug with Chaturbate checker I just noticed; whoops. 
     - One browser open at a time limit to work better on slower machines (have it working on a Raspberrypi 3B+)
+    - Removed support for twitter (it's been broken for a while anyway)
 - 8/02/2024
     - Added Docker support - Thanks jasmeralia!
     - Added /test-permission command that takes the channelId you wish to test permissions with as an input.
