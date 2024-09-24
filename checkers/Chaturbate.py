@@ -21,8 +21,8 @@ def isModelOnline(cbUserName):
                 if result['username'] == cbUserName:
                     isOnline = True
                     title = result['room_subject']
-                    break
                     #thumbUrl = result['image_url'] + "?" + str(int(time.time()))
+                    break
             onlineModels = requests.get(Constants.cbApiUrl + f"&offset={tempLimit}")
             time.sleep(3)
             results = onlineModels.json()["results"]
