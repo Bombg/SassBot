@@ -37,8 +37,8 @@ class Constants:
         EP_NOTIFICATION_CHANNEL_ID = 1176083320157786143
         CONFESSTION_CHANNEL_ID = 1174994457561665598
         
-        CONFESSION_COMMAND_ID = 1159423004346957835
-        CONFESS_REVIEW_COMMAND_ID = 1159423004346957834
+        CONFESSION_COMMAND_ID = 1287575235910045699
+        CONFESS_REVIEW_COMMAND_ID = 1287575235910045698
 
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
