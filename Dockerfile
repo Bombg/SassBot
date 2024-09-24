@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies
 RUN apt update -y
-RUN apt-get install -y chromium xvfb
+RUN apt install -y chromium xvfb
 
 # Tweak below to disable caching
 RUN echo 1234
