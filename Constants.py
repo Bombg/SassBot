@@ -123,7 +123,8 @@ class Constants:
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
     # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. 
     # I've found this responds more reliably when you narrow down the search more. So add region, and any tags your model always uses
-    cbApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&limit=500"
+    cbJsonLimit = 500 # 500 is max. 100 is default if you remove the limit tag. Keep the limit tag in the api url OR change this to 100 if the tag is removed
+    cbApiUrl = f"https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&limit={cbJsonLimit}"
 
     kickEmbedColor = "#52fb19"
     fansEmbedColor = "#a0816c"
