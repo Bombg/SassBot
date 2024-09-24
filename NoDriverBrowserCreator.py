@@ -37,7 +37,7 @@ def getUserAgent():
 
 async def GetBrowser():
     while globals.browserOpen:
-        await asyncio.sleep(10)
+        await asyncio.sleep(20)
     # userAgent = getUserAgent()
     # browser_args=[f'user-agent={userAgent}']
     toSandbox = not IsRoot()
