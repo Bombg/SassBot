@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM ubuntu:jammy
+FROM python:3.11.3-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 ARG GITHUB_REPO="Bombg/SassBot"
@@ -10,7 +10,7 @@ RUN apt-get update && apt-get dist-upgrade -y
 # Install Google Chrome and dependencies
 RUN apt-get install -y wget gnupg2
 RUN apt-get update
-RUN apt-get install -y xvfb python3.10 python3-pip git libgconf-2-4 unzip htop
+RUN apt-get install -y chromium-browser xvfb python3.10 python3-pip git libgconf-2-4 unzip htop
 
 # Tweak below to disable caching
 RUN echo 1234
@@ -20,10 +20,9 @@ RUN cd /opt && \
     git clone https://github.com/${GITHUB_REPO}.git && \
     cd /opt/SassBot && \
     git checkout ${GITHUB_BRANCH} && \
-    pip install -r requirements.txt && \
-    pip install uvloop
+    pip install -r requirements.txt
 
-WORKDIR /opt/SassBot
+WORKDIR /home/bombg//SassBot
 # ENTRYPOINT ["/usr/bin/python3", "-O", "run.py"]
 # ENTRYPOINT ["/usr/bin/python3", "-u", "run.py"]
 CMD ["/bin/bash", "-c", "/usr/bin/python3 -u run.py 2>&1"]
