@@ -46,13 +46,24 @@ class Constants:
     TIME_BEFORE_BOT_RESTART = 86400 #time in seconds before bot will restart
     TIME_OFFLINE_BEFORE_RESTART = 900 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
     TEMP_TITLE_UPTIME = 57600 #Time in seconds temp titles will be used before default titles are used
-    TIME_BEFORE_REVIEW_RESET = 300
+    TIME_BEFORE_REVIEW_RESET = 300 # Time a whitelisted person has to review a confession before its added back to the queue
 
-    ONLINE_CHECK_TIMER = 180 #Wait time in seconds between checks
-    LONG_ONLINE_CHECK_TIMER = 300
-    AVATAR_CHECK_TIMER = 130
-    STATUS_CHECK_TIMER = 125
-    CONFESSION_CHECK_TIMER = 20
+    # Platform Check Timers - all in seconds
+    KICK_CHECK_TIMER = 180
+    CB_CHECK_TIMER = 180
+    FANS_CHECK_TIMER = 180
+    OF_CHECK_TIMER = 180
+    YT_CHECK_TIMER = 180
+    TWITCH_CHECK_TIMER = 180
+    CAM4_CHECK_TIMER = 1800 # Using very long Cam4 check timer to be on safe side. Lower at your own risk. Still unsure if safe.
+    MFC_CHECK_TIMER = 180
+    BC_CHECK_TIMER = 180
+    SC_CHECK_TIMER = 180
+    EP_CHECK_TIMER = 180
+
+    AVATAR_CHECK_TIMER = 130 # Timer for checking last online time before changing between happy/angry avatars
+    STATUS_CHECK_TIMER = 125 # Timer for checking online status and changing the bot status. Also used for record keeping
+    CONFESSION_CHECK_TIMER = 20 # How often new confessions are checked 
 
     CONFESSION_ALERT_INTERVALS = [0,0,1800,7200,18000,43200] # Seconds between unreveiwed confession alerts. Starts at index 1. 1st alert 0 seconds, 2nd alert 1800 etc. New confessions reset count
 
@@ -125,7 +136,8 @@ class Constants:
     # I've found this responds more reliably when you narrow down the search more. So add region, and any tags your model always uses
     cbJsonLimit = 500 # 500 is max. 100 is default if you remove the limit tag. Keep the limit tag in the api url OR change this to 100 if the tag is removed
     cbApiUrl = f"https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&limit={cbJsonLimit}"
-
+    
+    # Colors the line that runs vertically on the left side of the embed. Also used to color graphs
     kickEmbedColor = "#52fb19"
     fansEmbedColor = "#a0816c"
     ofEmbedColor = "#018ccf"
@@ -138,6 +150,7 @@ class Constants:
     scEmbedColor = "#a02831"
     epEmbedColor = "#f03d4c"
 
+    # Mainly Used in stream-status command
     linkTreeUrl = "https://allmylinks.com/flexiefae"
     
     # Titles for announcement embeds
