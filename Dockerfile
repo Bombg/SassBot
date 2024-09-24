@@ -14,6 +14,8 @@ RUN echo 1234
 WORKDIR /opt/SassBot
 COPY . .
 RUN pip3 install -r requirements.txt
+
+RUN chmod +x docker-entrypoint.sh
     
 # ENTRYPOINT ["/usr/bin/python3", "-O", "run.py"]
 # ENTRYPOINT ["/usr/bin/python3", "-u", "run.py"]
