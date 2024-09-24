@@ -38,15 +38,15 @@ def getUserAgent():
 async def GetBrowser():
     while globals.browserOpen:
         await asyncio.sleep(10)
-    userAgent = getUserAgent()
+    # userAgent = getUserAgent()
+    # browser_args=[f'user-agent={userAgent}']
     toSandbox = not IsRoot()
     toHeadless = False if platform.system() == "Linux" else True
     try:
         globals.browserOpen = True
         browser = await uc.start(
         headless=toHeadless,
-        sandbox= toSandbox,
-        browser_args=[f'user-agent={userAgent}']
+        sandbox= toSandbox
     )
     except Exception as e:
         print(f"error creating browser in GetBrowser: {e}")
