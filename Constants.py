@@ -51,8 +51,8 @@ class Constants:
     # Platform Check Timers - all in seconds
     KICK_CHECK_TIMER = 180
     CB_CHECK_TIMER = 180
-    FANS_CHECK_TIMER = 180
-    OF_CHECK_TIMER = 180
+    FANS_CHECK_TIMER = 220
+    OF_CHECK_TIMER = 170
     YT_CHECK_TIMER = 180
     TWITCH_CHECK_TIMER = 180
     CAM4_CHECK_TIMER = 1800 # Using very long Cam4 check timer to be on safe side. Lower at your own risk. Still unsure if safe.
