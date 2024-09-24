@@ -44,6 +44,7 @@ async def GetBrowser():
     toHeadless = False if platform.system() == "Linux" else True
     try:
         globals.browserOpen = True
+        if platform.system() == "Linux":killPotentialZombies()
         browser = await uc.start(
         headless=toHeadless,
         sandbox= toSandbox
