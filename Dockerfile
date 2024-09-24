@@ -8,9 +8,9 @@ ARG GITHUB_BRANCH="flexiefae"
 RUN apt-get update && apt-get dist-upgrade -y
 
 # Install Google Chrome and dependencies
-RUN apt-get install -y wget gnupg2
-RUN apt-get update
-RUN apt-get install -y chromium-browser xvfb python3.10 python3-pip git libgconf-2-4 unzip htop
+RUN DEBIAN_FRONTEND=nointeractive apt-get install -y wget gnupg2
+RUN DEBIAN_FRONTEND=nointeractive apt-get update
+RUN DEBIAN_FRONTEND=nointeractive apt-get install -y chromium-browser xvfb python3.10 python3-pip git libgconf-2-4 unzip htop
 
 # Tweak below to disable caching
 RUN echo 1234
