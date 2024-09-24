@@ -66,7 +66,7 @@
     To easily get both of these IDs, in discord advanced options turn on developer mode. After that you can right click servers/channels and a new option to copy the IDs will be available.
     Also edit and add vairus URLs to your streamer in Constants.py. Everything is described in comments.
 5. Make sure you have python 3.10 or better installed.
-    - make sure you have chrome and Xvfb installed. Xephyr,Xvnc or another browser may work but not tested. 
+    - make sure you have Chrome/Chromium and Xvfb installed. Xephyr,Xvnc or another browser may work but not tested. 
     - run command 'pip install -r requirements.txt'
 6. Generate the database with 'python GenerateDatabase.py' or 'python3 GenerateDatabase.py' 
 7. Replace images in the image folder with those of your streamer, but keep same file names.
@@ -87,7 +87,8 @@
     - Checkers that once used selenium now use nodriver instead. Chromedriver no longer required or supported
     - Added more reqirements nodriver,PyVirtualDisplay. Install them via the command 'pip install -U -r requirements.txt' 
     - Xvfb is now required if using Linux. Xephyr or Xvnc may work but not tested.
-    - Fixed a long standing bug with Chaturbate checker I just noticed. Whoops. 
+    - Fixed a long standing bug with Chaturbate checker I just noticed; whoops. 
+    - One browser open at a time limit to work better on slower machines (have it working on a Raspberrypi 3B+)
 - 8/02/2024
     - Added Docker support - Thanks jasmeralia!
     - Added /test-permission command that takes the channelId you wish to test permissions with as an input.
