@@ -93,6 +93,7 @@
     - Removed support for twitter (it's been broken for a while anyway)
     - Each platform has its own check timer in constants now. Instead of normal/long
     - Updated Dockerfile to reflect the new changes
+    - Fixed Twitch checker
 - 8/02/2024
     - Added Docker support - Thanks jasmeralia!
     - Added /test-permission command that takes the channelId you wish to test permissions with as an input.
