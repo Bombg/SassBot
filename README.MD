@@ -83,14 +83,16 @@
 3. Fansly will 404 you for a period of time if you make too many requests from the same ip
 
 ### Update History
-- 9/23/2024
+- 9/24/2024
     - Checkers that once used selenium now use nodriver instead. Chromedriver no longer required or supported
+        - works with Chromium as well as Chrome. Other browsers are untested.
     - Added more reqirements nodriver,PyVirtualDisplay. Install them via the command 'pip install -U -r requirements.txt' 
     - Xvfb is now required if using Linux. Xephyr or Xvnc may work but not tested.
     - Fixed a long standing bug with Chaturbate checker I just noticed; whoops. 
     - One browser open at a time limit to work better on slower machines (have it working on a Raspberrypi 3B+)
     - Removed support for twitter (it's been broken for a while anyway)
     - Each platform has its own check timer in constants now. Instead of normal/long
+    - Updated Dockerfile to reflect the new changes
 - 8/02/2024
     - Added Docker support - Thanks jasmeralia!
     - Added /test-permission command that takes the channelId you wish to test permissions with as an input.
