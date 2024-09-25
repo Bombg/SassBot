@@ -13,14 +13,14 @@ def isModelOnline(twitchChannelName):
     soup = BeautifulSoup(page.content, "html.parser")
     twitchJson = getTwitchJson(soup)
     if twitchJson:
-        title = twitchJson['description']
-        thumbUrl = twitchJson['thumbnailUrl'][2]
+        title = twitchJson['@graph'][0]['description']
+        thumbUrl = twitchJson['@graph'][0]['thumbnailUrl'][2]
         reticon = getIcon(soup)
         if reticon:
             icon = reticon
         thumbUrlReq = requests.get(thumbUrl,allow_redirects=True)
         time.sleep(1)
-        isOnlineJson = twitchJson['publication']['isLiveBroadcast']
+        isOnlineJson = twitchJson['@graph'][0]['publication']['isLiveBroadcast']
         if isOnlineJson and thumbUrl == thumbUrlReq.url:
             isOnline = True
     return isOnline, title, thumbUrl, icon
@@ -28,9 +28,8 @@ def isModelOnline(twitchChannelName):
 def getTwitchJson(soup):
     twitchJson = 0
     try:
-        firstSplit = soup.prettify().split('<script type=\"application/ld+json\">\n    [')
-        jsonSplit = firstSplit[1].split(']\n   </script>')
-        twitchJson = json.loads(jsonSplit[0])
+        twitchJson = soup.find_all("script", type="application/ld+json")
+        twitchJson = json.loads(twitchJson[0].text)
     except IndexError:
         pass
     return twitchJson
