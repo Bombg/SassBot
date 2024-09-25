@@ -17,7 +17,8 @@ RUN cd /opt && \
     git clone https://github.com/${GITHUB_REPO}.git && \
     cd /opt/SassBot && \
     git checkout ${GITHUB_BRANCH} && \
-    pip install -r requirements.txt 
+    pip install -r requirements.txt && \
+    pip install uvloop
 
 WORKDIR /opt/SassBot
 RUN chmod +x docker-entrypoint.sh

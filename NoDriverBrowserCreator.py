@@ -8,6 +8,17 @@ import platform
 import psutil
 import StaticMethods
 from Constants import Constants
+from nodriver import *
+
+def GetConfig():
+    toSandbox = not IsRoot()
+    toHeadless = False if platform.system() == "Linux" else True
+    # userAgent = getUserAgent()
+    config = Config()
+    config.headless = toHeadless
+    config.sandbox = toSandbox
+    # config.browser_args=[f'user-agent={userAgent}']
+    return config
 
 def killPotentialZombies():
     PROCNAMES = ["google-chrome",
@@ -39,18 +50,10 @@ def getUserAgent():
 async def GetBrowser():
     while globals.browserOpen:
         await asyncio.sleep(20)
-    # userAgent = getUserAgent()
-    # browser_args=[f'user-agent={userAgent}']
-    toSandbox = not IsRoot()
-    toHeadless = False if platform.system() == "Linux" else True
     try:
         globals.browserOpen = True
         if platform.system() == "Linux":killPotentialZombies()
-        browser = await uc.start(
-        headless=toHeadless,
-        sandbox= toSandbox,
-        retries= Constants.NODRIVER_BROWSER_CONNECT_RETRIES
-    )
+        browser = await uc.start(config=GetConfig(), retries = Constants.NODRIVER_BROWSER_CONNECT_RETRIES)
     except Exception as e:
         print(f"error creating browser in GetBrowser: {e}")
         if platform.system() == "Linux":killPotentialZombies()
