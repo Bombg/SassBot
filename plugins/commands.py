@@ -209,7 +209,7 @@ async def pinImage(ctx: tanjun.abc.SlashContext, imgurl: str, hours: int) -> Non
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def rebroadcast(ctx: tanjun.abc.Context) -> None:
-    await ctx.respond("Online Notifications should be resent within the next " + str(Constants.ONLINE_CHECK_TIMER) +  " seconds (or less), assuming " + Constants.streamerName + " is online.")
+    await ctx.respond("Online Notifications should be resent when the next online check for each platform is made (could be a few minutes), assuming " + Constants.streamerName + " is online.")
     StaticMethods.setRebroadcast()
 
 @component.with_slash_command
@@ -218,7 +218,7 @@ async def rebroadcast(ctx: tanjun.abc.Context) -> None:
 @Permissions(Constants.whiteListedRoleIDs)
 @CommandLogger
 async def rebroadcastWithImage(ctx: tanjun.abc.SlashContext, imgurl: str) -> None:
-    await ctx.respond(f"Added {imgurl} to the embed image list and will rebroadcast within the next {Constants.ONLINE_CHECK_TIMER} seconds.")
+    await ctx.respond(f"Added {imgurl} to the embed image list and will rebroadcast when the next online check is made. (could be minutes)")
     StaticMethods.pinImage(imgurl, Constants.PIN_TIME_SHORT)
     StaticMethods.setRebroadcast()
 

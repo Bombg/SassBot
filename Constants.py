@@ -21,24 +21,24 @@ class Constants:
         CONFESSION_COMMAND_ID = 1159423004346957835
         CONFESS_REVIEW_COMMAND_ID = 1159423004346957834
     else:
-        GUILD_ID =1058859922219081778 #Guild ID of the discord server
-        whiteListedRoleIDs = [1062179283705020486,145802742647095296,1100148453792813086,245364417783398400] # IDs of Roles you wish to be white listed for some commands.  You can also add user IDs if you want to add an individual without a role
+        GUILD_ID = 1174994456181755934 #Guild ID of the discord server
+        whiteListedRoleIDs = [145802742647095296,1174591890608369664,1176074001362190346,1176080712865169429,1176080119534727178] # IDs of Roles you wish to be white listed for some commands. You can also add user IDs if you want to add an individual without a role
         # Channel ID the bot will post notifications to
-        KICK_NOTIFICATION_CHANNEL_ID = 1268796965743886448
-        CB_NOTIFICATION_CHANNEL_ID = 1268796965743886448
-        FANS_NOTIFICATION_CHANNEL_ID = 1268796965743886448
-        OF_NOTIFICATION_CHANNEL_ID = 1061931918414852146
-        YT_NOTIFICATION_CHANNEL_ID = 1268796965743886448
-        TWITCH_NOTIFICATION_CHANNEL_ID = 1268796965743886448
-        CAM4_NOTIFICATION_CHANNEL_ID = 1268796965743886448
-        MFC_NOTIFICATION_CHANNEL_ID = 1268796965743886448
-        BC_NOTIFICATION_CHANNEL_ID = 1268796965743886448
-        SC_NOTIFICATION_CHANNEL_ID = 1268796965743886448
-        EP_NOTIFICATION_CHANNEL_ID = 1268796965743886448
-        CONFESSTION_CHANNEL_ID = 1158240422997528637
-
-        CONFESSION_COMMAND_ID = 1159321755270250571
-        CONFESS_REVIEW_COMMAND_ID = 1159321755270250570
+        KICK_NOTIFICATION_CHANNEL_ID = 1176083320157786143
+        CB_NOTIFICATION_CHANNEL_ID = 1176083320157786143
+        FANS_NOTIFICATION_CHANNEL_ID = 1176083320157786143
+        OF_NOTIFICATION_CHANNEL_ID = 1176083320157786143
+        YT_NOTIFICATION_CHANNEL_ID = 1176083320157786143
+        TWITCH_NOTIFICATION_CHANNEL_ID = 1176083320157786143
+        CAM4_NOTIFICATION_CHANNEL_ID = 1176083320157786143
+        MFC_NOTIFICATION_CHANNEL_ID = 1176083320157786143
+        BC_NOTIFICATION_CHANNEL_ID = 1176083320157786143
+        SC_NOTIFICATION_CHANNEL_ID = 1176083320157786143
+        EP_NOTIFICATION_CHANNEL_ID = 1176083320157786143
+        CONFESSTION_CHANNEL_ID = 1174994457561665598
+        
+        CONFESSION_COMMAND_ID = 1287575235910045699
+        CONFESS_REVIEW_COMMAND_ID = 1287575235910045698
 
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
@@ -46,13 +46,27 @@ class Constants:
     TIME_BEFORE_BOT_RESTART = 86400 #time in seconds before bot will restart
     TIME_OFFLINE_BEFORE_RESTART = 900 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
     TEMP_TITLE_UPTIME = 57600 #Time in seconds temp titles will be used before default titles are used
-    TIME_BEFORE_REVIEW_RESET = 300
+    TIME_BEFORE_REVIEW_RESET = 300 # Time a whitelisted person has to review a confession before its added back to the queue
+    
+    # Nodriver default for retries is 4, but for slow machines this could require a lot more (raspberry pi 3b+ tested with 20 and still fails occasionally)
+    NODRIVER_BROWSER_CONNECT_RETRIES = 25
 
-    ONLINE_CHECK_TIMER = 180 #Wait time in seconds between checks
-    LONG_ONLINE_CHECK_TIMER = 900
-    AVATAR_CHECK_TIMER = 130
-    STATUS_CHECK_TIMER = 125
-    CONFESSION_CHECK_TIMER = 20
+    # Platform Check Timers - all in seconds
+    KICK_CHECK_TIMER = 180
+    CB_CHECK_TIMER = 180
+    FANS_CHECK_TIMER = 220
+    OF_CHECK_TIMER = 170
+    YT_CHECK_TIMER = 180
+    TWITCH_CHECK_TIMER = 180
+    CAM4_CHECK_TIMER = 1800 # Using very long Cam4 check timer to be on safe side. Lower at your own risk. Still unsure if safe.
+    MFC_CHECK_TIMER = 180
+    BC_CHECK_TIMER = 180
+    SC_CHECK_TIMER = 180
+    EP_CHECK_TIMER = 180
+
+    AVATAR_CHECK_TIMER = 130 # Timer for checking last online time before changing between happy/angry avatars
+    STATUS_CHECK_TIMER = 125 # Timer for checking online status and changing the bot status. Also used for record keeping
+    CONFESSION_CHECK_TIMER = 20 # How often new confessions are checked 
 
     CONFESSION_ALERT_INTERVALS = [0,0,1800,7200,18000,43200] # Seconds between unreveiwed confession alerts. Starts at index 1. 1st alert 0 seconds, 2nd alert 1800 etc. New confessions reset count
 
@@ -60,9 +74,9 @@ class Constants:
     PERCENTAGE_OF_MAX = 0.85 # Percent of maximum users online before a smart alert goes off
     SECONDS_BETWEEN_SMART_ALERTS = 21600 # minimum number of seconds before another smart alert goes off
 
-    RECORD_KEEPING_START_DATE = 1694340841 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
+    RECORD_KEEPING_START_DATE = 1727022585 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
 
-    PIN_TIME_LONG = 4 # number in hours. If new image is found on twitter, image will be auto pinned for this length of time
+    PIN_TIME_LONG = 4 # number in hours. 
     PIN_TIME_SHORT = 1 # same as above but this is used for images added via rebroadcast-image command
 
     # For role pings to work you will first need to turn them on via the /ping-toggle True/False command. 
@@ -102,29 +116,31 @@ class Constants:
     EP_RERUN_ROLES_TO_PING = ""
 
     #Generic name of the streamer that will be used for all notifications
-    streamerName = "LitneySpears"
+    streamerName = "FlexieFae"
 
     #Usernames associated with each platform - if not applicable leave an empty array. i.e. cbUserName = []
     #If the streamer has multiple accounts for a paltform, add an extra username to the array i.e. cbUserName = ['user1','user2']
-    kickUserName = ['LitneySpears']
-    cbUserName = []
-    fansUserName = ['Litneyspearsx']
-    ofUserName = ['litneyspearsx','litneyspearsfree']
-    ytUserName = ['litneyspears_']
-    twitchUserName = ['litneyspears_']
+    kickUserName = ['flexiefae']
+    cbUserName = ['heynicole01']
+    fansUserName = ['FlexieFae']
+    ofUserName = []
+    ytUserName = ['FlexieFae']
+    twitchUserName = ['flexiefae']
     cam4UserName = []
     mfcUserName = []
     bcUserName = []
     scUserName = []
     epUserName = []
 
-    twitchUrl = f"https://www.twitch.tv/litneyspears_" #Add a valid twitch URL here even if you streamer doesn't have twitch or else the presence won't update properly
+    twitchUrl = f"https://www.twitch.tv/flexiefae" #Add a valid twitch URL here even if you streamer doesn't have twitch or else the presence won't update properly
 
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
     # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. 
     # I've found this responds more reliably when you narrow down the search more. So add region, and any tags your model always uses
-    cbApiUrl = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&tag=bigboobs"
-
+    cbJsonLimit = 500 # 500 is max. 100 is default if you remove the limit tag. Keep the limit tag in the api url OR change this to 100 if the tag is removed
+    cbApiUrl = f"https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica&limit={cbJsonLimit}"
+    
+    # Colors the line that runs vertically on the left side of the embed. Also used to color graphs
     kickEmbedColor = "#52fb19"
     fansEmbedColor = "#a0816c"
     ofEmbedColor = "#018ccf"
@@ -137,11 +153,8 @@ class Constants:
     scEmbedColor = "#a02831"
     epEmbedColor = "#f03d4c"
 
-    #Leave empty string if you don't use. twitterUrl = ""
-    # pulls images from the twitter page, so if your streamer shares other stuff that isn't photos of her, probably don't use it. And just add the images yourself, or remove ones you don't want
-    twitterUrl = '' 
-    
-    linkTreeUrl = "https://allmylinks.com/litneyspears"
+    # Mainly Used in stream-status command
+    linkTreeUrl = "https://allmylinks.com/flexiefae"
     
     # Titles for announcement embeds
     # Titles for platforms that have optional titles or no titles at all
@@ -181,5 +194,3 @@ class Constants:
     bcBelowTitleText =  f"{streamerName} is now live on BongaCams!"
     scBelowTitleText =  f"{streamerName} is now live on StripChat!"
     epBelowTitleText =  f"{streamerName} is now live on ePlay!"
-
-    

@@ -19,8 +19,6 @@
 - Track multiple accounts per platform. (for example, if they have a paid and free account)
 - There's a minimum time between notifications, so your discord members won't get spammed if you're having connection issues.
 - Bot's status reflects what the streamer is doing. Offline or streaming on Kick, yt, etc.
-- Auto embed images from Twitter into notifications
-    - feature is busted for now until Twitter allows people to see tweets without being logged in once again.
 - White list commands to certain roles.
 - Log who uses what commands
 - Add/remove images yourself to embed into notifications via image commands. Images are rotated through, so add as many as you like.
@@ -33,7 +31,7 @@
 - /ping-toggle - Toggle for role pings in online announcements. This is defaulted to false, so set true if you want role pings
 - /announce-rerun-toggle - Toggle if reruns will be announced. If a title contains a variation of rr/rerun/not live then the stream will be detected as a rerun.
 - /title  - Allows you to temporarily add a custom title for a platform/username combo. TEMP_TITLE_UPTIME in constants.py determines how long a temp title added via /title will be used for.
-- Image list commands - Images can be pulled from twitter and/or manually added. These images are used for embeds for all supported platforms.
+- Image list commands - Images can be manually added. These images are used for embeds for all supported platforms.
     - /image-list-show - show the list of image urls that will be rotated through during online announcements
     - /image-list-add -  add an image url to the image list
     - /image-list-remove -  remove an image from the image list. Must provide the url
@@ -68,7 +66,7 @@
     To easily get both of these IDs, in discord advanced options turn on developer mode. After that you can right click servers/channels and a new option to copy the IDs will be available.
     Also edit and add vairus URLs to your streamer in Constants.py. Everything is described in comments.
 5. Make sure you have python 3.10 or better installed.
-    - make sure you have chrome and chromedriver installed
+    - make sure you have Chrome/Chromium and Xvfb installed. Xephyr,Xvnc or another browser may work but not tested. 
     - run command 'pip install -r requirements.txt'
 6. Generate the database with 'python GenerateDatabase.py' or 'python3 GenerateDatabase.py' 
 7. Replace images in the image folder with those of your streamer, but keep same file names.
@@ -81,9 +79,18 @@
 ### Known Issues
 
 1. If multiple accounts are streaming on the same platform at the same time, /rebroadcast will only show an announcement for one of the accounts.
-2. Cam4 api may lock you out after a certain number of calls. May need to switch methods in the future.
+2. Cam4 api ban your IP if you make too many calls from the same ip. May need to switch methods in the future.
+3. Fansly will 404 you for a period of time if you make too many requests from the same ip
 
 ### Update History
+- 9/23/2024
+    - Checkers that once used selenium now use nodriver instead. Chromedriver no longer required or supported
+    - Added more reqirements nodriver,PyVirtualDisplay. Install them via the command 'pip install -U -r requirements.txt' 
+    - Xvfb is now required if using Linux. Xephyr or Xvnc may work but not tested.
+    - Fixed a long standing bug with Chaturbate checker I just noticed; whoops. 
+    - One browser open at a time limit to work better on slower machines (have it working on a Raspberrypi 3B+)
+    - Removed support for twitter (it's been broken for a while anyway)
+    - Each platform has its own check timer in constants now. Instead of normal/long
 - 8/02/2024
     - Added Docker support - Thanks jasmeralia!
     - Added /test-permission command that takes the channelId you wish to test permissions with as an input.

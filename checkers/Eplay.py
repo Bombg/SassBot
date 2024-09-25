@@ -1,5 +1,4 @@
 import time
-from selenium.webdriver.common.by import By
 import requests
 from Constants import Constants
 from bs4 import BeautifulSoup

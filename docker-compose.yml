@@ -2,6 +2,7 @@ services:
   sassbot:
     image: sassbot:latest
     volumes:
-      - ./Constants.py:/opt/SassBot/Constants.py
-      - ./secrets:/opt/SassBot/secrets
-      - ./sassBot.db:/opt/SassBot/sassBot.db
+      - /home/bombg/Repos/SassBot/Constants.py:/opt/SassBot/Constants.py
+      - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
+      - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
+    restart: unless-stopped

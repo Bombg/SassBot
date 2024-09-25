@@ -72,94 +72,94 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, us
     print("\n")
 
 @component.with_schedule
-@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
+@tanjun.as_interval(Constants.CB_CHECK_TIMER)
 async def checkChatur(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.cbUserName:
         for cbUserName in Constants.cbUserName:
             await platformChecker(Chaturbate.isModelOnline, Notifications.ChaturNotification,cbUserName,"chaturbate",rest)
-            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.cbUserName))
+            await asyncio.sleep(Constants.CB_CHECK_TIMER/len(Constants.cbUserName))
 
 @component.with_schedule
-@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
+@tanjun.as_interval(Constants.OF_CHECK_TIMER)
 async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.ofUserName:
         for ofUserName in Constants.ofUserName:
             await platformChecker(Onlyfans.isModelOnline, Notifications.OFNotification,ofUserName,"onlyfans",rest)
-            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.ofUserName))
+            await asyncio.sleep(Constants.OF_CHECK_TIMER/len(Constants.ofUserName))
 
 @component.with_schedule
-@tanjun.as_interval(Constants.LONG_ONLINE_CHECK_TIMER) # Fans on a longer timer or page wont load
+@tanjun.as_interval(Constants.FANS_CHECK_TIMER)
 async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.fansUserName:
         for fansUserName in Constants.fansUserName:
             await platformChecker(Fansly.isModelOnline, Notifications.FansNotification,fansUserName,"fansly",rest)
-            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.fansUserName))
+            await asyncio.sleep(Constants.FANS_CHECK_TIMER/len(Constants.fansUserName))
 
 @component.with_schedule
-@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
+@tanjun.as_interval(Constants.TWITCH_CHECK_TIMER)
 async def checkTwitch(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.twitchUserName:
         for twitchUserName in Constants.twitchUserName:
             await platformChecker(Twitch.isModelOnline, Notifications.TwitchNotification,twitchUserName,"twitch",rest)
-            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.twitchUserName))
+            await asyncio.sleep(Constants.TWITCH_CHECK_TIMER/len(Constants.twitchUserName))
 
 @component.with_schedule
-@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
+@tanjun.as_interval(Constants.YT_CHECK_TIMER)
 async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.ytUserName:
         for ytUserName in Constants.ytUserName:
             await platformChecker(Youtube.isModelOnline, Notifications.YTNotification,ytUserName,"youtube",rest)
-            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.ytUserName))
+            await asyncio.sleep(Constants.YT_CHECK_TIMER/len(Constants.ytUserName))
 
 @component.with_schedule
-@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
+@tanjun.as_interval(Constants.KICK_CHECK_TIMER)
 async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.kickUserName:
         for kickUserName in Constants.kickUserName:
             await platformChecker(Kick.isModelOnline, Notifications.KickNotification,kickUserName,"kick",rest)
-            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.kickUserName))
+            await asyncio.sleep(Constants.KICK_CHECK_TIMER/len(Constants.kickUserName))
 
 @component.with_schedule
-@tanjun.as_interval(Constants.LONG_ONLINE_CHECK_TIMER) # Long timer on Cam4, if too quick they'll ban your IP. still unsure if this is 100% safe
+@tanjun.as_interval(Constants.CAM4_CHECK_TIMER)
 async def checkCam4(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.cam4UserName:
         for cam4UserName in Constants.cam4UserName:
             await platformChecker(Cam4.isModelOnline, Notifications.Cam4Notification,cam4UserName,"cam4",rest)
-            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.cam4UserName))
+            await asyncio.sleep(Constants.CAM4_CHECK_TIMER/len(Constants.cam4UserName))
 
 @component.with_schedule
-@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
+@tanjun.as_interval(Constants.MFC_CHECK_TIMER)
 async def checkMfc(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.mfcUserName:
         for mfcUserName in Constants.mfcUserName:
             await platformChecker(MFC.isModelOnline, Notifications.MfcNotification,mfcUserName,"mfc",rest)
-            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.mfcUserName))
+            await asyncio.sleep(Constants.MFC_CHECK_TIMER/len(Constants.mfcUserName))
 
 
 @component.with_schedule
-@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
+@tanjun.as_interval(Constants.BC_CHECK_TIMER)
 async def checkBc(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.bcUserName:
         for bcUserName in Constants.bcUserName:
             await platformChecker(BC.isModelOnline, Notifications.BcNotification,bcUserName,"bongacams",rest)
-            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.bcUserName))
+            await asyncio.sleep(Constants.BC_CHECK_TIMER/len(Constants.bcUserName))
 
 
 @component.with_schedule
-@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
+@tanjun.as_interval(Constants.SC_CHECK_TIMER)
 async def checkSc(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.scUserName:
         for scUserName in Constants.scUserName:
             await platformChecker(SC.isModelOnline, Notifications.ScNotification,scUserName,"stripchat",rest)
-            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.scUserName))
+            await asyncio.sleep(Constants.SC_CHECK_TIMER/len(Constants.scUserName))
 
 @component.with_schedule
-@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER)
+@tanjun.as_interval(Constants.EP_CHECK_TIMER)
 async def checkEp(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.epUserName:
         for epUserName in Constants.epUserName:
             await platformChecker(EP.isModelOnline, Notifications.EpNotification,epUserName,"eplay",rest)
-            await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.epUserName))
+            await asyncio.sleep(Constants.EP_CHECK_TIMER/len(Constants.epUserName))
 
 
 @component.with_schedule

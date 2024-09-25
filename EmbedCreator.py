@@ -1,18 +1,16 @@
 import hikari
-import TwitterImageGrabber
 import asyncio
 from Constants import Constants
 import StaticMethods
 
 class EmbedCreator:
-    def __init__(self,description,title,url,thumbnail,color,icon,username,largeThumbnail = "",useTwitter = True) -> None:
+    def __init__(self,description,title,url,thumbnail,color,icon,username,largeThumbnail = "") -> None:
         self.title = title
         self.description = description
         self.url = url
         self.thumbnail = thumbnail
         self.color = color
         self.largeThumbnail = largeThumbnail
-        self.useTwitter = useTwitter
         self.icon = icon
         self.username = username
 
@@ -32,9 +30,7 @@ class EmbedCreator:
 
     async def getThumbnailImage(self):
         pinUrl = StaticMethods.checkImagePin()
-        if Constants.twitterUrl and self.useTwitter:
-            embedImg = await asyncio.get_running_loop().run_in_executor(None,TwitterImageGrabber.getImage)
-        if self.largeThumbnail and not pinUrl or not self.useTwitter and self.largeThumbnail:
+        if self.largeThumbnail and not pinUrl:
             embedImg = self.largeThumbnail
         else:
             embedImg = StaticMethods.getEmbedImage()
