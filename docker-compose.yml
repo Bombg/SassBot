@@ -5,3 +5,4 @@ services:
       - /home/bombg/Repos/SassBot/Constants.py:/opt/SassBot/Constants.py
       - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
       - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
+    restart: unless-stopped
