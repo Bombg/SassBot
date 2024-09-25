@@ -21,8 +21,8 @@ class Constants:
         CONFESSION_COMMAND_ID = 1159423004346957835
         CONFESS_REVIEW_COMMAND_ID = 1159423004346957834
     else:
-        GUILD_ID = 1058859922219081778 #Guild ID of the discord server
-        whiteListedRoleIDs = [145802742647095296,1174591890608369664,1176074001362190346,1176080712865169429,1176080119534727178] # IDs of Roles you wish to be white listed for some commands. You can also add user IDs if you want to add an individual without a role
+        GUILD_ID =1058859922219081778 #Guild ID of the discord server
+        whiteListedRoleIDs = [1062179283705020486,145802742647095296,1100148453792813086,245364417783398400] # IDs of Roles you wish to be white listed for some commands. You can also add user IDs if you want to add an individual without a role
         # Channel ID the bot will post notifications to
         KICK_NOTIFICATION_CHANNEL_ID = 1268796965743886448
         CB_NOTIFICATION_CHANNEL_ID = 1268796965743886448
@@ -74,7 +74,7 @@ class Constants:
     PERCENTAGE_OF_MAX = 0.85 # Percent of maximum users online before a smart alert goes off
     SECONDS_BETWEEN_SMART_ALERTS = 21600 # minimum number of seconds before another smart alert goes off
 
-    RECORD_KEEPING_START_DATE = 1727022585 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
+    RECORD_KEEPING_START_DATE = 1694340841 #Epoch time in seconds when you started using this bot Use: https://www.epochconverter.com/
 
     PIN_TIME_LONG = 4 # number in hours. 
     PIN_TIME_SHORT = 1 # same as above but this is used for images added via rebroadcast-image command
