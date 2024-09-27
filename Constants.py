@@ -22,7 +22,7 @@ class Constants:
         CONFESS_REVIEW_COMMAND_ID = 1159423004346957834
 
         KICK_PROXY = ""
-        FANS_PROXY = ""
+        FANS_PROXY = "192.168.50.253:8888"
         OF_PROXY = ""
     else:
         GUILD_ID =1058859922219081778 #Guild ID of the discord server
@@ -45,7 +45,7 @@ class Constants:
         CONFESS_REVIEW_COMMAND_ID = 1159321755270250570
 
         KICK_PROXY = ""
-        FANS_PROXY = "172.18.0.2:8000"
+        FANS_PROXY = "172.18.0.2:8888"
         OF_PROXY = ""
 
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
