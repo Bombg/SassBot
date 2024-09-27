@@ -45,7 +45,7 @@ async def ClickEnterButton(page:uc.Tab):
         if enterBtn:
             await enterBtn.click()
             await asyncio.sleep(.5 * Constants.NODRIVER_WAIT_MULTIPLIER)
-    except TimeoutError:
+    except :
         pass
 
 async def IsLiveBadge(page:uc.Tab):
@@ -54,7 +54,7 @@ async def IsLiveBadge(page:uc.Tab):
         liveBadge = await page.find("live-badge bold font-size-sm", best_match=True)
         if liveBadge:
             live = True
-    except TimeoutError:
+    except :
         pass
     return live
 

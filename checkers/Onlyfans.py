@@ -26,7 +26,7 @@ async def IsLiveBadge(page:uc.Tab):
         liveBadge = await page.find("g-avatar__icon m-live", best_match=True)
         if liveBadge:
             live = True
-    except TimeoutError:
+    except:
         pass
     return live
 
