@@ -23,7 +23,7 @@ class Constants:
 
         KICK_PROXY = ""
         FANS_PROXY = "192.168.50.253:8888"
-        OF_PROXY = ""
+        OF_PROXY = "192.168.50.253:8888"
     else:
         GUILD_ID =1058859922219081778 #Guild ID of the discord server
         whiteListedRoleIDs = [1062179283705020486,145802742647095296,1100148453792813086,245364417783398400] # IDs of Roles you wish to be white listed for some commands. You can also add user IDs if you want to add an individual without a role
@@ -46,7 +46,7 @@ class Constants:
 
         KICK_PROXY = ""
         FANS_PROXY = "172.18.0.2:8888"
-        OF_PROXY = ""
+        OF_PROXY = "172.18.0.2:8888"
 
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
