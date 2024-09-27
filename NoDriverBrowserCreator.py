@@ -10,7 +10,7 @@ import StaticMethods
 from Constants import Constants
 from nodriver import *
 
-def GetConfig():
+def GetConfig(proxy):
     toSandbox = not IsRoot()
     toHeadless = False if platform.system() == "Linux" else True
     # userAgent = getUserAgent()
@@ -18,6 +18,8 @@ def GetConfig():
     config.headless = toHeadless
     config.sandbox = toSandbox
     # config.browser_args=[f'user-agent={userAgent}']
+    if proxy:
+        config._browser_args=[f'--proxy-server={proxy}']
     return config
 
 def killPotentialZombies():
@@ -47,13 +49,13 @@ def getUserAgent():
             print("Trouble getting user agent from jnrbsn's github. Using default")
         return userAgent
 
-async def GetBrowser():
+async def GetBrowser(proxy=""):
     while globals.browserOpen:
         await asyncio.sleep(20)
     try:
         globals.browserOpen = True
         if platform.system() == "Linux":killPotentialZombies()
-        browser = await uc.start(config=GetConfig(), retries = Constants.NODRIVER_BROWSER_CONNECT_RETRIES)
+        browser = await uc.start(config=GetConfig(proxy), retries = Constants.NODRIVER_BROWSER_CONNECT_RETRIES)
     except Exception as e:
         print(f"error creating browser in GetBrowser: {e}")
         if platform.system() == "Linux":killPotentialZombies()

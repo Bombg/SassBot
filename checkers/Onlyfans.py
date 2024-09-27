@@ -6,6 +6,7 @@ import NoDriverBrowserCreator as ndb
 from pyvirtualdisplay import Display
 import globals
 import platform
+from Constants import Constants
 
 async def GetIcon(page:uc.Tab):
     icon = 'images/errIcon.png'
@@ -39,17 +40,17 @@ async def GetOnlineStatus(ofUserName):
         if platform.system() == "Linux":
             display = Display(visible=0, size=(1080,720))
             display.start()
-        browser = await ndb.GetBrowser()
-        await asyncio.sleep(10)
+        browser = await ndb.GetBrowser(proxy=Constants.OF_PROXY)
+        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         page = await browser.get(ofUrl, new_window=True)
-        await asyncio.sleep(10)
+        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         await page.save_screenshot("Ofscreenshot.jpg")
         isOnline = await IsLiveBadge(page)
         icon  = await GetIcon(page)
         await page.close()
-        await asyncio.sleep(2)
+        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         browser.stop()
-        await asyncio.sleep(2)
+        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         globals.browserOpen = False
         if platform.system() == "Linux": display.stop()
     except Exception as e:

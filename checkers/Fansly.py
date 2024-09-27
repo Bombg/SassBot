@@ -20,19 +20,18 @@ async def GetOnlineStatus(fansUserName):
         if platform.system() == "Linux":
             display = Display(visible=0, size=(1080,720))
             display.start()
-        browser = await ndb.GetBrowser()
-        await asyncio.sleep(10)
+        browser = await ndb.GetBrowser(proxy=Constants.FANS_PROXY)
+        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         page = await browser.get(fansUrl)
-        await asyncio.sleep(10)
+        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         await ClickEnterButton(page)
         isOnline = await IsLiveBadge(page)
-        await asyncio.sleep(2)
         icon = await GetIcon(page)
         await page.save_screenshot("Fansscreenshot.jpg")
         await page.close()
-        await asyncio.sleep(2)
+        await asyncio.sleep(.5*Constants.NODRIVER_WAIT_MULTIPLIER)
         browser.stop()
-        await asyncio.sleep(2)
+        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         globals.browserOpen = False
         if platform.system() == "Linux": display.stop()
     except Exception as e:
@@ -45,7 +44,7 @@ async def ClickEnterButton(page:uc.Tab):
         enterBtn = await page.find("Enter",best_match=True)
         if enterBtn:
             await enterBtn.click()
-            await asyncio.sleep(5)
+            await asyncio.sleep(.5 * Constants.NODRIVER_WAIT_MULTIPLIER)
     except TimeoutError:
         pass
 
@@ -64,7 +63,7 @@ async def GetIcon(page:uc.Tab):
     try:
         iconElements = await page.find_all("image cover")
         await iconElements[1].click()
-        await asyncio.sleep(2)
+        await asyncio.sleep(.5 * Constants.NODRIVER_WAIT_MULTIPLIER)
         iconElement = await page.find("image-overlay-flex", best_match=True)
         await iconElement.save_screenshot( "images/fansIcon.jpg")
         icon = "images/fansIcon.jpg"

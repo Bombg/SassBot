@@ -6,6 +6,7 @@ import NoDriverBrowserCreator as ndb
 from pyvirtualdisplay import Display
 import globals
 import platform
+from Constants import Constants
 
 def isModelOnline(kickUserName):
     isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(kickUserName))
@@ -18,10 +19,10 @@ async def GetOnlineStatus(kickUserName):
         if platform.system() == "Linux":
             display = Display(visible=0, size=(1080,720))
             display.start()
-        browser = await ndb.GetBrowser()
-        await asyncio.sleep(10)
+        browser = await ndb.GetBrowser(proxy=Constants.KICK_PROXY)
+        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         page = await browser.get(apiUrl)
-        await asyncio.sleep(10)
+        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         await page.save_screenshot("KickScreenshot.jpg")
         content = await page.get_content()
         content = content.split('<body>')
@@ -31,9 +32,9 @@ async def GetOnlineStatus(kickUserName):
             jsonText = content[1].split('</body></html>')
             isOnline, title, thumbUrl, icon = getStreamInfo(jsonText)
         await page.close()
-        await asyncio.sleep(2)
+        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         browser.stop()
-        await asyncio.sleep(2)
+        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         globals.browserOpen = False
         if platform.system() == "Linux": display.stop()
     except Exception as e:

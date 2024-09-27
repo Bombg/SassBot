@@ -20,6 +20,10 @@ class Constants:
         
         CONFESSION_COMMAND_ID = 1159423004346957835
         CONFESS_REVIEW_COMMAND_ID = 1159423004346957834
+
+        KICK_PROXY = ""
+        FANS_PROXY = ""
+        OF_PROXY = ""
     else:
         GUILD_ID =1058859922219081778 #Guild ID of the discord server
         whiteListedRoleIDs = [1062179283705020486,145802742647095296,1100148453792813086,245364417783398400] # IDs of Roles you wish to be white listed for some commands. You can also add user IDs if you want to add an individual without a role
@@ -40,6 +44,10 @@ class Constants:
         CONFESSION_COMMAND_ID = 1159321755270250571
         CONFESS_REVIEW_COMMAND_ID = 1159321755270250570
 
+        KICK_PROXY = ""
+        FANS_PROXY = ""
+        OF_PROXY = ""
+
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
     ONLINE_MESSAGE_REBROADCAST_TIME = 86400 #Time in seconds the stream will be online before another online notification will be broadcasted
@@ -50,6 +58,7 @@ class Constants:
     
     # Nodriver default for retries is 4, but for slow machines this could require a lot more (raspberry pi 3b+ tested with 20 and still fails occasionally)
     NODRIVER_BROWSER_CONNECT_RETRIES = 25
+    NODRIVER_WAIT_MULTIPLIER = 3 # multiplier for nodriver waits. Make this longer for slower machines
 
     # Platform Check Timers - all in seconds
     KICK_CHECK_TIMER = 180
