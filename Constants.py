@@ -45,7 +45,7 @@ class Constants:
         CONFESS_REVIEW_COMMAND_ID = 1159321755270250570
 
         KICK_PROXY = ""
-        FANS_PROXY = ""
+        FANS_PROXY = "172.18.0.2:8000"
         OF_PROXY = ""
 
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
