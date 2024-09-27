@@ -58,7 +58,7 @@ class Constants:
     
     # Nodriver default for retries is 4, but for slow machines this could require a lot more (raspberry pi 3b+ tested with 20 and still fails occasionally)
     NODRIVER_BROWSER_CONNECT_RETRIES = 25
-    NODRIVER_WAIT_MULTIPLIER = 3 # multiplier for nodriver waits. Make this longer for slower machines
+    NODRIVER_WAIT_MULTIPLIER = 5 # multiplier for nodriver waits. Make this longer for slower machines
 
     # Platform Check Timers - all in seconds
     KICK_CHECK_TIMER = 180
