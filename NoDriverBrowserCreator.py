@@ -57,6 +57,7 @@ async def GetBrowser(proxy=""):
         print(f"error creating browser in GetBrowser: {e}")
         if platform.system() == "Linux":killPotentialZombies()
         globals.browserOpen = False
+        await asyncio.sleep(10)
     return browser
 
 # Taken from https://github.com/ultrafunkamsterdam/nodriver/blob/1bb6003c7f0db4d3ec05fdf3fc8c8e0804260103/nodriver/core/config.py#L240
