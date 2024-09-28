@@ -16,7 +16,7 @@ def GetConfig(proxy):
     # userAgent = getUserAgent()
     config = Config()
     config.headless = toHeadless
-    config.sandbox = False
+    config.sandbox = True
     # config.browser_args=[f'user-agent={userAgent}']
     if proxy:
         config._browser_args=[f'--proxy-server={proxy}']
