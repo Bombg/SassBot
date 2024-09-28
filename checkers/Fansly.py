@@ -17,9 +17,6 @@ async def GetOnlineStatus(fansUserName):
     isOnline = False
     icon = 'images/errIcon.png'
     try:
-        if platform.system() == "Linux":
-            display = Display(visible=0, size=(1080,720))
-            display.start()
         browser = await ndb.GetBrowser(proxy=Constants.FANS_PROXY)
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         page = await browser.get(fansUrl)
@@ -33,7 +30,6 @@ async def GetOnlineStatus(fansUserName):
         browser.stop()
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         globals.browserOpen = False
-        if platform.system() == "Linux": display.stop()
     except Exception as e:
         print(f"Error when getting browser for Fansly: {e}")
         globals.browserOpen = False

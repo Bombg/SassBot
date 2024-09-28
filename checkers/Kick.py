@@ -16,9 +16,6 @@ async def GetOnlineStatus(kickUserName):
     isOnline, title, thumbUrl, icon = setDefaultStreamValues()
     apiUrl = f"https://kick.com/api/v1/channels/{kickUserName}"
     try:
-        if platform.system() == "Linux":
-            display = Display(visible=0, size=(1080,720))
-            display.start()
         browser = await ndb.GetBrowser(proxy=Constants.KICK_PROXY)
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         page = await browser.get(apiUrl)
@@ -36,7 +33,6 @@ async def GetOnlineStatus(kickUserName):
         browser.stop()
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         globals.browserOpen = False
-        if platform.system() == "Linux": display.stop()
     except Exception as e:
         print(f"error getting browser for Kick: {e}")
         globals.browserOpen = False

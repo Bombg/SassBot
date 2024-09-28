@@ -37,9 +37,6 @@ async def GetOnlineStatus(ofUserName):
     thumbUrl = ""
     icon = 'images/errIcon.png'
     try:
-        if platform.system() == "Linux":
-            display = Display(visible=0, size=(1080,720))
-            display.start()
         browser = await ndb.GetBrowser(proxy=Constants.OF_PROXY)
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         page = await browser.get(ofUrl, new_window=True)
@@ -52,7 +49,6 @@ async def GetOnlineStatus(ofUserName):
         browser.stop()
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         globals.browserOpen = False
-        if platform.system() == "Linux": display.stop()
     except Exception as e:
         print(f"Error getting browser for Onylyfans: {e}")
         globals.browserOpen = False
