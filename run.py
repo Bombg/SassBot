@@ -11,5 +11,8 @@ if os.name != "nt":
 
 if __name__ == "__main__":
     if platform.system() == "Linux":
-        subprocess.run('Xvfb $DISPLAY -screen $DISPLAY 1280x1024x16 & export DISPLAY=:99')
+        subprocess.run('Xvfb $DISPLAY -screen $DISPLAY 1280x1024x16 & export DISPLAY=:99', 
+                        shell=True, 
+                        check=True,
+                        executable='/bin/bash')
     build_bot().run()
