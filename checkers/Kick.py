@@ -7,10 +7,27 @@ from pyvirtualdisplay import Display
 import globals
 import platform
 from Constants import Constants
+import multiprocessing
 
 def isModelOnline(kickUserName):
-    isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(kickUserName))
+    queue = multiprocessing.Manager()
+    returnDict = queue.dict()
+    p = multiprocessing.Process(target=process, args=(kickUserName, returnDict))
+    p.start()
+    p.join()
+    isOnline = returnDict.get("isOnline")
+    title = returnDict.get("title")
+    thumbUrl = returnDict.get("thumbUrl")
+    icon = returnDict.get("icon")
+    p.terminate()
     return isOnline, title, thumbUrl, icon
+
+def process(kickUserName, returnDict):
+    isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(kickUserName))
+    returnDict["isOnline"] = isOnline
+    returnDict["title"] = title
+    returnDict['thumbUrl'] = thumbUrl
+    returnDict['icon'] = icon
 
 async def GetOnlineStatus(kickUserName):
     isOnline, title, thumbUrl, icon = setDefaultStreamValues()

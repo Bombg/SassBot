@@ -1,7 +1,5 @@
 # syntax=docker/dockerfile:1
 FROM python:3.11.3-slim
-ARG GITHUB_REPO="Bombg/SassBot"
-ARG GITHUB_BRANCH="master"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -9,18 +7,13 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update -y
 RUN apt install -y chromium xvfb git
 
-# Tweak below to disable caching
-RUN echo 1234
+WORKDIR /opt/SassBot
+COPY . .
 
 # Clone repo and install requirements
-RUN cd /opt && \
-    git clone https://github.com/${GITHUB_REPO}.git && \
-    cd /opt/SassBot && \
-    git checkout ${GITHUB_BRANCH} && \
-    pip install -r requirements.txt && \
+RUN pip install -r requirements.txt && \
     pip install uvloop
 
-WORKDIR /opt/SassBot
 RUN chmod +x docker-entrypoint.sh
     
 ENTRYPOINT ["/bin/sh", "-c", "./docker-entrypoint.sh"]

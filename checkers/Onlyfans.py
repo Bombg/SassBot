@@ -3,10 +3,9 @@ import re
 import asyncio
 import nodriver as uc
 import NoDriverBrowserCreator as ndb
-from pyvirtualdisplay import Display
 import globals
-import platform
 from Constants import Constants
+import multiprocessing
 
 async def GetIcon(page:uc.Tab):
     icon = 'images/errIcon.png'
@@ -56,6 +55,22 @@ async def GetOnlineStatus(ofUserName):
 
 
 def isModelOnline(ofUserName):
-    isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(ofUserName))
+    queue = multiprocessing.Manager()
+    returnDict = queue.dict()
+    p = multiprocessing.Process(target=process, args=(ofUserName, returnDict))
+    p.start()
+    p.join()
+    isOnline = returnDict.get("isOnline")
+    title = returnDict.get("title")
+    thumbUrl = returnDict.get("thumbUrl")
+    icon = returnDict.get("icon")
+    p.terminate()
 
     return isOnline, title, thumbUrl, icon
+
+def process(ofUserName, returnDict):
+    isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(ofUserName))
+    returnDict["isOnline"] = isOnline
+    returnDict["title"] = title
+    returnDict['thumbUrl'] = thumbUrl
+    returnDict['icon'] = icon

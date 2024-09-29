@@ -10,23 +10,6 @@ import StaticMethods
 from Constants import Constants
 from nodriver import *
 
-def killPotentialZombies():
-    PROCNAMES = ["google-chrome",
-                "chromium",
-                "chromium-browser",
-                "chrome",
-                "google-chrome-stable"]
-    numZombies = 0
-    for proc in psutil.process_iter():
-        # check whether the process name matches
-        if proc.name() in PROCNAMES:
-            numZombies = numZombies + 1
-            proc.kill()
-    if numZombies > 0:
-        print(f"Killed {numZombies} zombies.")
-    if numZombies > 15:
-            StaticMethods.rebootServer()
-
 def getUserAgent():
         userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/127.0.2651.105"
         try:
@@ -55,7 +38,6 @@ async def GetBrowser(proxy=""):
                                 retries = Constants.NODRIVER_BROWSER_CONNECT_RETRIES)
     except Exception as e:
         print(f"error creating browser in GetBrowser: {e}")
-        if platform.system() == "Linux":killPotentialZombies()
         globals.browserOpen = False
         await asyncio.sleep(10)
     return browser
