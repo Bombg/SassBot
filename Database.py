@@ -4,14 +4,21 @@ import time
 import datetime
 from datetime import date
 from datetime import timedelta
+import StaticMethods
 
 class Database:
     def __init__(self):
         pass
     
     def connectCursor(self):
-        conn = sqlite3.connect("sassBot.db")
-        cur = conn.cursor()
+        try:
+            conn = sqlite3.connect("sassBot.db")
+            cur = conn.cursor()
+        except sqlite3.OperationalError as e:
+            print(e)
+            if e == "unable to open database file":
+                print("File descriptor leak detected. Rebooting")
+                StaticMethods.rebootServer()
         return conn, cur
     
     # Confessions Table Methods
