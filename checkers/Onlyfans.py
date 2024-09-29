@@ -55,17 +55,17 @@ async def GetOnlineStatus(ofUserName):
 
 
 def isModelOnline(ofUserName):
-    queue = multiprocessing.Manager()
-    returnDict = queue.dict()
-    p = multiprocessing.Process(target=process, args=(ofUserName, returnDict))
-    p.start()
-    p.join()
-    isOnline = returnDict.get("isOnline")
-    title = returnDict.get("title")
-    thumbUrl = returnDict.get("thumbUrl")
-    icon = returnDict.get("icon")
-    p.terminate()
-
+    # queue = multiprocessing.Manager()
+    # returnDict = queue.dict()
+    # p = multiprocessing.Process(target=process, args=(ofUserName, returnDict))
+    # p.start()
+    # p.join()
+    # isOnline = returnDict.get("isOnline")
+    # title = returnDict.get("title")
+    # thumbUrl = returnDict.get("thumbUrl")
+    # icon = returnDict.get("icon")
+    # p.terminate()
+    isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(ofUserName))
     return isOnline, title, thumbUrl, icon
 
 def process(ofUserName, returnDict):

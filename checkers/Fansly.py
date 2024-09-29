@@ -6,16 +6,17 @@ import globals
 import multiprocessing
 
 def isModelOnline(fansUserName):
-    queue = multiprocessing.Manager()
-    returnDict = queue.dict()
-    p = multiprocessing.Process(target=process, args=(fansUserName, returnDict))
-    p.start()
-    p.join()
-    isOnline = returnDict.get("isOnline")
-    title = returnDict.get("title")
-    thumbUrl = returnDict.get("thumbUrl")
-    icon = returnDict.get("icon")
-    p.terminate()
+    # queue = multiprocessing.Manager()
+    # returnDict = queue.dict()
+    # p = multiprocessing.Process(target=process, args=(fansUserName, returnDict))
+    # p.start()
+    # p.join()
+    # isOnline = returnDict.get("isOnline")
+    # title = returnDict.get("title")
+    # thumbUrl = returnDict.get("thumbUrl")
+    # icon = returnDict.get("icon")
+    # p.terminate()
+    isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(fansUserName))
     return isOnline, title, thumbUrl, icon
 
 def process(fansUserName, returnDict):
