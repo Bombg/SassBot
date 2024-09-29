@@ -10,6 +10,25 @@ import StaticMethods
 from Constants import Constants
 from nodriver import *
 
+def KillUnconncetedBrowsers():
+    PROCNAMES = ["google-chrome",
+                "chromium",
+                "chromium-browser",
+                "chrome",
+                "google-chrome-stable"]
+    numBrowserProcesses = 0
+    for proc in psutil.process_iter():
+        # check whether the process name matches
+        if proc.name() in PROCNAMES:
+            numBrowserProcesses = numBrowserProcesses + 1
+            try:
+                proc.terminate()
+            except Exception as e:
+                proc.kill()
+                print(e)
+    if numBrowserProcesses > 0:
+        print(f"Tried to kill {numBrowserProcesses} browser processes.")
+
 def getUserAgent():
         userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/127.0.2651.105"
         try:
@@ -25,6 +44,8 @@ async def GetBrowser(proxy=""):
         await asyncio.sleep(20)
     try:
         globals.browserOpen = True
+        KillUnconncetedBrowsers()
+        await asyncio.sleep(2)
         toSandbox = not IsRoot()
         toHeadless = False if platform.system() == "Linux" else True
         if proxy:
@@ -38,6 +59,7 @@ async def GetBrowser(proxy=""):
                                 retries = Constants.NODRIVER_BROWSER_CONNECT_RETRIES)
     except Exception as e:
         print(f"error creating browser in GetBrowser: {e}")
+        KillUnconncetedBrowsers()
         globals.browserOpen = False
         await asyncio.sleep(10)
     return browser
