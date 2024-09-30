@@ -51,7 +51,7 @@ class Constants:
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
     ONLINE_MESSAGE_REBROADCAST_TIME = 86400 #Time in seconds the stream will be online before another online notification will be broadcasted
-    TIME_BEFORE_BOT_RESTART = 3600 #time in seconds before bot will restart
+    TIME_BEFORE_BOT_RESTART = 86400 #time in seconds before bot will restart. Restart checks are made every 10 minutes
     TIME_OFFLINE_BEFORE_RESTART = 900 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
     TEMP_TITLE_UPTIME = 57600 #Time in seconds temp titles will be used before default titles are used
     TIME_BEFORE_REVIEW_RESET = 300 # Time a whitelisted person has to review a confession before its added back to the queue

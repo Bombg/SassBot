@@ -216,7 +216,7 @@ async def checkOnlineTime() -> None:
     print("\n")
 
 @component.with_schedule
-@tanjun.as_time_schedule(minutes=[3], hours=[11])
+@tanjun.as_time_schedule(minutes=[5,15,25,35,45,55])
 async def checkRestart() -> None:
     db = Database()
     onTime,offTime,totalTime = db.getStreamTableValues()
