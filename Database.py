@@ -16,7 +16,7 @@ class Database:
             cur = conn.cursor()
         except sqlite3.OperationalError as e:
             print(e)
-            if e == "unable to open database file":
+            if "unable to open" in e:
                 print("File descriptor leak detected. Rebooting")
                 StaticMethods.rebootServer()
         return conn, cur

@@ -1,5 +1,5 @@
 class Constants:
-    DEBUG = False
+    DEBUG = True
     TEST_SERVER = False
     if TEST_SERVER:
         GUILD_ID =313876691082674178 #Guild ID of the discord server
