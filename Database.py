@@ -15,10 +15,14 @@ class Database:
             conn = sqlite3.connect("sassBot.db")
             cur = conn.cursor()
         except sqlite3.OperationalError as e:
-            print(e)
-            if "unable to open" in e:
-                print("File descriptor leak detected. Rebooting")
-                StaticMethods.rebootServer()
+            try:
+                f = open("testingForLeak.txt", 'w')
+                f.close()
+            except Exception as e:
+                print(e)
+                if "Too many open files" in str(e):
+                    print("File descriptor leak detected. Rebooting")
+                    StaticMethods.rebootServer()
         return conn, cur
     
     # Confessions Table Methods
