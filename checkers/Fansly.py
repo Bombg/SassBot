@@ -3,28 +3,10 @@ import asyncio
 import nodriver as uc
 import NoDriverBrowserCreator as ndb
 import globals
-import multiprocessing
 
 def isModelOnline(fansUserName):
-    # queue = multiprocessing.Manager()
-    # returnDict = queue.dict()
-    # p = multiprocessing.Process(target=process, args=(fansUserName, returnDict))
-    # p.start()
-    # p.join()
-    # isOnline = returnDict.get("isOnline")
-    # title = returnDict.get("title")
-    # thumbUrl = returnDict.get("thumbUrl")
-    # icon = returnDict.get("icon")
-    # p.terminate()
     isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(fansUserName))
     return isOnline, title, thumbUrl, icon
-
-def process(fansUserName, returnDict):
-    isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(fansUserName))
-    returnDict["isOnline"] = isOnline
-    returnDict["title"] = title
-    returnDict['thumbUrl'] = thumbUrl
-    returnDict['icon'] = icon
 
 async def GetOnlineStatus(fansUserName):
     fansUrl = f"https://fansly.com/{fansUserName}"
@@ -43,7 +25,7 @@ async def GetOnlineStatus(fansUserName):
         await page.save_screenshot("Fansscreenshot.jpg")
         await page.close()
         await asyncio.sleep(.5*Constants.NODRIVER_WAIT_MULTIPLIER)
-        browser.stop()
+        #browser.stop()
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         globals.browserOpen = False
     except Exception as e:

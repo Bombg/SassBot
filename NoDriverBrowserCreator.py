@@ -41,11 +41,10 @@ def getUserAgent():
 
 async def GetBrowser(proxy=""):
     while globals.browserOpen:
-        await asyncio.sleep(20)
+        await asyncio.sleep(2 * Constants.NODRIVER_WAIT_MULTIPLIER)
     try:
         globals.browserOpen = True
-        KillUnconncetedBrowsers()
-        await asyncio.sleep(2)
+        await asyncio.sleep(1 * Constants.NODRIVER_WAIT_MULTIPLIER)
         toSandbox = not IsRoot()
         toHeadless = False if platform.system() == "Linux" else True
         if proxy:
@@ -59,9 +58,10 @@ async def GetBrowser(proxy=""):
                                 retries = Constants.NODRIVER_BROWSER_CONNECT_RETRIES)
     except Exception as e:
         print(f"error creating browser in GetBrowser: {e}")
+        await asyncio.sleep(1 *  Constants.NODRIVER_WAIT_MULTIPLIER)
         KillUnconncetedBrowsers()
+        await asyncio.sleep(1 *  Constants.NODRIVER_WAIT_MULTIPLIER)
         globals.browserOpen = False
-        await asyncio.sleep(10)
     return browser
 
 # Taken from https://github.com/ultrafunkamsterdam/nodriver/blob/1bb6003c7f0db4d3ec05fdf3fc8c8e0804260103/nodriver/core/config.py#L240
