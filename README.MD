@@ -81,8 +81,11 @@
 1. If multiple accounts are streaming on the same platform at the same time, /rebroadcast will only show an announcement for one of the accounts.
 2. Cam4 api ban your IP if you make too many calls from the same ip. May need to switch methods in the future.
 3. Fansly will 404 you for a period of time if you make too many requests from the same ip
+4. If you are in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 10/3/2024
+    - Fixed MFC, SC, BC checkers
 - 9/24/2024
     - Checkers that once used selenium now use nodriver instead. Chromedriver no longer required or supported
         - works with Chromium as well as Chrome. Other browsers are untested.

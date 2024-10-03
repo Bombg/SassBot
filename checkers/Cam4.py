@@ -3,14 +3,16 @@ import json
 import json.decoder 
 import time
 from Constants import Constants
+from NoDriverBrowserCreator import getUserAgent
 
 def isModelOnline(cam4UserName):
     title = Constants.cam4DefaultTitle
     thumbUrl = ''
     isOnline = False
     icon = 'images/errIcon.png'
+    agent = getUserAgent()
     try:
-        headers = {"User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:75.0) Gecko/20100101 Firefox/75.0"}
+        headers = {"User-Agent": agent}
         results = requests.get(f"https://www.cam4.com/rest/v1.0/search/performer/{cam4UserName}", headers=headers)
         time.sleep(1)
         try:
@@ -18,6 +20,7 @@ def isModelOnline(cam4UserName):
             if cam4Json['online']:
                 isOnline = True
                 icon = cam4Json['profileImageUrl']
+            results.close()
         except json.decoder.JSONDecodeError:
             print("cam4 api didn't respond?")
     except requests.exceptions.ConnectTimeout:

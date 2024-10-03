@@ -19,7 +19,7 @@ def isModelOnline(epUserName):
         title =  profileJson["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["title"]
         thumbUrl = profileJson["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["ss"]
         icon =  profileJson["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["avatar"]
-        
+        request.close()
     except requests.exceptions.ConnectTimeout:
         print("connection timed out to eplay.com. Bot detection or rate limited?")
     return isOnline, title, thumbUrl, icon

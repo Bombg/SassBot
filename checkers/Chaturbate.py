@@ -28,6 +28,7 @@ def isModelOnline(cbUserName):
             results = onlineModels.json()["results"]
             count = onlineModels.json()['count']
             iterations = iterations + 1
+        onlineModels.close()
     except json.decoder.JSONDecodeError:
         print("cb api didn't respond")
     return isOnline, title, thumbUrl, icon

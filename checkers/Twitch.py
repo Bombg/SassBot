@@ -23,6 +23,7 @@ def isModelOnline(twitchChannelName):
         isOnlineJson = twitchJson['@graph'][0]['publication']['isLiveBroadcast']
         if isOnlineJson and thumbUrl == thumbUrlReq.url:
             isOnline = True
+    page.close()
     return isOnline, title, thumbUrl, icon
 
 def getTwitchJson(soup):
