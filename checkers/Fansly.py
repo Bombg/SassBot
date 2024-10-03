@@ -4,11 +4,7 @@ import nodriver as uc
 import NoDriverBrowserCreator as ndb
 import globals
 
-def isModelOnline(fansUserName):
-    isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(fansUserName))
-    return isOnline, title, thumbUrl, icon
-
-async def GetOnlineStatus(fansUserName):
+async def isModelOnline(fansUserName):
     fansUrl = f"https://fansly.com/{fansUserName}"
     thumbUrl = ""
     title = Constants.fansDefaultTitle

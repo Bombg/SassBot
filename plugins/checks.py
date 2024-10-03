@@ -23,6 +23,7 @@ from typing import Callable
 from datetime import date
 import datetime
 from datetime import timedelta
+import inspect
 
 component = tanjun.Component()
 
@@ -31,7 +32,10 @@ def load(client: tanjun.abc.Client) -> None:
     client.add_component(component.copy())
 
 async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, userName: str, platformName: str, rest: hikari.impl.RESTClientImpl):
-    isOnline, title, thumbUrl, icon = await asyncio.get_running_loop().run_in_executor(None,isOnlineFunc,userName)
+    if inspect.iscoroutinefunction(isOnlineFunc):
+        isOnline, title, thumbUrl, icon = await isOnlineFunc(userName)
+    else:
+        isOnline, title, thumbUrl, icon = await asyncio.get_running_loop().run_in_executor(None,isOnlineFunc,userName)
     isRerun = False
     db = Database()
     lastOnlineMessage,streamStartTime,streamEndTime = db.getPlatformAccountsRowValues(platformName,userName)

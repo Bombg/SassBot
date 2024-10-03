@@ -6,11 +6,7 @@ import NoDriverBrowserCreator as ndb
 import globals
 from Constants import Constants
 
-def isModelOnline(kickUserName):
-    isOnline, title, thumbUrl, icon = uc.loop().run_until_complete(GetOnlineStatus(kickUserName))
-    return isOnline, title, thumbUrl, icon
-
-async def GetOnlineStatus(kickUserName):
+async def isModelOnline(kickUserName):
     isOnline, title, thumbUrl, icon = setDefaultStreamValues()
     apiUrl = f"https://kick.com/api/v1/channels/{kickUserName}"
     try:
