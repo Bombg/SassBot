@@ -20,6 +20,10 @@ class Constants:
         
         CONFESSION_COMMAND_ID = 1159423004346957835
         CONFESS_REVIEW_COMMAND_ID = 1159423004346957834
+
+        KICK_PROXY = ""
+        FANS_PROXY = "127.0.0.1:8888"
+        OF_PROXY = ""
     else:
         GUILD_ID =1058859922219081778 #Guild ID of the discord server
         whiteListedRoleIDs = [1062179283705020486,145802742647095296,1100148453792813086,245364417783398400] # IDs of Roles you wish to be white listed for some commands.  You can also add user IDs if you want to add an individual without a role
@@ -39,6 +43,10 @@ class Constants:
 
         CONFESSION_COMMAND_ID = 1159321755270250571
         CONFESS_REVIEW_COMMAND_ID = 1159321755270250570
+
+        KICK_PROXY = ""
+        FANS_PROXY = "127.0.0.1:8888"
+        OF_PROXY = ""
 
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours

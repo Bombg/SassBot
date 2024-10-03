@@ -12,7 +12,7 @@ def isModelOnline(fansUserName):
     isOnline = False
     title = Constants.fansDefaultTitle
     driverCreator = SeleniumDriverCreator()
-    driver = driverCreator.createDriver()
+    driver = driverCreator.createDriver(proxy=Constants.FANS_PROXY)
     driver.get(fansUrl)
     time.sleep(10)
     checkForEnterButton(driver)

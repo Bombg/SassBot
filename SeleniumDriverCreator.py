@@ -6,7 +6,7 @@ import platform
 import re
 
 class SeleniumDriverCreator:
-    def createDriverOptions(self):
+    def createDriverOptions(self,proxy):
         chromeOptions = Options()
         chromeOptions.add_argument("--headless")
         chromeOptions.add_argument("--mute-audio")
@@ -17,8 +17,6 @@ class SeleniumDriverCreator:
         chromeOptions.add_argument("--disable-gpu")
         chromeOptions.add_argument("--window-size=1920,1080")
         chromeOptions.add_argument("--disable-extensions")
-        chromeOptions.add_argument("--proxy-server='direct://'")
-        chromeOptions.add_argument("--proxy-bypass-list=*")
         chromeOptions.add_argument("--start-maximized")
         chromeOptions.add_argument('--ignore-certificate-errors')
         userAgent = self.getUserAgent()
@@ -26,11 +24,15 @@ class SeleniumDriverCreator:
         chromeOptions.add_argument("--disable-blink-features=AutomationControlled")
         chromeOptions.add_experimental_option("excludeSwitches", ["enable-automation"])
         chromeOptions.add_experimental_option("useAutomationExtension", False)
-
+        if proxy:
+            chromeOptions.add_argument(f"--proxy-server={proxy}")
+        else:
+            chromeOptions.add_argument("--proxy-server='direct://'")
+            chromeOptions.add_argument("--proxy-bypass-list=*")
         return chromeOptions
 
-    def createDriver(self):
-        chromeOptions = self.createDriverOptions()
+    def createDriver(self,proxy=""):
+        chromeOptions = self.createDriverOptions(proxy)
         driver = webdriver.Chrome(options=chromeOptions)
         driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 
