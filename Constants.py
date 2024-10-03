@@ -56,7 +56,7 @@ class Constants:
     TEMP_TITLE_UPTIME = 57600 #Time in seconds temp titles will be used before default titles are used
     TIME_BEFORE_REVIEW_RESET = 300
 
-    ONLINE_CHECK_TIMER = 180 #Wait time in seconds between checks
+    ONLINE_CHECK_TIMER = 150 #Wait time in seconds between checks
     LONG_ONLINE_CHECK_TIMER = 900
     AVATAR_CHECK_TIMER = 130
     STATUS_CHECK_TIMER = 125

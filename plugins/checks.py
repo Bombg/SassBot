@@ -88,7 +88,7 @@ async def checkOnlyfans(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> No
             await asyncio.sleep(Constants.ONLINE_CHECK_TIMER/len(Constants.ofUserName))
 
 @component.with_schedule
-@tanjun.as_interval(Constants.LONG_ONLINE_CHECK_TIMER) # Fans on a longer timer or page wont load
+@tanjun.as_interval(Constants.ONLINE_CHECK_TIMER) # Fans on a longer timer or page wont load
 async def checkFansly(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.fansUserName:
         for fansUserName in Constants.fansUserName:
