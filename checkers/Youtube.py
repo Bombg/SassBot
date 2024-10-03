@@ -24,6 +24,7 @@ def isModelOnline(ytUserName):
             icon = iconJson['contents']['twoColumnWatchNextResults']['results']['results']['contents'][1]['videoSecondaryInfoRenderer']['owner']['videoOwnerRenderer']['thumbnail']['thumbnails'][0]['url']
         else:
             print("can't get yt icon")
+    page.close()
     return online,title, thumbUrl, icon
 
 def getIconJson(scripts):

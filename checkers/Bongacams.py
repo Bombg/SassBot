@@ -3,13 +3,16 @@ import time
 from bs4 import BeautifulSoup
 import json
 from Constants import Constants
+from NoDriverBrowserCreator import getUserAgent
 
 def isModelOnline(bcUserName):
     title = Constants.bcDefaultTitle
     thumbUrl = ''
     isOnline = False
     icon = 'images/errIcon.png'
-    page = requests.get(f'https://bongacams.com/{bcUserName}')
+    agent = getUserAgent()
+    headers = {"User-Agent": agent}
+    page = requests.get(f'https://bongacams.com/{bcUserName}',headers=headers)
     time.sleep(1)
     if page.status_code == 200:
         soup = BeautifulSoup(page.content, "html.parser")
@@ -28,6 +31,7 @@ def isModelOnline(bcUserName):
             icon = bcJson['chatHeaderOptions']['profileImage']
             icon = "https:" + icon
             isOnline = not bcJson['chatShowStatusOptions']['isOffline']
+    page.close()
     return isOnline, title, thumbUrl, icon
 
 
