@@ -1,6 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+import logging
+from Constants import Constants
+import time
+
+logger = logging.getLogger(__name__)
+logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
 
 def isModelOnline(ytUserName):
     ytUrl = f"https://www.youtube.com/@{ytUserName}/live"
@@ -8,23 +14,25 @@ def isModelOnline(ytUserName):
     title =  "placeholder youtube title"
     thumbUrl = ""
     icon = 'images/errIcon.png'
-    page = requests.get(ytUrl, cookies={'CONSENT': 'YES+42'})
-    soup = BeautifulSoup(page.content, "html.parser")
-    live = soup.find("link", {"rel": "canonical"})
-    scripts = soup.find_all('script')
-    liveJson = getLiveJson(scripts)
-    if liveJson:
-        iconJson = getIconJson(scripts)
-        status = liveJson["playabilityStatus"]["status"]
-        title = liveJson["videoDetails"]['title']
-        thumbUrl = liveJson['videoDetails']['thumbnail']['thumbnails'][4]['url']
-        if live and status != "LIVE_STREAM_OFFLINE": 
-            online = True
-        if iconJson:
-            icon = iconJson['contents']['twoColumnWatchNextResults']['results']['results']['contents'][1]['videoSecondaryInfoRenderer']['owner']['videoOwnerRenderer']['thumbnail']['thumbnails'][0]['url']
-        else:
-            print("can't get yt icon")
-    page.close()
+    try:
+        page = requests.get(ytUrl, cookies={'CONSENT': 'YES+42'})
+        soup = BeautifulSoup(page.content, "html.parser")
+        live = soup.find("link", {"rel": "canonical"})
+        scripts = soup.find_all('script')
+        liveJson = getLiveJson(scripts)
+        if liveJson:
+            iconJson = getIconJson(scripts)
+            status = liveJson["playabilityStatus"]["status"]
+            title = liveJson["videoDetails"]['title']
+            thumbUrl = liveJson['videoDetails']['thumbnail']['thumbnails'][4]['url'] + "?" + str(int(time.time()))
+            if live and status != "LIVE_STREAM_OFFLINE": 
+                online = True
+            if iconJson:
+                icon = iconJson['contents']['twoColumnWatchNextResults']['results']['results']['contents'][1]['videoSecondaryInfoRenderer']['owner']['videoOwnerRenderer']['thumbnail']['thumbnails'][0]['url']
+    except requests.exceptions.ConnectTimeout:
+        logger.warning("connection timed out to Youtube. Bot detection or rate limited?")
+    except requests.exceptions.SSLError:
+        logger.warning("SSL Error when attempting to connect to Youtube")
     return online,title, thumbUrl, icon
 
 def getIconJson(scripts):

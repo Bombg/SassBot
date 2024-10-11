@@ -5,6 +5,10 @@ import time
 import NoDriverBrowserCreator as ndb
 import globals
 from Constants import Constants
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
 
 async def isModelOnline(kickUserName):
     isOnline, title, thumbUrl, icon = setDefaultStreamValues()
@@ -18,7 +22,7 @@ async def isModelOnline(kickUserName):
         content = await page.get_content()
         content = content.split('<body>')
         if len(content) < 2:
-            print("error with kick checker. user is banned,wrong username supplied, or cloudflare bot detection")
+            logger.warning("error with kick checker. user is banned,wrong username supplied, or cloudflare bot detection")
         else:
             jsonText = content[1].split('</body></html>')
             isOnline, title, thumbUrl, icon = getStreamInfo(jsonText)
@@ -28,7 +32,7 @@ async def isModelOnline(kickUserName):
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         globals.browserOpen = False
     except Exception as e:
-        print(f"error getting browser for Kick: {e}")
+        logger.warning(f"error getting browser for Kick: {e}")
         globals.browserOpen = False
     return isOnline, title, thumbUrl, icon
 
@@ -51,5 +55,5 @@ def getStreamInfo(jsonText):
             icon = results['user']['profile_pic']
             isOnline = True
     except json.decoder.JSONDecodeError:
-        print("no json at kick api, bot detection or site down?")
+        logger.warning("no json at kick api, bot detection site down, or cloudflare bot detection")
     return isOnline,title,thumbUrl,icon

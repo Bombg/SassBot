@@ -3,6 +3,10 @@ import requests
 from Constants import Constants
 from bs4 import BeautifulSoup
 import json
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
 
 def isModelOnline(epUserName):
     isOnline = False
@@ -17,9 +21,10 @@ def isModelOnline(epUserName):
         profileJson = json.loads(profileJson[0].text)
         isOnline = profileJson["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["live"]
         title =  profileJson["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["title"]
-        thumbUrl = profileJson["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["ss"]
+        thumbUrl = profileJson["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["ss"] + "?" + str(int(time.time()))
         icon =  profileJson["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["avatar"]
-        request.close()
     except requests.exceptions.ConnectTimeout:
-        print("connection timed out to eplay.com. Bot detection or rate limited?")
+        logger.warning("connection timed out to eplay.com. Bot detection or rate limited?")
+    except requests.exceptions.SSLError:
+        logger.warning("SSL Error when attempting to connect to Eplay")
     return isOnline, title, thumbUrl, icon

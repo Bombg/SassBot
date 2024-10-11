@@ -6,9 +6,12 @@ import asyncio
 import ctypes, os
 import platform
 import psutil
-import StaticMethods
+import logging
 from Constants import Constants
 from nodriver import *
+
+logger = logging.getLogger(__name__)
+logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
 
 def KillUnconncetedBrowsers():
     PROCNAMES = ["google-chrome",
@@ -25,9 +28,9 @@ def KillUnconncetedBrowsers():
                 proc.terminate()
             except Exception as e:
                 proc.kill()
-                print(e)
+                logger.warning(e)
     if numBrowserProcesses > 0:
-        print(f"Tried to kill {numBrowserProcesses} browser processes.")
+        logger.info(f"Tried to kill {numBrowserProcesses} browser processes.")
 
 def getUserAgent():
         userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/127.0.2651.105"
@@ -37,7 +40,7 @@ def getUserAgent():
             userAgent = random.choice(userAgentsJson)
             page.close()
         except:
-            print("Trouble getting user agent from jnrbsn's github. Using default")
+            logger.warning("Trouble getting user agent from jnrbsn's github. Using default")
         return userAgent
 
 async def GetBrowser(proxy=""):
@@ -58,7 +61,7 @@ async def GetBrowser(proxy=""):
                                 headless=toHeadless,
                                 retries = Constants.NODRIVER_BROWSER_CONNECT_RETRIES)
     except Exception as e:
-        print(f"error creating browser in GetBrowser: {e}")
+        logger.warning(f"error creating browser in GetBrowser: {e}")
         await asyncio.sleep(1 *  Constants.NODRIVER_WAIT_MULTIPLIER)
         KillUnconncetedBrowsers()
         await asyncio.sleep(1 *  Constants.NODRIVER_WAIT_MULTIPLIER)

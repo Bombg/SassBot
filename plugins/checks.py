@@ -24,18 +24,28 @@ from datetime import date
 import datetime
 from datetime import timedelta
 import inspect
+import logging
 
 component = tanjun.Component()
+logger = logging.getLogger(__name__)
+logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
 
 @tanjun.as_loader
 def load(client: tanjun.abc.Client) -> None:
     client.add_component(component.copy())
 
 async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, userName: str, platformName: str, rest: hikari.impl.RESTClientImpl):
-    if inspect.iscoroutinefunction(isOnlineFunc):
-        isOnline, title, thumbUrl, icon = await isOnlineFunc(userName)
-    else:
-        isOnline, title, thumbUrl, icon = await asyncio.get_running_loop().run_in_executor(None,isOnlineFunc,userName)
+    try:
+        if inspect.iscoroutinefunction(isOnlineFunc):
+            isOnline, title, thumbUrl, icon = await isOnlineFunc(userName)
+        else:
+            isOnline, title, thumbUrl, icon = await asyncio.get_running_loop().run_in_executor(None,isOnlineFunc,userName)
+    except Exception as e:
+        logging.exception(f"caught exception: {e}")
+        thumbUrl = ""
+        title = "NoTitle"
+        isOnline = False
+        icon = 'images/errIcon.png'
     isRerun = False
     db = Database()
     lastOnlineMessage,streamStartTime,streamEndTime = db.getPlatformAccountsRowValues(platformName,userName)
@@ -49,18 +59,17 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, us
     if isOnline and StaticMethods.isRerun(title):
         isOnline = isOnline if db.getRerunAnnounce() else False
         isRerun = True
-    if Constants.DEBUG:
-        print(platformName + "Offline: " + str((-1 * secondsSinceStreamStartTime) if isOnline else secondsSinceStreamEndTime))
+    logger.debug(platformName + " +Offline\-Online: " + str((-1 * secondsSinceStreamStartTime) if isOnline else secondsSinceStreamEndTime))
     if isOnline == True:
         db.setRerun(isRerun, platformName)
         if secondsSinceStreamEndTime >= Constants.WAIT_BETWEEN_MESSAGES and secondsSinceLastMessage >= Constants.WAIT_BETWEEN_MESSAGES and streamEndTime >= streamStartTime:
-            print(f"{platformName}Boobies")
+            logger.info(f"{platformName}: Sending Notification")
             await platformNotifFunc(rest, title, thumbUrl, icon, userName, isRerun)
             db.updatePlatformRowCol(platformName,"last_stream_start_time",time.time())
             db.updatePlatformAccountRowCol(platformName, userName,"last_stream_start_time",time.time())
             globals.rebroadcast[platformName] = 0
         elif secondsSinceLastMessage >= Constants.ONLINE_MESSAGE_REBROADCAST_TIME or globals.rebroadcast[platformName]:
-            print(f"Long{platformName}Boobies")
+            logger.info(f"{platformName}: Rebroadcast Command or Rebroadcast_TIME Notification sent")
             await platformNotifFunc(rest, title, thumbUrl, icon, userName, isRerun)
             lastOnlineMessage = time.time()
             globals.rebroadcast[platformName] = 0
@@ -73,7 +82,6 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, us
             db.updatePlatformRowCol(platformName,"last_stream_end_time",time.time())
             db.updatePlatformAccountRowCol(platformName,userName,"last_stream_end_time",time.time())
         globals.rebroadcast[platformName] = 0
-    print("\n")
 
 @component.with_schedule
 @tanjun.as_interval(Constants.CB_CHECK_TIMER)
@@ -175,11 +183,11 @@ async def changeAvatar(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> Non
     hours, minutes = StaticMethods.timeToHoursMinutes(offTime)
     if online and not globals.normalAvtar:
         await rest.edit_my_user(avatar = 'images/avatars/calmStreamer.png')
-        print(f"changed avatar to good {Constants.streamerName}")
+        logger.info(f"changed avatar to good {Constants.streamerName}")
         globals.normalAvtar = True
     if not online and globals.normalAvtar and hours >= Constants.MIN_TIME_BEFORE_AVATAR_CHANGE and offTime != 0:
         await rest.edit_my_user(avatar = 'images/avatars/pissedStreamer.png')
-        print(f"changed avatar to bad {Constants.streamerName}")
+        logger.info(f"changed avatar to bad {Constants.streamerName}")
         globals.normalAvtar = False
 
 @component.with_schedule
@@ -194,7 +202,7 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
     if not playingString:
         playingString = playingString + "Offline "
     if playingString != globals.globalPlayString:
-        print("Updated presence to " + playingString)
+        logger.info("Updated presence to " + playingString)
         globals.globalPlayString = playingString
         await asyncio.sleep(5)
         await bot.update_presence(activity=hikari.Activity(
@@ -203,7 +211,6 @@ async def changeStatus(bot: alluka.Injected[hikari.GatewayBot]) -> None:
             url = Constants.twitchUrl
             ))
         await asyncio.sleep(5)
-    print("\n")
 
 @component.with_schedule
 @tanjun.as_interval(Constants.STATUS_CHECK_TIMER)
@@ -212,12 +219,11 @@ async def checkOnlineTime() -> None:
     online = StaticMethods.checkOnline(db)
     lastOnline,lastOffline,totalStreamTime = db.getStreamTableValues()
     if online and lastOffline >= lastOnline:
-        print("time online starts now")
+        logger.info("time online starts now")
         db.setStreamLastOnline(time.time())
     elif not online and lastOffline <= lastOnline:
-        print("offline time starts now")
+        logger.info("offline time starts now")
         StaticMethods.setOfflineAddTime()
-    print("\n")
 
 @component.with_schedule
 @tanjun.as_time_schedule(minutes=[5,15,25,35,45,55])
@@ -229,9 +235,8 @@ async def checkRestart() -> None:
     timeSinceOffline = time.time() - offTime
     if not online and timeSinceRestart > Constants.TIME_BEFORE_BOT_RESTART and timeSinceOffline > Constants.TIME_OFFLINE_BEFORE_RESTART:
         StaticMethods.safeRebootServer()
-    elif Constants.DEBUG:
-        print("TimeSinceRestart: " + str(timeSinceRestart))
-        print("TimeSinceOffline: " + str(timeSinceOffline))
+        logger.debug("TimeSinceRestart: " + str(timeSinceRestart))
+        logger.debug("TimeSinceOffline: " + str(timeSinceOffline))
 
 @component.with_schedule
 @tanjun.as_time_schedule(minutes=[0,10,20,30,40,50])

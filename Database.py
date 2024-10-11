@@ -5,10 +5,13 @@ import datetime
 from datetime import date
 from datetime import timedelta
 import StaticMethods
+import logging
+from Constants import Constants
 
 class Database:
     def __init__(self):
-        pass
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
     
     def connectCursor(self):
         try:
@@ -19,9 +22,9 @@ class Database:
                 f = open("testingForLeak.txt", 'w')
                 f.close()
             except Exception as e:
-                print(e)
+                self.logger.error(e)
                 if "Too many open files" in str(e):
-                    print("File descriptor leak detected. Rebooting")
+                    self.logger.critical("File descriptor leak detected. Rebooting")
                     StaticMethods.rebootServer()
         return conn, cur
     
@@ -165,7 +168,7 @@ class Database:
             cur.close()
             conn.close()
         else:
-            print("given bad account or platform. can't update title")
+            self.logger.error("given bad account or platform. can't update title")
 
     def checkAddTitleCols(self):
         isTitleExist = self.isColExist("platform_accounts","temp_title")
@@ -556,7 +559,7 @@ class Database:
             value = cur.fetchall()
             isExists = value[0][0]
         except sqlite3.OperationalError:
-            print("error when checking if col exists, perhaps no data yet")
+            self.logger.warning("error when checking if col exists, perhaps no data yet")
         cur.close()
         conn.close()
         return isExists

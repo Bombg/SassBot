@@ -79,11 +79,16 @@
 ### Known Issues
 
 1. If multiple accounts are streaming on the same platform at the same time, /rebroadcast will only show an announcement for one of the accounts.
-2. Cam4 api ban your IP if you make too many calls from the same ip. May need to switch methods in the future.
+2. Cam4 will api ban your IP if you make too many calls from the same ip. May need to switch methods in the future.
 3. Fansly will 404 you for a period of time if you make too many requests from the same ip
 4. If you are in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 10/11/2024 
+    - Moving prints over to pythyon logging library
+    - Improved some exception handling
+    - Fixed file descriptor leak-- happened over a week ago but i'm confident it's gone now.
+    - added newer versions of hikari/tanjun to requirements. No code changes so old will still work too for now. 
 - 10/3/2024
     - Fixed MFC, SC, BC checkers
 - 9/24/2024

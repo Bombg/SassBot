@@ -3,6 +3,10 @@ import asyncio
 import nodriver as uc
 import NoDriverBrowserCreator as ndb
 import globals
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
 
 async def isModelOnline(fansUserName):
     fansUrl = f"https://fansly.com/{fansUserName}"
@@ -25,7 +29,7 @@ async def isModelOnline(fansUserName):
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         globals.browserOpen = False
     except Exception as e:
-        print(f"Error when getting browser for Fansly: {e}")
+        logger.warning(f"Error when getting browser for Fansly: {e}")
         globals.browserOpen = False
     return isOnline, title, thumbUrl, icon
 
@@ -35,7 +39,7 @@ async def ClickEnterButton(page:uc.Tab):
         if enterBtn:
             await enterBtn.click()
             await asyncio.sleep(.5 * Constants.NODRIVER_WAIT_MULTIPLIER)
-    except :
+    except asyncio.exceptions.TimeoutError:
         pass
 
 async def IsLiveBadge(page:uc.Tab):
@@ -44,7 +48,7 @@ async def IsLiveBadge(page:uc.Tab):
         liveBadge = await page.find("live-badge bold font-size-sm", best_match=True)
         if liveBadge:
             live = True
-    except :
+    except asyncio.exceptions.TimeoutError:
         pass
     return live
 
@@ -57,6 +61,6 @@ async def GetIcon(page:uc.Tab):
         iconElement = await page.find("image-overlay-flex", best_match=True)
         await iconElement.save_screenshot( "images/fansIcon.jpg")
         icon = "images/fansIcon.jpg"
-    except:
+    except asyncio.exceptions.TimeoutError:
         pass
     return icon

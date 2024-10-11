@@ -1,6 +1,7 @@
 class Constants:
-    DEBUG = True
     TEST_SERVER = False
+    SASSBOT_LOG_LEVEL = 20 # DEBUG = 10, INFO = 20, WARNING = 30, ERROR = 40, CRITICAL = 50
+    OTHER_LIBRARIES_LOG_LEVEL = 20 # DEBUG = 10, INFO = 20, WARNING = 30, ERROR = 40, CRITICAL = 50
     if TEST_SERVER:
         GUILD_ID =313876691082674178 #Guild ID of the discord server
         whiteListedRoleIDs = [145802742647095296] # IDs of Roles you wish to be white listed for some commands. You can also add user IDs if you want to add an individual without a role

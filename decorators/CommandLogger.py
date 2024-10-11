@@ -2,6 +2,11 @@ from typing import Any
 import tanjun
 from datetime import datetime
 import time
+import logging
+from Constants import Constants
+
+logger = logging.getLogger(__name__)
+logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
 
 class CommandLogger:
     def __init__(self, func) -> None:
@@ -13,6 +18,6 @@ class CommandLogger:
         if isinstance(ctx, tanjun.abc.SlashContext):
             self.file.write(f"{self.date} - {self.func.__name__} - used by {ctx.member.id} aka {ctx.member.display_name}\n")
         else:
-            print("didn't get right ctx for logger")
+            logger.error("didn't get right ctx for command logger")
         self.file.close()
         return self.func(*args,**kwds)

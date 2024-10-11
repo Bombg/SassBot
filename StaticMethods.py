@@ -9,6 +9,10 @@ from datetime import timedelta
 from datetime import date
 import re
 import tanjun
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
 
 def logCommand(funcName, ctx) -> None:
     file = open("commandLogs.txt", 'a')
@@ -16,7 +20,7 @@ def logCommand(funcName, ctx) -> None:
     if isinstance(ctx, tanjun.abc.SlashContext):
         file.write(f"{date} - {funcName} - used by {ctx.member.id} aka {ctx.member.display_name}\n")
     else:
-        print("didn't get right ctx for logger")
+        logger.warning("didn't get right ctx for command logger")
     file.close()
 
 def resetUnfinishedConfessions():
@@ -93,7 +97,7 @@ def smartRebroadcast() -> None:
         lastOnlineMessage,streamStartTime,streamEndTime,isRerun = db.getPlatformsRowValues(platform)
         secondsSinceLastMessage = timeToSeconds(lastOnlineMessage)
         if secondsSinceLastMessage >= Constants.SECONDS_BETWEEN_SMART_ALERTS and streamStartTime > streamEndTime:
-            print(f"Smart alert for {platform}")
+            logger.info(f"Smart alert for {platform}")
             globals.rebroadcast[platform] = 1
 
 def getMaxOnlineInPresenceDict(presDict: dict) -> int:
@@ -128,7 +132,7 @@ def getEmbedImage() -> str:
         twImgQue = twImgList
     if not twImgList:
         imageSrc = 'images/twitErrImg.jpg'
-        print("adding default image for embed since nothing is on the list.")
+        logger.info("adding default image for embed since nothing is on the image list.")
     elif url:
         imageSrc = url
     else:
@@ -141,7 +145,7 @@ def unPin() -> None:
     db.setImgPin(0, "")
 
 def setRebroadcast() -> None:
-    print("rebroadcast: On")
+    logger.info("rebroadcast: On")
     globals.rebroadcast = {
         "chaturbate":1,
         "onlyfans":1,
@@ -254,9 +258,10 @@ def timeToSeconds(newTime: float) -> int:
     return totalTime
 
 def rebootServer() -> None:
+    logger.critical("Sassbot server rebooting from restart command or fd leak detection or scheduled restart based off TIME_BEFORE_BOT_RESTART")
     os.system('reboot')
 
 def safeRebootServer() -> None:
     time.sleep(300)
-    print("Scheduled restart is happening.\nSleeping for 300 seconds before restart, in case something goes horribly wrong")
+    logger.warning("Scheduled restart is happening.\nSleeping for 300 seconds before restart, in case something goes horribly wrong")
     rebootServer()
