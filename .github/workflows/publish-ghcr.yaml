@@ -32,5 +32,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/sassbot-arm:latest
+          tags: ghcr.io/bombg/sassbot-arm:latest
           platforms: linux/arm64
