@@ -9,20 +9,21 @@ import checkers.Myfreecams as MFC
 import checkers.Bongacams as BC
 import checkers.Stripchat as SC
 import checkers.Eplay as EP
-from Constants import Constants
+try:
+    from AppConstants import Constants as Constants
+except ImportError:
+    from DefaultConstants import Constants as Constants
 import checkers.Twitch as Twitch
 import checkers.Kick as Kick
 import checkers.Youtube as Youtube
 import checkers.Cam4 as Cam4
 import globals
 import time
-import StaticMethods
-from Notifications import Notifications
-from Database import Database
+import utils.StaticMethods as StaticMethods
+from utils.Notifications import Notifications
+from utils.Database import Database
 from typing import Callable
 from datetime import date
-import datetime
-from datetime import timedelta
 import inspect
 import logging
 
@@ -45,7 +46,7 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, us
         thumbUrl = ""
         title = "NoTitle"
         isOnline = False
-        icon = 'images/errIcon.png'
+        icon = Constants.defaultIcon
     isRerun = False
     db = Database()
     lastOnlineMessage,streamStartTime,streamEndTime = db.getPlatformAccountsRowValues(platformName,userName)
@@ -59,7 +60,7 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, us
     if isOnline and StaticMethods.isRerun(title):
         isOnline = isOnline if db.getRerunAnnounce() else False
         isRerun = True
-    logger.debug(platformName + " +Offline\-Online: " + str((-1 * secondsSinceStreamStartTime) if isOnline else secondsSinceStreamEndTime))
+    logger.debug(platformName + " +Offline|-Online: " + str((-1 * secondsSinceStreamStartTime) if isOnline else secondsSinceStreamEndTime))
     if isOnline == True:
         db.setRerun(isRerun, platformName)
         if secondsSinceStreamEndTime >= Constants.WAIT_BETWEEN_MESSAGES and secondsSinceLastMessage >= Constants.WAIT_BETWEEN_MESSAGES and streamEndTime >= streamStartTime:
@@ -182,11 +183,11 @@ async def changeAvatar(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> Non
     onTime, offTime, totalOnTime = db.getStreamTableValues()
     hours, minutes = StaticMethods.timeToHoursMinutes(offTime)
     if online and not globals.normalAvtar:
-        await rest.edit_my_user(avatar = 'images/avatars/calmStreamer.png')
+        await rest.edit_my_user(avatar = Constants.calmAvatar)
         logger.info(f"changed avatar to good {Constants.streamerName}")
         globals.normalAvtar = True
     if not online and globals.normalAvtar and hours >= Constants.MIN_TIME_BEFORE_AVATAR_CHANGE and offTime != 0:
-        await rest.edit_my_user(avatar = 'images/avatars/pissedStreamer.png')
+        await rest.edit_my_user(avatar = Constants.pissedAvatar)
         logger.info(f"changed avatar to bad {Constants.streamerName}")
         globals.normalAvtar = False
 

@@ -1,6 +1,9 @@
 import hikari
 import tanjun
-from Constants import Constants
+try:
+    from AppConstants import Constants as Constants
+except ImportError:
+    from DefaultConstants import Constants as Constants
 import miru
 
 def getToken():

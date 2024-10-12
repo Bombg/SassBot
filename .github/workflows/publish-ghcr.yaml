@@ -1,20 +1,15 @@
-name: Docker Image creator for sassbot latest
+name: Docker Image creator for sassbot experimental
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+      - flexiefae
+env: 
+  IMAGEVER: ${{ github.ref_name == 'master' && 'latest' || 'experimental' }}
 
 jobs:
-  build-and-push-x86:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: build and push image
-        run: |
-          docker login --username bombg --password ${{ secrets.GH_PAT }} ghcr.io
-          docker build . --tag ghcr.io/bombg/sassbot:latest
-          docker push ghcr.io/bombg/sassbot:latest
-  build-and-push-arm:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -32,5 +27,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/bombg/sassbot:latest-arm
-          platforms: linux/arm64
+          tags: ghcr.io/bombg/sassbot:${{env.IMAGEVER}}
+          platforms: linux/arm64, linux/amd64

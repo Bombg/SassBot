@@ -1,19 +1,23 @@
-from Constants import Constants
+try:
+    from AppConstants import Constants as Constants
+except ImportError:
+    from DefaultConstants import Constants as Constants
 import asyncio
 import nodriver as uc
-import NoDriverBrowserCreator as ndb
+import utils.NoDriverBrowserCreator as ndb
 import globals
 import logging
+from utils.StaticMethods import GetThumbnail
 
 logger = logging.getLogger(__name__)
 logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
 
 async def isModelOnline(fansUserName):
     fansUrl = f"https://fansly.com/{fansUserName}"
-    thumbUrl = ""
+    tempThumbUrl = ""
     title = Constants.fansDefaultTitle
     isOnline = False
-    icon = 'images/errIcon.png'
+    icon = Constants.defaultIcon
     try:
         browser = await ndb.GetBrowser(proxy=Constants.FANS_PROXY)
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
@@ -31,6 +35,7 @@ async def isModelOnline(fansUserName):
     except Exception as e:
         logger.warning(f"Error when getting browser for Fansly: {e}")
         globals.browserOpen = False
+    thumbUrl = GetThumbnail(tempThumbUrl, Constants.fansThumbnail)
     return isOnline, title, thumbUrl, icon
 
 async def ClickEnterButton(page:uc.Tab):
@@ -53,7 +58,7 @@ async def IsLiveBadge(page:uc.Tab):
     return live
 
 async def GetIcon(page:uc.Tab):
-    icon = 'images/errIcon.png'
+    icon = Constants.defaultIcon
     try:
         iconElements = await page.find_all("image cover")
         await iconElements[1].click()

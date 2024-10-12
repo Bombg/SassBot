@@ -2,8 +2,11 @@ import os
 import platform
 import logging
 from pyvirtualdisplay import Display
-from Constants import Constants
-from bot import build_bot
+try:
+    from AppConstants import Constants as Constants
+except ImportError:
+    from DefaultConstants import Constants as Constants
+from utils.bot import build_bot
 import colorlog
 
 logger = logging.getLogger(__name__)

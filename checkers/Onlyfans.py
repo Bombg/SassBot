@@ -1,11 +1,14 @@
-from Constants import Constants
+try:
+    from AppConstants import Constants as Constants
+except ImportError:
+    from DefaultConstants import Constants as Constants
 import re
 import asyncio
 import nodriver as uc
-import NoDriverBrowserCreator as ndb
+import utils.NoDriverBrowserCreator as ndb
 import globals
-from Constants import Constants
 import logging
+from utils.StaticMethods import GetThumbnail
 
 logger = logging.getLogger(__name__)
 logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
@@ -14,8 +17,8 @@ async def isModelOnline(ofUserName):
     isOnline = False
     ofUrl = f"https://onlyfans.com/{ofUserName}"
     title = Constants.ofDefaultTitle
-    thumbUrl = ""
-    icon = 'images/errIcon.png'
+    tempThumbUrl = ""
+    icon = Constants.defaultIcon
     try:
         browser = await ndb.GetBrowser(proxy=Constants.OF_PROXY)
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
@@ -32,10 +35,11 @@ async def isModelOnline(ofUserName):
     except Exception as e:
         logger.warning(f"Error getting browser for Onylyfans: {e}")
         globals.browserOpen = False
+    thumbUrl = GetThumbnail(tempThumbUrl, Constants.ofThumbnail)
     return isOnline, title, thumbUrl, icon
 
 async def GetIcon(page:uc.Tab):
-    icon = 'images/errIcon.png'
+    icon = Constants.defaultIcon
     reString = r'^https:\/\/.+avatar.jpg$'
     try:
         imageElements = await page.find_all("data-v-325c6981")

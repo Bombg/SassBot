@@ -4,9 +4,12 @@ import time
 import datetime
 from datetime import date
 from datetime import timedelta
-import StaticMethods
+import utils.StaticMethods as StaticMethods
 import logging
-from Constants import Constants
+try:
+    from AppConstants import Constants as Constants
+except ImportError:
+    from DefaultConstants import Constants as Constants
 
 class Database:
     def __init__(self):

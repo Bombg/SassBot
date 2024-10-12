@@ -1,9 +1,12 @@
 import miru
 import hikari
-from Database import Database
+from utils.Database import Database
 from datetime import timedelta
 import plugins.commands as commands
-from Constants import Constants
+try:
+    from AppConstants import Constants as Constants
+except ImportError:
+    from DefaultConstants import Constants as Constants
 import tanjun
 import random
 

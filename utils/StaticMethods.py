@@ -1,10 +1,12 @@
 import time
 import os
-from Database import Database
+from utils.Database import Database
 import globals
-import base64
 import datetime
-from Constants import Constants
+try:
+    from AppConstants import Constants as Constants
+except ImportError:
+    from DefaultConstants import Constants as Constants
 from datetime import timedelta
 from datetime import date
 import re
@@ -131,7 +133,7 @@ def getEmbedImage() -> str:
     if not twImgQue and twImgList:
         twImgQue = twImgList
     if not twImgList:
-        imageSrc = 'images/twitErrImg.jpg'
+        imageSrc = Constants.defaultThumbnail
         logger.info("adding default image for embed since nothing is on the image list.")
     elif url:
         imageSrc = url
@@ -259,9 +261,21 @@ def timeToSeconds(newTime: float) -> int:
 
 def rebootServer() -> None:
     logger.critical("Sassbot server rebooting from restart command or fd leak detection or scheduled restart based off TIME_BEFORE_BOT_RESTART")
+    globals.botStartTime = time.time()
     os.system('reboot')
 
 def safeRebootServer() -> None:
     time.sleep(300)
     logger.warning("Scheduled restart is happening.\nSleeping for 300 seconds before restart, in case something goes horribly wrong")
     rebootServer()
+
+def GetThumbnail(tempThumbUrl, constantsThumbnail):
+    thumbnail = ""
+    if constantsThumbnail == "LIST":
+        thumbnail = ""
+    elif constantsThumbnail:
+        thumbnail = constantsThumbnail
+    elif tempThumbUrl:
+        thumbnail = tempThumbUrl
+    
+    return thumbnail

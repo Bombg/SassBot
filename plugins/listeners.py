@@ -1,7 +1,10 @@
 import hikari
 import alluka
 import tanjun
-from Constants import Constants 
+try:
+    from AppConstants import Constants as Constants
+except ImportError:
+    from DefaultConstants import Constants as Constants 
 from datetime import datetime
 import time
 

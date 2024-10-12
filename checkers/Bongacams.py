@@ -2,18 +2,22 @@ import requests
 import time
 from bs4 import BeautifulSoup
 import json
-from Constants import Constants
-from NoDriverBrowserCreator import getUserAgent
+try:
+    from AppConstants import Constants as Constants
+except ImportError:
+    from DefaultConstants import Constants as Constants
+from utils.NoDriverBrowserCreator import getUserAgent
 import logging
+from utils.StaticMethods import GetThumbnail
 
 logger = logging.getLogger(__name__)
 logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
 
 def isModelOnline(bcUserName):
     title = Constants.bcDefaultTitle
-    thumbUrl = ''
+    tempThumbUrl = ""
     isOnline = False
-    icon = 'images/errIcon.png'
+    icon = Constants.defaultIcon
     agent = getUserAgent()
     headers = {"User-Agent": agent}
     try:
@@ -40,7 +44,5 @@ def isModelOnline(bcUserName):
         logger.warning("connection timed out to Bongacams. Bot detection or rate limited?")
     except requests.exceptions.SSLError:
         logger.warning("SSL Error when attempting to connect to Bomgacams")
+    thumbUrl = GetThumbnail(tempThumbUrl, Constants.bcThumbnail)
     return isOnline, title, thumbUrl, icon
-
-
-    

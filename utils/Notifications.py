@@ -1,7 +1,10 @@
 import asyncio
-from EmbedCreator import EmbedCreator
-from Constants import Constants
-from Database import Database
+from utils.EmbedCreator import EmbedCreator
+try:
+    from AppConstants import Constants as Constants
+except ImportError:
+    from DefaultConstants import Constants as Constants
+from utils.Database import Database
 import time
 import hikari
 

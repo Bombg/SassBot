@@ -7,7 +7,10 @@ import ctypes, os
 import platform
 import psutil
 import logging
-from Constants import Constants
+try:
+    from AppConstants import Constants as Constants
+except ImportError:
+    from DefaultConstants import Constants as Constants
 from nodriver import *
 
 logger = logging.getLogger(__name__)

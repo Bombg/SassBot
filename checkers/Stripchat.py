@@ -1,18 +1,22 @@
 import requests
 import json
 import time
-from Constants import Constants
-from NoDriverBrowserCreator import getUserAgent
+try:
+    from AppConstants import Constants as Constants
+except ImportError:
+    from DefaultConstants import Constants as Constants
+from utils.NoDriverBrowserCreator import getUserAgent
 import logging
+from utils.StaticMethods import GetThumbnail
 
 logger = logging.getLogger(__name__)
 logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
 
 def isModelOnline(scUserName):
     title = Constants.scDefaultTitle
-    thumbUrl = ''
+    tempThumbUrl = ''
     isOnline = False
-    icon = 'images/errIcon.png'
+    icon = Constants.defaultIcon
     agent = getUserAgent()
     headers = {"User-Agent": agent}
     try:
@@ -24,11 +28,12 @@ def isModelOnline(scUserName):
                 isOnline = True if scJson['model']['status']  != 'off' else False
                 icon = scJson['model']['avatarUrl']
                 title = scJson['goal']['description'] if scJson['goal']['description'] else Constants.scDefaultTitle
-                thumbUrl = scJson['model']['previewUrl'] + "?" + str(int(time.time()))
+                tempThumbUrl = scJson['model']['previewUrl'] + "?" + str(int(time.time()))
             except json.decoder.JSONDecodeError:
                 pass
     except requests.exceptions.ConnectTimeout:
         logger.warning("connection timed out to Stripchat. Bot detection or rate limited?")
     except requests.exceptions.SSLError:
         logger.warning("SSL Error when attempting to connect to Stripchat")
+    thumbUrl = GetThumbnail(tempThumbUrl, Constants.scThumbnail)
     return isOnline, title, thumbUrl, icon

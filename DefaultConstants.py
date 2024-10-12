@@ -52,7 +52,7 @@ class Constants:
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
     ONLINE_MESSAGE_REBROADCAST_TIME = 86400 #Time in seconds the stream will be online before another online notification will be broadcasted
-    TIME_BEFORE_BOT_RESTART = 43200 #time in seconds before bot will restart. Restart checks are made every 10 minutes
+    TIME_BEFORE_BOT_RESTART = 86400 #time in seconds before bot will restart. Restart checks are made every 10 minutes
     TIME_OFFLINE_BEFORE_RESTART = 900 #minimum time in seconds stream needs to be offline before bot will restart IF TIME_BEFORE_BOT_RESTART time has been met
     TEMP_TITLE_UPTIME = 57600 #Time in seconds temp titles will be used before default titles are used
     TIME_BEFORE_REVIEW_RESET = 300 # Time a whitelisted person has to review a confession before its added back to the queue
@@ -204,3 +204,30 @@ class Constants:
     bcBelowTitleText =  f"{streamerName} is now live on BongaCams!"
     scBelowTitleText =  f"{streamerName} is now live on StripChat!"
     epBelowTitleText =  f"{streamerName} is now live on ePlay!"
+
+    # Leave empty strings if you want to use default thumbnail behavior; which is: (1)pull thumbnail from platform, (2)if it doesn't exist use image from image list, (3)if list empty use defaultThumbnail
+    # Add your own image path/url if you want to exclusively use the same image over and over for a specific platform's thumbnail
+    # If you want thumbnails to only come from the image list, make the string equal to LIST i.e cbThumbnail = "LIST" . Useful if you don't want NSFW thumbnails in alerts
+    kickThumbnail = ""
+    fansThumbnail = ""
+    ofThumbnail = ""
+    cbThumbnail = "LIST"
+    ytThumbnail = ""
+    twitchThumbnail = ""
+    cam4Thumbnail = ""
+    mfcThumbnail = ""
+    bcThumbnail = ""
+    scThumbnail = ""
+    epThumbnail = ""
+
+    # Icon in this case is the small image that shows in the top left of the imbed before the streamer's name for that platform
+    # This is used if an avatar/icon can't be found on a platform, otherwise the platform's version will be used
+    defaultIcon = 'images/errIcon.png'
+
+    # This thumbnail is used if there is no thumbnail for a platform AND there is nothing in the image list
+    defaultThumbnail = 'images/twitErrImg.jpg'
+
+    # Calm is default bot avatar, pissed is what it changes to after MIN_TIME_BEFORE_AVATAR_CHANGE has been met
+    # Make them the same image if you don't want the feature to change anything 
+    calmAvatar = 'images/avatars/calmStreamer.png'
+    pissedAvatar = 'images/avatars/pissedStreamer.png'

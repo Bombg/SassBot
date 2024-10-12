@@ -1,21 +1,24 @@
 import hikari.errors
 import tanjun
-import StaticMethods
+import utils.StaticMethods as StaticMethods
 import time
-from Constants import Constants
-from Database import Database
+try:
+    from AppConstants import Constants as Constants
+except ImportError:
+    from DefaultConstants import Constants as Constants
+from utils.Database import Database
 from datetime import datetime
 from decorators.Permissions import Permissions
 from decorators.CommandLogger import CommandLogger
 from datetime import date
 from datetime import timedelta
-import DataGrapher
+import utils.DataGrapher as DataGrapher
 import hikari
 import re
-import MiruViews
+import utils.MiruViews as MiruViews
 import alluka
 import asyncio
-from EmbedCreator import EmbedCreator
+from utils.EmbedCreator import EmbedCreator
 
 component = tanjun.Component()
 
@@ -32,7 +35,7 @@ async def testNotification(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[h
                                     "https://www.google.com/", 
                                     'images/platformImages/twitchImage.png', 
                                     Constants.twitchEmbedColor, 
-                                    'images/errIcon.png', 
+                                    Constants.defaultIcon, 
                                     "TestUserName"
                                 )
     task = asyncio.create_task(embedMaker.getEmbed())
