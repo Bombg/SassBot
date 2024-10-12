@@ -65,6 +65,7 @@
 4. In the Constants.py file, change the GUILD_ID value to the guild id of your server, and each platform NOTIFICATION_CHANNEL_ID to the channel ID you want alerts posted to.
     To easily get both of these IDs, in discord advanced options turn on developer mode. After that you can right click servers/channels and a new option to copy the IDs will be available.
     Also edit and add vairus URLs to your streamer in Constants.py. Everything is described in comments.
+    - After editing constants you can create a copy called AppConstants.py - This will be used before DefaultConstants.py. So you can pull changes without stashing or overwriting
 5. Generate the database with 'python GenerateDatabase.py' or 'python3 GenerateDatabase.py'
 6. Replace images in the image folder with those of your streamer, but keep same file names.
     - images/errIcon.png - icon used for embeds if there is an issue getting one from the platform, or if one doesn't exist
