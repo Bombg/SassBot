@@ -84,7 +84,10 @@
 4. If you are in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
-- 10/11/2024 
+- 10/11/2024
+    - added workflow to auto make docker images. They are
+        - ghcr.io/bombg/sassbot:latest
+        - ghcr.io/bombg/sassbot:latest-arm
     - Moving prints over to pythyon logging library
     - Improved some exception handling
     - Fixed file descriptor leak-- happened over a week ago but i'm confident it's gone now.
