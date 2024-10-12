@@ -1,3 +1,10 @@
+# This exmple works on my machine but obviously /home/bombg/Repos won't be on yours.
+# So change /home/bombg/Repos/SassBot to wherever sassbot is located on your machine
+# I.E if your local machine Sassbot is in /Example/Repos/SassBot then 
+# /home/bombg/Repos/SassBot/Constants.py:/opt/SassBot/Constants.py 
+# Becomes
+# /Example/Repos/SassBot/Constants.py:/opt/SassBot/Constants.py -- Right side of the colon stays the same
+# Make sure you've edited Constants, created the /secrets/token file AND generated the database before you start the image (Follow intructions Steps 1-5)
 services:
   sassbot:
     image: ghcr.io/bombg/sassbot:latest #ghcr.io/bombg/sassbot:latest-arm for arm processors i.e. Raspberry Pi
@@ -6,3 +13,17 @@ services:
       - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
       - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
     restart: unless-stopped
+
+# The example below is if you want to look at images nodriver has created for troubleshooting purposes
+# Make sure you touch create the jpg files before you start the image or they'll be created as folders (and be useless)
+# services:
+#   sassbot:
+#     image: ghcr.io/bombg/sassbot:latest
+#     volumes:
+#       - /home/bombg/Repos/SassBot/Constants.py:/opt/SassBot/Constants.py
+#       - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
+#       - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
+#       - /home/bombg/Repos/SassBot/Fansscreenshot.jpg:/opt/SassBot/Fansscreenshot.jpg
+#       - /home/bombg/Repos/SassBot/Ofscreenshot.jpg:/opt/SassBot/Ofscreenshot.jpg
+#       - /home/bombg/Repos/SassBot/KickScreenshot.jpg:/opt/SassBot/KickScreenshot.jpg
+#     restart: unless-stopped
