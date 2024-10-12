@@ -66,22 +66,22 @@
     To easily get both of these IDs, in discord advanced options turn on developer mode. After that you can right click servers/channels and a new option to copy the IDs will be available.
     Also edit and add vairus URLs to your streamer in Constants.py. Everything is described in comments.
 5. Generate the database with 'python GenerateDatabase.py' or 'python3 GenerateDatabase.py'
-6. Make sure you have python 3.10 installed.
-    - make sure you have Chrome/Chromium another browser may work but not tested. 
-    - Make sure Xvfb is installed if on Linux. Xephyr, or Xvnc may work but untested 
-    - run command 'pip install -r requirements.txt' 
-7. Replace images in the image folder with those of your streamer, but keep same file names.
+6. Replace images in the image folder with those of your streamer, but keep same file names.
     - images/errIcon.png - icon used for embeds if there is an issue getting one from the platform, or if one doesn't exist
     - images/twitErrImg.jpg - default photo used for embeds if no other thumbnail or photo can be grabbed from the image list (if its empty)
     - images/avatars/calmStreamer.png - Bot avatar if streamer has streamed within the MIN_TIME_BEFORE_AVATAR_CHANGE time frame (default 48 hours)
     - images/avatars/pissedStreamer.png - Bot avatar if streamer hasn't streamed within the MIN_TIME_BEFORE_AVATAR_CHANGE time frame
+7. Make sure you have python 3.10 installed.
+    - make sure you have Chrome/Chromium another browser may work but not tested. 
+    - Make sure Xvfb is installed if on Linux. Xephyr, or Xvnc may work but untested 
+    - run command 'pip install -r requirements.txt' 
 8. Start the bot: 'python3 run.py' or 'python run.py'
 
 ### How To: Docker Compose or Portainer
 
 1. Install Docker
 2. Install Docker Compose and/or Portainer
-3. Complete steps 1-5 above in the "how to set up the bot" section
+3. Complete steps 1-6 above in the "how to set up the bot" section
 4. Edit docker-compose.yml and follow the commented instructions
 5. If using docker compose, from the Sassbot directory start it via "sudo docker compose up -d"
 6. If using Portainer go to stacks > add stack 
