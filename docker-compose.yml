@@ -4,10 +4,10 @@
 # /home/bombg/Repos/SassBot/Constants.py:/opt/SassBot/Constants.py 
 # Becomes
 # /Example/Repos/SassBot/Constants.py:/opt/SassBot/Constants.py -- Right side of the colon stays the same
-# Make sure you've edited Constants, created the /secrets/token file AND generated the database before you start the image (Follow intructions Steps 1-5)
+# Make sure you've edited Constants, created the /secrets/token file AND generated the database before you start the image (Follow intructions Steps 1-6)
 services:
   sassbot:
-    image: ghcr.io/bombg/sassbot:latest #ghcr.io/bombg/sassbot:latest-arm for arm processors i.e. Raspberry Pi
+    image: ghcr.io/bombg/sassbot:latest
     volumes:
       - /home/bombg/Repos/SassBot/AppConstants.py:/opt/SassBot/AppConstants.py
       - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
@@ -20,14 +20,43 @@ services:
 
 # The example below is if you want to look at images nodriver has created for troubleshooting purposes
 # Make sure you touch create the jpg files before you start the image or they'll be created as folders (and be useless)
+#
 # services:
 #   sassbot:
 #     image: ghcr.io/bombg/sassbot:latest
 #     volumes:
-#       - /home/bombg/Repos/SassBot/Constants.py:/opt/SassBot/Constants.py
+#       - /home/bombg/Repos/SassBot/AppConstants.py:/opt/SassBot/AppConstants.py
 #       - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
 #       - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
+#       - /home/bombg/Repos/SassBot/Fae/FaeIcon.png:/opt/SassBot/images/errIcon.png
+#       - /home/bombg/Repos/SassBot/Fae/FaeErr.jpg:/opt/SassBot/images/twitErrImg.jpg
+#       - /home/bombg/Repos/SassBot/Fae/FaeC.png:/opt/SassBot/images/avatars/calmStreamer.png
+#       - /home/bombg/Repos/SassBot/Fae/FaeP.png:/opt/SassBot/images/avatars/pissedStreamer.png
 #       - /home/bombg/Repos/SassBot/Fansscreenshot.jpg:/opt/SassBot/Fansscreenshot.jpg
 #       - /home/bombg/Repos/SassBot/Ofscreenshot.jpg:/opt/SassBot/Ofscreenshot.jpg
 #       - /home/bombg/Repos/SassBot/KickScreenshot.jpg:/opt/SassBot/KickScreenshot.jpg
+#     restart: unless-stopped
+
+
+# Yet another version that includes a restarter container to reboot the container once a day - be sure to rename `faebot-sassbot-1` to the name of your actual bot container
+
+# services:
+#   sassbot:
+#     image: ghcr.io/bombg/sassbot:latest
+#     volumes:
+#       - /home/bombg/Repos/SassBot/AppConstants.py:/opt/SassBot/AppConstants.py
+#       - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
+#       - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
+#       - /home/bombg/Repos/SassBot/Fae/FaeIcon.png:/opt/SassBot/images/errIcon.png
+#       - /home/bombg/Repos/SassBot/Fae/FaeErr.jpg:/opt/SassBot/images/twitErrImg.jpg
+#       - /home/bombg/Repos/SassBot/Fae/FaeC.png:/opt/SassBot/images/avatars/calmStreamer.png
+#       - /home/bombg/Repos/SassBot/Fae/FaeP.png:/opt/SassBot/images/avatars/pissedStreamer.png
+#       - /home/bombg/Repos/SassBot/Fansscreenshot.jpg:/opt/SassBot/Fansscreenshot.jpg
+#       - /home/bombg/Repos/SassBot/Ofscreenshot.jpg:/opt/SassBot/Ofscreenshot.jpg
+#       - /home/bombg/Repos/SassBot/KickScreenshot.jpg:/opt/SassBot/KickScreenshot.jpg
+#     restart: unless-stopped
+#   restarter:
+#     image: docker:cli
+#     volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
+#     command: ["/bin/sh", "-c", "while true; do sleep 86400; docker restart faebot-sassbot-1; done"]
 #     restart: unless-stopped
