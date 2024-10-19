@@ -97,6 +97,9 @@
 4. If the requesting ip is in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 10/19/2024
+    - Improvements on Twitch checker to hopefully work more quickly
+    - Improvements with nodriver temp folders (was previously taking up too much disk space)
 - 10/12/2024
     - Moved more things to config to constants
         - Changing thumbnail behavior
