@@ -171,7 +171,7 @@ class Constants:
     # Titles for platforms that have optional titles or no titles at all
     # You can also use the /title command to create temporary titles for a platform on the fly, but once the TEMP_TITLE_UPTIME time is up then it defaults back to these titles
     # If the titles contain any variation of RR/Rerun/not live then it will be detected by rerun detection
-    fansDefaultTitle = "Naughty Fansly stream? =)"
+    fansDefaultTitle = "🍑💦Now taking good vibes on stream! =)🍑💦"
     ofDefaultTitle = "Naughty time? =)"
     cam4DefaultTitle = "Cam4 Naughty Time."
     mfcDefaultTitle = "MFC Fun Time."

@@ -265,8 +265,8 @@ def rebootServer() -> None:
     os.system('reboot')
 
 def safeRebootServer() -> None:
-    time.sleep(300)
     logger.warning("Scheduled restart is happening.\nSleeping for 300 seconds before restart, in case something goes horribly wrong")
+    time.sleep(300)
     rebootServer()
 
 def GetThumbnail(tempThumbUrl, constantsThumbnail):
