@@ -8,6 +8,7 @@ except ImportError:
 from utils.NoDriverBrowserCreator import getUserAgent
 import logging
 from utils.StaticMethods import GetThumbnail
+from utils.StaticMethods import GetProxies
 
 logger = logging.getLogger(__name__)
 logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
@@ -20,7 +21,10 @@ def isModelOnline(scUserName):
     agent = getUserAgent()
     headers = {"User-Agent": agent}
     try:
-        page = requests.get(f'https://stripchat.com/api/vr/v2/models/username/{scUserName}', headers=headers)
+        if Constants.SC_PROXY:
+            page = requests.get(f'https://stripchat.com/api/vr/v2/models/username/{scUserName}', headers=headers, proxies=GetProxies(Constants.SC_PROXY))
+        else:
+            page = requests.get(f'https://stripchat.com/api/vr/v2/models/username/{scUserName}', headers=headers)
         time.sleep(1)
         if page.status_code == 200:
             try:

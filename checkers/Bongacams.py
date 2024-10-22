@@ -9,6 +9,7 @@ except ImportError:
 from utils.NoDriverBrowserCreator import getUserAgent
 import logging
 from utils.StaticMethods import GetThumbnail
+from utils.StaticMethods import GetProxies
 
 logger = logging.getLogger(__name__)
 logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
@@ -21,7 +22,10 @@ def isModelOnline(bcUserName):
     agent = getUserAgent()
     headers = {"User-Agent": agent}
     try:
-        page = requests.get(f'https://bongacams.com/{bcUserName}',headers=headers)
+        if Constants.BC_PROXY:
+            page = requests.get(f'https://bongacams.com/{bcUserName}',headers=headers, proxies=GetProxies(Constants.BC_PROXY))
+        else:
+            page = requests.get(f'https://bongacams.com/{bcUserName}',headers=headers)
         time.sleep(1)
         if page.status_code == 200:
             soup = BeautifulSoup(page.content, "html.parser")

@@ -19,12 +19,12 @@ def isModelOnline(twitchChannelName: str):
     isOnline = False
     icon = Constants.defaultIcon
     try:
-        tempThumbUrl = f'https://static-cdn.jtvnw.net/previews-ttv/live_user_{twitchChannelName}-640x360.jpg'
-        thumbUrlReq = requests.get(tempThumbUrl,allow_redirects=True)
+        isOnline = IsOnline(twitchChannelName)
         time.sleep(1)
-        if tempThumbUrl == thumbUrlReq.url:
+        if isOnline:
             isOnline = True
             page = requests.get(f'https://www.twitch.tv/{twitchChannelName}')
+            tempThumbUrl = f'https://static-cdn.jtvnw.net/previews-ttv/live_user_{twitchChannelName}-640x360.jpg'
             time.sleep(1)
             soup = BeautifulSoup(page.content, "html.parser")
             title = getTitle(soup)
@@ -54,3 +54,8 @@ def getTitle(soup):
     except IndexError:
         pass
     return title
+
+def IsOnline(channelName):
+    url = "https://gql.twitch.tv/gql"
+    query = "query {\n  user(login: \""+ channelName +"\") {\n    stream {\n      id\n    }\n  }\n}"
+    return True if requests.request("POST", url, json={"query": query, "variables": {}}, headers={"client-id": "kimne78kx3ncx6brgo4mv6wki5h1ko"}).json()["data"]["user"]["stream"] else False

@@ -20,7 +20,8 @@ rebroadcast = {
     "mfc":0,
     "bongacams":0,
     "stripchat":0,
-    "eplay":0
+    "eplay":0,
+    "manyvids":0
 }
 
 confessionIds = {"alert":0}

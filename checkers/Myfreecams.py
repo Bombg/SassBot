@@ -7,6 +7,7 @@ except ImportError:
 from bs4 import BeautifulSoup
 import logging
 from utils.StaticMethods import GetThumbnail
+from utils.StaticMethods import GetProxies
 
 logger = logging.getLogger(__name__)
 logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
@@ -17,7 +18,10 @@ def isModelOnline(mfcUserName):
     tempThumbUrl = ""
     icon = Constants.defaultIcon
     try:
-        request = requests.get(f"https://share.myfreecams.com/{mfcUserName}")
+        if Constants.MFC_PROXY:
+            request = requests.get(f"https://share.myfreecams.com/{mfcUserName}", proxies=GetProxies(Constants.MFC_PROXY))
+        else:
+            request = requests.get(f"https://share.myfreecams.com/{mfcUserName}")
         time.sleep(1)
         soup = BeautifulSoup(request.content, "html.parser")
         vidPreview = soup.find(class_='campreview d-none')

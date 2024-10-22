@@ -54,18 +54,19 @@ async def GetBrowser(proxy=""):
         await asyncio.sleep(1 * Constants.NODRIVER_WAIT_MULTIPLIER)
         toSandbox = not IsRoot()
         toHeadless = False if platform.system() == "Linux" else True
+        dataDir = "/ndTemp" if platform.system() == "Linux" else None
         if proxy:
             browser = await uc.start(sandbox=toSandbox,
                                 headless=toHeadless,
                                 browser_args=[f'--proxy-server={proxy}','--mute-audio','--disable-3d-apis','--disable-dev-shm-usage','--disable-gpu','--disable-blink-features=AutomationControlled'],
                                 retries = Constants.NODRIVER_BROWSER_CONNECT_RETRIES,
-                                user_data_dir="/ndTemp"
+                                user_data_dir=dataDir
                                 )
         else:
             browser = await uc.start(sandbox=toSandbox,
                                 headless=toHeadless,
                                 retries = Constants.NODRIVER_BROWSER_CONNECT_RETRIES,
-                                user_data_dir="/ndTemp"
+                                user_data_dir=dataDir
                                 )
     except Exception as e:
         logger.warning(f"error creating browser in GetBrowser: {e}")

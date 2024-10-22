@@ -12,6 +12,7 @@
 - BongaCams
 - StripChat
 - ePlay
+- ManyVids
 ### Features
 - Get notifications when your streamer is online sent to a discord channel
 - Rerun detection/support. If stream titles contains a variation of rerun/rr/not live then it will be detected as a rerun.
@@ -97,6 +98,13 @@
 4. If the requesting ip is in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 10/22/2024
+    - Added ManyVids Support
+        - Because of this many things have changed in Default/App Constants so they will need to be updated with new vars
+    - Added proxy support for most of the checkers. Anything that doesn't use nodriver will use socks5
+    - Changed requirements update them with 'pip install -U -r requirements.txt' 
+    - Change nodriver temp file behavior. Uses default behavior in windows
+    - Changed Dockerfile to improve size and fixed docker image to work with windows
 - 10/19/2024
     - Improvements on Twitch checker to hopefully work more quickly
     - Improvements with nodriver temp folders (was previously taking up too much disk space)

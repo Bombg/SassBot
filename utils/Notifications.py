@@ -259,3 +259,26 @@ class Notifications:
         rolesToPing = Constants.EP_RERUN_ROLES_TO_PING if isRerun else Constants.EP_ROLES_TO_PING
         messageContent = rolesToPing + epOnlineText if IS_PING else epOnlineText
         await rest.create_message(channel = Constants.EP_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=epEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
+
+    async def MvNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, mvUserName, isRerun):
+        mvLiveStreamUrl = f"https://www.manyvids.com/live/cam/{mvUserName}"
+        mvOnlineText = Constants.mvAboveEmbedText + "\n<" + mvLiveStreamUrl + ">"
+        embedMaker = EmbedCreator(
+                                    Constants.mvBelowTitleText, 
+                                    title, 
+                                    mvLiveStreamUrl, 
+                                    'images/platformImages/mvImage.png', 
+                                    Constants.mvEmbedColor, 
+                                    icon, 
+                                    mvUserName, 
+                                    largeThumbnail= largeThumbnail
+                                )
+        task = asyncio.create_task(embedMaker.getEmbed())
+        mvEmbed = await task
+        db = Database()
+        db.updatePlatformRowCol("manyvids","last_online_message",time.time())
+        db.updatePlatformAccountRowCol("manyvids",mvUserName,"last_online_message",time.time())
+        IS_PING = db.getPing()
+        rolesToPing = Constants.MV_RERUN_ROLES_TO_PING if isRerun else Constants.MV_ROLES_TO_PING
+        messageContent = rolesToPing + mvOnlineText if IS_PING else mvOnlineText
+        await rest.create_message(channel = Constants.MV_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=mvEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)

@@ -18,14 +18,28 @@ class Constants:
         BC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
         SC_NOTIFICATION_CHANNEL_ID = 1137599805787480214
         EP_NOTIFICATION_CHANNEL_ID = 1137599805787480214
+        MV_NOTIFICATION_CHANNEL_ID = 1137599805787480214
         CONFESSTION_CHANNEL_ID = 1137599805787480214
         
         CONFESSION_COMMAND_ID = 1159423004346957835
         CONFESS_REVIEW_COMMAND_ID = 1159423004346957834
-
-        KICK_PROXY = ""
-        FANS_PROXY = "127.0.0.1:8888"
-        OF_PROXY = ""
+        
+        # Leave an empty string if you don't wish to use a proxy for a checker.
+        # Kick/OF/Fansly use nodriver, which doesn't support authenticated proxies
+        # All the other platforms assumes you're using a socks5 proxy, so you can leave out the socks5:// part
+        # Commented out platforms don't support proxies 
+        KICK_PROXY = "" # Chrome/Chromium doesn't support authenticated proxies
+        FANS_PROXY = "127.0.0.1:8888" # Chrome/Chromium doesn't support authenticated proxies
+        OF_PROXY = "" # Chrome/Chromium doesn't support authenticated proxies
+        #CB_PROXY = "" # Everything below assumed is a socks5 proxy.
+        MV_PROXY = ""
+        BC_PROXY = ""
+        SC_PROXY = ""
+        EP_PROXY = ""
+        CAM4_PROXY = ""
+        MFC_PROXY = ""
+        #YT_PROXY = ""
+        #TWITCH_PROXY = ""
     else:
         GUILD_ID =1058859922219081778 #Guild ID of the discord server
         whiteListedRoleIDs = [1062179283705020486,145802742647095296,1100148453792813086,245364417783398400] # IDs of Roles you wish to be white listed for some commands. You can also add user IDs if you want to add an individual without a role
@@ -41,14 +55,28 @@ class Constants:
         BC_NOTIFICATION_CHANNEL_ID = 1268796965743886448
         SC_NOTIFICATION_CHANNEL_ID = 1268796965743886448
         EP_NOTIFICATION_CHANNEL_ID = 1268796965743886448
+        MV_NOTIFICATION_CHANNEL_ID = 1268796965743886448
         CONFESSTION_CHANNEL_ID = 1158240422997528637
         
         CONFESSION_COMMAND_ID = 1159321755270250571
         CONFESS_REVIEW_COMMAND_ID = 1159321755270250570
-
-        KICK_PROXY = ""
-        FANS_PROXY = "127.0.0.1:8888"
-        OF_PROXY = ""
+        
+        # Leave an empty string if you don't wish to use a proxy for a checker.
+        # Kick/OF/Fansly use nodriver, which doesn't support authenticated proxies
+        # All the other platforms assumes you're using a socks5 proxy, so you can leave out the socks5:// part
+        # Commented out platforms don't support proxies 
+        KICK_PROXY = "" # Chrome/Chromium doesn't support authenticated proxies
+        FANS_PROXY = "127.0.0.1:8888" # Chrome/Chromium doesn't support authenticated proxies
+        OF_PROXY = ""# Chrome/Chromium doesn't support authenticated proxies
+        #CB_PROXY = "" # Everything below assumed is a socks5 proxy.
+        MV_PROXY = ""
+        BC_PROXY = ""
+        SC_PROXY = ""
+        EP_PROXY = ""
+        CAM4_PROXY = ""
+        MFC_PROXY = ""
+        #YT_PROXY = ""
+        #TWITCH_PROXY = ""
 
     WAIT_BETWEEN_MESSAGES = 1800 # minimum amount of time in seconds the stream has to be offline before new notification messages. 
     MIN_TIME_BEFORE_AVATAR_CHANGE = 48 # Minimum time before avatar changes -- in hours
@@ -74,6 +102,7 @@ class Constants:
     BC_CHECK_TIMER = 180
     SC_CHECK_TIMER = 180
     EP_CHECK_TIMER = 180
+    MV_CHECK_TIMER = 180
 
     AVATAR_CHECK_TIMER = 130 # Timer for checking last online time before changing between happy/angry avatars
     STATUS_CHECK_TIMER = 125 # Timer for checking online status and changing the bot status. Also used for record keeping
@@ -107,6 +136,7 @@ class Constants:
     BC_ROLES_TO_PING = "@everyone "
     SC_ROLES_TO_PING = "@everyone "
     EP_ROLES_TO_PING = "@everyone "
+    MV_ROLES_TO_PING = "@everyone "
 
     # For rerun announcements/pings to work you will first need to turn them on via the /announce-rerun-toggle True/False command AND the /ping-toggle True/False command. 
     # if you don't want a specific platform to get a rerun ping, just leave an empty string (It will still get announced if turned on)
@@ -125,6 +155,7 @@ class Constants:
     BC_RERUN_ROLES_TO_PING = ""
     SC_RERUN_ROLES_TO_PING = ""
     EP_RERUN_ROLES_TO_PING = ""
+    MV_RERUN_ROLES_TO_PING = ""
 
     #Generic name of the streamer that will be used for all notifications
     streamerName = "LitneySpears"
@@ -142,6 +173,7 @@ class Constants:
     bcUserName = []
     scUserName = []
     epUserName = []
+    mvUserName = [] #case sensitive if you want the the avatar to be pulled
 
     twitchUrl = f"https://www.twitch.tv/litneyspears_" #Add a valid twitch URL here even if you streamer doesn't have twitch or else the presence won't update properly
 
@@ -163,6 +195,7 @@ class Constants:
     bcEmbedColor = "#97323a"
     scEmbedColor = "#a02831"
     epEmbedColor = "#f03d4c"
+    mvEmbedColor = "#722a9e"
 
     # Mainly Used in stream-status command
     linkTreeUrl = "https://allmylinks.com/litneyspears"
@@ -178,6 +211,7 @@ class Constants:
     bcDefaultTitle = "BongaCams Fun Time."
     scDefaultTitle = "StripChat Fun Time."
     epDefaultTitle = "ePlay Fun Time."
+    mvDefaultTitle = "Manyvids Fun Time Starts Now!"
     
     # This is the text that will appear above the embed. Role mentions will be added before this text, and a link to the stream will be added after
     # i.e. @everyone <AboveEmbedTextGoesHere> https://kick.com/StreamerName
@@ -192,6 +226,7 @@ class Constants:
     bcAboveEmbedText =  f"{streamerName} is live on BongaCams!"
     scAboveEmbedText =  f"{streamerName} is live on StripChat!"
     epAboveEmbedText =  f"{streamerName} is live on ePlay!"
+    mvAboveEmbedText =  f"{streamerName} is live on ManyVids!"
 
     # This is small text that will appear below the title, and above the main image inside the embed.
     kickBelowTitleText =  f"{streamerName} is now live on Kick!"
@@ -205,6 +240,7 @@ class Constants:
     bcBelowTitleText =  f"{streamerName} is now live on BongaCams!"
     scBelowTitleText =  f"{streamerName} is now live on StripChat!"
     epBelowTitleText =  f"{streamerName} is now live on ePlay!"
+    mvBelowTitleText = f"{streamerName} is now live on ManyVids!"
 
     # Leave empty strings if you want to use default thumbnail behavior; which is: (1)pull thumbnail from platform, (2)if it doesn't exist use image from image list, (3)if list empty use defaultThumbnail
     # Add your own image path/url if you want to exclusively use the same image over and over for a specific platform's thumbnail
@@ -220,6 +256,7 @@ class Constants:
     bcThumbnail = ""
     scThumbnail = ""
     epThumbnail = ""
+    mvThumbnail = ""
 
     # Icon in this case is the small image that shows in the top left of the imbed before the streamer's name for that platform
     # This is used if an avatar/icon can't be found on a platform, otherwise the platform's version will be used

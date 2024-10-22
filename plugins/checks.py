@@ -9,6 +9,7 @@ import checkers.Myfreecams as MFC
 import checkers.Bongacams as BC
 import checkers.Stripchat as SC
 import checkers.Eplay as EP
+import checkers.Manyvids as MV
 try:
     from AppConstants import Constants as Constants
 except ImportError:
@@ -173,6 +174,14 @@ async def checkEp(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
         for epUserName in Constants.epUserName:
             await platformChecker(EP.isModelOnline, Notifications.EpNotification,epUserName,"eplay",rest)
             await asyncio.sleep(Constants.EP_CHECK_TIMER/len(Constants.epUserName))
+
+@component.with_schedule
+@tanjun.as_interval(Constants.MV_CHECK_TIMER)
+async def checkMv(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    if Constants.mvUserName:
+        for mvUserName in Constants.mvUserName:
+            await platformChecker(MV.isModelOnline, Notifications.MvNotification,mvUserName,"manyvids",rest)
+            await asyncio.sleep(Constants.MV_CHECK_TIMER/len(Constants.mvUserName))
 
 
 @component.with_schedule

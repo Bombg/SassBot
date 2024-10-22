@@ -9,6 +9,7 @@ except ImportError:
 from utils.NoDriverBrowserCreator import getUserAgent
 import logging
 from utils.StaticMethods import GetThumbnail
+from utils.StaticMethods import GetProxies
 
 logger = logging.getLogger(__name__)
 logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
@@ -21,7 +22,10 @@ def isModelOnline(cam4UserName):
     agent = getUserAgent()
     try:
         headers = {"User-Agent": agent}
-        results = requests.get(f"https://www.cam4.com/rest/v1.0/search/performer/{cam4UserName}", headers=headers)
+        if Constants.CAM4_PROXY:
+            results = requests.get(f"https://www.cam4.com/rest/v1.0/search/performer/{cam4UserName}", headers=headers, proxies=GetProxies(Constants.CAM4_PROXY))
+        else:
+            results = requests.get(f"https://www.cam4.com/rest/v1.0/search/performer/{cam4UserName}", headers=headers)
         time.sleep(1)
         try:
             cam4Json = results.json()

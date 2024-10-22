@@ -20,3 +20,4 @@ ofScreenshot.jpg
 NoDriverTest.py
 AppConstants.py
 tests
+.dockerignore
