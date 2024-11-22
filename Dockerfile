@@ -37,3 +37,4 @@ ENV PATH=/venv/bin:$PATH
 COPY . .
 
 RUN chmod +x docker-entrypoint.sh
+ENTRYPOINT ["/bin/sh", "-c", "./docker-entrypoint.sh"]
