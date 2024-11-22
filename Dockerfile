@@ -1,5 +1,4 @@
-# Build Stage
-FROM python:3.11-slim-bullseye AS build
+FROM python:3.11.3-slim AS build
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Build dummy packages to skip installing them and their dependencies -- Copied from FlareSolverr
@@ -22,14 +21,10 @@ RUN pip install -r requirements.txt && \
     pip install uvloop
 
 # Buidling final image, moving over venv
-FROM python:3.11-slim-bullseye
+FROM python:3.11.3-slim
+ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /opt/SassBot
-
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PATH=/venv/bin:$PATH
-COPY --from=build /*.deb /
-COPY --from=build /venv /venv
 
 RUN apt update -y && apt install -y --no-install-recommends chromium xvfb \
     # Remove temporary files and hardware decoding libraries -- Copied from FlareSolverr
@@ -37,8 +32,8 @@ RUN apt update -y && apt install -y --no-install-recommends chromium xvfb \
     && rm -f /usr/lib/x86_64-linux-gnu/libmfxhw* \
     && rm -f /usr/lib/x86_64-linux-gnu/mfx/* 
 
+COPY --from=build /venv /venv
+ENV PATH=/venv/bin:$PATH
 COPY . .
 
 RUN chmod +x docker-entrypoint.sh
-    
-ENTRYPOINT ["/bin/sh", "-c", "./docker-entrypoint.sh"]
