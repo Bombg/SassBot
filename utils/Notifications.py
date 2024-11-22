@@ -261,7 +261,7 @@ class Notifications:
         await rest.create_message(channel = Constants.EP_NOTIFICATION_CHANNEL_ID, content = messageContent, embed=epEmbed, mentions_everyone= IS_PING, role_mentions=IS_PING)
 
     async def MvNotification(rest: hikari.impl.RESTClientImpl, title, largeThumbnail, icon, mvUserName, isRerun):
-        mvLiveStreamUrl = f"https://www.manyvids.com/live/cam/{mvUserName}"
+        mvLiveStreamUrl = f"https://www.manyvids.com/live/cam/{mvUserName.lower()}"
         mvOnlineText = Constants.mvAboveEmbedText + "\n<" + mvLiveStreamUrl + ">"
         embedMaker = EmbedCreator(
                                     Constants.mvBelowTitleText, 
