@@ -98,6 +98,9 @@
 4. If the requesting ip is in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 11/22/2024
+     - Docker File improvements
+     - fix for manyvids link
 - 10/22/2024
     - Added ManyVids Support
         - Because of this many things have changed in Default/App Constants so they will need to be updated with new vars
