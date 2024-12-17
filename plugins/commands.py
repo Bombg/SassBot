@@ -23,6 +23,35 @@ from utils.EmbedCreator import EmbedCreator
 component = tanjun.Component()
 
 @component.with_slash_command
+@tanjun.as_slash_command("ban-appeal", "Appeal a ban.", always_defer= True, default_to_ephemeral= True)
+@CommandLogger
+async def confess(ctx: tanjun.abc.SlashContext) -> None:
+    view = MiruViews.AppealModalView(autodefer=False)
+    await ctx.respond("Pre-type your ban appeal and then hit the submit button when you are ready to submit it.\n Button will time out after a few mins, so re-type command if it doesn't work", components=view)
+    message = await ctx.fetch_last_response()
+    await view.start(message)
+    await view.wait()
+    await ctx.interaction.delete_initial_response()
+
+@component.with_slash_command
+@tanjun.checks.with_check(StaticMethods.isPermission)
+@tanjun.as_slash_command("appeal-review", "View appeals that need to be reviewd for approval or denial",default_to_ephemeral= True, always_defer= True)
+async def appealReview(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    db = Database()
+    appealId,appeal, title = db.getUnreviewedAppeal()
+    if appealId:
+        view = MiruViews.AppealReView(appealId=appealId, tanCtx=ctx, appeal=appeal, rest=rest, title=title)
+        content = f"## {appealId}:{title}\n``` {appeal} ```"
+        await ctx.respond(content=content, components=view)
+        message = await ctx.fetch_last_response()
+        await view.start(message)
+        await view.wait()
+        message = await ctx.fetch_last_response()
+        await ctx.interaction.delete_message(message)
+    else:
+        await ctx.respond("There are no appealss in need of review")
+
+@component.with_slash_command
 @tanjun.checks.with_check(StaticMethods.isPermission)
 @tanjun.with_str_slash_option("channelid", "Text channel ID you wish to send a message to in order to test permissions")
 @tanjun.as_slash_command("test-permission", "Test a notification for a specific platform",default_to_ephemeral= True, always_defer= True)

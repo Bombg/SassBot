@@ -98,9 +98,14 @@
 4. If the requesting ip is in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 12/17/2024
+    - added two new commands 
+        - /ban-appeal - A command anyone can use to appeal a ban - works similarly to /confess but it's logged
+        - /appeal-review - a command for white listed people to review the ban appeals. If approved, a message is sent to APPEAL_CHANNEL_ID to tell MOD_ROLE_ID to unban
+        - new constants were added, so update appconstants.py as needed
 - 11/22/2024
-     - Docker File improvements
-     - fix for manyvids link
+    - Docker File improvements
+    - fix for manyvids link
 - 10/22/2024
     - Added ManyVids Support
         - Because of this many things have changed in Default/App Constants so they will need to be updated with new vars

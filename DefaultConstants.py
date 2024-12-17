@@ -6,6 +6,7 @@ class Constants:
     if TEST_SERVER:
         GUILD_ID =313876691082674178 #Guild ID of the discord server
         whiteListedRoleIDs = [145802742647095296] # IDs of Roles you wish to be white listed for some commands. You can also add user IDs if you want to add an individual without a role
+        MOD_ROLE_ID = 1096930045685145710 # Used to ping mods to take action on an approved ban appeal
         # Channel ID the bot will post notifications to
         KICK_NOTIFICATION_CHANNEL_ID = 1137599805787480214
         CB_NOTIFICATION_CHANNEL_ID = 1137599805787480214
@@ -20,9 +21,12 @@ class Constants:
         EP_NOTIFICATION_CHANNEL_ID = 1137599805787480214
         MV_NOTIFICATION_CHANNEL_ID = 1137599805787480214
         CONFESSTION_CHANNEL_ID = 1137599805787480214
+        APPEAL_CHANNEL_ID = 1137599805787480214
         
         CONFESSION_COMMAND_ID = 1159423004346957835
         CONFESS_REVIEW_COMMAND_ID = 1159423004346957834
+        APPEAL_COMMAND_ID = 1159321755270250571
+        APPEAL_REVIEW_COMMAND_ID = 1159321755270250570
         
         # Leave an empty string if you don't wish to use a proxy for a checker.
         # Kick/OF/Fansly use nodriver, which doesn't support authenticated proxies
@@ -43,6 +47,7 @@ class Constants:
     else:
         GUILD_ID =1058859922219081778 #Guild ID of the discord server
         whiteListedRoleIDs = [1062179283705020486,145802742647095296,1100148453792813086,245364417783398400] # IDs of Roles you wish to be white listed for some commands. You can also add user IDs if you want to add an individual without a role
+        MOD_ROLE_ID = 1096930045685145710 # Used to ping mods to take action on an approved ban appeal
         # Channel ID the bot will post notifications to
         KICK_NOTIFICATION_CHANNEL_ID = 1268796965743886448
         CB_NOTIFICATION_CHANNEL_ID = 1268796965743886448
@@ -57,9 +62,12 @@ class Constants:
         EP_NOTIFICATION_CHANNEL_ID = 1268796965743886448
         MV_NOTIFICATION_CHANNEL_ID = 1268796965743886448
         CONFESSTION_CHANNEL_ID = 1158240422997528637
+        APPEAL_CHANNEL_ID = 1158240422997528637
         
         CONFESSION_COMMAND_ID = 1159321755270250571
         CONFESS_REVIEW_COMMAND_ID = 1159321755270250570
+        APPEAL_COMMAND_ID = 1159321755270250571
+        APPEAL_REVIEW_COMMAND_ID = 1159321755270250570
         
         # Leave an empty string if you don't wish to use a proxy for a checker.
         # Kick/OF/Fansly use nodriver, which doesn't support authenticated proxies
@@ -107,8 +115,10 @@ class Constants:
     AVATAR_CHECK_TIMER = 130 # Timer for checking last online time before changing between happy/angry avatars
     STATUS_CHECK_TIMER = 125 # Timer for checking online status and changing the bot status. Also used for record keeping
     CONFESSION_CHECK_TIMER = 20 # How often new confessions are checked 
+    APPEAL_CHECK_TIMER = 20 # How often new appeals are checked 
 
     CONFESSION_ALERT_INTERVALS = [0,0,1800,7200,18000,43200] # Seconds between unreveiwed confession alerts. Starts at index 1. 1st alert 0 seconds, 2nd alert 1800 etc. New confessions reset count
+    APPEAL_ALERT_INTERVALS = [0,0,1800,7200,18000,43200] # Seconds between unreveiwed appeal alerts. Starts at index 1. 1st alert 0 seconds, 2nd alert 1800 etc. New appeals reset count
 
     SMART_ALERT_LOOK_AHEAD = 3 #number of hours smart alert looks ahead to make sure conditions are still met (to make sure alerts aren't made too late into a stream)
     PERCENTAGE_OF_MAX = 0.85 # Percent of maximum users online before a smart alert goes off

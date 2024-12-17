@@ -36,6 +36,8 @@ def isModelOnline(twitchChannelName: str):
         logger.warning("connection timed out to Twitch. Bot detection or rate limited?")
     except requests.exceptions.SSLError:
         logger.warning("SSL Error when attempting to connect to Twitch")
+    except TypeError:
+        logger.warning("twitch user banned or doesn't exist")
     thumbUrl = GetThumbnail(tempThumbUrl, Constants.twitchThumbnail)
     return isOnline, title, thumbUrl, icon
 

@@ -31,7 +31,27 @@ class Database:
                     StaticMethods.rebootServer()
         return conn, cur
     
-    # Confessions Table Methods
+    # Confessions & Appeals Table Methods
+    def createAppealsTable(self):
+        conn,cur = self.connectCursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS appeals
+                (
+                    appeal_id INTEGER PRIMARY KEY,
+                    appeal TEXT,
+                    appeal_title TEXT,
+                    appeal_status INTEGER,
+                    appealer_id INTEGER,
+                    appealer_name TEXT,
+                    reviewer_id INTEGER,
+                    reviewer_name TEXT,
+                    date_added INTEGER,
+                    date_reviewed INTEGER
+                )
+            ''')
+        conn.commit()
+        cur.close()
+        conn.close()
+
     def createConfessionsTable(self):
         conn,cur = self.connectCursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS confessions
@@ -46,6 +66,16 @@ class Database:
                     date_reviewed INTEGER
                 )
             ''')
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def addAppeal(self, appeal:str, appealTitle:str, appealerId: int, appealerName:str) -> None:
+        self.createAppealsTable()
+        conn,cur = self.connectCursor()
+        rowVals = (appeal, appealTitle, appealerId, appealerName, time.time())
+        exeString = f'''INSERT INTO appeals (appeal,appeal_title, appealer_id, appealer_name, date_added) VALUES (?,?,?,?,?)'''
+        cur.execute(exeString,rowVals)
         conn.commit()
         cur.close()
         conn.close()
@@ -78,10 +108,37 @@ class Database:
         self.setConfessionDateReviewed(confessionId)
         return confessionId, confession, title
     
+    def getUnreviewedAppeal(self):
+        self.createAppealsTable()
+        appealId = 0
+        appeal = ""
+        title = ""
+        conn,cur = self.connectCursor()
+        exeString = '''SELECT appeal_id, appeal,appeal_title FROM appeals WHERE date_reviewed IS NULL LIMIT 1'''
+        cur.execute(exeString)
+        values = cur.fetchall()
+        if values:
+            appealId = values[0][0]
+            appeal = values[0][1]
+            title = values[0][2]
+        cur.close()
+        conn.close()
+        self.setAppealDateReviewed(appealId)
+        return appealId, appeal, title
+    
     def setConfessionDateReviewed(self, confessionId):
         self.createConfessionsTable()
         conn, cur = self.connectCursor()
         exeString = f'''UPDATE confessions SET date_reviewed={time.time()} WHERE confession_id={confessionId} '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def setAppealDateReviewed(self, appealId):
+        self.createAppealsTable()
+        conn, cur = self.connectCursor()
+        exeString = f'''UPDATE appeals SET date_reviewed={time.time()} WHERE appeal_id={appealId} '''
         cur.execute(exeString)
         conn.commit()
         cur.close()
@@ -97,7 +154,17 @@ class Database:
         cur.close()
         conn.close()
     
-    def getUnfinishedReviews(self):
+    def reviewAppeal(self, appealId: int, approveDeny: int, reviewerId: int, reviewerName: str):
+        self.createAppealsTable()
+        conn, cur = self.connectCursor()
+        values = (approveDeny, reviewerId, reviewerName, time.time(), appealId)
+        exeString = f'''UPDATE appeals SET appeal_status=?, reviewer_id=?, reviewer_name=?, date_reviewed=? WHERE appeal_id=? '''
+        cur.execute(exeString,values)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def getUnfinishedConfessionReviews(self):
         self.createConfessionsTable()
         conn, cur = self.connectCursor()
         exeString = f'''SELECT confession_id, date_reviewed FROM confessions WHERE review_status IS NULL AND date_reviewed IS NOT NULL '''
@@ -107,6 +174,25 @@ class Database:
         conn.close()
         return value
     
+    def getUnfinishedAppealReviews(self):
+        self.createAppealsTable()
+        conn, cur = self.connectCursor()
+        exeString = f'''SELECT appeal_id, date_reviewed FROM appeals WHERE appeal_status IS NULL AND date_reviewed IS NOT NULL '''
+        cur.execute(exeString)
+        value = cur.fetchall()
+        cur.close()
+        conn.close()
+        return value
+    
+    def resetAppealDateReviewed(self, appealId):
+        self.createAppealsTable()
+        conn, cur = self.connectCursor()
+        exeString = f'''UPDATE appeals SET date_reviewed=NULL WHERE appeal_id={appealId} '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
+
     def resetConfessionDateReviewed(self, confessionId):
         self.createConfessionsTable()
         conn, cur = self.connectCursor()
@@ -116,10 +202,20 @@ class Database:
         cur.close()
         conn.close()
     
-    def getAllUnreviewed(self):
+    def getAllUnreviewedConfessions(self):
         self.createConfessionsTable()
         conn,cur = self.connectCursor()
         exeString = '''SELECT confession_id, confession,confession_title FROM confessions WHERE date_reviewed IS NULL'''
+        cur.execute(exeString)
+        values = cur.fetchall()
+        cur.close()
+        conn.close()
+        return values
+    
+    def getAllUnreviewedAppeals(self):
+        self.createAppealsTable()
+        conn,cur = self.connectCursor()
+        exeString = '''SELECT appeal_id, appeal, appeal_title FROM appeals WHERE date_reviewed IS NULL'''
         cur.execute(exeString)
         values = cur.fetchall()
         cur.close()

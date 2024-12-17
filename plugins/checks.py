@@ -296,7 +296,7 @@ async def smartAlert(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
 async def resetUnreviewedConfessions(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     StaticMethods.resetUnfinishedConfessions()
     db = Database()
-    value = db.getAllUnreviewed()
+    value = db.getAllUnreviewedConfessions()
     if value:
         minVal = 99
         minAlertsId = 0
@@ -315,3 +315,28 @@ async def resetUnreviewedConfessions(rest: alluka.Injected[hikari.impl.RESTClien
             for k, v in globals.confessionIds.items():
                 if v < globals.confessionIds[minAlertsId]:
                     globals.confessionIds[k] = globals.confessionIds[minAlertsId]
+
+@component.with_schedule
+@tanjun.as_interval(Constants.APPEAL_CHECK_TIMER)
+async def resetUnreviewedAppeals(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    StaticMethods.resetUnfinishedAppeals()
+    db = Database()
+    value = db.getAllUnreviewedAppeals()
+    if value:
+        minVal = 99
+        minAlertsId = 0
+        for val in value:
+            if val[0] not in globals.appealIds:
+                globals.appealIds[val[0]] = 1
+            if minVal > globals.appealIds[val[0]]:
+                minVal = globals.appealIds[val[0]]
+                minAlertsId = val[0]
+        alertIntervals = Constants.APPEAL_ALERT_INTERVALS
+        minVal = len(alertIntervals)-1 if minVal > len(alertIntervals)-1 else minVal
+        if StaticMethods.timeToSeconds(globals.appealIds["alert"]) >= alertIntervals[minVal]:
+            globals.appealIds[minAlertsId] += 1
+            await rest.create_message(channel=Constants.APPEAL_CHANNEL_ID, content=f"There are {len(value)} appeals in need of review =)\n Use </appeal-review:{Constants.APPEAL_REVIEW_COMMAND_ID}> to review them")
+            globals.appealIds["alert"] = time.time()
+            for k, v in globals.appealIds.items():
+                if v < globals.appealIds[minAlertsId]:
+                    globals.appealIds[k] = globals.appealIds[minAlertsId]

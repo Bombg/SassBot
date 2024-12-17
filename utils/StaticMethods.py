@@ -27,11 +27,19 @@ def logCommand(funcName, ctx) -> None:
 
 def resetUnfinishedConfessions():
     db = Database()
-    unFinished = db.getUnfinishedReviews()
+    unFinished = db.getUnfinishedConfessionReviews()
     if unFinished:
         for row in unFinished:
             if timeToSeconds(row[1]) >= Constants.TIME_BEFORE_REVIEW_RESET:
                 db.resetConfessionDateReviewed(row[0])
+
+def resetUnfinishedAppeals():
+    db = Database()
+    unFinished = db.getUnfinishedAppealReviews()
+    if unFinished:
+        for row in unFinished:
+            if timeToSeconds(row[1]) >= Constants.TIME_BEFORE_REVIEW_RESET:
+                db.resetAppealDateReviewed(row[0])
 
 async def isPermission(ctx: tanjun.abc.SlashContext)-> bool:
     hasPermission = False
