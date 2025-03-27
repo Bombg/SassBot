@@ -98,6 +98,8 @@
 4. If the requesting ip is in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 3/27/2025
+    - Fixed ManyVids checker
 - 12/17/2024
     - added two new commands 
         - /ban-appeal - A command anyone can use to appeal a ban - works similarly to /confess but it's logged

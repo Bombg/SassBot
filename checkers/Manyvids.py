@@ -8,6 +8,7 @@ from utils.StaticMethods import GetThumbnail
 from utils.StaticMethods import GetProxies
 import logging
 import re
+from utils.NoDriverBrowserCreator import getUserAgent
 
 logger = logging.getLogger(__name__)
 logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
@@ -18,10 +19,12 @@ def isModelOnline(mvUserName):
     isOnline = False
     icon = Constants.defaultIcon
     pageUrl = f"https://www.manyvids.com/live/cam/{mvUserName.lower()}"
+    agent = getUserAgent()
+    headers = {"User-Agent": agent}
     if Constants.MV_PROXY:
-        page = requests.get(pageUrl, proxies=GetProxies(Constants.MV_PROXY))
+        page = requests.get(pageUrl, proxies=GetProxies(Constants.MV_PROXY), headers=headers)
     else:
-        page = requests.get(pageUrl)
+        page = requests.get(pageUrl, headers=headers)
     soup = BeautifulSoup(page.content, "html.parser")
     onlineStatus = soup.find("div", {"class":"status_box__v1drl"})
     if onlineStatus:
