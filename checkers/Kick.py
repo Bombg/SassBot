@@ -56,7 +56,7 @@ def getStreamInfo(jsonText):
             title = results['livestream']['session_title']
             title = title.replace("&amp;","&")
             title = title.replace("&lt;", "<")
-            thumbUrl = results['livestream']['thumbnail']['url']+ "#" + str(int(time.time()))
+            thumbUrl = results['livestream']['thumbnail']['url']#+ "#" + str(int(time.time()))
             icon = results['user']['profile_pic']
             isOnline = True
     except json.decoder.JSONDecodeError:
