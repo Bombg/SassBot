@@ -3,8 +3,7 @@ name: Docker Image creator for sassbot experimental
 on:
   push:
     branches:
-      - master
-      - flexiefae
+      - '**'
 env: 
   IMAGEVER: ${{ github.ref_name == 'master' && 'latest' || 'experimental' }}
 
