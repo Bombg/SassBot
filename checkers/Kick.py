@@ -92,7 +92,7 @@ def isModelOnlineAPI(kickUserName):
     else:
         logger.warning("Kick API: Failed to get data. status code:" + apiResponse.status_code)
     
-    return True, title, thumbUrl, icon
+    return isOnline, title, thumbUrl, icon
 
 def getAccessToken():
     if not globals.kickAccessToken:
