@@ -375,6 +375,7 @@ async def processWebhookData(body, headers):
     if Kick.verifyWebhook(headers, body):
         logger.debug("verified kick webhook")
         if headers['kick-event-type'] == "livestream.status.updated":
+            body = json.loads(body)
             if body['is_live']:
                 kickUserName = body['broadcaster']['channel_slug']
                 globals.kickProfilePics[kickUserName] = body['broadcaster']['profile_picture']
