@@ -187,6 +187,12 @@ class Constants:
 
     twitchUrl = f"https://www.twitch.tv/litneyspears_" #Add a valid twitch URL here even if you streamer doesn't have twitch or else the presence won't update properly
 
+    #Optional - but faster and more reliable if you setup an app on kick-- start one on the developer tab in kick settings
+    kickClientId = ""
+    kickClientSecret = ""
+    webhookPort = "" # # what port to use to listen to webhooks (int not str). If left as a blank string then webhook client (fastapi) wont be started
+    webhookHostIp = '0.0.0.0' # 127.0.0.1 if you want to host locally. 0.0.0.0 if you want to be accessable from outside IPs. Check fastAPI docs for more info
+
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
     # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. 
     # I've found this responds more reliably when you narrow down the search more. So add region, and any tags your model always uses
