@@ -35,7 +35,7 @@ def isModelOnline(mvUserName):
         if onlineStatus and (onlineStatus.text == "LIVE" or onlineStatus.text == "IN PRIVATE"):
             isOnline = True
             icon = GetIcon(soup, mvUserName)
-        thumbUrl = GetThumbnail(tempThumbUrl, Constants.mvThumbnail)
+            thumbUrl = GetThumbnail(tempThumbUrl, Constants.mvThumbnail)
     except requests.exceptions.ConnectionError as e:
         logger.warning(e)
     except requests.exceptions.ChunkedEncodingError as e:
