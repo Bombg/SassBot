@@ -37,7 +37,9 @@ def isModelOnline(mvUserName):
             icon = GetIcon(soup, mvUserName)
         thumbUrl = GetThumbnail(tempThumbUrl, Constants.mvThumbnail)
     except requests.exceptions.ConnectionError as e:
-        logger.exception(e)
+        logger.warning(e)
+    except requests.exceptions.ChunkedEncodingError as e:
+        logger.warning(e)
     return isOnline, title, thumbUrl, icon
 
 def GetIcon(soup:BeautifulSoup, mvUserName):
