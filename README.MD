@@ -98,6 +98,9 @@
 4. If the requesting ip is in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 6/19/2025
+    - Added Kick API support with webhooks. Update AppConstants with new vars in DefaultConstants.
+    - New packages are required to be installed so install them via the command 'pip install -U -r requirements.txt' 
 - 3/27/2025
     - Fixed ManyVids checker
 - 12/17/2024

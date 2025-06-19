@@ -16,25 +16,31 @@ logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
 def isModelOnline(mvUserName):
     title = Constants.mvDefaultTitle
     tempThumbUrl = ''
+    thumbUrl = ''
     isOnline = False
     icon = Constants.defaultIcon
     pageUrl = f"https://www.manyvids.com/live/cam/{mvUserName.lower()}"
     agent = getUserAgent()
     headers = {"User-Agent": agent}
-    if Constants.MV_PROXY:
-        page = requests.get(pageUrl, proxies=GetProxies(Constants.MV_PROXY), headers=headers)
-    else:
-        page = requests.get(pageUrl, headers=headers)
-    soup = BeautifulSoup(page.content, "html.parser")
-    onlineStatus = soup.find("div", {"class":"status_box__v1drl"})
-    if onlineStatus:
-        logger.debug(onlineStatus.text)
-    else:
-        logger.debug("no online status")
-    if onlineStatus and (onlineStatus.text == "LIVE" or onlineStatus.text == "IN PRIVATE"):
-        isOnline = True
-        icon = GetIcon(soup, mvUserName)
-    thumbUrl = GetThumbnail(tempThumbUrl, Constants.mvThumbnail)
+    try:
+        if Constants.MV_PROXY:
+            page = requests.get(pageUrl, proxies=GetProxies(Constants.MV_PROXY), headers=headers)
+        else:
+            page = requests.get(pageUrl, headers=headers)
+        soup = BeautifulSoup(page.content, "html.parser")
+        onlineStatus = soup.find("div", {"class":"status_box__v1drl"})
+        if onlineStatus:
+            logger.debug(onlineStatus.text)
+        else:
+            logger.debug("no online status")
+        if onlineStatus and (onlineStatus.text == "LIVE" or onlineStatus.text == "IN PRIVATE"):
+            isOnline = True
+            icon = GetIcon(soup, mvUserName)
+            thumbUrl = GetThumbnail(tempThumbUrl, Constants.mvThumbnail)
+    except requests.exceptions.ConnectionError as e:
+        logger.warning(e)
+    except requests.exceptions.ChunkedEncodingError as e:
+        logger.warning(e)
     return isOnline, title, thumbUrl, icon
 
 def GetIcon(soup:BeautifulSoup, mvUserName):

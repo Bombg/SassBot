@@ -28,3 +28,9 @@ confessionIds = {"alert":0}
 appealIds = {"alert":0}
 
 browserOpen = False
+
+kickAccessToken = ""
+kickUserIds = {} # slug:userId
+kickProfilePics = {} # slug:url
+kickEventIds = []
+kickPublicKey = ""

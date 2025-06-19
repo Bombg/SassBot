@@ -27,6 +27,9 @@ from typing import Callable
 from datetime import date
 import inspect
 import logging
+import uvicorn
+from fastapi import FastAPI, Request, BackgroundTasks
+import json
 
 component = tanjun.Component()
 logger = logging.getLogger(__name__)
@@ -128,10 +131,15 @@ async def checkYT(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
 @component.with_schedule
 @tanjun.as_interval(Constants.KICK_CHECK_TIMER)
 async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    if Constants.kickClientId:
+        kickOnlineFunc = Kick.isModelOnlineAPI
+        await asyncio.sleep(1)
+    else:
+        kickOnlineFunc = Kick.isModelOnline
     if Constants.kickUserName:
         for kickUserName in Constants.kickUserName:
-            await platformChecker(Kick.isModelOnline, Notifications.KickNotification,kickUserName,"kick",rest)
-            await asyncio.sleep(Constants.KICK_CHECK_TIMER/len(Constants.kickUserName))
+            await platformChecker(kickOnlineFunc, Notifications.KickNotification,kickUserName,"kick",rest)
+            await asyncio.sleep(Constants.KICK_CHECK_TIMER/len(Constants.kickUserName)%Constants.KICK_CHECK_TIMER)
 
 @component.with_schedule
 @tanjun.as_interval(Constants.CAM4_CHECK_TIMER)
@@ -340,3 +348,40 @@ async def resetUnreviewedAppeals(rest: alluka.Injected[hikari.impl.RESTClientImp
             for k, v in globals.appealIds.items():
                 if v < globals.appealIds[minAlertsId]:
                     globals.appealIds[k] = globals.appealIds[minAlertsId]
+
+app = FastAPI()
+@component.with_schedule
+@tanjun.as_interval(30, max_runs=1)
+async def startWebhookServer(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    if not Constants.webhookPort: return
+    Kick.DeleteAllWebhooks() # Kick stops sending webhooks to a server that hasn't responded (down or restart). Deleting and resubbing fixes that
+    app.state.restClient = rest
+    await checkKick(rest)
+    loop = asyncio.get_running_loop()
+    config = uvicorn.Config("plugins.checks:app", port=Constants.webhookPort,host = Constants.webhookHostIp, log_level=Constants.OTHER_LIBRARIES_LOG_LEVEL)
+    server = uvicorn.Server(config)
+    loop.run_until_complete(await server.serve())
+
+@app.post("/webhook")
+async def receiveWebhook(request:Request, background_tasks: BackgroundTasks):
+    payload = await request.body()
+    headers = request.headers
+    background_tasks.add_task(processWebhookData, payload.decode('utf-8'), headers)
+    return {"status": "ok", "message": "Webhook received and is being processed."}
+
+async def processWebhookData(body, headers):
+    if 'kick-event-type' not in headers: return
+
+    if Kick.verifyWebhook(headers, body):
+        logger.debug("verified kick webhook")
+        if headers['kick-event-type'] == "livestream.status.updated":
+            body = json.loads(body)
+            if body['is_live']:
+                kickUserName = body['broadcaster']['channel_slug']
+                globals.kickProfilePics[kickUserName] = body['broadcaster']['profile_picture']
+            await checkKick(app.state.restClient)
+    else:
+        logger.warning("failed to verify incoming kick webhook")
+            
+    logger.debug(body)
+    logger.debug(str(headers))
