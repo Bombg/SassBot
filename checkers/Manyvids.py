@@ -16,6 +16,7 @@ logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
 def isModelOnline(mvUserName):
     title = Constants.mvDefaultTitle
     tempThumbUrl = ''
+    thumbUrl = ''
     isOnline = False
     icon = Constants.defaultIcon
     pageUrl = f"https://www.manyvids.com/live/cam/{mvUserName.lower()}"
