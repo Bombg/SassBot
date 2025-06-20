@@ -83,8 +83,8 @@ def isModelOnlineAPI(kickUserName):
         tempThumbUrl = apiData["data"][0]["stream"]["thumbnail"]
         title = apiData["data"][0]["stream_title"]
         thumbUrl = GetThumbnail(tempThumbUrl, Constants.kickThumbnail)
-        if kickUserName in globals.kickProfilePics:
-            icon = globals.kickProfilePics[kickUserName]
+        if kickUserName.lower() in globals.kickProfilePics:
+            icon = globals.kickProfilePics[kickUserName.lower()]
         if not kickUserName in globals.kickUserIds:
             globals.kickUserIds[kickUserName] = userId
             subscribeWebhooks(globals.kickUserIds[kickUserName], "livestream.status.updated")

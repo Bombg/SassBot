@@ -378,7 +378,7 @@ async def processWebhookData(body, headers):
             body = json.loads(body)
             if body['is_live']:
                 kickUserName = body['broadcaster']['channel_slug']
-                globals.kickProfilePics[kickUserName] = body['broadcaster']['profile_picture']
+                globals.kickProfilePics[kickUserName.lower()] = body['broadcaster']['profile_picture']
             await checkKick(app.state.restClient)
     else:
         logger.warning("failed to verify incoming kick webhook")
