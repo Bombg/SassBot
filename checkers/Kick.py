@@ -69,14 +69,26 @@ def getStreamInfo(jsonText):
     return isOnline,title,thumbUrl,icon
 
 def isModelOnlineAPI(kickUserName):
-    isOnline, title, tempThumbUrl, icon = setDefaultStreamValues()
-    
+    apiResponse = getChannelInfoResponse(kickUserName)
+    isOnline, title, icon, thumbUrl = getApiStreamingVals(kickUserName, apiResponse)
+
+    return isOnline, title, thumbUrl, icon
+
+def getChannelInfoResponse(kickUserName):
     apiHeaders={"Authorization": getAccessToken(),"Accept":'application/json'}
     apiUrl = "https://api.kick.com/public/v1/channels"
     params = {"slug":[kickUserName]}
     apiResponse = requests.get(apiUrl, headers=apiHeaders, params=params)
+    if apiResponse.status_code == 401:
+        logger.debug("401 w/kick attempting to get new access code")
+        globals.kickAccessToken = None
+        apiHeaders={"Authorization": getAccessToken(),"Accept":'application/json'}
+        apiResponse = requests.get(apiUrl, headers=apiHeaders, params=params)
+    return apiResponse
 
+def getApiStreamingVals(kickUserName:str, apiResponse: requests.Response):
     apiData = apiResponse.json()
+    isOnline, title, tempThumbUrl, icon = setDefaultStreamValues()
     if apiData:
         userId = apiData["data"][0]["broadcaster_user_id"]
         isOnline = apiData["data"][0]["stream"]["is_live"]
@@ -91,8 +103,7 @@ def isModelOnlineAPI(kickUserName):
         logger.debug(apiData)
     else:
         logger.warning("Kick API: Failed to get data. status code:" + apiResponse.status_code)
-    
-    return isOnline, title, thumbUrl, icon
+    return isOnline,title,icon,thumbUrl
 
 def getAccessToken():
     if not globals.kickAccessToken:
@@ -111,10 +122,19 @@ def getAccessToken():
             tokenType = data["token_type"]
             globals.kickAccessToken = tokenType + " " + accessToken
         else:
-            logger.warning("Failed to get access token from kick")
+            logger.warning(str(response.status_code) + " Failed to get access token from kick")
     return globals.kickAccessToken
 
 def subscribeWebhooks(kickUserId, event):
+    webResponse = postWebhooks(kickUserId, event)
+    if webResponse.status_code == 200:
+        logger.debug("Webhook " + event + " subscribed for " + str(kickUserId))
+        logger.debug(webResponse.json())
+        globals.kickEventIds.append(webResponse.json()["data"][0]["subscription_id"])
+    else:
+        logger.warning(str(webResponse.status_code) + " Failed to subscribe to webhooks")
+
+def postWebhooks(kickUserId, event):
     webHeaders={"Authorization":getAccessToken(),"Content-Type":"application/json"}
     webhookReqUrl = "https://api.kick.com/public/v1/events/subscriptions"
     webData=json.dumps({
@@ -128,37 +148,52 @@ def subscribeWebhooks(kickUserId, event):
                         "method": "webhook"
     })
     webResponse = requests.post(webhookReqUrl,headers = webHeaders,data=webData)
-    if webResponse.status_code == 200:
-        logger.debug("Webhook " + event + " subscribed for " + str(kickUserId))
-        logger.debug(webResponse.json())
-        globals.kickEventIds.append(webResponse.json()["data"][0]["subscription_id"])
-    else:
-        logger.warning(str(webResponse.status_code) + " Failed to subscribe to webhooks")
+    if webResponse.status_code == 401:
+        logger.debug("401 w/kick attempting to get new access code")
+        globals.kickAccessToken = None
+        webHeaders={"Authorization":getAccessToken(),"Content-Type":"application/json"}
+        webResponse = requests.post(webhookReqUrl,headers = webHeaders,data=webData)
+    return webResponse
 
 def deleteWebhookSubs(eventSubs: list):
     webHeaders={"Authorization":getAccessToken(),"Content-Type":"application/json"}
     webhookReqUrl = "https://api.kick.com/public/v1/events/subscriptions"
     params={"id": eventSubs}
     webResponse = requests.delete(webhookReqUrl,headers = webHeaders,params=params)
+    if webResponse.status_code == 401:
+        logger.debug("401 w/kick attempting to get new access code")
+        globals.kickAccessToken = None
+        webHeaders={"Authorization":getAccessToken(),"Content-Type":"application/json"}
+        webResponse = requests.delete(webhookReqUrl,headers = webHeaders,params=params)
     if webResponse.status_code == 204:
         logger.debug("Successfully deleted kick event subs")
     else:
         logger.warning(str(webResponse.status_code) + " Couldn't delete kick event subs")
 
 def GetWebhookSubs()-> dict:
+    respJson = None
     webHeaders={"Authorization":getAccessToken(),"Content-Type":"application/json"}
     webhookReqUrl = "https://api.kick.com/public/v1/events/subscriptions"
     webResponse = requests.get(webhookReqUrl,headers = webHeaders)
-    logger.debug(webResponse.json())
-    return webResponse.json()
+    if webResponse.status_code == 401:
+        logger.debug("401 w/kick attempting to get new access code")
+        webHeaders={"Authorization":getAccessToken(),"Content-Type":"application/json"}
+        webResponse = requests.get(webhookReqUrl,headers = webHeaders)
+    if webResponse.status_code == 200:
+        respJson = webResponse.json()
+        logger.debug(webResponse.json())
+    else:
+        logger.warning(str(webResponse.status_code) + " error getting webhook sub list")
+    return respJson
 
 def DeleteAllWebhooks():
     subs = GetWebhookSubs()
-    subIds = []
+    if subs and 'data' in subs:
+        subIds = []
 
-    for sub in subs['data']:
-        subIds.append(sub['id'])
-    deleteWebhookSubs(subIds)
+        for sub in subs['data']:
+            subIds.append(sub['id'])
+        deleteWebhookSubs(subIds)
 
 def verifyWebhook(headers, body:bytes):
     publicKey = getKickPublicKey()
