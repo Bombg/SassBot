@@ -113,7 +113,7 @@ def smartRebroadcast() -> None:
 def getMaxOnlineInPresenceDict(presDict: dict) -> int:
     maxOnline = 0
     for k, v in presDict.items():
-        if v:
+        if v and 'online' in v:
             maxOnline = max(v["online"], maxOnline)
     return maxOnline
 
