@@ -98,6 +98,11 @@
 4. If the requesting ip is in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 7/13/2025
+    - Added a heatlh endpoint at /health
+        - WebhookPort must be set for this to work
+        - Healthcheck and auto heal example in docker-compose.yml
+        - New constants added to default/app Constants. Update as needed
 - 6/19/2025
     - Added Kick API support with webhooks. Update AppConstants with new vars in DefaultConstants.
     - New packages are required to be installed so install them via the command 'pip install -U -r requirements.txt' 

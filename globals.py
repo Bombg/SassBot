@@ -34,3 +34,6 @@ kickUserIds = {} # slug:userId
 kickProfilePics = {} # slug:url
 kickEventIds = []
 kickPublicKey = ""
+
+lastCheckTime = time.time()
+lastNoDriverCheckTime = time.time()

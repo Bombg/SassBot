@@ -26,7 +26,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /opt/SassBot
 
-RUN apt update -y && apt install -y --no-install-recommends chromium xvfb \
+RUN apt update -y && apt install -y --no-install-recommends chromium xvfb curl \
     # Remove temporary files and hardware decoding libraries -- Copied from FlareSolverr
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /usr/lib/x86_64-linux-gnu/libmfxhw* \

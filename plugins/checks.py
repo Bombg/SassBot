@@ -43,8 +43,10 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, us
     try:
         if inspect.iscoroutinefunction(isOnlineFunc):
             isOnline, title, thumbUrl, icon = await isOnlineFunc(userName)
+            globals.lastNoDriverCheckTime = time.time()
         else:
             isOnline, title, thumbUrl, icon = await asyncio.get_running_loop().run_in_executor(None,isOnlineFunc,userName)
+            globals.lastCheckTime = time.time()
     except Exception as e:
         logging.exception(f"caught exception: {e}")
         thumbUrl = ""
@@ -360,6 +362,7 @@ async def startWebhookServer(rest: alluka.Injected[hikari.impl.RESTClientImpl]) 
     loop = asyncio.get_running_loop()
     config = uvicorn.Config("plugins.checks:app", port=Constants.webhookPort,host = Constants.webhookHostIp, log_level=Constants.OTHER_LIBRARIES_LOG_LEVEL)
     server = uvicorn.Server(config)
+    logging.getLogger("uvicorn.access").addFilter(StaticMethods.EndpointFilter())
     loop.run_until_complete(await server.serve())
 
 @app.post("/webhook")
@@ -368,6 +371,24 @@ async def receiveWebhook(request:Request, background_tasks: BackgroundTasks):
     headers = request.headers
     background_tasks.add_task(processWebhookData, payload.decode('utf-8'), headers)
     return {"status": "ok", "message": "Webhook received and is being processed."}
+
+@app.get("/health")
+async def receiveWebhook(request:Request, background_tasks: BackgroundTasks):
+    shortest, ndShortest = StaticMethods.GetShortestActiveCheckTimer()
+    badHealthMultiplier = Constants.badHealthMultiplier
+    badHealth = shortest * badHealthMultiplier
+    ndBadHealth = ndShortest * badHealthMultiplier
+    timeSinceLastCheck = time.time() - globals.lastCheckTime
+    ndTimeSinceLastCheck = time.time() - globals.lastNoDriverCheckTime
+    if badHealth < timeSinceLastCheck or ndBadHealth < ndTimeSinceLastCheck:
+        status  = 503
+        message = "Too long since last check time. Bad Health"
+        logger.critical(f"Failed health check. {timeSinceLastCheck} seconds since last online check")
+    else:
+        status = 200
+        message = "Sassbot running well"
+        logger.debug(f"Health check Pass: LastCheck: {timeSinceLastCheck} LastCheckND: {ndTimeSinceLastCheck}")
+    return {"status": status, "message": message}
 
 async def processWebhookData(body, headers):
     if 'kick-event-type' not in headers: return

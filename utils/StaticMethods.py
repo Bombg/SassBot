@@ -298,3 +298,46 @@ def GetProxies(proxyIpPort):
     'https': f'socks5://{proxyIpPort}'
     }
     return proxies
+
+def GetShortestActiveCheckTimer():
+    timerLengths = []
+    noDriverTimerLengths = []
+    if Constants.kickUserName and Constants.kickClientId:
+        timerLengths.append(Constants.KICK_CHECK_TIMER)
+    else:
+        noDriverTimerLengths.append(Constants.KICK_CHECK_TIMER)
+    if Constants.cbUserName:
+        timerLengths.append(Constants.CB_CHECK_TIMER)
+    if Constants.fansUserName:
+        noDriverTimerLengths.append(Constants.FANS_CHECK_TIMER)
+    if Constants.ofUserName:
+        noDriverTimerLengths.append(Constants.OF_CHECK_TIMER)
+    if Constants.ytUserName:
+        timerLengths.append(Constants.YT_CHECK_TIMER)
+    if Constants.twitchUserName:
+        timerLengths.append(Constants.TWITCH_CHECK_TIMER)
+    if Constants.cam4UserName:
+        timerLengths.append(Constants.CAM4_CHECK_TIMER)
+    if Constants.mfcUserName:
+        timerLengths.append(Constants.MFC_CHECK_TIMER)
+    if Constants.bcUserName:
+        timerLengths.append(Constants.BC_CHECK_TIMER)
+    if Constants.scUserName:
+        timerLengths.append(Constants.SC_CHECK_TIMER)
+    if Constants.epUserName:
+        timerLengths.append(Constants.EP_CHECK_TIMER)
+    if Constants.mvUserName:
+        timerLengths.append(Constants.MV_CHECK_TIMER)
+    shortest = 999999999999999999
+    ndShortest = 999999999999999999
+    for timer in timerLengths:
+        if timer < shortest:
+            shortest = timer
+    for timer in noDriverTimerLengths:
+        if timer < ndShortest:
+            ndShortest = timer
+    return shortest, ndShortest
+
+class EndpointFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        return record.args and len(record.args) >= 3 and record.args[2] != "/health"

@@ -38,11 +38,12 @@ services:
 #     restart: unless-stopped
 
 
-# Yet another version that includes a restarter container to reboot the container once a day - be sure to rename `faebot-sassbot-1` to the name of your actual bot container
+# Yet another version that includes a health checking and restarting the container if it's unhealthy. The port you set in Default/AppConstants under webhookPort
 
 # services:
 #   sassbot:
-#     image: ghcr.io/bombg/sassbot:latest
+#     image: ghcr.io/bombg/sassbot:experimental
+#     container_name: Faebot
 #     volumes:
 #       - /home/bombg/Repos/SassBot/AppConstants.py:/opt/SassBot/AppConstants.py
 #       - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
@@ -54,9 +55,32 @@ services:
 #       - /home/bombg/Repos/SassBot/Fansscreenshot.jpg:/opt/SassBot/Fansscreenshot.jpg
 #       - /home/bombg/Repos/SassBot/Ofscreenshot.jpg:/opt/SassBot/Ofscreenshot.jpg
 #       - /home/bombg/Repos/SassBot/KickScreenshot.jpg:/opt/SassBot/KickScreenshot.jpg
+#       - /home/bombg/Repos/SassBot/commandLogs.txt:/opt/SassBot/commandLogs.txt
+#       - /home/bombg/Repos/SassBot/deletedMessageLogs.txt:/opt/SassBot/deletedMessageLogs.txt
+#     ports:
+#       - 5060:5060 # webhook/health
 #     restart: unless-stopped
-#   restarter:
-#     image: docker:cli
-#     volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
-#     command: ["/bin/sh", "-c", "while true; do sleep 86400; docker restart faebot-sassbot-1; done"]
-#     restart: unless-stopped
+#     networks:
+#       - gluetun_default
+#     logging:
+#       driver: "json-file"
+#       options:
+#          max-size: "50m"
+#     healthcheck:
+#       test: curl --fail http://localhost:5060/health || exit 1
+#       interval: 30s        # Check every 30 seconds
+#       timeout: 10s         # Allow up to 10 seconds for response
+#       start_period: 30s    # Wait 30 seconds before first check
+#       retries: 3           # Mark unhealthy after 3 consecutive failures
+#   autoheal:
+#     deploy:
+#       replicas: 1
+#     environment:
+#       AUTOHEAL_CONTAINER_LABEL: all
+#       AUTOHEAL_START_PERIOD: 60
+#     image: willfarrell/autoheal:latest
+#     network_mode: none
+#     restart: always
+#     volumes:
+#       - /etc/localtime:/etc/localtime:ro
+#       - /var/run/docker.sock:/var/run/docker.sock
