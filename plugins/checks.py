@@ -29,6 +29,7 @@ import inspect
 import logging
 import uvicorn
 from fastapi import FastAPI, Request, BackgroundTasks
+from fastapi.responses import JSONResponse
 import json
 
 component = tanjun.Component()
@@ -381,15 +382,17 @@ async def receiveWebhook(request:Request, background_tasks: BackgroundTasks):
     timeSinceLastCheck = time.time() - globals.lastCheckTime
     ndTimeSinceLastCheck = time.time() - globals.lastNoDriverCheckTime
     if badHealth < timeSinceLastCheck or ndBadHealth < ndTimeSinceLastCheck:
-        status  = 503
+        statusCode  = 503
         message = "Too long since last check time. Bad Health"
         logger.critical(f"Failed health check. {timeSinceLastCheck} seconds since last online check")
     else:
-        status = 200
+        statusCode = 200
         message = "Sassbot running well"
         logger.debug(f"Health check Pass: LastCheck: {timeSinceLastCheck} LastCheckND: {ndTimeSinceLastCheck}")
-    return {"status": status, "message": message}
-
+    return JSONResponse(
+                        content={"message": f"{message}"},
+                        status_code=statusCode
+            )
 async def processWebhookData(body, headers):
     if 'kick-event-type' not in headers: return
 
