@@ -724,7 +724,7 @@ class Database:
             value = cur.fetchall()
             isExists = value[0][0]
         except sqlite3.OperationalError:
-            self.logger.warning("error when checking if col exists, perhaps no data yet")
+            self.logger.debug("error when checking if col exists, perhaps no data yet")
         cur.close()
         conn.close()
         return isExists
