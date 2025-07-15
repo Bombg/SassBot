@@ -27,6 +27,7 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         page = await browser.get(apiUrl)
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
+        logger.debug(f"grabbing clip data from {apiUrl}")
         await page.save_screenshot("KickClipsScreenshot.jpg")
         content = await page.get_content()
         content = content.split('<body>')
