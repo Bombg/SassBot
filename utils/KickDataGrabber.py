@@ -27,7 +27,6 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         page = await browser.get(apiUrl)
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
-        logger.debug(f"grabbing clip data from {apiUrl}")
         await page.save_screenshot("KickClipsScreenshot.jpg")
         content = await page.get_content()
         content = content.split('<body>')
@@ -38,6 +37,7 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
             results = json.loads(jsonText[0])
             if 'nextCursor' in results:
                 globals.kickClipCursor = results['nextCursor']
+                logger.debug(f"grabbing clip data from {apiUrl} and going again at cursor: {results['nextCursor']}")
             for clip in results['clips']:
                 exeString = f'''SELECT clip_id FROM kick_clips WHERE clip_id='{clip['id']}' '''
                 creationDate = dt.strptime(clip['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
