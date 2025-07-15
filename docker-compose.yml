@@ -70,14 +70,14 @@ services:
 #       test: curl --fail http://localhost:5060/health || exit 1
 #       interval: 30s        # Check every 30 seconds
 #       timeout: 10s         # Allow up to 10 seconds for response
-#       start_period: 30s    # Wait 30 seconds before first check
+#       start_period: 90s    # Wait 90 seconds before first check
 #       retries: 3           # Mark unhealthy after 3 consecutive failures
 #   autoheal:
 #     deploy:
 #       replicas: 1
 #     environment:
 #       AUTOHEAL_CONTAINER_LABEL: all
-#       AUTOHEAL_START_PERIOD: 60
+#       AUTOHEAL_START_PERIOD: 90
 #     image: willfarrell/autoheal:latest
 #     network_mode: none
 #     restart: always
