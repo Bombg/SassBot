@@ -50,14 +50,14 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
                         globals.kickClipMostViewedUser[clip['creator']['slug']] = viewIncrease
                         if not clip['creator']['slug'] in globals.kickClipMostClips:
                             globals.kickClipMostClips[clip['creator']['slug']] = []
-                        globals.kickClipMostClips[clip['creator']['slug']] = globals.kickClipMostClips[clip['creator']['slug']].append(clip['id'])
+                        globals.kickClipMostClips[clip['creator']['slug']].append(clip['id'])
                 elif timeDiff < timedelta(days=daysClipLookBack):
                     previousViews = db.getKickClipViews(clip['id'],clip['channel']['slug'])
                     viewIncrease = clip['views'] - previousViews
                     if not clip['creator']['slug'] in globals.kickClipMostViewedUser:
                         globals.kickClipMostViewedUser[clip['creator']['slug']] = 0
                     if not clip['creator']['slug'] in globals.kickClipMostClips:
-                            globals.kickClipMostClips[clip['creator']['slug']] = []
+                        globals.kickClipMostClips[clip['creator']['slug']] = []
                     if clip['id'] not in  globals.kickClipMostClips[clip['creator']['slug']]:
                         globals.kickClipMostClips[clip['creator']['slug']].append(clip['id'])
                     globals.kickClipMostViewedUser[clip['creator']['slug']] = globals.kickClipMostViewedUser[clip['creator']['slug']] + viewIncrease
