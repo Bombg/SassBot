@@ -27,11 +27,7 @@ async def isModelOnline(fansUserName):
         isOnline = await IsLiveBadge(page)
         icon = await GetIcon(page)
         await page.save_screenshot("Fansscreenshot.jpg")
-        await page.close()
-        await asyncio.sleep(.5*Constants.NODRIVER_WAIT_MULTIPLIER)
-        browser.stop()
-        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
-        globals.browserOpen = False
+        await ndb.CloseNDBrowser(browser,page)
     except Exception as e:
         logger.warning(f"Error when getting browser for Fansly: {e}")
         globals.browserOpen = False

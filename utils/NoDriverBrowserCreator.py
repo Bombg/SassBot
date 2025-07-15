@@ -89,3 +89,10 @@ def IsRoot():
         return os.getuid() == 0
     except AttributeError:
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
+
+async def CloseNDBrowser(browser, page):
+    await page.close()
+    await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
+    browser.stop()
+    await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
+    globals.browserOpen = False

@@ -31,6 +31,72 @@ class Database:
                     StaticMethods.rebootServer()
         return conn, cur
     
+    def createKickClipsHeroesTable(self):
+        conn,cur = self.connectCursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS kick_clips_heroes
+            (
+                year_week TEXT PRIMARY KEY,
+                most_viewed_clip TEXT,
+                most_viewed_clipper TEXT,
+                most_clips TEXT,
+                FOREIGN KEY(most_viewed_clip) REFERENCES kick_clips(clip_id)
+            )
+        ''')
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def createKickClipsTable(self):
+        conn,cur = self.connectCursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS kick_clips
+            (
+                clip_id TEXT PRIMARY KEY,
+                livestream_id INTEGER,
+                channel_slug TEXT,
+                clip_creator_slug TEXT,
+                creation_date TEXT,
+                title TEXT,
+                views INTEGER,
+                category_slug TEXT
+            )
+        ''')
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def createWeeklyKickClipsData(self,yearWeek:str, mostViewedClip:str, mostViewedClipper:str, mostClips:str):
+        self.createKickClipsHeroesTable()
+        conn, cur = self.connectCursor()
+        rowVals = (yearWeek, mostViewedClip, mostViewedClipper, mostClips)
+        exeString = '''INSERT INTO kick_clips_heroes (year_week, most_viewed_clip, most_viewed_clipper, most_clips) VALUES (?,?,?,?)'''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def getKickClipViews(self,clipId:str, channel_slug:str) -> int:
+        self.createKickClipsTable()
+        views = 0
+        conn, cur = self.connectCursor()
+        exeString = f'''SELECT views FROM kick_clips WHERE channel_slug='{channel_slug}' AND clip_id='{clipId}' '''
+        cur.execute(exeString)
+        previousViews = cur.fetchall()
+        if previousViews:
+            views = previousViews[0][0]
+        cur.close()
+        conn.close()
+        return views
+
+    def addKickClipToTable(self, clipId:str, livestreamId:int, channelSlug:str, clipCreatorSlug:str, creationDate:str, title:str, views:int, categorySlug:str) -> None:
+        self.createKickClipsTable()
+        conn, cur = self.connectCursor()
+        rowVals = (clipId, livestreamId, channelSlug, clipCreatorSlug, creationDate, title, views, categorySlug)
+        exeString = f'''INSERT INTO kick_clips (clip_id, livestream_id, channel_slug, clip_creator_slug, creation_date, title, views, category_slug) VALUES (?,?,?,?,?,?,?,?)'''
+        cur.execute(exeString,rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
     # Confessions & Appeals Table Methods
     def createAppealsTable(self):
         conn,cur = self.connectCursor()

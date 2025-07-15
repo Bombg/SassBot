@@ -35,11 +35,7 @@ async def isModelOnline(kickUserName):
         else:
             jsonText = content[1].split('</body></html>')
             isOnline, title, tempThumbUrl, icon = getStreamInfo(jsonText)
-        await page.close()
-        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
-        browser.stop()
-        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
-        globals.browserOpen = False
+        await ndb.CloseNDBrowser(browser,page)
     except Exception as e:
         logger.warning(f"error getting browser for Kick: {e}")
         globals.browserOpen = False

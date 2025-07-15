@@ -27,11 +27,7 @@ async def isModelOnline(ofUserName):
         await page.save_screenshot("Ofscreenshot.jpg")
         isOnline = await IsLiveBadge(page)
         icon  = await GetIcon(page)
-        await page.close()
-        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
-        browser.stop()
-        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
-        globals.browserOpen = False
+        await ndb.CloseNDBrowser(browser, page)
     except Exception as e:
         logger.warning(f"Error getting browser for Onylyfans: {e}")
         globals.browserOpen = False

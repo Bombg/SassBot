@@ -29,7 +29,10 @@ import inspect
 import logging
 import uvicorn
 from fastapi import FastAPI, Request, BackgroundTasks
+from fastapi.responses import JSONResponse
 import json
+import datetime
+import utils.KickDataGrabber as KickDataGrabber
 
 component = tanjun.Component()
 logger = logging.getLogger(__name__)
@@ -141,6 +144,7 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.kickUserName:
         for kickUserName in Constants.kickUserName:
             await platformChecker(kickOnlineFunc, Notifications.KickNotification,kickUserName,"kick",rest)
+            await checkKickClips(kickUserName, rest)
             await asyncio.sleep(Constants.KICK_CHECK_TIMER/len(Constants.kickUserName)%Constants.KICK_CHECK_TIMER)
 
 @component.with_schedule
@@ -381,14 +385,14 @@ async def receiveWebhook(request:Request, background_tasks: BackgroundTasks):
     timeSinceLastCheck = time.time() - globals.lastCheckTime
     ndTimeSinceLastCheck = time.time() - globals.lastNoDriverCheckTime
     if badHealth < timeSinceLastCheck or ndBadHealth < ndTimeSinceLastCheck:
-        status  = 503
+        statusCode  = 503
         message = "Too long since last check time. Bad Health"
         logger.critical(f"Failed health check. {timeSinceLastCheck} seconds since last online check")
     else:
-        status = 200
+        statusCode = 200
         message = "Sassbot running well"
         logger.debug(f"Health check Pass: LastCheck: {timeSinceLastCheck} LastCheckND: {ndTimeSinceLastCheck}")
-    return {"status": status, "message": message}
+    return JSONResponse(content={"message": f"{message}"}, status_code=statusCode)
 
 async def processWebhookData(body, headers):
     if 'kick-event-type' not in headers: return
@@ -406,3 +410,12 @@ async def processWebhookData(body, headers):
             
     logger.debug(body)
     logger.debug(str(headers))
+
+async def checkKickClips(kickSlug, rest: hikari.impl.RESTClientImpl) -> None:
+    today = datetime.date.today()
+    isoYear, isoWeek, isoDayOfWeek = today.isocalendar()
+    yearWeek = f"{isoYear}:{isoWeek}"
+    db = Database()
+    exeString = f'''SELECT year_week FROM kick_clips_heroes WHERE year_week='{yearWeek}' '''
+    if not db.isExists(exeString):
+        await KickDataGrabber.CollectClipData(kickSlug, rest)

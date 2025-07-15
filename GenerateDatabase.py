@@ -94,6 +94,29 @@ cur.execute('''CREATE TABLE IF NOT EXISTS appeals
                 )
             ''')
 
+cur.execute('''CREATE TABLE IF NOT EXISTS kick_clips
+            (
+                clip_id TEXT PRIMARY KEY,
+                livestream_id INTEGER,
+                channel_slug TEXT,
+                clip_creator_slug TEXT,
+                creation_date TEXT,
+                title TEXT,
+                views INTEGER,
+                category_slug TEXT
+            )
+''')
+
+cur.execute('''CREATE TABLE IF NOT EXISTS kick_clips_heroes
+            (
+                year_week TEXT PRIMARY KEY,
+                most_viewed_clip TEXT,
+                most_viewed_clipper TEXT,
+                most_clips TEXT,
+                FOREIGN KEY(most_viewed_clip) REFERENCES kick_clips(clip_id)
+            )
+''')
+
 platform_list =[
                 ("chaturbate",0,0,0),
                 ("onlyfans",0,0,0),
