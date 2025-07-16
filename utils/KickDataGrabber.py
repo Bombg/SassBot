@@ -57,10 +57,6 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
                     viewIncrease = clip['views'] - previousViews
                     if not clip['creator']['slug'] in globals.kickClipMostViewedUser:
                         globals.kickClipMostViewedUser[clip['creator']['slug']] = 0
-                    if not clip['creator']['slug'] in globals.kickClipMostClips:
-                        globals.kickClipMostClips[clip['creator']['slug']] = []
-                    if clip['id'] not in  globals.kickClipMostClips[clip['creator']['slug']]:
-                        globals.kickClipMostClips[clip['creator']['slug']].append(clip['id'])
                     globals.kickClipMostViewedUser[clip['creator']['slug']] = globals.kickClipMostViewedUser[clip['creator']['slug']] + viewIncrease
                     db.updateKickClipViews(clip['id'],clip['views'])
                 else:
