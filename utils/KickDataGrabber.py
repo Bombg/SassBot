@@ -62,6 +62,7 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
                     if clip['id'] not in  globals.kickClipMostClips[clip['creator']['slug']]:
                         globals.kickClipMostClips[clip['creator']['slug']].append(clip['id'])
                     globals.kickClipMostViewedUser[clip['creator']['slug']] = globals.kickClipMostViewedUser[clip['creator']['slug']] + viewIncrease
+                    db.updateKickClipViews(clip['id'],clip['views'])
                 else:
                     globals.kickClipCursor = ""
                 if viewIncrease > globals.kickClipMostViews:
@@ -113,7 +114,6 @@ def GetMostViewedClipper():
     return  user, mostViews
 
 def GetMostClipper():
-    logger.debug(globals.kickClipMostClips)
     mostClips = 0
     user = ''
     for clipperSlug, numClips in globals.kickClipMostClips.items():

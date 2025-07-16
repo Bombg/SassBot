@@ -73,6 +73,14 @@ class Database:
         conn.commit()
         cur.close()
         conn.close()
+    
+    def updateKickClipViews(self, clipId:str, views:int) -> None:
+        conn, cur = self.connectCursor()
+        exeString = f'''UPDATE kick_clips SET views={views} WHERE clip_id='{clipId}' '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
 
     def getKickClipViews(self,clipId:str, channel_slug:str) -> int:
         self.createKickClipsTable()
