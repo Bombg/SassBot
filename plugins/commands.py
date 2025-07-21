@@ -23,12 +23,15 @@ import checkers.Kick as Kick
 
 component = tanjun.Component()
 
-# @component.with_slash_command
-# @tanjun.checks.with_check(StaticMethods.isPermission)
-# @tanjun.as_slash_command("events-delete", "Delete all kick event subs",always_defer= True, default_to_ephemeral= True)
-# @CommandLogger
-# async def eventDelete(ctx: tanjun.abc.SlashContext) -> None:
-#     Kick.DeleteAllWebhooks()
+@component.with_slash_command
+@tanjun.checks.with_check(StaticMethods.isPermission)
+@tanjun.with_str_slash_option("username", "Kick username/slug")
+@tanjun.as_slash_command("kick-user-info", "Delete all kick event subs",always_defer= True, default_to_ephemeral= True)
+@CommandLogger
+async def getKickUserInfo(ctx: tanjun.abc.SlashContext, username:str) -> None:
+    info = Kick.getChannelInfoResponse([username]).json()
+    print(info)
+    
 
 @component.with_slash_command
 @tanjun.checks.with_check(StaticMethods.isPermission)

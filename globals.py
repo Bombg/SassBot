@@ -41,6 +41,8 @@ kickClipMostViewsClipper = ''
 kickClipMostViewsTitle = ''
 kickClipMostViewedUser = {} #slug:views
 kickClipMostClips = {} # slug:numClips
+kickGiftedDict = {} # id:slug
+kickSelfDict = {} #id:slug
 
 lastCheckTime = time.time()
 lastNoDriverCheckTime = time.time()

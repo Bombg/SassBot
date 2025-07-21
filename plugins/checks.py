@@ -419,3 +419,31 @@ async def checkKickClips(kickSlug, rest: hikari.impl.RESTClientImpl) -> None:
     exeString = f'''SELECT year_week FROM kick_clips_heroes WHERE year_week='{yearWeek}' '''
     if not db.isExists(exeString):
         await KickDataGrabber.CollectClipData(kickSlug, rest)
+
+@component.with_schedule
+@tanjun.as_time_schedule(minutes=[0,10,20,30,40,50])
+async def memberLogger(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    members = rest.fetch_members(Constants.GUILD_ID)
+    db = Database()
+    logger.debug("adding discord users to DB")
+    async for member in members:
+        db.insertDiscordUser(member.id, member.username)
+
+@component.with_schedule
+@tanjun.as_interval(30, max_runs=1)
+async def startKickWebsocket(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    if not Constants.kickChatroomId or not Constants.kickChannelId: return
+    lastLaunchTime = time.time()
+    maxRetries = 3
+    maxRetryWindow = 30
+    numRetries = 0
+    while numRetries <= maxRetries:
+        await KickDataGrabber.connectKickWebSockets()
+        logger.warning("Kick Websocket closed. Attempting to reconnect")
+        timeSinceLastRetry = time.time() - lastLaunchTime
+        if timeSinceLastRetry <= maxRetryWindow:
+            numRetries += 1
+        else:
+            lastLaunchTime = time.time()
+            numRetries = 1
+    logger.critical("Kick Websocket failed after reaching max retries")

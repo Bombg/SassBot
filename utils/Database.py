@@ -31,6 +31,82 @@ class Database:
                     StaticMethods.rebootServer()
         return conn, cur
     
+    def createDiscordUserTable(self):
+        conn, cur = self.connectCursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS discord_users
+            (
+                id INTEGER PRIMARY KEY,
+                user_name TEXT
+            )
+        ''')
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def createKickUserTable(self):
+        conn, cur = self.connectCursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS kick_users
+            (
+                id INTEGER PRIMARY KEY,
+                slug TEXT,
+                channel_id INTEGER,
+                chatroom_id INTEGER
+            )
+        ''')
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def createKickSubTable(self):
+        conn, cur = self.connectCursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS kick_subs
+            (
+                sub_id INTEGER PRIMARY KEY,
+                user_id INTEGER,
+                user_slug TEXT,
+                num_gifted INTEGER,
+                date_iso TEXT,
+                self INTEGER,
+                FOREIGN KEY(user_id) REFERENCES kick_users(id)
+            )
+        ''')
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def insertDiscordUser(self,userId:int, userName:str):
+        self.createDiscordUserTable()
+        conn, cur = self.connectCursor()
+        rowVals = (userId, userName)
+        exeString = '''INSERT INTO discord_users (id, user_name) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET user_name = excluded.user_name'''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def insertKickUser(self, userId:int, slug:str, channelId:int = None, chatroomId:int = None):
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        slug = slug.lower()
+        rowVals = (userId, slug, channelId, chatroomId)
+        exeString = '''INSERT INTO kick_users (id, slug, channel_id, chatroom_id) VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET slug = excluded.slug'''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def insertKickSub(self, gifterId:int, gifterSlug:str, numGifted:int, date:str, selfSub = 0):
+        self.createKickSubTable()
+        gifterSlug = gifterSlug.lower()
+        conn, cur = self.connectCursor()
+        rowVals = (gifterId, gifterSlug, numGifted, date, selfSub)
+        exeString = '''INSERT INTO kick_subs (user_id, user_slug, num_gifted, date_iso, self) VALUES(?,?,?,?,?)'''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    # Kick Clips Table Methods
     def createKickClipsHeroesTable(self):
         conn,cur = self.connectCursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS kick_clips_heroes

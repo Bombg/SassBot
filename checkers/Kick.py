@@ -65,15 +65,18 @@ def getStreamInfo(jsonText):
     return isOnline,title,thumbUrl,icon
 
 def isModelOnlineAPI(kickUserName):
-    apiResponse = getChannelInfoResponse(kickUserName)
+    apiResponse = getChannelInfoResponse([kickUserName])
     isOnline, title, icon, thumbUrl = getApiStreamingVals(kickUserName, apiResponse)
 
     return isOnline, title, thumbUrl, icon
 
-def getChannelInfoResponse(kickUserName):
+def getChannelInfoResponse(kickUserNames:list):
     apiHeaders={"Authorization": getAccessToken(),"Accept":'application/json'}
     apiUrl = "https://api.kick.com/public/v1/channels"
-    params = {"slug":[kickUserName]}
+    for i in range(len(kickUserNames)):
+        kickUserNames[i] = kickUserNames[i].lower()
+        kickUserNames[i] = kickUserNames[i].replace("_", "-")
+    params = {"slug":[kickUserNames]}
     apiResponse = requests.get(apiUrl, headers=apiHeaders, params=params)
     if apiResponse.status_code == 401:
         logger.debug("401 w/kick attempting to get new access code")

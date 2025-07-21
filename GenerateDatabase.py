@@ -117,6 +117,44 @@ cur.execute('''CREATE TABLE IF NOT EXISTS kick_clips_heroes
             )
 ''')
 
+cur.execute('''CREATE TABLE IF NOT EXISTS kick_users
+            (
+                id INTEGER PRIMARY KEY,
+                slug TEXT,
+                channel_id INTEGER,
+                chatroom_id INTEGER
+            )
+''')
+
+cur.execute('''CREATE TABLE IF NOT EXISTS discord_users
+            (
+                id INTEGER PRIMARY KEY,
+                user_name TEXT
+            )
+''')
+
+cur.execute('''CREATE TABLE IF NOT EXISTS account_connections
+            (
+                discord_id INTEGER PRIMARY KEY,
+                kick_id TEXT,
+                FOREIGN KEY(discord_id) REFERENCES discord_users(id),
+                FOREIGN KEY(kick_id) REFERENCES kick_users(id)
+            )
+''')
+
+cur.execute('''CREATE TABLE IF NOT EXISTS kick_subs
+            (
+                sub_id INTEGER PRIMARY KEY,
+                user_id INTEGER,
+                user_slug TEXT,
+                num_gifted INTEGER,
+                date_iso TEXT,
+                self INTEGER,
+                FOREIGN KEY(user_id) REFERENCES kick_users(id),
+            )
+''')
+
+
 platform_list =[
                 ("chaturbate",0,0,0),
                 ("onlyfans",0,0,0),

@@ -194,6 +194,8 @@ class Constants:
     kickClientSecret = ""
     webhookPort = "" # what port to use to listen to webhooks or health checks (int not str). If left as a blank string then webhook/health check client (fastapi) wont be started
     webhookHostIp = '0.0.0.0' # 127.0.0.1 if you want to host locally. 0.0.0.0 if you want to be accessable from outside IPs. Check fastAPI docs for more info
+    kickChatroomId = '' # https://kick.com/api/v2/channels/<KICKUSERNAME> go here to get the ID's needed
+    kickChannelId = ''
     badHealthMultiplier = 2 # if badHealthMultiplier * shortest of the check timers is < last check time /health returns 503
 
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
