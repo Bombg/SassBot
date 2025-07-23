@@ -43,6 +43,7 @@ kickClipMostViewedUser = {} #slug:views
 kickClipMostClips = {} # slug:numClips
 kickGiftUStrings = []
 kickOauth = {}
+kickLastWebhookHeaders = ''
 
 lastCheckTime = time.time()
 lastNoDriverCheckTime = time.time()

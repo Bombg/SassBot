@@ -448,8 +448,8 @@ async def OAuthCallback(code: str = None, state: str = None, error: str = None):
     return RedirectResponse(url=Constants.kickDiscordRedirect)
 
 async def processWebhookData(body, headers):
-    if 'kick-event-type' not in headers: return
-
+    if 'kick-event-type' not in headers or headers == globals.kickLastWebhookHeaders: return
+    globals.kickLastWebhookHeaders = headers
     if Kick.verifyWebhook(headers, body):
         logger.debug("verified kick webhook")
         if headers['kick-event-type'] == "livestream.status.updated":
