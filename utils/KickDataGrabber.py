@@ -50,30 +50,39 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
                     db.addKickClipToTable(clip['id'], clip['livestream_id'],clip['channel']['slug'], clip['creator']['slug'], clip['created_at'], clip['title'], clip['views'], clip['category']['slug'])
                     if timeDiff < timedelta(days=daysClipLookBack):
                         viewIncrease = clip['views']
-                        globals.kickClipMostViewedUser[clip['creator']['slug']] = viewIncrease
-                        if not clip['creator']['slug'] in globals.kickClipMostClips:
-                            globals.kickClipMostClips[clip['creator']['slug']] = []
-                        globals.kickClipMostClips[clip['creator']['slug']].append(clip['id'])
+                        AddTotalViewsToGlobal(clip, viewIncrease)
+                        TallyClipInGlobal(clip)
                 elif timeDiff < timedelta(days=daysClipLookBack):
                     previousViews = db.getKickClipViews(clip['id'],clip['channel']['slug'])
                     viewIncrease = clip['views'] - previousViews
-                    if not clip['creator']['slug'] in globals.kickClipMostViewedUser:
-                        globals.kickClipMostViewedUser[clip['creator']['slug']] = 0
-                    globals.kickClipMostViewedUser[clip['creator']['slug']] = globals.kickClipMostViewedUser[clip['creator']['slug']] + viewIncrease
+                    AddTotalViewsToGlobal(clip, viewIncrease)
                     db.updateKickClipViews(clip['id'],clip['views'])
                 else:
                     globals.kickClipCursor = ""
                 if viewIncrease > globals.kickClipMostViews:
-                    globals.kickClipMostViews = viewIncrease
-                    globals.kickClipMostViewsId = clip['id']
-                    globals.kickClipMostViewsClipper = clip['creator']['slug']
-                    globals.kickClipMostViewsTitle = clip['title']
+                    AddMostViewedClipToGlobal(clip, viewIncrease)
             if not globals.kickClipCursor:
                 await AnnounceWinnersHandleData(kickSlug, rest, db) 
         await ndb.CloseNDBrowser(browser, page)
     except Exception as e:
         logger.exception(e)
         globals.browserOpen = False
+
+def AddMostViewedClipToGlobal(clip, viewIncrease):
+    globals.kickClipMostViews = viewIncrease
+    globals.kickClipMostViewsId = clip['id']
+    globals.kickClipMostViewsClipper = clip['creator']['slug']
+    globals.kickClipMostViewsTitle = clip['title']
+
+def TallyClipInGlobal(clip):
+    if not clip['creator']['slug'] in globals.kickClipMostClips:
+        globals.kickClipMostClips[clip['creator']['slug']] = []
+    globals.kickClipMostClips[clip['creator']['slug']].append(clip['id'])
+
+def AddTotalViewsToGlobal(clip, viewIncrease):
+    if not clip['creator']['slug'] in globals.kickClipMostViewedUser:
+        globals.kickClipMostViewedUser[clip['creator']['slug']] = 0
+    globals.kickClipMostViewedUser[clip['creator']['slug']] = globals.kickClipMostViewedUser[clip['creator']['slug']] + viewIncrease
 
 async def AnnounceWinnersHandleData(kickSlug: str, rest:hikari.impl.RESTClientImpl, db:Database):
     today = datetime.date.today()
@@ -154,36 +163,13 @@ async def connectKickWebSockets():
                         await ws.close(close_timeout = 3)
                         logger.warning("Kick Websocket dropped")
                     elif data['event'] == 'App\\Events\\ChannelSubscriptionEvent':
-                        #{'event': 'App\\Events\\ChannelSubscriptionEvent', 'data': '{"user_ids":[67477867],"username":"noahwjbrennan","channel_id":17425723}', 'channel': 'channel.17425723'}
-                        data = json.loads(data['data'])
-                        userId = data['user_ids'][0] 
-                        userName = data['username'] # if userName is null perhaps they got gifted and not self sub
-                        if userName:
-                            logger.debug(f"{userName}:{userId} self subbed")
-                        else:
-                            logger.debug(f"{len(data['user_ids'])} people gifted a sub")
-                        # Send to Subs table
+                        await ParseChannelSubscriptionEvent(db,data)
                     elif data['event'] == 'App\\Events\\LuckyUsersWhoGotGiftSubscriptionsEvent':
-                        #{'event': 'App\\Events\\LuckyUsersWhoGotGiftSubscriptionsEvent', 'data': '{"channel":{"id":17425723,"user_id":18312333,"slug":"nelkboys","is_banned":false,"playback_url":"https:\\/\\/fa723fc1b171.us-west-2.playback.live-video.net\\/api\\/video\\/v1\\/us-west-2.196233775518.channel.ze6nVEIVJ53v.m3u8","name_updated_at":null,"vod_enabled":true,"subscription_enabled":true,"is_affiliate":true,"can_host":true,"chatroom":{"id":17172694,"chatable_type":"App\\\\Models\\\\Channel","channel_id":17425723,"created_at":"2023-08-25T17:13:46.000000Z","updated_at":"2025-07-02T17:19:50.000000Z","chat_mode_old":"public","chat_mode":"public","slow_mode":true,"chatable_id":17425723,"followers_mode":true,"subscribers_mode":false,"emotes_mode":false,"message_interval":5,"following_min_duration":180}},"usernames":["kernanator","OhDollar","UZJ100","slimetimelive","m1nt710","k8dot","ginja47ninja","jbizzle007","MEATTIP","Danni2g","big_fat_black_testicles","DIZOTIZY","ck_certified","fletchyflipem","tturtlees","NickelinDime","ZACHROCK9","duey_17","1stScoop","PurpleArmyCX","Yettipnw","Jackyboy13","Beau4","nickv4","Iceman299","Dats_Lvke","Walidq695","chamoney2","Kushaug","Charredd","Cherts","ckmitch","Mattsark","Bee_Lu","Cman12","Scarcerow","EyezChico","Pizza_farts","BurgerGrease","BigCabbyDaddy","Chess_zebra","Denver7","BS3VEN","KyleRousseau38","KyleMay","HoonieStonebag","Kongwtf","brianc12","MyManTitsSlap","dkny25"],"gifter_username":"astra555"}', 'channel': 'channel.17425723'}
-                        data = json.loads(data['data'])
-                        userName = data['gifter_username']
-                        giftList = data['usernames']
-                        numGifted = len(giftList)
-                        #info = Kick.getChannelInfoResponse(userName).json()
-                        #userId = info['data'][0]['broadcaster_user_id']
-                        logger.debug(f"{userName} gifted {numGifted}")
-                        # Send to Subs Table
+                        ParseLuckyUsersWhoGotGiftSubscriptionsEvent(db,data)
                     elif data['event'] == 'GiftedSubscriptionsEvent':
                         ParseGiftedSubscriptionsEvent(db,data)
                     elif data['event'] == 'App\\Events\\ChatMessageEvent':
-                        #{'event': 'App\\Events\\ChatMessageEvent', 'data': '{"id":"bbcdbcfd-8619-40c2-a0d0-ae7cf4c7a932","chatroom_id":1221707,"content":"[emote:3989851:litneyspears4Max]on my way to show you love","type":"message","created_at":"2025-07-17T08:44:56+00:00","sender":{"id":3528468,"username":"OhLookItsMax","slug":"ohlookitsmax","identity":{"color":"#FF9D00","badges":[{"type":"vip","text":"VIP"},{"type":"subscriber","text":"Subscriber","count":26}]}},"metadata":{"message_ref":"1752741896375"}}', 'channel': 'chatrooms.1221707.v2'}
-                        data = json.loads(data['data'])
-                        message = data['content']
-                        userId = data['sender']['id']
-                        userName = data['sender']['username']
-                        #collect emote data . Message data?
-                        logger.debug(f"{userName}:{userId} sent a message")
-                        db.insertKickUser(userId, userName)
+                        ParseChatMessageEvent(db, data)
                     elif data['event'] == 'App\\Events\\ChatMessageSentEvent':
                         ParseChatMessageSentEvent(db, data)
                     elif data['event'] == 'App\\Events\\ChatMoveToSupportedChannelEvent':
@@ -209,15 +195,16 @@ async def connectKickWebSockets():
                         bannerUserId = data['banned_by']['id']
                         logger.debug(f"{bannedUser}:{bannedUserId} banned/timeout by: {bannerUser}:{bannerUserId}")
                     elif data['event'] == 'App\\Events\\SubscriptionEvent':
-                        data = json.loads(data['data'])
-                        userName = data['username']
+                        ParseSubscriptionEvent(db, data)
+                    elif data['event'] == 'GiftsLeaderboardUpdated':
+                        #{"event":"GiftsLeaderboardUpdated","data":"{\"leaderboard\":[{\"user_id\":3315987,\"username\":\"TH3_ST4B_H4PPY\",\"quantity\":2469},{\"user_id\":4984014,\"username\":\"Andygreenwood2014\",\"quantity\":2312},{\"user_id\":538703,\"username\":\"GamerGabe\",\"quantity\":806},{\"user_id\":960630,\"username\":\"edubz5184\",\"quantity\":514},{\"user_id\":35809627,\"username\":\"LaskaTheDanishViking\",\"quantity\":416},{\"user_id\":43644314,\"username\":\"peque5040\",\"quantity\":390},{\"user_id\":26634199,\"username\":\"StrawHat85\",\"quantity\":312},{\"user_id\":38875468,\"username\":\"Psycilocibin\",\"quantity\":290},{\"user_id\":49795136,\"username\":\"Ridindirty001\",\"quantity\":252},{\"user_id\":45092496,\"username\":\"kingblackshaft\",\"quantity\":250}],\"weekly_leaderboard\":[{\"user_id\":8348691,\"username\":\"allehej\",\"quantity\":40},{\"user_id\":3315987,\"username\":\"TH3_ST4B_H4PPY\",\"quantity\":25},{\"user_id\":32793864,\"username\":\"Gator6989\",\"quantity\":5},{\"user_id\":45092496,\"username\":\"kingblackshaft\",\"quantity\":5},{\"user_id\":4984014,\"username\":\"Andygreenwood2014\",\"quantity\":5},{\"user_id\":3450843,\"username\":\"Lukeus\",\"quantity\":2},{\"user_id\":1903856,\"username\":\"the_fire_tiger\",\"quantity\":2},{\"user_id\":69907818,\"username\":\"R1ckyBoo\",\"quantity\":1}],\"monthly_leaderboard\":[{\"user_id\":3315987,\"username\":\"TH3_ST4B_H4PPY\",\"quantity\":277},{\"user_id\":4984014,\"username\":\"Andygreenwood2014\",\"quantity\":182},{\"user_id\":43644314,\"username\":\"peque5040\",\"quantity\":115},{\"user_id\":45092496,\"username\":\"kingblackshaft\",\"quantity\":113},{\"user_id\":538703,\"username\":\"GamerGabe\",\"quantity\":50},{\"user_id\":63805513,\"username\":\"CrispRat\",\"quantity\":48},{\"user_id\":8348691,\"username\":\"allehej\",\"quantity\":46},{\"user_id\":960630,\"username\":\"edubz5184\",\"quantity\":40},{\"user_id\":1848562,\"username\":\"hitemup1234\",\"quantity\":20},{\"user_id\":3450843,\"username\":\"Lukeus\",\"quantity\":12}],\"gifter_id\":69907818,\"gifter_username\":\"R1ckyBoo\",\"gifted_quantity\":1}","channel":"channel_1143439"}
+                        pass
                     else:
                         logger.debug(f"[KickWS] Message received: {data}")
                         saneEvent = data['event'].replace("\\", "-")
                         f = open(f"PusherExamples/{saneEvent}.txt", 'a')
                         f.write(message + "\n")
                         f.close()
-
                 except json.JSONDecodeError:
                     logger.debug(f"Received non-JSON message: {message}")
     except websockets.exceptions.ConnectionClosed as e:
@@ -225,46 +212,90 @@ async def connectKickWebSockets():
     except Exception as e:
         logger.exception(f"An error occurred: {e}")
 
+def ParseSubscriptionEvent(db:Database, data):
+    #{"event":"App\\Events\\SubscriptionEvent","data":"{\"chatroom_id\":31047538,\"username\":\"The_D0ctor\",\"months\":1}","channel":"chatrooms.31047538.v2"}
+    channel = data['channel']
+    data = json.loads(data['data'])
+    userName = data['username']
+    months = data['months']
+    info = Kick.getChannelInfoResponse([userName]).json()
+    userId = info['data'][0]['broadcaster_user_id']
+    gifterUString = CreateGiftedUString(["self"],userName,1)
+    if not isGiftedAlreadyExist(gifterUString):
+        logger.debug(f"SubscriptionEvent:{gifterUString} inserting")
+        currentDate = datetime.datetime.now(datetime.timezone.utc)
+        db.insertKickSub(userId, userName, 1, currentDate.isoformat(), channel, selfSub=months)
+        globals.kickGiftUStrings.append(gifterUString)
+
+def ParseChatMessageEvent(db:Database, data):
+    #{'event': 'App\\Events\\ChatMessageEvent', 'data': '{"id":"bbcdbcfd-8619-40c2-a0d0-ae7cf4c7a932","chatroom_id":1221707,"content":"[emote:3989851:litneyspears4Max]on my way to show you love","type":"message","created_at":"2025-07-17T08:44:56+00:00","sender":{"id":3528468,"username":"OhLookItsMax","slug":"ohlookitsmax","identity":{"color":"#FF9D00","badges":[{"type":"vip","text":"VIP"},{"type":"subscriber","text":"Subscriber","count":26}]}},"metadata":{"message_ref":"1752741896375"}}', 'channel': 'chatrooms.1221707.v2'}
+    data = json.loads(data['data'])
+    message = data['content']
+    userId = data['sender']['id']
+    userName = data['sender']['username']
+    #collect emote data . Message data?
+    db.insertKickUser(userId, userName)
+
+def ParseLuckyUsersWhoGotGiftSubscriptionsEvent(db:Database, data):
+    #{'event': 'App\\Events\\LuckyUsersWhoGotGiftSubscriptionsEvent', 'data': '{"channel":{"id":17425723,"user_id":18312333,"slug":"nelkboys","is_banned":false,"playback_url":"https:\\/\\/fa723fc1b171.us-west-2.playback.live-video.net\\/api\\/video\\/v1\\/us-west-2.196233775518.channel.ze6nVEIVJ53v.m3u8","name_updated_at":null,"vod_enabled":true,"subscription_enabled":true,"is_affiliate":true,"can_host":true,"chatroom":{"id":17172694,"chatable_type":"App\\\\Models\\\\Channel","channel_id":17425723,"created_at":"2023-08-25T17:13:46.000000Z","updated_at":"2025-07-02T17:19:50.000000Z","chat_mode_old":"public","chat_mode":"public","slow_mode":true,"chatable_id":17425723,"followers_mode":true,"subscribers_mode":false,"emotes_mode":false,"message_interval":5,"following_min_duration":180}},"usernames":["kernanator","OhDollar","UZJ100","slimetimelive","m1nt710","k8dot","ginja47ninja","jbizzle007","MEATTIP","Danni2g","big_fat_black_testicles","DIZOTIZY","ck_certified","fletchyflipem","tturtlees","NickelinDime","ZACHROCK9","duey_17","1stScoop","PurpleArmyCX","Yettipnw","Jackyboy13","Beau4","nickv4","Iceman299","Dats_Lvke","Walidq695","chamoney2","Kushaug","Charredd","Cherts","ckmitch","Mattsark","Bee_Lu","Cman12","Scarcerow","EyezChico","Pizza_farts","BurgerGrease","BigCabbyDaddy","Chess_zebra","Denver7","BS3VEN","KyleRousseau38","KyleMay","HoonieStonebag","Kongwtf","brianc12","MyManTitsSlap","dkny25"],"gifter_username":"astra555"}', 'channel': 'channel.17425723'}
+    data = json.loads(data['data'])
+    userName = data['gifter_username']
+    giftList = data['usernames']
+    numGifted = len(giftList)
+    logger.debug(f"LuckyUsersWhoGotGiftSubscriptionsEvent: Check for insertions or handle")
+
+async def ParseChannelSubscriptionEvent(db:Database, data):
+    #{'event': 'App\\Events\\ChannelSubscriptionEvent', 'data': '{"user_ids":[67477867],"username":"noahwjbrennan","channel_id":17425723}', 'channel': 'channel.17425723'}
+    data = json.loads(data['data'])
+    userId = data['user_ids'][0] 
+    userName = data['username'] # if userName is null perhaps they got gifted and not self sub
+    if userName:
+        giftedUstring = CreateGiftedUString(["self"],userName,1)
+        await asyncio.sleep(5)
+        if not isGiftedAlreadyExist(giftedUstring):
+            logger.warning(f"ChannelSubscriptionEvent:{giftedUstring} not inserted")
+    else:
+        logger.debug(f"ChannelSubscriptionEvent(gifted version): Insertion event around now or handle this")
+
 def ParseGiftedSubscriptionsEvent(db:Database, data):
     #{'event': 'GiftedSubscriptionsEvent', 'data': '{"chatroom_id":25951243,"gifted_usernames":["rawze"],"gifter_username":"F1Aa","gifter_total":1}', 'channel': 'chatroom_25951243'}
+    channel = data['channel']
     data = json.loads(data['data'])
     userName = data['gifter_username'] # Only event sometimes?
     totalGifted = data['gifter_total'] # num gifted overall in channel over time (200,300 etc)
     numGifted = len(data['gifted_usernames'])
-    logger.debug(f"GiftedSubscriptionsEvent:{userName} gifted {numGifted} ")
     giftedList = data['gifted_usernames']
-    if not GiftedAlreadyExists(giftedList):
-        logger.debug(f"GiftedSubscriptionsEvent:Inserting subs")
+    giftedUString = CreateGiftedUString(giftedList, userName, numGifted)
+    if not isGiftedAlreadyExist(giftedUString):
+        logger.debug(f"GiftedSubscriptionsEvent:{giftedUString} inserting")
         info = Kick.getChannelInfoResponse([userName]).json()
         userId = info['data'][0]['broadcaster_user_id']
         currentDate = datetime.datetime.now(datetime.timezone.utc)
-        db.insertKickSub(userId, userName, numGifted, currentDate.isoformat())
-        giftedIds = Kick.getChannelInfoResponse(giftedList).json()
-        for gifted in giftedIds['data']:
-            globals.kickGiftedDict[gifted['broadcaster_user_id']] = gifted['slug']
+        db.insertKickSub(userId, userName, numGifted, currentDate.isoformat(),channel)
+        globals.kickGiftUStrings.append(giftedUString)
 
 def ParseChatMessageSentEvent(db:Database, data):
     #{'event': 'App\\Events\\ChatMessageSentEvent', 'data': '{"message":{"id":"93ae8404-b077-46ba-a095-76f167b3b185","message":null,"type":"info","replied_to":null,"is_info":null,"link_preview":null,"chatroom_id":1221707,"role":"user","created_at":1751605454,"action":"gift","optional_message":null,"months_subscribed":null,"subscriptions_count":5,"giftedUsers":[{"username":"Terraflux","monthsSubscribed":1},{"username":"xHayir","monthsSubscribed":1},{"username":"Darren911","monthsSubscribed":1},{"username":"Hoodhotest","monthsSubscribed":1},{"username":"thetroublewithravens","monthsSubscribed":1}]},"user":{"id":2289061,"username":"PhatBoiLotto","role":"user","isSuperAdmin":null,"profile_thumb":"https:\\/\\/kick-files-prod.s3.us-west-2.amazonaws.com\\/images\\/user\\/2289061\\/profile_image\\/conversion\\/462cfe47-917a-46d7-8db4-f79a4dcae213-thumb.webp?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAS3MDRZGPDOOAYROR%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T050415Z&X-Amz-SignedHeaders=host&X-Amz-Expires=299&X-Amz-Signature=4dbf64a8b9d3ad89c30bc8c4fac2c284800f98e26c7ef842fceec03d7969b2ba","verified":false,"follower_badges":[],"is_subscribed":null,"is_founder":false,"months_subscribed":null,"quantity_gifted":0}}', 'channel': 'chatrooms.1221707'}
+    channel = data['channel']
     data = json.loads(data['data'])
     numGifted = data['message']['subscriptions_count'] # num gifted in the single event (1,5 10, 20 etc) 0 gifted is self sub
     userId = data['user']['id']
     userName = data['user']['username']
-    logger.debug(f"{userName}:{userId} gifted {numGifted}")
-    db.insertKickUser(userId, userName)
     currentDate = datetime.datetime.now(datetime.timezone.utc)
     if numGifted > 0:
         giftedList = MakeGiftedList(data['message']['giftedUsers'])
-        if not GiftedAlreadyExists(giftedList):
-            logger.debug(f"ChatMessageSentEvent:Inserting subs")
-            db.insertKickSub(userId, userName, numGifted, currentDate.isoformat())
-            giftedIds = Kick.getChannelInfoResponse(giftedList).json()
-            for gifted in giftedIds['data']:
-                globals.kickGiftedDict[gifted['broadcaster_user_id']] = gifted['slug']
-    elif userId not in globals.kickSelfDict:
-        logger.debug(f"Inserting subs")
-        months = data['user']['months_subscribed']
-        db.insertKickSub(userId, userName, 1, currentDate.isoformat(), selfSub=months)
-        globals.kickSelfDict[userId] = userName
+        giftedUString = CreateGiftedUString(giftedList, userName, numGifted)
+        if not isGiftedAlreadyExist(giftedUString):
+            logger.debug(f"ChatMessageSentEvent:{giftedUString} inserting")
+            db.insertKickSub(userId, userName, numGifted, currentDate.isoformat(), channel)
+            globals.kickGiftUStrings.append(giftedUString)
+    else:
+        giftedUString = CreateGiftedUString(["self"], userName, 1)
+        if not isGiftedAlreadyExist(giftedUString):
+            logger.debug(f"ChatMessageSentEvent:{giftedUString} inserting")
+            months = data['user']['months_subscribed']
+            db.insertKickSub(userId, userName, 1, currentDate.isoformat(), channel, selfSub=months)
+            globals.kickGiftUStrings.append(giftedUString)
 
 async def subWsChannel(channel, ws):
     subscribeMessage = {
@@ -276,20 +307,20 @@ async def subWsChannel(channel, ws):
     await ws.send(json.dumps(subscribeMessage))
     logger.debug(f"[KickWS] Sent subscription request to channel: {channel}")
 
-def GiftedAlreadyExists(giftedList:list):
+def isGiftedAlreadyExist(giftedUString):
     exists = False
-    for k, v in globals.kickGiftedDict.items():
-        if exists: break
-        for gift in giftedList:
-            logger.debug(f"comparing {str(gift).lower()} to {str(k).lower()} and {str(v).lower()}")
-            if str(gift).lower() == str(k).lower() or str(gift).lower() == str(v).lower():
-                exists = True
-                break
-    if exists: 
-        logger.debug("Found a match during comparison") 
-    else: 
-        logger.debug("No sub match. adding")
+    if giftedUString and giftedUString in globals.kickGiftUStrings:
+        exists = True
     return exists
+
+def CreateGiftedUString(giftedList:list, gifter:str, numGifted:int) -> str:
+    # numGifted:Gifter:Giftee1:Giftee2... in alphabetical
+    if not giftedList or not gifter or not numGifted: return ""
+    giftedList.sort()
+    giftedUString = f"{numGifted}:{gifter.lower()}"
+    for giftee in giftedList:
+        giftedUString = giftedUString + ":" + giftee.lower()
+    return giftedUString
 
 def MakeGiftedList(giftedUsers):
     giftedList = []

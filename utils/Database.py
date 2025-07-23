@@ -10,6 +10,7 @@ try:
     from AppConstants import Constants as Constants
 except ImportError:
     from DefaultConstants import Constants as Constants
+import GenerateDatabase
 
 class Database:
     def __init__(self):
@@ -33,46 +34,42 @@ class Database:
     
     def createDiscordUserTable(self):
         conn, cur = self.connectCursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS discord_users
-            (
-                id INTEGER PRIMARY KEY,
-                user_name TEXT
-            )
-        ''')
+        GenerateDatabase.CreateDiscordUsersTable(cur)
         conn.commit()
         cur.close()
         conn.close()
     
     def createKickUserTable(self):
         conn, cur = self.connectCursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS kick_users
-            (
-                id INTEGER PRIMARY KEY,
-                slug TEXT,
-                channel_id INTEGER,
-                chatroom_id INTEGER
-            )
-        ''')
+        GenerateDatabase.CreateKickUsersTable(cur)
         conn.commit()
         cur.close()
         conn.close()
     
     def createKickSubTable(self):
         conn, cur = self.connectCursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS kick_subs
-            (
-                sub_id INTEGER PRIMARY KEY,
-                user_id INTEGER,
-                user_slug TEXT,
-                num_gifted INTEGER,
-                date_iso TEXT,
-                self INTEGER,
-                FOREIGN KEY(user_id) REFERENCES kick_users(id)
-            )
-        ''')
+        GenerateDatabase.CreateKickSubsTable(cur)
         conn.commit()
         cur.close()
         conn.close()
+
+    def createConnectionsTable(self):
+        conn, cur = self.connectCursor()
+        GenerateDatabase.CreateAccountConnectionsTable(cur)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def insertDiscordKickAccountConnection(self, discordId:int, kickId:int):
+        self.createConnectionsTable()
+        conn, cur = self.connectCursor()
+        rowVals = (discordId, kickId)
+        exeString = '''INSERT INTO account_connections (discord_id, kick_id) VALUES (?,?) ON CONFLICT(discord_id) DO UPDATE SET kick_id = excluded.kick_id'''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+
     
     def insertDiscordUser(self,userId:int, userName:str):
         self.createDiscordUserTable()
@@ -84,23 +81,24 @@ class Database:
         cur.close()
         conn.close()
     
-    def insertKickUser(self, userId:int, slug:str, channelId:int = None, chatroomId:int = None):
+    def insertKickUser(self, userId:int, slug:str, channelId:int = None, chatroomId:int = None, refreshToken:str = None, email:str = None):
         self.createKickUserTable()
         conn, cur = self.connectCursor()
         slug = slug.lower()
-        rowVals = (userId, slug, channelId, chatroomId)
-        exeString = '''INSERT INTO kick_users (id, slug, channel_id, chatroom_id) VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET slug = excluded.slug'''
+        rowVals = (userId, slug, channelId, chatroomId, refreshToken, email)
+        exeString = '''INSERT INTO kick_users (id, slug, channel_id, chatroom_id, refresh_token, email) VALUES(?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET slug = excluded.slug'''
         cur.execute(exeString, rowVals)
         conn.commit()
         cur.close()
         conn.close()
     
-    def insertKickSub(self, gifterId:int, gifterSlug:str, numGifted:int, date:str, selfSub = 0):
+    def insertKickSub(self, gifterId:int, gifterSlug:str, numGifted:int, date:str, channel:str, selfSub = 0):
         self.createKickSubTable()
         gifterSlug = gifterSlug.lower()
+        self.insertKickUser(gifterId,gifterSlug)
         conn, cur = self.connectCursor()
-        rowVals = (gifterId, gifterSlug, numGifted, date, selfSub)
-        exeString = '''INSERT INTO kick_subs (user_id, user_slug, num_gifted, date_iso, self) VALUES(?,?,?,?,?)'''
+        rowVals = (gifterId, gifterSlug, numGifted, date, channel, selfSub)
+        exeString = '''INSERT INTO kick_subs (user_id, user_slug, num_gifted, date_iso, channel, self) VALUES(?,?,?,?,?,?)'''
         cur.execute(exeString, rowVals)
         conn.commit()
         cur.close()
@@ -109,33 +107,14 @@ class Database:
     # Kick Clips Table Methods
     def createKickClipsHeroesTable(self):
         conn,cur = self.connectCursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS kick_clips_heroes
-            (
-                year_week TEXT PRIMARY KEY,
-                most_viewed_clip TEXT,
-                most_viewed_clipper TEXT,
-                most_clips TEXT,
-                FOREIGN KEY(most_viewed_clip) REFERENCES kick_clips(clip_id)
-            )
-        ''')
+        GenerateDatabase.CreateKickClipsHeroesTable(cur)
         conn.commit()
         cur.close()
         conn.close()
 
     def createKickClipsTable(self):
         conn,cur = self.connectCursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS kick_clips
-            (
-                clip_id TEXT PRIMARY KEY,
-                livestream_id INTEGER,
-                channel_slug TEXT,
-                clip_creator_slug TEXT,
-                creation_date TEXT,
-                title TEXT,
-                views INTEGER,
-                category_slug TEXT
-            )
-        ''')
+        GenerateDatabase.CreateKickClipsTable(cur)
         conn.commit()
         cur.close()
         conn.close()
@@ -184,38 +163,14 @@ class Database:
     # Confessions & Appeals Table Methods
     def createAppealsTable(self):
         conn,cur = self.connectCursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS appeals
-                (
-                    appeal_id INTEGER PRIMARY KEY,
-                    appeal TEXT,
-                    appeal_title TEXT,
-                    appeal_status INTEGER,
-                    appealer_id INTEGER,
-                    appealer_name TEXT,
-                    reviewer_id INTEGER,
-                    reviewer_name TEXT,
-                    date_added INTEGER,
-                    date_reviewed INTEGER
-                )
-            ''')
+        GenerateDatabase.CreateAppealsTable(cur)
         conn.commit()
         cur.close()
         conn.close()
 
     def createConfessionsTable(self):
         conn,cur = self.connectCursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS confessions
-                (
-                    confession_id INTEGER PRIMARY KEY,
-                    confession TEXT,
-                    confession_title TEXT,
-                    review_status INTEGER,
-                    reviewer_id INTEGER,
-                    reviewer_name TEXT,
-                    date_added INTEGER,
-                    date_reviewed INTEGER
-                )
-            ''')
+        GenerateDatabase.CreateConfessionsTable(cur)
         conn.commit()
         cur.close()
         conn.close()
@@ -431,19 +386,7 @@ class Database:
 
     def createPlatformAccountsTable(self) -> None:
         conn,cur = self.connectCursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS platform_accounts
-                (
-                    account_name TEXT NOT NULL,
-                    platform_name TEXT NOT NULL, 
-                    last_online_message REAL,
-                    last_stream_start_time REAL,
-                    last_stream_end_time REAL,
-                    temp_title TEXT,
-                    temp_title_time REAL,
-                    PRIMARY KEY (account_name, platform_name),
-                    FOREIGN KEY(platform_name) REFERENCES platforms(platform_name)
-                )
-            ''')
+        GenerateDatabase.CreatePlatformAccountsTable(cur)
         conn.commit()
         cur.close()
         conn.close()

@@ -28,11 +28,13 @@ from datetime import date
 import inspect
 import logging
 import uvicorn
-from fastapi import FastAPI, Request, BackgroundTasks
+from fastapi import FastAPI, Request, BackgroundTasks, HTTPException
+from fastapi.responses import RedirectResponse
 from fastapi.responses import JSONResponse
 import json
 import datetime
 import utils.KickDataGrabber as KickDataGrabber
+import requests
 
 component = tanjun.Component()
 logger = logging.getLogger(__name__)
@@ -377,7 +379,7 @@ async def receiveWebhook(request:Request, background_tasks: BackgroundTasks):
     return {"status": "ok", "message": "Webhook received and is being processed."}
 
 @app.get("/health")
-async def receiveWebhook(request:Request, background_tasks: BackgroundTasks):
+async def checkHealth():
     shortest, ndShortest = StaticMethods.GetShortestActiveCheckTimer()
     badHealthMultiplier = Constants.badHealthMultiplier
     badHealth = shortest * badHealthMultiplier
@@ -393,6 +395,57 @@ async def receiveWebhook(request:Request, background_tasks: BackgroundTasks):
         message = "Sassbot running well"
         logger.debug(f"Health check Pass: LastCheck: {timeSinceLastCheck} LastCheckND: {ndTimeSinceLastCheck}")
     return JSONResponse(content={"message": f"{message}"}, status_code=statusCode)
+
+@app.get("/callback")
+async def OAuthCallback(code: str = None, state: str = None, error: str = None):
+    if error:
+        logger.debug("got callback error")
+        raise HTTPException(
+            status_code=401, 
+            detail=f"Authorization failed. Error: {error}"
+        )
+    if not state or not state in globals.kickOauth:
+        logger.debug("oauth state didn't match")
+        raise HTTPException(
+            status_code=403, 
+            detail="State mismatch. Possible CSRF attack. Access denied."
+        )
+    try:
+        headers = {'Content-Type': "application/x-www-form-urlencoded"}
+        token_url = "https://id.kick.com/oauth/token" 
+        discordId = globals.kickOauth[state][0]
+        codeVerifier = globals.kickOauth[state][1]
+
+        payload = {
+            'code': code,
+            'client_id': Constants.kickClientId,
+            'client_secret': Constants.kickClientSecret,
+            'redirect_uri': Constants.kickRedirectUrl, 
+            'grant_type': 'authorization_code',
+            'code_verifier': codeVerifier  
+        }
+
+        response = requests.post(token_url, data=payload, headers=headers)
+        response.raise_for_status()  # This will raise an HTTPError for bad responses (4xx or 5xx)
+
+        del globals.kickOauth[state]
+        token_data = response.json()
+        accessToken = token_data['access_token']
+        refreshToken = token_data["refresh_token"]
+        tokenType = token_data["token_type"]
+        accessToken = tokenType + " " + accessToken
+        userResponse = Kick.GetUserInfoFromToken(accessToken)
+        userResponse = userResponse.json()
+        userId = userResponse['data'][0]['user_id']
+        userName = userResponse['data'][0]['name']
+        email = userResponse['data'][0]['email']
+        #profilePicture = userResponse['data'][0]['profile_picture'] # behind verification? dumb
+        db = Database()
+        db.insertKickUser(userId,userName,refreshToken=refreshToken, email=email)
+        db.insertDiscordKickAccountConnection(discordId, userId)
+    except requests.exceptions.RequestException as e:
+        raise HTTPException(status_code=500, detail=f"Failed to exchange code for token: {e}")
+    return RedirectResponse(url=Constants.kickDiscordRedirect)
 
 async def processWebhookData(body, headers):
     if 'kick-event-type' not in headers: return

@@ -12,6 +12,10 @@ from datetime import date
 import re
 import tanjun
 import logging
+import secrets
+import hashlib
+import base64
+from urllib.parse import urlencode, urlunparse, urlparse
 
 logger = logging.getLogger(__name__)
 logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
@@ -341,3 +345,22 @@ def GetShortestActiveCheckTimer():
 class EndpointFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
         return record.args and len(record.args) >= 3 and record.args[2] != "/health"
+
+def GetCodeVerifier():
+    codeVerifier = secrets.token_urlsafe(64)
+    return codeVerifier
+
+def GetOauthState():
+    return secrets.token_urlsafe(32)
+
+def GetHashedCodeVerifier(codeVerifier):
+    return hashlib.sha256(codeVerifier.encode('utf-8')).digest()
+
+def GetCodeChallenge(hashedVerifier):
+    return base64.urlsafe_b64encode(hashedVerifier).rstrip(b'=').decode('utf-8')
+
+def EncodeParamsWithUrl(params: dict, url:str) -> str:
+    encoded_params = urlencode(params)
+    parsedUrl = urlparse(url)
+    fullUrl = urlunparse(parsedUrl._replace(query=encoded_params))
+    return fullUrl

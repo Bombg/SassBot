@@ -196,6 +196,8 @@ class Constants:
     webhookHostIp = '0.0.0.0' # 127.0.0.1 if you want to host locally. 0.0.0.0 if you want to be accessable from outside IPs. Check fastAPI docs for more info
     kickChatroomId = '' # https://kick.com/api/v2/channels/<KICKUSERNAME> go here to get the ID's needed
     kickChannelId = ''
+    kickRedirectUrl = '' #Must match EXACTLY with the redirect URL entered into kick dev dashboard
+    kickDiscordRedirect = '' # Discord link to the server the user has connected their kick account to. Or whatever you want to redirect to after successful Oauth flow
     badHealthMultiplier = 2 # if badHealthMultiplier * shortest of the check timers is < last check time /health returns 503
 
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/

@@ -20,17 +20,38 @@ import alluka
 import asyncio
 from utils.EmbedCreator import EmbedCreator
 import checkers.Kick as Kick
+import globals
 
 component = tanjun.Component()
 
 @component.with_slash_command
 @tanjun.checks.with_check(StaticMethods.isPermission)
-@tanjun.with_str_slash_option("username", "Kick username/slug")
-@tanjun.as_slash_command("kick-user-info", "Delete all kick event subs",always_defer= True, default_to_ephemeral= True)
+@tanjun.as_slash_command("connect-kick", "Connect Kick Account to Discord account",always_defer= True, default_to_ephemeral= True)
 @CommandLogger
-async def getKickUserInfo(ctx: tanjun.abc.SlashContext, username:str) -> None:
-    info = Kick.getChannelInfoResponse([username]).json()
-    print(info)
+async def ConnectKickAccount(ctx: tanjun.abc.SlashContext) -> None:    
+    codeVerifier = StaticMethods.GetCodeVerifier()
+    oauthState = StaticMethods.GetOauthState()
+    hashedVerifier = StaticMethods.GetHashedCodeVerifier(codeVerifier)
+    codeChallenge = StaticMethods.GetCodeChallenge(hashedVerifier)
+    discordId = ctx.member.id
+    discordUsername = ctx.member.username
+    db = Database()
+    db.insertDiscordUser(discordId, discordUsername)
+    stateIdVerifier = {oauthState:[discordId,codeVerifier]}
+    globals.kickOauth.update(stateIdVerifier)
+    kickOauthAuthorization = 'https://id.kick.com/oauth/authorize'
+    redirectUrl = Constants.kickRedirectUrl
+    params = {
+                "client_id":Constants.kickClientId,
+                "redirect_uri":redirectUrl,
+                "response_type":"code",
+                "scope":"user:read",
+                "code_challenge":codeChallenge,
+                "code_challenge_method":"S256",
+                "state":oauthState
+            }
+    fullUrl = StaticMethods.EncodeParamsWithUrl(params, kickOauthAuthorization)
+    await ctx.respond(fullUrl)
     
 
 @component.with_slash_command

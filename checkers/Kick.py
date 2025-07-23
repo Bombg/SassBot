@@ -238,3 +238,15 @@ def getKickPublicKey()-> rsa.RSAPublicKey:
     publicKey = getPublicKey()
     publicKey = serialization.load_pem_public_key(publicKey)
     return publicKey
+
+def GetUserInfoFromToken(token:str):
+    apiHeaders={"Authorization": token,"Accept":'application/json'}
+    apiUrl = "https://api.kick.com/public/v1/users"
+    #params = {"id":""}
+    apiResponse = requests.get(apiUrl, headers=apiHeaders)
+    if apiResponse.status_code == 401:
+        logger.debug("401 w/kick attempting to get new access code")
+        globals.kickAccessToken = None
+        apiHeaders={"Authorization": getAccessToken(),"Accept":'application/json'}
+        apiResponse = requests.get(apiUrl, headers=apiHeaders)
+    return apiResponse
