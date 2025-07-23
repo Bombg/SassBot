@@ -25,7 +25,6 @@ import globals
 component = tanjun.Component()
 
 @component.with_slash_command
-@tanjun.checks.with_check(StaticMethods.isPermission)
 @tanjun.as_slash_command("connect-kick", "Connect Kick Account to Discord account",always_defer= True, default_to_ephemeral= True)
 @CommandLogger
 async def ConnectKickAccount(ctx: tanjun.abc.SlashContext) -> None:    
@@ -51,8 +50,11 @@ async def ConnectKickAccount(ctx: tanjun.abc.SlashContext) -> None:
                 "state":oauthState
             }
     fullUrl = StaticMethods.EncodeParamsWithUrl(params, kickOauthAuthorization)
-    await ctx.respond(fullUrl)
-    
+    view = MiruViews.DiscordKickConnectButton(fullUrl)
+    await ctx.respond(components=view)
+    await asyncio.sleep(30)
+    message = await ctx.fetch_last_response()
+    await ctx.interaction.delete_message(message)
 
 @component.with_slash_command
 @tanjun.checks.with_check(StaticMethods.isPermission)

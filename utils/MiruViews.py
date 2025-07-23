@@ -121,3 +121,8 @@ def createConfessionEmbed(confessionId, confession, title):
             )
         ).add_field(name="Confession/Question", value=confession)
     return embed
+
+class DiscordKickConnectButton(miru.View):
+    def __init__(self,link) -> None:
+        super().__init__(timeout=None, autodefer=True)
+        self.add_item(miru.Button(label="Connect Kick Account", url=link, style=hikari.ButtonStyle.LINK))
