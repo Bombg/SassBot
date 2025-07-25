@@ -201,10 +201,10 @@ async def connectKickWebSockets():
                         pass
                     else:
                         logger.debug(f"[KickWS] Message received: {data}")
-                        saneEvent = data['event'].replace("\\", "-")
-                        f = open(f"PusherExamples/{saneEvent}.txt", 'a')
-                        f.write(message + "\n")
-                        f.close()
+                        # saneEvent = data['event'].replace("\\", "-")
+                        # f = open(f"PusherExamples/{saneEvent}.txt", 'a')
+                        # f.write(message + "\n")
+                        # f.close()
                 except json.JSONDecodeError:
                     logger.debug(f"Received non-JSON message: {message}")
     except websockets.exceptions.ConnectionClosed as e:
