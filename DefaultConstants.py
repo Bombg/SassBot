@@ -189,11 +189,15 @@ class Constants:
 
     twitchUrl = f"https://www.twitch.tv/litneyspears_" #Add a valid twitch URL here even if you streamer doesn't have twitch or else the presence won't update properly
 
+    # Required if you want to use /health endpoint 
+    # Required for Kick API use
+    webhookPort = "" # what port to use to listen to webhooks or health checks (int not str). If left as a blank string then webhook/health check client (fastapi) wont be started
+    webhookHostIp = '0.0.0.0' # 127.0.0.1 if you want to host locally. 0.0.0.0 if you want to be accessable from outside IPs. Check fastAPI docs for more info
+    badHealthMultiplier = 2 # if badHealthMultiplier * shortest of the check timers is < last check time /health returns 503
+
     #Optional - but faster and more reliable if you setup an app on kick-- start one on the developer tab in kick settings
     kickClientId = ""
     kickClientSecret = ""
-    webhookPort = "" # what port to use to listen to webhooks or health checks (int not str). If left as a blank string then webhook/health check client (fastapi) wont be started
-    webhookHostIp = '0.0.0.0' # 127.0.0.1 if you want to host locally. 0.0.0.0 if you want to be accessable from outside IPs. Check fastAPI docs for more info
     kickChatroomId = '' # https://kick.com/api/v2/channels/<KICKUSERNAME> go here to get the ID's needed
     kickChannelId = ''
     kickRedirectUrl = '' #Must match EXACTLY with the redirect URL entered into kick dev dashboard
@@ -207,7 +211,6 @@ class Constants:
     kickSubsLongLookBackDays = 1 # Days, how far back to look into sub history to go towards threshold
     kickLongDateRolePeriod = 31 # Days, how long user keeps the role before its removed
     kickShortTimeRolePeriod = 14 # Hours, how long user keeps role before it's removed
-    badHealthMultiplier = 2 # if badHealthMultiplier * shortest of the check timers is < last check time /health returns 503
 
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
     # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. 

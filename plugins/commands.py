@@ -19,7 +19,6 @@ import utils.MiruViews as MiruViews
 import alluka
 import asyncio
 from utils.EmbedCreator import EmbedCreator
-import checkers.Kick as Kick
 import globals
 
 component = tanjun.Component()
@@ -27,7 +26,10 @@ component = tanjun.Component()
 @component.with_slash_command
 @tanjun.as_slash_command("connect-kick", "Connect Kick Account to Discord account",always_defer= True, default_to_ephemeral= True)
 @CommandLogger
-async def ConnectKickAccount(ctx: tanjun.abc.SlashContext) -> None:    
+async def ConnectKickAccount(ctx: tanjun.abc.SlashContext) -> None:
+    if not Constants.kickClientId or not Constants.kickClientSecret:
+        await ctx.respond("Kick API not set up")
+        return
     codeVerifier = StaticMethods.GetCodeVerifier()
     oauthState = StaticMethods.GetOauthState()
     hashedVerifier = StaticMethods.GetHashedCodeVerifier(codeVerifier)
@@ -55,16 +57,6 @@ async def ConnectKickAccount(ctx: tanjun.abc.SlashContext) -> None:
     await asyncio.sleep(30)
     message = await ctx.fetch_last_response()
     await ctx.interaction.delete_message(message)
-
-@component.with_slash_command
-@tanjun.checks.with_check(StaticMethods.isPermission)
-@tanjun.with_int_slash_option("kickuserid","int id of the kick channel")
-@tanjun.with_str_slash_option("eventname","name of the kick event", default="chat.message.sent")
-@tanjun.as_slash_command("event-subscribe", "subscribe", always_defer= True, default_to_ephemeral= True)
-@CommandLogger
-async def eventSubscribe(ctx: tanjun.abc.SlashContext, kickuserid:int, eventname:str) -> None:
-    Kick.subscribeWebhooks(kickuserid,eventname)
-
 
 @component.with_slash_command
 @tanjun.as_slash_command("ban-appeal", "Appeal a ban.", always_defer= True, default_to_ephemeral= True)

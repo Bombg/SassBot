@@ -186,6 +186,7 @@ def GetWebhookSubs()-> dict:
     return respJson
 
 def DeleteAllWebhooks():
+    if not Constants.kickClientId or not Constants.kickClientSecret: return
     subs = GetWebhookSubs()
     if subs and 'data' in subs:
         subIds = []

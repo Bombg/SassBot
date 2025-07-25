@@ -362,7 +362,7 @@ app = FastAPI()
 @component.with_schedule
 @tanjun.as_interval(30, max_runs=1)
 async def startWebhookServer(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if not Constants.webhookPort: return
+    if not Constants.webhookPort or not Constants.webhookHostIp: return
     Kick.DeleteAllWebhooks() # Kick stops sending webhooks to a server that hasn't responded (down or restart). Deleting and resubbing fixes that
     app.state.restClient = rest
     await checkKick(rest)
@@ -564,15 +564,13 @@ async def RemoveKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> 
         if Constants.kickLongRoleId in member.role_ids:
             if kickId:
                 await CheckRemoveLongRole(db, longDateRolePeriod, member, kickId)
-            else:
-                logger.debug(f"{member.username} was given a kick sub role without kick connectin (mod gave it to them)")
+            else: 
                 db.insertKickUser(dummyKickId, member.username)
                 await CheckRemoveLongRole(db, longDateRolePeriod, member, dummyKickId)
         if Constants.kickShortRoleId in member.role_ids:
             if kickId:
                 await CheckRemoveShortRole(db, shortTimeRolePeriod, member, kickId)
             else:
-                logger.debug(f"{member.username} was given a kick sub role without kick connectin (mod gave it to them)")
                 db.insertKickUser(dummyKickId, member.username)
                 await CheckRemoveShortRole(db,  shortTimeRolePeriod, member, dummyKickId)
 
