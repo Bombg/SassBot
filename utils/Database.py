@@ -32,6 +32,20 @@ class Database:
                     StaticMethods.rebootServer()
         return conn, cur
     
+    def GetKickSlugFromId(self, kickId:int) -> str:
+        self.createKickUserTable()
+        kickSlug = ""
+        conn, cur = self.connectCursor()
+        rowVals = (kickId,)
+        exeString = '''SELECT slug FROM kick_users WHERE id=? '''
+        cur.execute(exeString, rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            kickSlug = fetch[0][0]
+        cur.close()
+        conn.close()
+        return kickSlug
+    
     def GetKickIdFromSlug(self, kickSlug:str) -> int:
         id = 0
         self.createKickUserTable()

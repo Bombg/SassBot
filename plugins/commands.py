@@ -25,6 +25,23 @@ component = tanjun.Component()
 
 @component.with_slash_command
 @tanjun.checks.with_check(StaticMethods.isPermission)
+@tanjun.with_member_slash_option("member", "The member to select.")
+@tanjun.as_slash_command("get-discord-kick", "Get the Kick username for a specified Discord Username")
+@CommandLogger
+async def GetDiscordKick(ctx: tanjun.abc.SlashContext, member: hikari.Member) -> None:
+    db = Database()
+    flag = True
+    kickId = db.GetKickDiscordConnection(member.id)
+    if not kickId: 
+        flag = False
+    kickSlug = db.GetKickSlugFromId(kickId)
+    if kickSlug and flag:
+        await ctx.respond(f"Kick Username: {kickSlug}")
+    else:
+        await ctx.respond("Couldn't find a Kick username attached to that Discord username")
+
+@component.with_slash_command
+@tanjun.checks.with_check(StaticMethods.isPermission)
 @tanjun.with_int_slash_option("kickuserid","int id of the kick channel")
 @tanjun.with_str_slash_option("eventname","name of the kick event", default="chat.message.sent")
 @tanjun.as_slash_command("event-subscribe", "subscribe", always_defer= True, default_to_ephemeral= True)

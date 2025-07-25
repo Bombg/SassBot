@@ -249,6 +249,7 @@ def ParseLuckyUsersWhoGotGiftSubscriptionsEvent(db:Database, data):
     logger.debug(f"LuckyUsersWhoGotGiftSubscriptionsEvent: Check for insertions or handle")
 
 async def ParseChannelSubscriptionEvent(db:Database, data):
+    #{"event":"App\\Events\\ChannelSubscriptionEvent","data":"{\"user_ids\":[62315363,2872386,3225896,59025745,2398519,2086888,2086799],\"username\":\"\",\"channel_id\":31335859}","channel":"channel.31335859"}
     #{'event': 'App\\Events\\ChannelSubscriptionEvent', 'data': '{"user_ids":[67477867],"username":"noahwjbrennan","channel_id":17425723}', 'channel': 'channel.17425723'}
     data = json.loads(data['data'])
     userId = data['user_ids'][0] 
@@ -259,7 +260,8 @@ async def ParseChannelSubscriptionEvent(db:Database, data):
         if not isGiftedAlreadyExist(giftedUstring):
             logger.warning(f"ChannelSubscriptionEvent:{giftedUstring} not inserted")
     else:
-        logger.debug(f"ChannelSubscriptionEvent(gifted version): Insertion event around now or handle this")
+        logger.debug(f"ChannelSubscriptionEvent(gifted version): insertion? may be reserved for anon gifts?")
+        logger.debug(data)
 
 def ParseGiftedSubscriptionsEvent(db:Database, data):
     #{'event': 'GiftedSubscriptionsEvent', 'data': '{"chatroom_id":25951243,"gifted_usernames":["rawze"],"gifter_username":"F1Aa","gifter_total":1}', 'channel': 'chatroom_25951243'}
