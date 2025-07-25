@@ -23,6 +23,32 @@ import globals
 
 component = tanjun.Component()
 
+async def KickUserAutoCompelte(ctx: tanjun.abc.AutocompleteContext, value:str) -> None:
+    db = Database()
+    kickUsers = db.GetKickUsersAndId()
+    choices = [
+                name for name in kickUsers if value.lower() in name.lower()
+            ]
+    await ctx.set_choices({name: name for name in choices[:25]})
+
+@component.with_slash_command
+@tanjun.checks.with_check(StaticMethods.isPermission)
+@tanjun.with_member_slash_option("member", "The member to select.")
+@tanjun.with_str_slash_option("kickuser", "Select Kick user.", autocomplete=KickUserAutoCompelte)
+@tanjun.as_slash_command("manual-connect-kick", "MOD can connect Kick Account to Discord Account", always_defer=True, default_to_ephemeral=True)
+@CommandLogger
+async def ManualConnectKickAccount(ctx: tanjun.abc.SlashContext, member: hikari.Member, kickuser:str) -> None:
+    db = Database()
+    if member and kickuser:
+        kickId = db.GetKickIdFromSlug(kickuser.lower())
+        if kickId:
+            db.insertDiscordKickAccountConnection(member.id,kickId)
+            await ctx.respond(f"Inserted {kickuser}:{kickId} connected with {member.username}:{member.id}")
+        else:
+            await ctx.respond("User not in DB. Have them talk in Kick chat to be recorded")
+    else:
+        await ctx.respond("bad data entry. Try again")
+
 @component.with_slash_command
 @tanjun.as_slash_command("connect-kick", "Connect Kick Account to Discord account",always_defer= True, default_to_ephemeral= True)
 @CommandLogger

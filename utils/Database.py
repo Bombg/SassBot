@@ -32,6 +32,36 @@ class Database:
                     StaticMethods.rebootServer()
         return conn, cur
     
+    def GetKickIdFromSlug(self, kickSlug:str) -> int:
+        id = 0
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        rowVals = (kickSlug,)
+        exeString = '''SELECT id FROM kick_users WHERE slug=? '''
+        cur.execute(exeString, rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            id = fetch[0][0]
+        cur.close()
+        conn.close()
+        return id
+
+    
+    def GetKickUsersAndId(self):
+        kickUsers = {}
+        conn, cur = self.connectCursor()
+        self.createKickUserTable()
+        exeString = '''SELECT id,slug from kick_users '''
+        cur.execute(exeString)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            for user in fetch:
+                if user[0] > 0: #dummy kick accounts id < 0
+                    kickUsers[user[1]] = user[0]
+        cur.close()
+        conn.close()
+        return kickUsers
+    
     def CreateAccountConnectionsTable(self):
         conn, cur = self.connectCursor()
         GenerateDatabase.CreateAccountConnectionsTable(cur)

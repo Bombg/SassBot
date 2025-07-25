@@ -114,8 +114,8 @@ def getAccessToken():
                     "client_secret":Constants.kickClientSecret
         }
         response = requests.post(authorizationUrl, headers=headers, data=tokenJson)
-        data = response.json()
         if response.status_code == 200:
+            data = response.json()
             accessToken = data["access_token"]
             expiresIn = data["expires_in"]
             tokenType = data["token_type"]
