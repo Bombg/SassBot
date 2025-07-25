@@ -32,6 +32,22 @@ class Database:
                     StaticMethods.rebootServer()
         return conn, cur
     
+    def GetLastSubDate(self,kickId) -> str:
+        self.createKickSubTable()
+        subDate = ''
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT sub_id,user_id, date_iso from kick_subs ORDER BY sub_id DESC'''
+        cur.execute(exeString)
+        row = cur.fetchone()
+        while row and not subDate:
+            if row[1] == kickId:
+                subDate = row[2]
+            row = cur.fetchone()
+        cur.close()
+        conn.close()
+        return subDate
+
+    
     def GetKickSlugFromId(self, kickId:int) -> str:
         self.createKickUserTable()
         kickSlug = ""

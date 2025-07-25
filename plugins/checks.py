@@ -531,9 +531,10 @@ async def HandleShortSubRoles(rest:hikari.impl.RESTClientImpl, db:Database, shor
                 if roleId == role.id:
                     isExist = True
             if not isExist and not db.isHasShortDate(k):
-                logger.debug("adding role")
+                logger.debug("adding short role")
+                lastSubDate = db.GetLastSubDate(k)
                 await member.add_role(roleId)
-                db.InsertShortRoleDate(k)
+                db.InsertShortRoleDate(k, roledate=lastSubDate)
 
 async def HandleLongSubRoles(rest:hikari.impl.RESTClientImpl, db:Database, longSubbers:dict):
     for k,v in longSubbers.items():
@@ -549,7 +550,8 @@ async def HandleLongSubRoles(rest:hikari.impl.RESTClientImpl, db:Database, longS
             if not isExist and not db.isHasLongDate(k):
                 logger.debug("adding long role")
                 await member.add_role(roleId)
-                db.InsertLongRoleDate(k)
+                lastSubDate = db.GetLastSubDate(k)
+                db.InsertLongRoleDate(k, roledate=lastSubDate)
 
 @component.with_schedule
 @tanjun.as_interval(15)
