@@ -55,7 +55,15 @@ async def ManualConnectKickAccount(ctx: tanjun.abc.SlashContext, member: hikari.
             db.insertDiscordKickAccountConnection(member.id,kickId)
             await ctx.respond(f"Inserted {kickuser}:{kickId} connected with {member.username}:{member.id}")
         else:
-            await ctx.respond("User not in DB. Have them talk in Kick chat to be recorded")
+            import checkers.Kick as Kick
+            info = Kick.getChannelInfoResponse([kickuser]).json()
+            if info:
+                kickId = info['data'][0]['broadcaster_user_id']
+                db.insertKickUser(kickId,kickuser)
+                db.insertDiscordKickAccountConnection(member.id,kickId)
+                await ctx.respond(f"Inserted {kickuser}:{kickId} connected with {member.username}:{member.id}")
+            else:
+                await ctx.respond("User not in DB AND not found at API. Have them talk in Kick chat to be recorded OR enter their name correctly")
     else:
         await ctx.respond("bad data entry. Try again")
 

@@ -41,7 +41,8 @@ class Database:
         cur.execute(exeString, rowVals)
         fetch = cur.fetchall()
         if fetch and fetch[0][0] != None:
-            id = fetch[0][0]
+            if fetch[0][0] > 0:
+                id = fetch[0][0]
         cur.close()
         conn.close()
         return id
