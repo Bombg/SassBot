@@ -223,9 +223,13 @@ def ParseSubscriptionEvent(db:Database, data):
     gifterUString = CreateGiftedUString(["self"],userName,1)
     if not isGiftedAlreadyExist(gifterUString):
         logger.debug(f"SubscriptionEvent:{gifterUString} inserting")
-        currentDate = datetime.datetime.now(datetime.timezone.utc)
-        db.insertKickSub(userId, userName, 1, currentDate.isoformat(), channel, selfSub=months)
-        globals.kickGiftUStrings.append(gifterUString)
+        HandleKickSub(db, userId, userName, 1, channel, months, gifterUString)
+
+def HandleKickSub(db:Database, userId, userName, numGifted, channel,  months, gifterUString):
+    currentDate = datetime.datetime.now(datetime.timezone.utc)
+    db.insertKickSub(userId, userName, numGifted, currentDate.isoformat(), channel, selfSub=months)
+    globals.kickGiftUStrings.append(gifterUString)
+
 
 def ParseChatMessageEvent(db:Database, data):
     #{'event': 'App\\Events\\ChatMessageEvent', 'data': '{"id":"bbcdbcfd-8619-40c2-a0d0-ae7cf4c7a932","chatroom_id":1221707,"content":"[emote:3989851:litneyspears4Max]on my way to show you love","type":"message","created_at":"2025-07-17T08:44:56+00:00","sender":{"id":3528468,"username":"OhLookItsMax","slug":"ohlookitsmax","identity":{"color":"#FF9D00","badges":[{"type":"vip","text":"VIP"},{"type":"subscriber","text":"Subscriber","count":26}]}},"metadata":{"message_ref":"1752741896375"}}', 'channel': 'chatrooms.1221707.v2'}
@@ -270,9 +274,7 @@ def ParseGiftedSubscriptionsEvent(db:Database, data):
         logger.debug(f"GiftedSubscriptionsEvent:{giftedUString} inserting")
         info = Kick.getChannelInfoResponse([userName]).json()
         userId = info['data'][0]['broadcaster_user_id']
-        currentDate = datetime.datetime.now(datetime.timezone.utc)
-        db.insertKickSub(userId, userName, numGifted, currentDate.isoformat(),channel)
-        globals.kickGiftUStrings.append(giftedUString)
+        HandleKickSub(db, userId, userName, numGifted, channel, None, giftedUString)
 
 def ParseChatMessageSentEvent(db:Database, data):
     #{'event': 'App\\Events\\ChatMessageSentEvent', 'data': '{"message":{"id":"93ae8404-b077-46ba-a095-76f167b3b185","message":null,"type":"info","replied_to":null,"is_info":null,"link_preview":null,"chatroom_id":1221707,"role":"user","created_at":1751605454,"action":"gift","optional_message":null,"months_subscribed":null,"subscriptions_count":5,"giftedUsers":[{"username":"Terraflux","monthsSubscribed":1},{"username":"xHayir","monthsSubscribed":1},{"username":"Darren911","monthsSubscribed":1},{"username":"Hoodhotest","monthsSubscribed":1},{"username":"thetroublewithravens","monthsSubscribed":1}]},"user":{"id":2289061,"username":"PhatBoiLotto","role":"user","isSuperAdmin":null,"profile_thumb":"https:\\/\\/kick-files-prod.s3.us-west-2.amazonaws.com\\/images\\/user\\/2289061\\/profile_image\\/conversion\\/462cfe47-917a-46d7-8db4-f79a4dcae213-thumb.webp?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAS3MDRZGPDOOAYROR%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T050415Z&X-Amz-SignedHeaders=host&X-Amz-Expires=299&X-Amz-Signature=4dbf64a8b9d3ad89c30bc8c4fac2c284800f98e26c7ef842fceec03d7969b2ba","verified":false,"follower_badges":[],"is_subscribed":null,"is_founder":false,"months_subscribed":null,"quantity_gifted":0}}', 'channel': 'chatrooms.1221707'}
@@ -281,21 +283,18 @@ def ParseChatMessageSentEvent(db:Database, data):
     numGifted = data['message']['subscriptions_count'] # num gifted in the single event (1,5 10, 20 etc) 0 gifted is self sub
     userId = data['user']['id']
     userName = data['user']['username']
-    currentDate = datetime.datetime.now(datetime.timezone.utc)
     if numGifted > 0:
         giftedList = MakeGiftedList(data['message']['giftedUsers'])
         giftedUString = CreateGiftedUString(giftedList, userName, numGifted)
         if not isGiftedAlreadyExist(giftedUString):
             logger.debug(f"ChatMessageSentEvent:{giftedUString} inserting")
-            db.insertKickSub(userId, userName, numGifted, currentDate.isoformat(), channel)
-            globals.kickGiftUStrings.append(giftedUString)
+            HandleKickSub(db, userId, userName, numGifted, channel, None, giftedUString)
     else:
         giftedUString = CreateGiftedUString(["self"], userName, 1)
         if not isGiftedAlreadyExist(giftedUString):
             logger.debug(f"ChatMessageSentEvent:{giftedUString} inserting")
             months = data['user']['months_subscribed']
-            db.insertKickSub(userId, userName, 1, currentDate.isoformat(), channel, selfSub=months)
-            globals.kickGiftUStrings.append(giftedUString)
+            HandleKickSub(db, userId, userName, 1, channel, months, giftedUString)
 
 async def subWsChannel(channel, ws):
     subscribeMessage = {

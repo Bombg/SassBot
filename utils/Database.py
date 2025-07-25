@@ -32,6 +32,174 @@ class Database:
                     StaticMethods.rebootServer()
         return conn, cur
     
+    def CreateAccountConnectionsTable(self):
+        conn, cur = self.connectCursor()
+        GenerateDatabase.CreateAccountConnectionsTable(cur)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def isHasShortDate(self,kickId):
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        hasDate = False
+        rowVals = (kickId,)
+        exeString = f'''SELECT short_role_date FROM kick_users WHERE id=?'''
+        cur.execute(exeString,rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            hasDate = True
+        cur.close()
+        conn.close()
+        return hasDate
+    
+    def GetShortDate(self,kickId):
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        hasDate = False
+        rowVals = (kickId,)
+        exeString = f'''SELECT short_role_date FROM kick_users WHERE id=?'''
+        cur.execute(exeString,rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            hasDate = fetch[0][0]
+        cur.close()
+        conn.close()
+        return hasDate
+    
+    def GetLongDate(self,kickId):
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        hasDate = False
+        rowVals = (kickId,)
+        exeString = f'''SELECT long_role_date FROM kick_users WHERE id=?'''
+        cur.execute(exeString,rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            hasDate = fetch[0][0]
+        cur.close()
+        conn.close()
+        return hasDate
+
+    def isHasLongDate(self,kickId):
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        hasDate = False
+        rowVals = (kickId,)
+        exeString = f'''SELECT long_role_date FROM kick_users WHERE id=?'''
+        cur.execute(exeString,rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            hasDate = True
+        cur.close()
+        conn.close()
+        return hasDate
+    
+    def InsertLongRoleDate(self,kickId, roledate = datetime.datetime.now(datetime.timezone.utc).isoformat()):
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        rowVals = (roledate, kickId)
+        exeString = f'''UPDATE kick_users SET long_role_date=? WHERE id=?'''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+
+    def InsertShortRoleDate(self,kickId, roledate = datetime.datetime.now(datetime.timezone.utc).isoformat()):
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        rowVals = (roledate, kickId)
+        exeString = f'''UPDATE kick_users SET short_role_date=? WHERE id=?'''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def GetDiscordKickConnection(self,kickId):
+        self.CreateAccountConnectionsTable()
+        discordId = 0
+        conn, cur = self.connectCursor()
+        rowVals = (kickId,)
+        exeString = f'''SELECT discord_id FROM account_connections WHERE kick_id=? '''
+        cur.execute(exeString,rowVals)
+        fetch = cur.fetchall()
+        if fetch:
+            discordId = fetch[0][0]
+        cur.close()
+        conn.close()
+        return discordId
+    
+    def GetKickDiscordConnection(self,discordId):
+        self.CreateAccountConnectionsTable()
+        kickId = 0
+        conn, cur = self.connectCursor()
+        rowVals = (discordId,)
+        exeString = f'''SELECT kick_id FROM account_connections WHERE discord_id=? '''
+        cur.execute(exeString,rowVals)
+        fetch = cur.fetchall()
+        if fetch:
+            kickId = fetch[0][0]
+        cur.close()
+        conn.close()
+        return kickId
+    
+    def GetSubTimeHours(self,hours, subTreshhold):
+        self.createKickSubTable()
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT * from kick_subs ORDER BY sub_id DESC'''
+        cur.execute(exeString)
+        row = cur.fetchone()
+        shortSubCounts = {}
+        idNameDict = {}
+        while row:
+            subTime = datetime.datetime.fromisoformat(row[4])
+            shortThreshhold = datetime.datetime.now(datetime.timezone.utc) - timedelta(hours=hours)
+            if row[1] not in idNameDict:
+                idNameDict[row[1]] = row[2]
+            if subTime > shortThreshhold: # larger is newer
+                if row[1] not in shortSubCounts:
+                    shortSubCounts[row[1]] = 0
+                shortSubCounts[row[1]] += row[3]
+            else:
+                break
+            row = cur.fetchone()
+        cur.close()
+        conn.close()
+        shortList = {}
+        for id in shortSubCounts:
+            if shortSubCounts[id] >= subTreshhold:
+                shortList[id] = idNameDict[id]
+        return shortList
+    
+    def GetSubTimeDays(self,days, subThreshold):
+        self.createKickSubTable()
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT * from kick_subs ORDER BY sub_id DESC'''
+        cur.execute(exeString)
+        row = cur.fetchone()
+        longSubCounts = {}
+        idNameDict = {}
+        while row:
+            subTime = datetime.datetime.fromisoformat(row[4])
+            longThreshhold = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=days)
+            if row[1] not in idNameDict:
+                idNameDict[row[1]] = row[2]
+            if subTime > longThreshhold: # larger is newer
+                if row[1] not in longSubCounts:
+                    longSubCounts[row[1]] = 0
+                longSubCounts[row[1]] += row[3]
+            else:
+                break
+            row = cur.fetchone()
+        cur.close()
+        conn.close()
+        longList = {}
+        for id in longSubCounts:
+            if longSubCounts[id] >= subThreshold:
+                longList[id] = idNameDict[id]
+        return longList
+    
     def createDiscordUserTable(self):
         conn, cur = self.connectCursor()
         GenerateDatabase.CreateDiscordUsersTable(cur)

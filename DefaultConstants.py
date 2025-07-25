@@ -198,6 +198,15 @@ class Constants:
     kickChannelId = ''
     kickRedirectUrl = '' #Must match EXACTLY with the redirect URL entered into kick dev dashboard
     kickDiscordRedirect = '' # Discord link to the server the user has connected their kick account to. Or whatever you want to redirect to after successful Oauth flow
+    hasRolePermissions = False # if the bot has permissions to change roles for kick sub roles
+    kickLongRoleId = 0 #IDs for the roles you give to people who sub. Long is for month long subs
+    kickShortRoleId = 0 # Short is meant for one day discord shows
+    kickSubsShortThreshold = 5 # Number of subs to get the Short Role
+    kickSubsShortLookBackHours = 12 # Hours, how far back to look into sub history to go towards threshold
+    kickSubsLongThreshold = 1 # Number of subs to get the Long Role
+    kickSubsLongLookBackDays = 1 # Days, how far back to look into sub history to go towards threshold
+    kickLongDateRolePeriod = 31 # Days, how long user keeps the role before its removed
+    kickShortTimeRolePeriod = 14 # Hours, how long user keeps role before it's removed
     badHealthMultiplier = 2 # if badHealthMultiplier * shortest of the check timers is < last check time /health returns 503
 
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/

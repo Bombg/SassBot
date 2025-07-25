@@ -1,3 +1,4 @@
+import hikari.errors
 import tanjun
 import alluka
 import hikari
@@ -500,3 +501,101 @@ async def startKickWebsocket(rest: alluka.Injected[hikari.impl.RESTClientImpl]) 
             lastLaunchTime = time.time()
             numRetries = 1
     logger.critical("Kick Websocket failed after reaching max retries")
+
+@component.with_schedule
+@tanjun.as_interval(15)
+async def AddKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    if not Constants.hasRolePermissions: return
+    db = Database()
+    subsShortThreshold = Constants.kickSubsShortThreshold
+    subsShortLookBackHours = Constants.kickSubsShortLookBackHours
+    subsLongThreshold = Constants.kickSubsLongThreshold
+    subsLongLookBackDays = Constants.kickSubsLongLookBackDays
+    shortSubbers = db.GetSubTimeHours(subsShortLookBackHours, subsShortThreshold)
+    longSubbers = db.GetSubTimeDays(subsLongLookBackDays,subsLongThreshold)
+    try:
+        await HandleShortSubRoles(rest, db, shortSubbers)
+        await HandleLongSubRoles(rest, db, longSubbers)
+    except hikari.errors.ForbiddenError:
+        logger.warning("Don't have permission to change roles or own role isn't high enough")
+
+async def HandleShortSubRoles(rest:hikari.impl.RESTClientImpl, db:Database, shortSubbers:dict):
+    for k,v in shortSubbers.items():
+        discordId = db.GetDiscordKickConnection(k)
+        if discordId:
+            member = await rest.fetch_member(Constants.GUILD_ID, discordId)
+            roleId = Constants.kickShortRoleId
+            roles = member.get_roles()
+            isExist = False
+            for role in roles:
+                if roleId == role.id:
+                    isExist = True
+            if not isExist and not db.isHasShortDate(k):
+                logger.debug("adding role")
+                await member.add_role(roleId)
+                db.InsertShortRoleDate(k)
+
+async def HandleLongSubRoles(rest:hikari.impl.RESTClientImpl, db:Database, longSubbers:dict):
+    for k,v in longSubbers.items():
+        discordId = db.GetDiscordKickConnection(k)
+        if discordId:
+            member = await rest.fetch_member(Constants.GUILD_ID, discordId)
+            roleId = Constants.kickLongRoleId
+            roles = member.get_roles()
+            isExist = False
+            for role in roles:
+                if roleId == role.id:
+                    isExist = True
+            if not isExist and not db.isHasLongDate(k):
+                logger.debug("adding long role")
+                await member.add_role(roleId)
+                db.InsertLongRoleDate(k)
+
+@component.with_schedule
+@tanjun.as_interval(15)
+async def RemoveKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    if not Constants.hasRolePermissions:return
+    db = Database()
+    longDateRolePeriod = Constants.kickLongDateRolePeriod
+    shortTimeRolePeriod = Constants.kickShortTimeRolePeriod
+    async for member in rest.fetch_members(Constants.GUILD_ID):
+        kickId = db.GetKickDiscordConnection(member.id)
+        dummyKickId = member.id * -1
+        if Constants.kickLongRoleId in member.role_ids:
+            if kickId:
+                await CheckRemoveLongRole(db, longDateRolePeriod, member, kickId)
+            else:
+                logger.debug(f"{member.username} was given a kick sub role without kick connectin (mod gave it to them)")
+                db.insertKickUser(dummyKickId, member.username)
+                await CheckRemoveLongRole(db, longDateRolePeriod, member, dummyKickId)
+        if Constants.kickShortRoleId in member.role_ids:
+            if kickId:
+                await CheckRemoveShortRole(db, shortTimeRolePeriod, member, kickId)
+            else:
+                logger.debug(f"{member.username} was given a kick sub role without kick connectin (mod gave it to them)")
+                db.insertKickUser(dummyKickId, member.username)
+                await CheckRemoveShortRole(db,  shortTimeRolePeriod, member, dummyKickId)
+
+async def CheckRemoveLongRole(db:Database, longDateRolePeriod, member, kickId):
+    longDate = db.GetLongDate(kickId)
+    if longDate: 
+        longDate = datetime.datetime.fromisoformat(longDate)
+        threshhold = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=longDateRolePeriod)
+        if longDate < threshhold:
+            logger.debug(f"{member.username} kick Long sub role expired. Removing")
+            await member.remove_role(Constants.kickLongRoleId)
+            db.InsertLongRoleDate(kickId,roledate=None)
+    else:
+        db.InsertLongRoleDate(kickId)
+
+async def CheckRemoveShortRole(db:Database, shortDateRolePeriod, member, kickId):
+    shortDate = db.GetShortDate(kickId)
+    if shortDate: 
+        shortDate = datetime.datetime.fromisoformat(shortDate)
+        threshhold = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=shortDateRolePeriod)
+        if shortDate < threshhold:
+            logger.debug(f"{member.username} kick Short sub role expired. Removing")
+            await member.remove_role(Constants.kickShortRoleId)
+            db.InsertLongRoleDate(kickId,roledate=None)
+    else:
+        db.InsertShortRoleDate(kickId)

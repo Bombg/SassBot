@@ -1,5 +1,5 @@
 import sqlite3
-import time
+
 #INTEGER = int
 #REAL = float
 #TEXT = string
@@ -14,7 +14,9 @@ def CreateKickUsersTable(cur):
                 channel_id INTEGER,
                 chatroom_id INTEGER,
                 email TEXT,
-                refresh_token TEXT
+                refresh_token TEXT,
+                long_role_date TEXT,
+                short_role_date TEXT
             )
     ''')
 
