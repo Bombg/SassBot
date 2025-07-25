@@ -23,6 +23,16 @@ import globals
 
 component = tanjun.Component()
 
+@component.with_slash_command
+@tanjun.checks.with_check(StaticMethods.isPermission)
+@tanjun.with_int_slash_option("kickuserid","int id of the kick channel")
+@tanjun.with_str_slash_option("eventname","name of the kick event", default="chat.message.sent")
+@tanjun.as_slash_command("event-subscribe", "subscribe", always_defer= True, default_to_ephemeral= True)
+@CommandLogger
+async def eventSubscribe(ctx: tanjun.abc.SlashContext, kickuserid:int, eventname:str) -> None:
+    import checkers.Kick as Kick
+    Kick.subscribeWebhooks(kickuserid,eventname)
+
 async def KickUserAutoCompelte(ctx: tanjun.abc.AutocompleteContext, value:str) -> None:
     db = Database()
     kickUsers = db.GetKickUsersAndId()
