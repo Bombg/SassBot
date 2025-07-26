@@ -62,6 +62,7 @@ class Database:
         return titleIdDict
     
     def isClipRowCountZero(self):
+        self.createKickClipsTable()
         conn, cur = self.connectCursor()
         exeString = '''SELECT COUNT(*) from kick_clips '''
         cur.execute(exeString)
@@ -71,6 +72,7 @@ class Database:
         return count == 0
     
     def isClipsFullyScanned(self):
+        self.createKickClipsTable()
         conn, cur = self.connectCursor()
         isScanned = True
         rowVals = ("greenLight",)
@@ -84,6 +86,7 @@ class Database:
         return isScanned
     
     def MarkClipsFullyScanned(self):
+        self.createKickClipsTable()
         conn, cur = self.connectCursor()
         rowVals = ("greenLight",)
         exeString = '''DELETE FROM kick_clips WHERE clip_id=?'''
