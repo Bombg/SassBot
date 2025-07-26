@@ -20,8 +20,23 @@ import alluka
 import asyncio
 from utils.EmbedCreator import EmbedCreator
 import globals
+import itertools
 
 component = tanjun.Component()
+
+async def KickClipAutoComplete(ctx: tanjun.abc.AutocompleteContext, value:str) -> None:
+    db = Database()
+    kickCLips = db.GetKickClipIdTitles()
+    choices = {name: val for name,val in kickCLips.items() if value.lower() in name.lower()}
+    await ctx.set_choices(dict(itertools.islice(choices.items(), 25)))
+
+@component.with_slash_command
+@tanjun.with_str_slash_option("title", "Title of the clip you're looking for",autocomplete=KickClipAutoComplete)
+@tanjun.as_slash_command("kick-clip-search", "Search for a kick clip", default_to_ephemeral=True, always_defer=True)
+async def SearchKickClips(ctx: tanjun.abc.SlashContext, title:str):
+    db = Database()
+    slug = db.GetChannelSlugFromClipId(title)
+    await ctx.respond(f'https://kick.com/{slug}/clips/{title}')
 
 @component.with_slash_command
 @tanjun.checks.with_check(StaticMethods.isPermission)

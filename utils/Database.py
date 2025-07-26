@@ -32,6 +32,35 @@ class Database:
                     StaticMethods.rebootServer()
         return conn, cur
     
+    def GetChannelSlugFromClipId(self, clipId):
+        self.createKickClipsTable()
+        slug = ''
+        conn, cur = self.connectCursor()
+        rowVal = (clipId,)
+        exeString = '''SELECT channel_slug FROM kick_clips WHERE clip_id=? '''
+        cur.execute(exeString, rowVal)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            slug = fetch[0][0]
+        cur.close()
+        conn.close()
+        return slug
+
+    
+    def GetKickClipIdTitles(self):
+        self.createKickClipsTable()
+        conn, cur = self.connectCursor()
+        titleIdDict = {}
+        exeString = '''SELECT clip_id, title FROM kick_clips '''
+        cur.execute(exeString)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            for touple in fetch:
+                titleIdDict[touple[1]] = touple[0]
+        cur.close()
+        conn.close()
+        return titleIdDict
+    
     def isClipRowCountZero(self):
         conn, cur = self.connectCursor()
         exeString = '''SELECT COUNT(*) from kick_clips '''
