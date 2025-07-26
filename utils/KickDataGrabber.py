@@ -42,10 +42,10 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
         else:
             jsonText = content[1].split('</body></html>')
             results = json.loads(jsonText[0])
+            await ndb.CloseNDBrowser(browser, page)
             if 'nextCursor' in results:
                 if globals.kickClipCursor in globals.kickVisitedCursors:
                     logger.debug("browser out of order after page load")
-                    await ndb.CloseNDBrowser(browser, page)
                     return
                 globals.kickVisitedCursors.append(globals.kickClipCursor)
                 globals.kickClipCursor = results['nextCursor']
@@ -75,7 +75,6 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
                     AddMostViewedClipToGlobal(clip, viewIncrease)
             if not globals.kickClipCursor:
                 await AnnounceWinnersHandleData(kickSlug, rest, db) 
-        await ndb.CloseNDBrowser(browser, page)
     except Exception as e:
         logger.exception(e)
         globals.browserOpen = False
