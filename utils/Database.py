@@ -32,6 +32,37 @@ class Database:
                     StaticMethods.rebootServer()
         return conn, cur
     
+    def isClipRowCountZero(self):
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT COUNT(*) from kick_clips '''
+        cur.execute(exeString)
+        count = cur.fetchone()[0]
+        cur.close()
+        conn.close()
+        return count == 0
+    
+    def isClipsFullyScanned(self):
+        conn, cur = self.connectCursor()
+        isScanned = True
+        rowVals = ("greenLight",)
+        exeString = '''SELECT clip_id from kick_clips where clip_id=? '''
+        cur.execute(exeString, rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            isScanned = False
+        cur.close()
+        conn.close()
+        return isScanned
+    
+    def MarkClipsFullyScanned(self):
+        conn, cur = self.connectCursor()
+        rowVals = ("greenLight",)
+        exeString = '''DELETE FROM kick_clips WHERE clip_id=?'''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+
     def GetLastSubDate(self,kickId) -> str:
         self.createKickSubTable()
         subDate = ''

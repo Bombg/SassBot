@@ -24,6 +24,8 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
     apiUrl = f"https://kick.com/api/v2/channels/{kickSlug}/clips"
     if globals.kickClipCursor:
         apiUrl = f"{apiUrl}?cursor={globals.kickClipCursor}"
+    if db.isClipRowCountZero():
+        db.addKickClipToTable("greenLight",None,None,None,None,None,None,None)
     browser = await ndb.GetBrowser(proxy=Constants.KICK_PROXY)
     try:
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
@@ -40,6 +42,8 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
             if 'nextCursor' in results:
                 globals.kickClipCursor = results['nextCursor']
                 logger.debug(f"grabbing clip data from {apiUrl} and going again at cursor: {results['nextCursor']}")
+            else:
+                db.MarkClipsFullyScanned()
             for clip in results['clips']:
                 exeString = f'''SELECT clip_id FROM kick_clips WHERE clip_id='{clip['id']}' '''
                 creationDate = dt.strptime(clip['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
@@ -57,7 +61,7 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
                     viewIncrease = clip['views'] - previousViews
                     AddTotalViewsToGlobal(clip, viewIncrease)
                     db.updateKickClipViews(clip['id'],clip['views'])
-                else:
+                elif db.isClipsFullyScanned():
                     globals.kickClipCursor = ""
                 if viewIncrease > globals.kickClipMostViews:
                     AddMostViewedClipToGlobal(clip, viewIncrease)
@@ -99,7 +103,10 @@ async def AnnounceWinnersHandleData(kickSlug: str, rest:hikari.impl.RESTClientIm
                     f"- ** {globals.kickClipMostViewsTitle.capitalize()} ** \n" \
                     f"     - clipped by: ** {globals.kickClipMostViewsClipper.capitalize()} ** \n"\
                     f"     - ** {mostViewedClipUrl} **"
-    await rest.create_message(channel=Constants.KICK_CLIPS_ANNOUNCEMENT_CHANNEL, content=messageContent)
+    if views and mostViewedUser and mostClipper and numClips and globals.kickClipMostViewsTitle and globals.kickClipMostViewsId:
+        await rest.create_message(channel=Constants.KICK_CLIPS_ANNOUNCEMENT_CHANNEL, content=messageContent)
+    else:
+        logger.warning("Weekly Kick Clip Data announcement cancelled. Data gathering interrupted or no data")
     db.createWeeklyKickClipsData(f"{isoYear}:{isoWeek}",globals.kickClipMostViewsId, mostViewedUser, mostClipper)
     ResetClipGlobals()
 
