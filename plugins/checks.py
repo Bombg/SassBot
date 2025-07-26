@@ -147,7 +147,6 @@ async def checkKick(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if Constants.kickUserName:
         for kickUserName in Constants.kickUserName:
             await platformChecker(kickOnlineFunc, Notifications.KickNotification,kickUserName,"kick",rest)
-            await checkKickClips(kickUserName, rest)
             await asyncio.sleep(Constants.KICK_CHECK_TIMER/len(Constants.kickUserName)%Constants.KICK_CHECK_TIMER)
 
 @component.with_schedule
@@ -465,14 +464,17 @@ async def processWebhookData(body, headers):
     logger.debug(body)
     logger.debug(str(headers))
 
-async def checkKickClips(kickSlug, rest: hikari.impl.RESTClientImpl) -> None:
+@component.with_schedule
+@tanjun.as_interval(Constants.KICK_CHECK_TIMER)
+async def checkKickClips(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     today = datetime.date.today()
     isoYear, isoWeek, isoDayOfWeek = today.isocalendar()
     yearWeek = f"{isoYear}:{isoWeek}"
     db = Database()
     exeString = f'''SELECT year_week FROM kick_clips_heroes WHERE year_week='{yearWeek}' '''
-    if not db.isExists(exeString):
-        await KickDataGrabber.CollectClipData(kickSlug, rest)
+    for kickUserName in Constants.kickUserName:
+        if not db.isExists(exeString):
+            await KickDataGrabber.CollectClipData(kickUserName.lower(), rest)
 
 @component.with_schedule
 @tanjun.as_time_schedule(minutes=[0,10,20,30,40,50])

@@ -28,6 +28,9 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
         db.addKickClipToTable("greenLight",None,None,None,None,None,None,None)
     browser = await ndb.GetBrowser(proxy=Constants.KICK_PROXY)
     try:
+        if globals.kickClipCursor in globals.kickVisitedCursors:
+            logger.debug("browser out of order pre page load")
+            return
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
         page = await browser.get(apiUrl)
         await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
@@ -40,6 +43,11 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
             jsonText = content[1].split('</body></html>')
             results = json.loads(jsonText[0])
             if 'nextCursor' in results:
+                if globals.kickClipCursor in globals.kickVisitedCursors:
+                    logger.debug("browser out of order after page load")
+                    await ndb.CloseNDBrowser(browser, page)
+                    return
+                globals.kickVisitedCursors.append(globals.kickClipCursor)
                 globals.kickClipCursor = results['nextCursor']
                 logger.debug(f"grabbing clip data from {apiUrl} and going again at cursor: {results['nextCursor']}")
             else:

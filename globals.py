@@ -44,6 +44,7 @@ kickClipMostClips = {} # slug:numClips
 kickGiftUStrings = []
 kickOauth = {}
 kickLastWebhookHeaders = ''
+kickVisitedCursors = []
 
 lastCheckTime = time.time()
 lastNoDriverCheckTime = time.time()
