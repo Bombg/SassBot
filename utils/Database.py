@@ -346,7 +346,15 @@ class Database:
         conn, cur = self.connectCursor()
         slug = slug.lower()
         rowVals = (userId, slug, channelId, chatroomId, refreshToken, email)
-        exeString = '''INSERT INTO kick_users (id, slug, channel_id, chatroom_id, refresh_token, email) VALUES(?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET slug = excluded.slug'''
+        exeString = '''INSERT INTO kick_users (id, slug, channel_id, chatroom_id, refresh_token, email) 
+                        VALUES(?,?,?,?,?,?) 
+                        ON CONFLICT(id) DO UPDATE SET 
+                        slug = COALESCE(excluded.slug, slug),
+                        channel_id= COALESCE(excluded.channel_id, channel_id),
+                        chatroom_id= COALESCE(excluded.chatroom_id, chatroom_id),
+                        refresh_token= COALESCE(excluded.refresh_token, refresh_token),
+                        email= COALESCE(excluded.email, email)
+                    '''
         cur.execute(exeString, rowVals)
         conn.commit()
         cur.close()
