@@ -174,7 +174,7 @@ async def connectKickWebSockets():
                         for channel in channels:
                             await subWsChannel(channel, ws)
                     elif data['event'] == 'pusher:error' and data['data']['code'] == 4200:
-                        await ws.close(close_timeout = 3)
+                        await ws.close()
                         logger.warning("Kick Websocket dropped")
                     elif data['event'] == 'App\\Events\\ChannelSubscriptionEvent':
                         await ParseChannelSubscriptionEvent(db,data)
