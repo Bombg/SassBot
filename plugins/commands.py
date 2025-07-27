@@ -33,6 +33,7 @@ async def KickClipAutoComplete(ctx: tanjun.abc.AutocompleteContext, value:str) -
 @component.with_slash_command
 @tanjun.with_str_slash_option("title", "Title of the clip you're looking for",autocomplete=KickClipAutoComplete)
 @tanjun.as_slash_command("kick-clip-search", "Search for a kick clip", default_to_ephemeral=True, always_defer=True)
+@CommandLogger
 async def SearchKickClips(ctx: tanjun.abc.SlashContext, title:str):
     db = Database()
     slug = db.GetChannelSlugFromClipId(title)
