@@ -96,5 +96,6 @@ async def CloseNDBrowser(browser, page):
     await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
     browser.stop()
     await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
-    if platform.system() == "Linux":KillUnconncetedBrowsers()
+    if platform.system() == "Linux":
+        KillUnconncetedBrowsers()
     globals.browserOpen = False
