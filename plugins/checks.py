@@ -389,7 +389,7 @@ async def checkHealth():
     if badHealth < timeSinceLastCheck or ndBadHealth < ndTimeSinceLastCheck:
         statusCode  = 503
         message = "Too long since last check time. Bad Health"
-        logger.critical(f"Failed health check. {timeSinceLastCheck} seconds since last online check")
+        logger.critical(f"Failed health check. {timeSinceLastCheck} and {ndTimeSinceLastCheck} seconds since last online check")
     else:
         statusCode = 200
         message = "Sassbot running well"
