@@ -22,10 +22,12 @@ logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
 async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> None:
     db = Database()
     apiUrl = f"https://kick.com/api/v2/channels/{kickSlug}/clips"
-    if globals.kickClipCursor:
-        apiUrl = f"{apiUrl}?cursor={globals.kickClipCursor}"
     if db.isClipRowCountZero():
         db.addKickClipToTable("greenLight",None,None,None,None,None,None,None)
+    if not db.isClipsFullyScanned():
+        globals.kickClipCursor = db.GetClipCursor()
+    if globals.kickClipCursor:
+        apiUrl = f"{apiUrl}?cursor={globals.kickClipCursor}"
     browser = await ndb.GetBrowser(proxy=Constants.KICK_PROXY)
     try:
         if globals.kickClipCursor in globals.kickVisitedCursors:
@@ -73,6 +75,8 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
                     globals.kickClipCursor = ""
                 if viewIncrease > globals.kickClipMostViews:
                     AddMostViewedClipToGlobal(clip, viewIncrease)
+            if not db.isClipsFullyScanned():
+                db.InsertClipCursor(results['nextCursor'])
             if not globals.kickClipCursor:
                 await AnnounceWinnersHandleData(kickSlug, rest, db) 
     except Exception as e:

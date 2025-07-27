@@ -61,6 +61,30 @@ class Database:
         conn.close()
         return titleIdDict
     
+    def InsertClipCursor(self,cursor:str):
+        self.createKickClipsTable()
+        conn, cur = self.connectCursor()
+        rowVal = (cursor,"greenLight")
+        exeString = '''UPDATE kick_clips SET channel_slug=? WHERE clip_id=?'''
+        cur.execute(exeString,rowVal)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def GetClipCursor(self):
+        self.createKickClipsTable()
+        conn, cur = self.connectCursor()
+        cursor = ''
+        rowVal = ("greenLight",)
+        exeString = '''SELECT channel_slug FROM kick_clips WHERE clip_id=?'''
+        cur.execute(exeString,rowVal)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            cursor = fetch[0][0]
+        cur.close()
+        conn.close()
+        return cursor
+    
     def isClipRowCountZero(self):
         self.createKickClipsTable()
         conn, cur = self.connectCursor()
