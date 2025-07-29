@@ -126,3 +126,11 @@ class DiscordKickConnectButton(miru.View):
     def __init__(self,link) -> None:
         super().__init__(timeout=None, autodefer=True)
         self.add_item(miru.Button(label="Connect Kick Account", url=link, style=hikari.ButtonStyle.LINK))
+
+class ConnectKick(miru.View):
+    def __init__(self) -> None:
+        self.db = Database()
+        super().__init__(timeout=None, autodefer=True)
+    @miru.button(label="Link Kick Account", style=hikari.ButtonStyle.PRIMARY, custom_id="ForeverKick")
+    async def KickForeverButton(self, button: miru.Button, ctx: miru.ViewContext) -> None:
+        await commands.ConnectKickAccount(ctx)

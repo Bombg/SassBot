@@ -21,8 +21,20 @@ import asyncio
 from utils.EmbedCreator import EmbedCreator
 import globals
 import itertools
+import miru
 
 component = tanjun.Component()
+
+@component.with_slash_command
+@tanjun.checks.with_check(StaticMethods.isPermission)
+@tanjun.as_slash_command("connect-kick-button", "A forever button to connect kick accounts", always_defer= True)
+async def ConnectKickButton(ctx: tanjun.abc.SlashContext) -> None:
+    view = MiruViews.ConnectKick()
+    content = Constants.kickConnectButtonMessage
+    await ctx.respond(content=content, components=view)
+    message = await ctx.fetch_last_response()
+    await view.start(message)
+    await view.wait()
 
 async def KickClipAutoComplete(ctx: tanjun.abc.AutocompleteContext, value:str) -> None:
     db = Database()
@@ -36,13 +48,19 @@ async def KickClipAutoComplete(ctx: tanjun.abc.AutocompleteContext, value:str) -
 @CommandLogger
 async def SearchKickClips(ctx: tanjun.abc.SlashContext, title:str):
     db = Database()
-    slug = db.GetChannelSlugFromClipId(title)
-    await ctx.respond(f'https://kick.com/{slug}/clips/{title}')
+    if title:
+        slug = db.GetChannelSlugFromClipId(title)
+        if slug:
+            await ctx.respond(f'https://kick.com/{slug}/clips/{title}')
+        else:
+            ctx.respond("bad input")
+    else:
+        ctx.respond("bad input")
 
 @component.with_slash_command
 @tanjun.checks.with_check(StaticMethods.isPermission)
 @tanjun.with_member_slash_option("member", "The member to select.")
-@tanjun.as_slash_command("get-discord-kick", "Get the Kick username for a specified Discord Username")
+@tanjun.as_slash_command("get-discord-kick", "Get the Kick username for a specified Discord Username", default_to_ephemeral=True, always_defer=True)
 @CommandLogger
 async def GetDiscordKick(ctx: tanjun.abc.SlashContext, member: hikari.Member) -> None:
     db = Database()
@@ -100,10 +118,7 @@ async def ManualConnectKickAccount(ctx: tanjun.abc.SlashContext, member: hikari.
     else:
         await ctx.respond("bad data entry. Try again")
 
-@component.with_slash_command
-@tanjun.as_slash_command("connect-kick", "Connect Kick Account to Discord account",always_defer= True, default_to_ephemeral= True)
-@CommandLogger
-async def ConnectKickAccount(ctx: tanjun.abc.SlashContext) -> None:
+async def ConnectKickAccount(ctx: miru.ViewContext) -> None:
     if not Constants.kickClientId or not Constants.kickClientSecret:
         await ctx.respond("Kick API not set up")
         return
@@ -130,10 +145,14 @@ async def ConnectKickAccount(ctx: tanjun.abc.SlashContext) -> None:
             }
     fullUrl = StaticMethods.EncodeParamsWithUrl(params, kickOauthAuthorization)
     view = MiruViews.DiscordKickConnectButton(fullUrl)
-    await ctx.respond(components=view)
-    await asyncio.sleep(30)
-    message = await ctx.fetch_last_response()
-    await ctx.interaction.delete_message(message)
+    await ctx.respond(components=view,flags=hikari.MessageFlag.EPHEMERAL)
+    count = 0
+    while oauthState in globals.kickOauth and count <= 60:
+        count +=1
+        await asyncio.sleep(2)
+    await ctx.interaction.delete_initial_response()
+    if not oauthState in globals.kickOauth:
+        await ctx.respond("Success", flags=hikari.MessageFlag.EPHEMERAL)
 
 @component.with_slash_command
 @tanjun.as_slash_command("ban-appeal", "Appeal a ban.", always_defer= True, default_to_ephemeral= True)

@@ -3,6 +3,8 @@ secrets/token
 __pycache__
 graphs
 cassbotDbDownloadScript.txt
+faebotDbDownloadScript.txt
+FaebotDbAutoDl.lnk
 CassDBAutoDL.lnk
 commandLogs.txt
 deletedMessageLogs.txt

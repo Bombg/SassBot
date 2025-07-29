@@ -211,6 +211,7 @@ class Constants:
     kickSubsLongLookBackDays = 1 # Days, how far back to look into sub history to go towards threshold
     kickLongDateRolePeriod = 31 # Days, how long user keeps the role before its removed
     kickShortTimeRolePeriod = 14 # Hours, how long user keeps role before it's removed
+    kickConnectButtonMessage = f"# Connect your Kick and Discord Accounts! \n ### This will allow you to gain special Discord roles when you sub on Kick"
 
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
     # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. 

@@ -542,18 +542,22 @@ async def HandleLongSubRoles(rest:hikari.impl.RESTClientImpl, db:Database, longS
     for k,v in longSubbers.items():
         discordId = db.GetDiscordKickConnection(k)
         if discordId:
-            member = await rest.fetch_member(Constants.GUILD_ID, discordId)
-            roleId = Constants.kickLongRoleId
-            roles = member.get_roles()
-            isExist = False
-            for role in roles:
-                if roleId == role.id:
-                    isExist = True
-            if not isExist and not db.isHasLongDate(k):
-                logger.debug("adding long role")
-                await member.add_role(roleId)
-                lastSubDate = db.GetLastSubDate(k)
-                db.InsertLongRoleDate(k, roledate=lastSubDate)
+            try:
+                member = await rest.fetch_member(Constants.GUILD_ID, discordId)
+                roleId = Constants.kickLongRoleId
+                roles = member.get_roles()
+                isExist = False
+                for role in roles:
+                    if roleId == role.id:
+                        isExist = True
+                if not isExist and not db.isHasLongDate(k):
+                    logger.debug("adding long role")
+                    await member.add_role(roleId)
+                    lastSubDate = db.GetLastSubDate(k)
+                    db.InsertLongRoleDate(k, roledate=lastSubDate)
+            except hikari.errors.NotFoundError:
+                #logger.debug("Not can't give or check role. Member left server")
+                pass
 
 @component.with_schedule
 @tanjun.as_interval(15)

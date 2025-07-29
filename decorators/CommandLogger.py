@@ -7,6 +7,7 @@ try:
     from AppConstants import Constants as Constants
 except ImportError:
     from DefaultConstants import Constants as Constants
+import miru
 
 logger = logging.getLogger(__name__)
 logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
@@ -18,7 +19,7 @@ class CommandLogger:
         self.file = open("commandLogs.txt", 'a')
         self.date = datetime.fromtimestamp(time.time())
         ctx = args[0]
-        if isinstance(ctx, tanjun.abc.SlashContext):
+        if isinstance(ctx, tanjun.abc.SlashContext) or isinstance(ctx, miru.ViewContext):
             self.file.write(f"{self.date} - {self.func.__name__} - used by {ctx.member.id} aka {ctx.member.display_name}\n")
         else:
             logger.error("didn't get right ctx for command logger")

@@ -7,8 +7,14 @@ except ImportError:
     from DefaultConstants import Constants as Constants 
 from datetime import datetime
 import time
+from utils.MiruViews import ConnectKick
 
 component = tanjun.Component()
+
+@component.with_listener(hikari.StartedEvent)
+async def startup_views(event: hikari.StartedEvent) -> None:
+    view = ConnectKick()
+    await view.start()
 
 @component.with_listener(hikari.MessageDeleteEvent)
 async def printDelete(event: hikari.MessageDeleteEvent, rest: alluka.Injected[hikari.impl.RESTClientImpl]):
