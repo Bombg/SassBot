@@ -157,7 +157,7 @@ async def ConnectKickAccount(ctx: miru.ViewContext) -> None:
 @component.with_slash_command
 @tanjun.as_slash_command("ban-appeal", "Appeal a ban.", always_defer= True, default_to_ephemeral= True)
 @CommandLogger
-async def confess(ctx: tanjun.abc.SlashContext) -> None:
+async def BanAppeal(ctx: tanjun.abc.SlashContext) -> None:
     view = MiruViews.AppealModalView(autodefer=False)
     await ctx.respond("Pre-type your ban appeal and then hit the submit button when you are ready to submit it.\n Button will time out after a few mins, so re-type command if it doesn't work", components=view)
     message = await ctx.fetch_last_response()
