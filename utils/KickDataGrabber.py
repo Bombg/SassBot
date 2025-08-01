@@ -218,7 +218,7 @@ async def connectKickWebSockets():
                         #{"event":"GiftsLeaderboardUpdated","data":"{\"leaderboard\":[{\"user_id\":3315987,\"username\":\"TH3_ST4B_H4PPY\",\"quantity\":2469},{\"user_id\":4984014,\"username\":\"Andygreenwood2014\",\"quantity\":2312},{\"user_id\":538703,\"username\":\"GamerGabe\",\"quantity\":806},{\"user_id\":960630,\"username\":\"edubz5184\",\"quantity\":514},{\"user_id\":35809627,\"username\":\"LaskaTheDanishViking\",\"quantity\":416},{\"user_id\":43644314,\"username\":\"peque5040\",\"quantity\":390},{\"user_id\":26634199,\"username\":\"StrawHat85\",\"quantity\":312},{\"user_id\":38875468,\"username\":\"Psycilocibin\",\"quantity\":290},{\"user_id\":49795136,\"username\":\"Ridindirty001\",\"quantity\":252},{\"user_id\":45092496,\"username\":\"kingblackshaft\",\"quantity\":250}],\"weekly_leaderboard\":[{\"user_id\":8348691,\"username\":\"allehej\",\"quantity\":40},{\"user_id\":3315987,\"username\":\"TH3_ST4B_H4PPY\",\"quantity\":25},{\"user_id\":32793864,\"username\":\"Gator6989\",\"quantity\":5},{\"user_id\":45092496,\"username\":\"kingblackshaft\",\"quantity\":5},{\"user_id\":4984014,\"username\":\"Andygreenwood2014\",\"quantity\":5},{\"user_id\":3450843,\"username\":\"Lukeus\",\"quantity\":2},{\"user_id\":1903856,\"username\":\"the_fire_tiger\",\"quantity\":2},{\"user_id\":69907818,\"username\":\"R1ckyBoo\",\"quantity\":1}],\"monthly_leaderboard\":[{\"user_id\":3315987,\"username\":\"TH3_ST4B_H4PPY\",\"quantity\":277},{\"user_id\":4984014,\"username\":\"Andygreenwood2014\",\"quantity\":182},{\"user_id\":43644314,\"username\":\"peque5040\",\"quantity\":115},{\"user_id\":45092496,\"username\":\"kingblackshaft\",\"quantity\":113},{\"user_id\":538703,\"username\":\"GamerGabe\",\"quantity\":50},{\"user_id\":63805513,\"username\":\"CrispRat\",\"quantity\":48},{\"user_id\":8348691,\"username\":\"allehej\",\"quantity\":46},{\"user_id\":960630,\"username\":\"edubz5184\",\"quantity\":40},{\"user_id\":1848562,\"username\":\"hitemup1234\",\"quantity\":20},{\"user_id\":3450843,\"username\":\"Lukeus\",\"quantity\":12}],\"gifter_id\":69907818,\"gifter_username\":\"R1ckyBoo\",\"gifted_quantity\":1}","channel":"channel_1143439"}
                         pass
                     else:
-                        logger.debug(f"[KickWS] Message received: {data}")
+                        logger.debug(f"TODO: {data}")
                         # saneEvent = data['event'].replace("\\", "-")
                         # f = open(f"PusherExamples/{saneEvent}.txt", 'a')
                         # f.write(message + "\n")
@@ -240,7 +240,7 @@ def ParseSubscriptionEvent(db:Database, data):
     userId = info['data'][0]['broadcaster_user_id']
     gifterUString = CreateGiftedUString(["self"],userName,1)
     if not isGiftedAlreadyExist(gifterUString):
-        logger.debug(f"SubscriptionEvent:{gifterUString} inserting")
+        logger.debug(f"Inserting:SubscriptionEvent:{gifterUString}")
         HandleKickSub(db, userId, userName, 1, channel, months, gifterUString)
 
 def HandleKickSub(db:Database, userId, userName, numGifted, channel,  months, gifterUString):
@@ -250,13 +250,27 @@ def HandleKickSub(db:Database, userId, userName, numGifted, channel,  months, gi
 
 
 def ParseChatMessageEvent(db:Database, data):
+    #3 types - message, reply, celebration
     #{'event': 'App\\Events\\ChatMessageEvent', 'data': '{"id":"bbcdbcfd-8619-40c2-a0d0-ae7cf4c7a932","chatroom_id":1221707,"content":"[emote:3989851:litneyspears4Max]on my way to show you love","type":"message","created_at":"2025-07-17T08:44:56+00:00","sender":{"id":3528468,"username":"OhLookItsMax","slug":"ohlookitsmax","identity":{"color":"#FF9D00","badges":[{"type":"vip","text":"VIP"},{"type":"subscriber","text":"Subscriber","count":26}]}},"metadata":{"message_ref":"1752741896375"}}', 'channel': 'chatrooms.1221707.v2'}
+    #{"event":"App\\Events\\ChatMessageEvent","data":"{\"id\":\"37e2ddbd-302c-4e5a-beda-4913c1747459\",\"chatroom_id\":1221707,\"content\":\"this is what someone deals with after Litney goes through Deadspace\",\"type\":\"reply\",\"created_at\":\"2025-07-19T03:47:45+00:00\",\"sender\":{\"id\":3528468,\"username\":\"OhLookItsMax\",\"slug\":\"ohlookitsmax\",\"identity\":{\"color\":\"#FF9D00\",\"badges\":[{\"type\":\"vip\",\"text\":\"VIP\"},{\"type\":\"subscriber\",\"text\":\"Subscriber\",\"count\":26}]}},\"metadata\":{\"original_sender\":{\"id\":2853400,\"username\":\"justdavid787\"},\"original_message\":{\"id\":\"91c93aae-23c4-4f62-acae-a3ca5782b8c7\",\"content\":\"this is like DeadSpace but weirder [emote:37225:KEKLEO]\"},\"message_ref\":\"1752896864929\"}}","channel":"chatrooms.1221707.v2"}
+    #{"event":"App\\Events\\ChatMessageEvent","data":"{\"id\":\"1fc36aef-d1c8-4af3-841f-0d38574b73c3\",\"chatroom_id\":31047538,\"content\":\"\\ud83c\\udf89\",\"type\":\"celebration\",\"created_at\":\"2025-07-19T14:18:32+00:00\",\"sender\":{\"id\":11497484,\"username\":\"jerkpupputo\",\"slug\":\"jerkpupputo\",\"identity\":{\"color\":\"#FF9D00\",\"badges\":[{\"type\":\"founder\",\"text\":\"Founder\"},{\"type\":\"subscriber\",\"text\":\"Subscriber\",\"count\":2}]}},\"metadata\":{\"celebration\":{\"id\":\"chceleb_01K0518CW5PNSCAWDSXZY5806C\",\"type\":\"subscription_renewed\",\"total_months\":2,\"created_at\":\"2025-07-14T17:55:52.83787Z\"}}}","channel":"chatrooms.31047538.v2"}
+    channel = data['channel']
     data = json.loads(data['data'])
     message = data['content']
     userId = data['sender']['id']
     userName = data['sender']['username']
     #collect emote data . Message data?
     db.insertKickUser(userId, userName)
+    if data['type'] == 'celebration' and data['metadata']['celebration']['type'] == 'subscription_renewed' :
+        months = data['metadata']['celebration']['total_months']
+        giftedUstring = CreateGiftedUString(["self"],userName,1)
+        if not isGiftedAlreadyExist(giftedUstring):
+            logger.debug(f"Inserting: {giftedUstring}")
+            HandleKickSub(db, userId, userName, 1, channel, months, giftedUstring)
+    elif data['type'] == 'celebration':
+        logger.debug(f"TODO: {data}")
+    elif data['type'] != "celebration" and data['type'] != "reply" and data['type'] != "message":
+        logger.debug(f"TODO:{data}")
 
 def ParseLuckyUsersWhoGotGiftSubscriptionsEvent(db:Database, data):
     #{'event': 'App\\Events\\LuckyUsersWhoGotGiftSubscriptionsEvent', 'data': '{"channel":{"id":17425723,"user_id":18312333,"slug":"nelkboys","is_banned":false,"playback_url":"https:\\/\\/fa723fc1b171.us-west-2.playback.live-video.net\\/api\\/video\\/v1\\/us-west-2.196233775518.channel.ze6nVEIVJ53v.m3u8","name_updated_at":null,"vod_enabled":true,"subscription_enabled":true,"is_affiliate":true,"can_host":true,"chatroom":{"id":17172694,"chatable_type":"App\\\\Models\\\\Channel","channel_id":17425723,"created_at":"2023-08-25T17:13:46.000000Z","updated_at":"2025-07-02T17:19:50.000000Z","chat_mode_old":"public","chat_mode":"public","slow_mode":true,"chatable_id":17425723,"followers_mode":true,"subscribers_mode":false,"emotes_mode":false,"message_interval":5,"following_min_duration":180}},"usernames":["kernanator","OhDollar","UZJ100","slimetimelive","m1nt710","k8dot","ginja47ninja","jbizzle007","MEATTIP","Danni2g","big_fat_black_testicles","DIZOTIZY","ck_certified","fletchyflipem","tturtlees","NickelinDime","ZACHROCK9","duey_17","1stScoop","PurpleArmyCX","Yettipnw","Jackyboy13","Beau4","nickv4","Iceman299","Dats_Lvke","Walidq695","chamoney2","Kushaug","Charredd","Cherts","ckmitch","Mattsark","Bee_Lu","Cman12","Scarcerow","EyezChico","Pizza_farts","BurgerGrease","BigCabbyDaddy","Chess_zebra","Denver7","BS3VEN","KyleRousseau38","KyleMay","HoonieStonebag","Kongwtf","brianc12","MyManTitsSlap","dkny25"],"gifter_username":"astra555"}', 'channel': 'channel.17425723'}
@@ -291,7 +305,7 @@ def ParseGiftedSubscriptionsEvent(db:Database, data):
     giftedList = data['gifted_usernames']
     giftedUString = CreateGiftedUString(giftedList, userName, numGifted)
     if not isGiftedAlreadyExist(giftedUString):
-        logger.debug(f"GiftedSubscriptionsEvent:{giftedUString} inserting")
+        logger.debug(f"Inserting: GiftedSubscriptionsEvent:{giftedUString}")
         info = Kick.getChannelInfoResponse([userName]).json()
         userId = info['data'][0]['broadcaster_user_id']
         HandleKickSub(db, userId, userName, numGifted, channel, None, giftedUString)
@@ -307,12 +321,12 @@ def ParseChatMessageSentEvent(db:Database, data):
         giftedList = MakeGiftedList(data['message']['giftedUsers'])
         giftedUString = CreateGiftedUString(giftedList, userName, numGifted)
         if not isGiftedAlreadyExist(giftedUString):
-            logger.debug(f"ChatMessageSentEvent:{giftedUString} inserting")
+            logger.debug(f"Inserting:ChatMessageSentEvent:{giftedUString}")
             HandleKickSub(db, userId, userName, numGifted, channel, None, giftedUString)
     else:
         giftedUString = CreateGiftedUString(["self"], userName, 1)
         if not isGiftedAlreadyExist(giftedUString):
-            logger.debug(f"ChatMessageSentEvent:{giftedUString} inserting")
+            logger.debug(f"Inserting:ChatMessageSentEvent:{giftedUString}")
             months = data['user']['months_subscribed']
             HandleKickSub(db, userId, userName, 1, channel, months, giftedUString)
 
