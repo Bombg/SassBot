@@ -189,6 +189,8 @@ class Constants:
 
     twitchUrl = f"https://www.twitch.tv/litneyspears_" #Add a valid twitch URL here even if you streamer doesn't have twitch or else the presence won't update properly
 
+    banAppealButtonMessage = "# To appeal a ban, click the button below and fill out the form"
+
     # Required if you want to use /health endpoint 
     # Required for Kick API use
     webhookPort = "" # what port to use to listen to webhooks or health checks (int not str). If left as a blank string then webhook/health check client (fastapi) wont be started

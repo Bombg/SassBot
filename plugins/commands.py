@@ -27,6 +27,16 @@ component = tanjun.Component()
 
 @component.with_slash_command
 @tanjun.checks.with_check(StaticMethods.isPermission)
+@tanjun.as_slash_command("ban-appeal-button", "A forever button that is pushed by users to appeal bans", always_defer=True)
+async def BanAppealButton(ctx: tanjun.abc.SlashContext) -> None:
+    view = MiruViews.BanAppealButton()
+    await ctx.respond(content=Constants.banAppealButtonMessage, components=view,)
+    message = await ctx.fetch_last_response()
+    await view.start(message)
+    await view.wait()
+
+@component.with_slash_command
+@tanjun.checks.with_check(StaticMethods.isPermission)
 @tanjun.as_slash_command("connect-kick-button", "A forever button to connect kick accounts", always_defer= True)
 async def ConnectKickButton(ctx: tanjun.abc.SlashContext) -> None:
     view = MiruViews.ConnectKick()
@@ -154,13 +164,11 @@ async def ConnectKickAccount(ctx: miru.ViewContext) -> None:
     if not oauthState in globals.kickOauth:
         await ctx.respond("Success", flags=hikari.MessageFlag.EPHEMERAL)
 
-@component.with_slash_command
-@tanjun.as_slash_command("ban-appeal", "Appeal a ban.", always_defer= True, default_to_ephemeral= True)
 @CommandLogger
-async def BanAppeal(ctx: tanjun.abc.SlashContext) -> None:
+async def BanAppeal(ctx: miru.ViewContext) -> None:
     view = MiruViews.AppealModalView(autodefer=False)
-    await ctx.respond("Pre-type your ban appeal and then hit the submit button when you are ready to submit it.\n Button will time out after a few mins, so re-type command if it doesn't work", components=view)
-    message = await ctx.fetch_last_response()
+    await ctx.respond("Pre-type your ban appeal and then hit the submit button when you are ready to submit it.\n Button will time out after a few mins, so re-push button if it doesn't work", components=view, flags=hikari.MessageFlag.EPHEMERAL)
+    message = await ctx.get_last_response()
     await view.start(message)
     await view.wait()
     await ctx.interaction.delete_initial_response()

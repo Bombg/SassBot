@@ -8,6 +8,7 @@ except ImportError:
 from datetime import datetime
 import time
 from utils.MiruViews import ConnectKick
+from utils.MiruViews import BanAppealButton
 
 component = tanjun.Component()
 
@@ -15,6 +16,8 @@ component = tanjun.Component()
 async def startup_views(event: hikari.StartedEvent) -> None:
     view = ConnectKick()
     await view.start()
+    banView = BanAppealButton()
+    await banView.start()
 
 @component.with_listener(hikari.MessageDeleteEvent)
 async def printDelete(event: hikari.MessageDeleteEvent, rest: alluka.Injected[hikari.impl.RESTClientImpl]):
