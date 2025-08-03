@@ -326,7 +326,7 @@ async def resetUnreviewedConfessions(rest: alluka.Injected[hikari.impl.RESTClien
         minVal = len(alertIntervals)-1 if minVal > len(alertIntervals)-1 else minVal
         if StaticMethods.timeToSeconds(globals.confessionIds["alert"]) >= alertIntervals[minVal]:
             globals.confessionIds[minAlertsId] += 1
-            await rest.create_message(channel=Constants.CONFESSTION_CHANNEL_ID, content=f"There are {len(value)} confessions in need of review =)\n Use </confess-review:{Constants.CONFESS_REVIEW_COMMAND_ID}> to review them")
+            await rest.create_message(channel=Constants.CONFESSTION_CHANNEL_ID, content=f"There are {len(value)} confessions in need of review =)\n Use </ymod confess-review:{Constants.CONFESS_REVIEW_COMMAND_ID}> to review them")
             globals.confessionIds["alert"] = time.time()
             for k, v in globals.confessionIds.items():
                 if v < globals.confessionIds[minAlertsId]:
@@ -351,7 +351,7 @@ async def resetUnreviewedAppeals(rest: alluka.Injected[hikari.impl.RESTClientImp
         minVal = len(alertIntervals)-1 if minVal > len(alertIntervals)-1 else minVal
         if StaticMethods.timeToSeconds(globals.appealIds["alert"]) >= alertIntervals[minVal]:
             globals.appealIds[minAlertsId] += 1
-            await rest.create_message(channel=Constants.APPEAL_CHANNEL_ID, content=f"There are {len(value)} appeals in need of review =)\n Use </appeal-review:{Constants.APPEAL_REVIEW_COMMAND_ID}> to review them")
+            await rest.create_message(channel=Constants.APPEAL_CHANNEL_ID, content=f"There are {len(value)} appeals in need of review =)\n Use </ymod appeal-review:{Constants.APPEAL_REVIEW_COMMAND_ID}> to review them")
             globals.appealIds["alert"] = time.time()
             for k, v in globals.appealIds.items():
                 if v < globals.appealIds[minAlertsId]:

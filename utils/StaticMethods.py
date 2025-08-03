@@ -52,7 +52,8 @@ async def isPermission(ctx: tanjun.abc.SlashContext)-> bool:
         if role.id in Constants.whiteListedRoleIDs or ctx.member.id in Constants.whiteListedRoleIDs:
             hasPermission = True
     if not hasPermission:
-        await ctx.respond("You don't have permission to do this",)
+        ctx.set_ephemeral_default(True)
+        await ctx.respond("You don't have permission to do this")
     return hasPermission
 
 def isRerun(title:str) -> bool:
