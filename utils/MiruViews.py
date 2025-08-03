@@ -141,3 +141,10 @@ class BanAppealButton(miru.View):
     @miru.button(label="Appeal Ban", style=hikari.ButtonStyle.DANGER, custom_id="BanAppeal")
     async def BanAppealButton(self, button:miru.Button, ctx: miru.ViewContext) -> None:
         await commands.BanAppeal(ctx)
+
+class ConfessButton(miru.View):
+    def __init__(self) -> None:
+        super().__init__(timeout=None, autodefer=True)
+    @miru.button(label="✝ Confess ✝", style=hikari.ButtonStyle.DANGER, custom_id="Confess")
+    async def ConfessButton(self, button:miru.Button, ctx: miru.ViewContext) -> None:
+        await commands.confess(ctx)

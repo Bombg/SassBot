@@ -9,6 +9,7 @@ from datetime import datetime
 import time
 from utils.MiruViews import ConnectKick
 from utils.MiruViews import BanAppealButton
+from utils.MiruViews import ConfessButton
 
 component = tanjun.Component()
 
@@ -18,6 +19,8 @@ async def startup_views(event: hikari.StartedEvent) -> None:
     await view.start()
     banView = BanAppealButton()
     await banView.start()
+    confessView = ConfessButton()
+    await confessView.start()
 
 @component.with_listener(hikari.MessageDeleteEvent)
 async def printDelete(event: hikari.MessageDeleteEvent, rest: alluka.Injected[hikari.impl.RESTClientImpl]):

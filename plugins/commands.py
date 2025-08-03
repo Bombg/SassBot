@@ -27,6 +27,18 @@ component = tanjun.Component()
 
 @component.with_slash_command
 @tanjun.checks.with_check(StaticMethods.isPermission)
+@tanjun.as_slash_command("confess-button", "A forever confess button to submit confessions", always_defer=True)
+@CommandLogger
+async def ConfessButton(ctx: tanjun.abc.SlashContext) -> None:
+    view = MiruViews.ConfessButton()
+    await ctx.respond(content = Constants.confessButtonMessage, components=view)
+    message = await ctx.fetch_last_response()
+    await view.start(message)
+    await view.wait()
+
+
+@component.with_slash_command
+@tanjun.checks.with_check(StaticMethods.isPermission)
 @tanjun.as_slash_command("ban-appeal-button", "A forever button that is pushed by users to appeal bans", always_defer=True)
 async def BanAppealButton(ctx: tanjun.abc.SlashContext) -> None:
     view = MiruViews.BanAppealButton()
@@ -238,9 +250,13 @@ async def confessReview(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[hika
 @component.with_slash_command
 @tanjun.as_slash_command("confess", "Anonymously post a confession or question to the confessions channel.", always_defer= True, default_to_ephemeral= True)
 async def confess(ctx: tanjun.abc.SlashContext) -> None:
+    content = "Pre-type your Confession/Question and then hit the submit button when you are ready to submit it.\n Button will time out after a few mins, so re-type command if it doesn't work"
     view = MiruViews.ConfessionModalView(autodefer=False)
-    await ctx.respond("Pre-type your Confession/Question and then hit the submit button when you are ready to submit it.\n Button will time out after a few mins, so re-type command if it doesn't work", components=view)
-    message = await ctx.fetch_last_response()
+    if isinstance(ctx, tanjun.abc.SlashContext):
+        await ctx.respond(content=content, components=view)
+    else:
+        await ctx.respond(content=content, components=view, flags = hikari.MessageFlag.EPHEMERAL)
+    message = await ctx.fetch_last_response() if isinstance(ctx, tanjun.abc.SlashContext) else await ctx.get_last_response()
     await view.start(message)
     await view.wait()
     await ctx.interaction.delete_initial_response()
