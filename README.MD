@@ -98,6 +98,22 @@
 4. If the requesting ip is in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 8/3/2025
+    - Commands renamed into groups
+        - commands that require whitelist permission are now under zmod and ymod
+    - Bot now collects Kick clip data
+        - kick-clip-search command
+        - announces clip stats to KICK_CLIPS_ANNOUNCEMENT_CHANNEL
+    - Can connect Kick accounts to Discord accounts
+        - Must have webhook constants set up and have callback URL set up in constants
+        - zmod kick-connect-button for a button that persists across restarts
+        - zmod kick-manual-connect if you wish to do it manually
+    - Bot now collects Kick sub data
+        - can now give and take two different roles based off sub counts
+            - check long/short role options in constants
+        - Automatically happens when discord account is connected to Kick
+        - If not connected, roles are still dropped after set time if manually given
+
 - 7/13/2025
     - Added a heatlh endpoint at /health
         - WebhookPort must be set for this to work
