@@ -20,7 +20,7 @@ def CommandLogger(func):
         date = datetime.fromtimestamp(time.time())
         ctx = args[0]
         if isinstance(ctx, tanjun.abc.SlashContext) or isinstance(ctx, miru.ViewContext):
-            info = f"{date}:{ctx.member.display_name}:{ctx.member.id}:{func.__name__}"
+            info = f"{date}:{ctx.member.display_name}:{ctx.member.id}:{func.__name__}\n"
             file.write(info)
             logger.info(f"COMMAND: {info}")
         else:
