@@ -32,6 +32,123 @@ class Database:
                     StaticMethods.rebootServer()
         return conn, cur
     
+    def GetKickClipRow(self, clipId):
+        self.createKickClipsTable()
+        conn, cur = self.connectCursor()
+        rowVals = (clipId,)
+        exeString = '''SELECT * from kick_clips WHERE clip_id=? '''
+        cur.execute(exeString,rowVals)
+        fetch = cur.fetchall()
+        cur.close()
+        conn.close()
+        return fetch
+        
+    
+    def CalculateWeeklyKickClipWinners(self):
+        self.createTempClipsTable()
+        self.createKickClipsHeroesTable()
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT clip_id, livestream_id, channel_slug, clip_creator_slug, creation_date, title, views, category_slug FROM temp_kick_clips ORDER BY creation_date DESC'''
+        cur.execute(exeString)
+        row = cur.fetchone()
+        clippersClipped = {}
+        clippersViews = {}
+        mostViews = 0
+        mostViewsTitle = ""
+        mostViewsClipper = ""
+        mostViewsClipId = ""
+        clipIdViews = {}
+        clipdsToAdd = []
+        while row:
+            clipId, livestreamId, channelSlug, creatorSlug, creationDate, title, views, category = row
+            oldClipRow = self.GetKickClipRow(clipId)
+            if oldClipRow:
+                oldclipId, oldlivestreamId, oldchannelSlug, oldcreatorSlug, oldcreationDate, oldtitle, oldviews, oldcategory = oldClipRow[0]
+                clipIdViews[clipId] = views
+            else:
+                oldviews = 0
+                clipdsToAdd.append(row)
+            if not creatorSlug in clippersClipped:
+                clippersClipped[creatorSlug] = []
+            clippersClipped[creatorSlug].append(clipId)
+            if not creatorSlug in clippersViews:
+                clippersViews[creatorSlug] = 0
+            viewIncrease = views - oldviews
+            clippersViews[creatorSlug] += viewIncrease
+            if views > mostViews:
+                mostViews = views
+                mostViewsClipper = creatorSlug
+                mostViewsTitle = title
+                mostViewsClipId = clipId
+            row = cur.fetchone()
+        mostViewedClipper, clipperViews = self.GetMostViewedKickClipper(clippersViews)
+        mostClippedClipper, numClips = self.GetMostKickClipper(clippersClipped)
+        exeString = '''DROP TABLE temp_kick_clips'''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
+        self.UpdateOldKickClipViews(clipIdViews)
+        self.AddTempClipsToDb(clipdsToAdd)
+        return mostViews, mostViewsTitle, mostViewsClipper, mostViewsClipId, mostViewedClipper, clipperViews, mostClippedClipper, numClips
+    
+    def AddTempClipsToDb(self, clipsToAdd:list):
+        for row in clipsToAdd:
+            clipId, livestreamId, channelSlug, creatorSlug, creationDate, title, views, category = row
+            self.addKickClipToTable(clipId,livestreamId,channelSlug,creatorSlug,creationDate,title,views,category)
+
+    def UpdateOldKickClipViews(self, clipIdViews:dict):
+        for clipId, views in clipIdViews.items():
+            self.updateKickClipViews(clipId,views)
+
+    def GetMostViewedKickClipper(self, clipperViews:dict):
+        mostViews = 0
+        user = ''
+        for clipperSlug, views in clipperViews.items():
+            if views > mostViews:
+                mostViews = views
+                user = clipperSlug
+        return  user, mostViews
+    
+    def GetMostKickClipper(self, clipperClips):
+        mostClips = 0
+        user = ''
+        for clipperSlug, numClips in clipperClips.items():
+            if len(numClips) > mostClips:
+                mostClips = len(numClips)
+                user = clipperSlug
+        return user, mostClips
+
+    
+    def addTempKickClipToTable(self, clipId:str, livestreamId:int, channelSlug:str, clipCreatorSlug:str, creationDate:str, title:str, views:int, categorySlug:str) -> None:
+        self.createTempClipsTable()
+        conn, cur = self.connectCursor()
+        rowVals = (clipId, livestreamId, channelSlug, clipCreatorSlug, creationDate, title, views, categorySlug)
+        exeString = f'''INSERT INTO temp_kick_clips (clip_id, livestream_id, channel_slug, clip_creator_slug, creation_date, title, views, category_slug) VALUES (?,?,?,?,?,?,?,?) ON CONFLICT(clip_id) DO NOTHING'''
+        cur.execute(exeString,rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def createTempClipsTable(self):
+        conn, cur = self.connectCursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS temp_kick_clips
+                (
+                    clip_id TEXT PRIMARY KEY,
+                    livestream_id INTEGER,
+                    channel_slug TEXT,
+                    clip_creator_slug TEXT,
+                    creation_date TEXT,
+                    title TEXT,
+                    views INTEGER,
+                    category_slug TEXT
+                )
+        ''')
+        conn.commit()
+        cur.close()
+        conn.close()
+
+
     def GetChannelSlugFromClipId(self, clipId):
         self.createKickClipsTable()
         slug = ''

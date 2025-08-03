@@ -61,20 +61,23 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
                 daysClipLookBack = 30
                 viewIncrease = 0
                 if not db.isExists(exeString):
-                    db.addKickClipToTable(clip['id'], clip['livestream_id'],clip['channel']['slug'], clip['creator']['slug'], clip['created_at'], clip['title'], clip['views'], clip['category']['slug'])
                     if timeDiff < timedelta(days=daysClipLookBack):
-                        viewIncrease = clip['views']
-                        AddTotalViewsToGlobal(clip, viewIncrease)
-                        TallyClipInGlobal(clip)
+                        db.addTempKickClipToTable(clip['id'], clip['livestream_id'],clip['channel']['slug'], clip['creator']['slug'], clip['created_at'], clip['title'], clip['views'], clip['category']['slug'])
+                        # viewIncrease = clip['views']
+                        # AddTotalViewsToGlobal(clip, viewIncrease)
+                        # TallyClipInGlobal(clip)
+                    else:
+                        db.addKickClipToTable(clip['id'], clip['livestream_id'],clip['channel']['slug'], clip['creator']['slug'], clip['created_at'], clip['title'], clip['views'], clip['category']['slug'])
                 elif timeDiff < timedelta(days=daysClipLookBack):
-                    previousViews = db.getKickClipViews(clip['id'],clip['channel']['slug'])
-                    viewIncrease = clip['views'] - previousViews
-                    AddTotalViewsToGlobal(clip, viewIncrease)
-                    db.updateKickClipViews(clip['id'],clip['views'])
+                    db.addTempKickClipToTable(clip['id'], clip['livestream_id'],clip['channel']['slug'], clip['creator']['slug'], clip['created_at'], clip['title'], clip['views'], clip['category']['slug'])
+                    # previousViews = db.getKickClipViews(clip['id'],clip['channel']['slug'])
+                    # viewIncrease = clip['views'] - previousViews
+                    # AddTotalViewsToGlobal(clip, viewIncrease)
+                    # db.updateKickClipViews(clip['id'],clip['views'])
                 elif db.isClipsFullyScanned():
                     globals.kickClipCursor = ""
-                if viewIncrease > globals.kickClipMostViews:
-                    AddMostViewedClipToGlobal(clip, viewIncrease)
+                # if viewIncrease > globals.kickClipMostViews:
+                #     AddMostViewedClipToGlobal(clip, viewIncrease)
             if not db.isClipsFullyScanned():
                 db.InsertClipCursor(results['nextCursor'])
             if not globals.kickClipCursor:
@@ -83,69 +86,25 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
         logger.exception(e)
         globals.browserOpen = False
 
-def AddMostViewedClipToGlobal(clip, viewIncrease):
-    globals.kickClipMostViews = viewIncrease
-    globals.kickClipMostViewsId = clip['id']
-    globals.kickClipMostViewsClipper = clip['creator']['slug']
-    globals.kickClipMostViewsTitle = clip['title']
-
-def TallyClipInGlobal(clip):
-    if not clip['creator']['slug'] in globals.kickClipMostClips:
-        globals.kickClipMostClips[clip['creator']['slug']] = []
-    globals.kickClipMostClips[clip['creator']['slug']].append(clip['id'])
-
-def AddTotalViewsToGlobal(clip, viewIncrease):
-    if not clip['creator']['slug'] in globals.kickClipMostViewedUser:
-        globals.kickClipMostViewedUser[clip['creator']['slug']] = 0
-    globals.kickClipMostViewedUser[clip['creator']['slug']] = globals.kickClipMostViewedUser[clip['creator']['slug']] + viewIncrease
-
 async def AnnounceWinnersHandleData(kickSlug: str, rest:hikari.impl.RESTClientImpl, db:Database):
     today = datetime.date.today()
     isoYear, isoWeek, isoDayOfWeek = today.isocalendar()
-    mostViewedClipUrl = f'https://kick.com/{kickSlug}/clips/{globals.kickClipMostViewsId}'
-    mostViewedUser, views = GetMostViewedClipper()
-    mostClipper, numClips = GetMostClipper()
+    mostViews, mostViewsTitle, mostViewsClipper, mostViewsClipId, mostViewedUser, userViews, mostClipper, numClips = db.CalculateWeeklyKickClipWinners()
+    mostViewedClipUrl = f'https://kick.com/{kickSlug}/clips/{mostViewsClipId}'
     messageContent=f"# Kick Clip Stats For Week {isoWeek} Of {isoYear}:\n" \
                     f"### Most Viewed Clipper:\n" \
-                    f"- ** {mostViewedUser.capitalize()} ** with ** {views} ** total views across all their clips\n"\
+                    f"- ** {mostViewedUser.capitalize()} ** with ** {userViews} ** total views across all their clips\n"\
                     f"### Most Prolific Clipper:\n" \
                     f"- ** {mostClipper.capitalize()} ** with ** {numClips} ** clips\n"\
                     f"## Most Viewed Clip:\n" \
-                    f"- ** {globals.kickClipMostViewsTitle.capitalize()} ** \n" \
-                    f"     - clipped by: ** {globals.kickClipMostViewsClipper.capitalize()} ** \n"\
+                    f"- ** {mostViewsTitle.capitalize()} **  with ** {mostViews} ** views\n" \
+                    f"     - clipped by: ** {mostViewsClipper.capitalize()} ** \n"\
                     f"     - ** {mostViewedClipUrl} **"
-    if views and mostViewedUser and mostClipper and numClips and globals.kickClipMostViewsTitle and globals.kickClipMostViewsId:
+    if userViews and mostViewedUser and mostClipper and numClips and mostViewsTitle and mostViewsClipId:
         await rest.create_message(channel=Constants.KICK_CLIPS_ANNOUNCEMENT_CHANNEL, content=messageContent)
     else:
         logger.warning("Weekly Kick Clip Data announcement cancelled. Data gathering interrupted or no data")
-    db.createWeeklyKickClipsData(f"{isoYear}:{isoWeek}",globals.kickClipMostViewsId, mostViewedUser, mostClipper)
-    ResetClipGlobals()
-
-def ResetClipGlobals():
-    globals.kickClipMostViews = 0
-    globals.kickClipMostViewsId = ''
-    globals.kickClipMostViewedUser = {} 
-    globals.kickClipMostClips = {}
-    globals.kickClipMostViewsClipper = ''
-    globals.kickClipMostViewsTitle = ''
-
-def GetMostViewedClipper():
-    mostViews = 0
-    user = ''
-    for clipperSlug, views in globals.kickClipMostViewedUser.items():
-        if views > mostViews:
-            mostViews = views
-            user = clipperSlug
-    return  user, mostViews
-
-def GetMostClipper():
-    mostClips = 0
-    user = ''
-    for clipperSlug, numClips in globals.kickClipMostClips.items():
-        if len(numClips) > mostClips:
-            mostClips = len(numClips)
-            user = clipperSlug
-    return user, mostClips
+    db.createWeeklyKickClipsData(f"{isoYear}:{isoWeek}",mostViewsClipId, mostViewedUser, mostClipper)
 
 async def connectKickWebSockets():
     COMMON_HEADERS = {
