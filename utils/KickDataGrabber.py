@@ -63,21 +63,12 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
                 if not db.isExists(exeString):
                     if timeDiff < timedelta(days=daysClipLookBack):
                         db.addTempKickClipToTable(clip['id'], clip['livestream_id'],clip['channel']['slug'], clip['creator']['slug'], clip['created_at'], clip['title'], clip['views'], clip['category']['slug'])
-                        # viewIncrease = clip['views']
-                        # AddTotalViewsToGlobal(clip, viewIncrease)
-                        # TallyClipInGlobal(clip)
                     else:
                         db.addKickClipToTable(clip['id'], clip['livestream_id'],clip['channel']['slug'], clip['creator']['slug'], clip['created_at'], clip['title'], clip['views'], clip['category']['slug'])
                 elif timeDiff < timedelta(days=daysClipLookBack):
                     db.addTempKickClipToTable(clip['id'], clip['livestream_id'],clip['channel']['slug'], clip['creator']['slug'], clip['created_at'], clip['title'], clip['views'], clip['category']['slug'])
-                    # previousViews = db.getKickClipViews(clip['id'],clip['channel']['slug'])
-                    # viewIncrease = clip['views'] - previousViews
-                    # AddTotalViewsToGlobal(clip, viewIncrease)
-                    # db.updateKickClipViews(clip['id'],clip['views'])
                 elif db.isClipsFullyScanned():
                     globals.kickClipCursor = ""
-                # if viewIncrease > globals.kickClipMostViews:
-                #     AddMostViewedClipToGlobal(clip, viewIncrease)
             if not db.isClipsFullyScanned():
                 db.InsertClipCursor(results['nextCursor'])
             if not globals.kickClipCursor:
