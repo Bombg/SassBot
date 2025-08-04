@@ -68,15 +68,15 @@ class Database:
             else:
                 oldviews = 0
                 clipdsToAdd.append(row)
-            if not creatorSlug in clippersClipped:
-                clippersClipped[creatorSlug] = []
-            clippersClipped[creatorSlug].append(clipId)
+                if not creatorSlug in clippersClipped:
+                    clippersClipped[creatorSlug] = []
+                clippersClipped[creatorSlug].append(clipId)
             if not creatorSlug in clippersViews:
                 clippersViews[creatorSlug] = 0
             viewIncrease = views - oldviews
             clippersViews[creatorSlug] += viewIncrease
-            if views > mostViews:
-                mostViews = views
+            if viewIncrease > mostViews:
+                mostViews = viewIncrease
                 mostViewsClipper = creatorSlug
                 mostViewsTitle = title
                 mostViewsClipId = clipId

@@ -84,11 +84,11 @@ async def AnnounceWinnersHandleData(kickSlug: str, rest:hikari.impl.RESTClientIm
     mostViewedClipUrl = f'https://kick.com/{kickSlug}/clips/{mostViewsClipId}'
     messageContent=f"# Kick Clip Stats For Week {isoWeek} Of {isoYear}:\n" \
                     f"### Most Viewed Clipper:\n" \
-                    f"- ** {mostViewedUser.capitalize()} ** with ** {userViews} ** total views across all their clips\n"\
+                    f"- ** {mostViewedUser.capitalize()} ** with ** {userViews} ** total views gained across all their clips\n"\
                     f"### Most Prolific Clipper:\n" \
                     f"- ** {mostClipper.capitalize()} ** with ** {numClips} ** clips\n"\
                     f"## Most Viewed Clip:\n" \
-                    f"- ** {mostViewsTitle.capitalize()} **  with ** {mostViews} ** views\n" \
+                    f"- ** {mostViewsTitle.capitalize()} **  with ** {mostViews} ** views gained\n" \
                     f"     - clipped by: ** {mostViewsClipper.capitalize()} ** \n"\
                     f"     - ** {mostViewedClipUrl} **"
     if userViews and mostViewedUser and mostClipper and numClips and mostViewsTitle and mostViewsClipId:
