@@ -106,8 +106,8 @@ def getWeekStreamingMinutes(startingDate: date, minutesDict = {}):
     return weekMinutes
 
 def smartRebroadcast() -> None:
-    platforms = ['chaturbate','onlyfans','fansly','twitch','youtube','kick','cam4','mfc','bongacams', 'stripchat','eplay','manyvids']
     db = Database()
+    platforms = db.GetPlatformNames()
     for platform in platforms:
         lastOnlineMessage,streamStartTime,streamEndTime,isRerun = db.getPlatformsRowValues(platform)
         secondsSinceLastMessage = timeToSeconds(lastOnlineMessage)
@@ -161,20 +161,10 @@ def unPin() -> None:
 
 def setRebroadcast() -> None:
     logger.info("rebroadcast: On")
-    globals.rebroadcast = {
-        "chaturbate":1,
-        "onlyfans":1,
-        "fansly":1,
-        "twitch":1,
-        "youtube":1,
-        "kick":1,
-        "cam4":1,
-        "mfc":1,
-        "bongacams":1,
-        "stripchat":1,
-        "eplay":1,
-        "manyvids":1
-}
+    db = Database()
+    platforms = db.GetPlatformNames()
+    for platform in platforms:
+        globals.rebroadcast[platform] = 1
 
 def addImageListQue(url: str) -> None:
     db = Database()
