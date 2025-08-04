@@ -259,14 +259,19 @@ async def announceRerunToggle(ctx: tanjun.abc.SlashContext, rerunannounce:bool) 
     onOff = "ON" if rerunannounce else "OFF"
     await ctx.respond(f"Rerun announcements have been turned {onOff}.")
 
+async def PlatformNameAutoComplete(ctx: tanjun.abc.AutocompleteContext, value:str) -> None:
+    db = Database()
+    platformNames = db.GetPlatformNames()
+    await ctx.set_choices({name:name for name in platformNames if value.lower() in name.lower()})
+
 @tanjun.with_str_slash_option("title", "The temporary title you wish to add")
-@tanjun.with_str_slash_option("platform", "The platform you wish to add a temporary title for")
+@tanjun.with_str_slash_option("platform", "The platform you wish to add a temporary title for",autocomplete=PlatformNameAutoComplete)
 @tanjun.with_str_slash_option("accountname", "The account name for the platform you wish to create a temp title for. Optional if only 1 account", default="")
 @moderationGroup.as_sub_command("title", "Add a temporary title for a platform", default_to_ephemeral=True, always_defer=True)
 @CommandLogger
 async def tempTitle(ctx: tanjun.abc.SlashContext, title: str, platform: str, accountname: str) -> None:
-    platforms = ['chaturbate','onlyfans','fansly','twitch','youtube','kick','cam4','mfc','bongacams', 'stripchat']
     db = Database()
+    platforms = db.GetPlatformNames()
     if platform.lower() in platforms:
         if not accountname:
             accounts = db.getPlatformAccountNames(platform)

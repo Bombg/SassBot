@@ -32,6 +32,16 @@ class Database:
                     StaticMethods.rebootServer()
         return conn, cur
     
+    def GetPlatformNames(self):
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT platform_name FROM platforms'''
+        cur.execute(exeString)
+        fetch = cur.fetchall()
+        platformNames = []
+        for name in fetch:
+            platformNames.append(name[0])
+        return platformNames
+    
     def GetKickClipRow(self, clipId):
         self.createKickClipsTable()
         conn, cur = self.connectCursor()
