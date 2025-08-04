@@ -371,14 +371,14 @@ async def startWebhookServer(rest: alluka.Injected[hikari.impl.RESTClientImpl]) 
     logging.getLogger("uvicorn.access").addFilter(StaticMethods.EndpointFilter())
     loop.run_until_complete(await server.serve())
 
-@app.post("/webhook")
+@app.post(Constants.webhookEndpoint)
 async def receiveWebhook(request:Request, background_tasks: BackgroundTasks):
     payload = await request.body()
     headers = request.headers
     background_tasks.add_task(processWebhookData, payload.decode('utf-8'), headers)
     return {"status": "ok", "message": "Webhook received and is being processed."}
 
-@app.get("/health")
+@app.get(Constants.healthEndpoint)
 async def checkHealth():
     shortest, ndShortest = StaticMethods.GetShortestActiveCheckTimer()
     badHealthMultiplier = Constants.badHealthMultiplier
@@ -396,7 +396,7 @@ async def checkHealth():
         logger.debug(f"Health check Pass: LastCheck: {timeSinceLastCheck} LastCheckND: {ndTimeSinceLastCheck}")
     return JSONResponse(content={"message": f"{message}"}, status_code=statusCode)
 
-@app.get("/callback")
+@app.get(Constants.kickOathCallbackEndpoint)
 async def OAuthCallback(code: str = None, state: str = None, error: str = None):
     if error:
         logger.debug("got callback error")
@@ -505,7 +505,7 @@ async def startKickWebsocket(rest: alluka.Injected[hikari.impl.RESTClientImpl]) 
     logger.critical("Kick Websocket failed after reaching max retries")
 
 @component.with_schedule
-@tanjun.as_interval(15)
+@tanjun.as_interval(Constants.ROLE_ADD_REMOVE_TIMER)
 async def AddKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if not Constants.hasRolePermissions: return
     db = Database()
@@ -560,7 +560,7 @@ async def HandleLongSubRoles(rest:hikari.impl.RESTClientImpl, db:Database, longS
                 pass
 
 @component.with_schedule
-@tanjun.as_interval(15)
+@tanjun.as_interval(Constants.ROLE_ADD_REMOVE_TIMER)
 async def RemoveKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
     if not Constants.hasRolePermissions:return
     db = Database()

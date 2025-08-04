@@ -58,7 +58,7 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
                 exeString = f'''SELECT clip_id FROM kick_clips WHERE clip_id='{clip['id']}' '''
                 creationDate = dt.strptime(clip['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
                 timeDiff = dt.now(timezone.utc) - creationDate
-                daysClipLookBack = 30
+                daysClipLookBack = Constants.kickClipDaysLookBack
                 viewIncrease = 0
                 if not db.isExists(exeString):
                     if timeDiff < timedelta(days=daysClipLookBack):

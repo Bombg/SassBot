@@ -117,7 +117,8 @@ class Constants:
     AVATAR_CHECK_TIMER = 130 # Timer for checking last online time before changing between happy/angry avatars
     STATUS_CHECK_TIMER = 125 # Timer for checking online status and changing the bot status. Also used for record keeping
     CONFESSION_CHECK_TIMER = 20 # How often new confessions are checked 
-    APPEAL_CHECK_TIMER = 20 # How often new appeals are checked 
+    APPEAL_CHECK_TIMER = 20 # How often new appeals are checked
+    ROLE_ADD_REMOVE_TIMER = 15 # Time in between checks to add and remove roles
 
     CONFESSION_ALERT_INTERVALS = [0,0,1800,7200,18000,43200] # Seconds between unreveiwed confession alerts. Starts at index 1. 1st alert 0 seconds, 2nd alert 1800 etc. New confessions reset count
     APPEAL_ALERT_INTERVALS = [0,0,1800,7200,18000,43200] # Seconds between unreveiwed appeal alerts. Starts at index 1. 1st alert 0 seconds, 2nd alert 1800 etc. New appeals reset count
@@ -198,6 +199,10 @@ class Constants:
     webhookHostIp = '0.0.0.0' # 127.0.0.1 if you want to host locally. 0.0.0.0 if you want to be accessable from outside IPs. Check fastAPI docs for more info
     badHealthMultiplier = 2 # if badHealthMultiplier * shortest of the check timers is < last check time /health returns 503
 
+    healthEndpoint = "/health"
+    webhookEndpoint = "/webhook"
+    kickOathCallbackEndpoint = "/callback"
+
     #Optional - but faster and more reliable if you setup an app on kick-- start one on the developer tab in kick settings
     kickClientId = ""
     kickClientSecret = ""
@@ -215,6 +220,7 @@ class Constants:
     kickLongDateRolePeriod = 31 # Days, how long user keeps the role before its removed
     kickShortTimeRolePeriod = 14 # Hours, how long user keeps role before it's removed
     kickConnectButtonMessage = f"# Connect your Kick and Discord Accounts! \n ### This will allow you to gain special Discord roles when you sub on Kick"
+    kickClipDaysLookBack = 30 # Number of days to look back for the weekly clip announcement
 
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
     # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. 
