@@ -1,30 +1,28 @@
 import requests
 from bs4 import BeautifulSoup
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 from utils.StaticMethods import GetThumbnail
 from utils.StaticMethods import GetProxies
 import logging
 import re
 from utils.NoDriverBrowserCreator import getUserAgent
 
+baseSettings = Settings()
 logger = logging.getLogger(__name__)
-logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
 def isModelOnline(mvUserName):
-    title = Constants.mvDefaultTitle
+    title = baseSettings.mvDefaultTitle
     tempThumbUrl = ''
     thumbUrl = ''
     isOnline = False
-    icon = Constants.defaultIcon
+    icon = baseSettings.defaultIcon
     pageUrl = f"https://www.manyvids.com/live/cam/{mvUserName.lower()}"
     agent = getUserAgent()
     headers = {"User-Agent": agent}
     try:
-        if Constants.MV_PROXY:
-            page = requests.get(pageUrl, proxies=GetProxies(Constants.MV_PROXY), headers=headers)
+        if baseSettings.MV_PROXY:
+            page = requests.get(pageUrl, proxies=GetProxies(baseSettings.MV_PROXY), headers=headers)
         else:
             page = requests.get(pageUrl, headers=headers)
         soup = BeautifulSoup(page.content, "html.parser")
@@ -36,7 +34,7 @@ def isModelOnline(mvUserName):
         if onlineStatus and (onlineStatus.text == "LIVE" or onlineStatus.text == "IN PRIVATE"):
             isOnline = True
             icon = GetIcon(soup, mvUserName)
-            thumbUrl = GetThumbnail(tempThumbUrl, Constants.mvThumbnail)
+            thumbUrl = GetThumbnail(tempThumbUrl, baseSettings.mvThumbnail)
     except requests.exceptions.ConnectionError as e:
         logger.warning(e)
     except requests.exceptions.ChunkedEncodingError as e:
@@ -44,7 +42,7 @@ def isModelOnline(mvUserName):
     return isOnline, title, thumbUrl, icon
 
 def GetIcon(soup:BeautifulSoup, mvUserName):
-    icon = Constants.defaultIcon
+    icon = baseSettings.defaultIcon
     reString = r"https:\/\/cdn5\.manyvids\.com\/php_uploads\/profile\/" + mvUserName + r"\/image\/cropped-image_\d+.jpeg"
     icon = re.search(reString, soup.prettify())
     if icon:

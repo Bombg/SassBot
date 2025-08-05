@@ -1,10 +1,9 @@
 import hikari
 import asyncio
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 import utils.StaticMethods as StaticMethods
+
+baseSettings = Settings()
 
 class EmbedCreator:
     def __init__(self,description,title,url,thumbnail,color,icon,username,largeThumbnail = "") -> None:

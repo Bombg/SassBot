@@ -1,16 +1,14 @@
 import hikari
 import alluka
 import tanjun
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants 
+from DefaultConstants import Settings as Settings 
 from datetime import datetime
 import time
 from utils.MiruViews import ConnectKick
 from utils.MiruViews import BanAppealButton
 from utils.MiruViews import ConfessButton
 
+baseSettings = Settings()
 component = tanjun.Component()
 
 @component.with_listener(hikari.StartedEvent)

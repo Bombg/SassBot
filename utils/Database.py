@@ -6,16 +6,15 @@ from datetime import date
 from datetime import timedelta
 import utils.StaticMethods as StaticMethods
 import logging
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 import GenerateDatabase
+
+baseSettings = Settings()
 
 class Database:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+        self.logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
     
     def connectCursor(self):
         try:

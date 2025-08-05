@@ -3,15 +3,13 @@ import tanjun
 from datetime import datetime
 import time
 import logging
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 import miru
 import functools
 
+baseSettings = Settings()
 logger = logging.getLogger(__name__)
-logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
 def CommandLogger(func):
     @functools.wraps(func)

@@ -1,23 +1,21 @@
 import time
 import requests
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 import json.decoder 
 import logging
 from utils.StaticMethods import GetThumbnail
 
+baseSettings = Settings()
 logger = logging.getLogger(__name__)
-logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
 def isModelOnline(cbUserName):
     isOnline = False
     title = "placeholder cb title"
     tempThumbUrl = ""
-    icon = Constants.defaultIcon
+    icon = baseSettings.defaultIcon
     try:
-        onlineModels = requests.get(Constants.cbApiUrl)
+        onlineModels = requests.get(baseSettings.cbApiUrl + f"&limit={baseSettings.cbJsonLimit}")
         time.sleep(3)
         try:
             results = onlineModels.json()["results"]
@@ -25,14 +23,14 @@ def isModelOnline(cbUserName):
             iterations = 1
             tempLimit = 0
             while count > tempLimit and not isOnline:
-                tempLimit = Constants.cbJsonLimit * iterations
+                tempLimit = baseSettings.cbJsonLimit * iterations
                 for result in results:
                     if result['username'] == cbUserName:
                         isOnline = True
                         title = result['room_subject']
                         tempThumbUrl = result['image_url'] + "?" + str(int(time.time()))
                         break
-                onlineModels = requests.get(Constants.cbApiUrl + f"&offset={tempLimit}")
+                onlineModels = requests.get(baseSettings.cbApiUrl + f"&offset={tempLimit}")
                 time.sleep(3)
                 results = onlineModels.json()["results"]
                 count = onlineModels.json()['count']
@@ -43,5 +41,5 @@ def isModelOnline(cbUserName):
         logger.warning("connection timed out or aborted with Chaturbate. Bot detection or rate limited?")
     except requests.exceptions.SSLError:
         logger.warning("SSL Error when attempting to connect to Chaturbate")
-    thumbUrl = GetThumbnail(tempThumbUrl, Constants.cbThumbnail)
+    thumbUrl = GetThumbnail(tempThumbUrl, baseSettings.cbThumbnail)
     return isOnline, title, thumbUrl, icon

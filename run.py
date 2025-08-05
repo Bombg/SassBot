@@ -2,20 +2,18 @@ import os
 import platform
 import logging
 from pyvirtualdisplay import Display
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 from utils.bot import build_bot
 import colorlog
 
+baseSettings = Settings()
 logger = logging.getLogger(__name__)
-logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 handler = colorlog.StreamHandler()
 handler.setFormatter(colorlog.ColoredFormatter(
 	'%(log_color)s%(bold)s%(levelname)s:%(name)s:%(message)s'))
 handlers = [handler]
-logging.basicConfig(level=Constants.OTHER_LIBRARIES_LOG_LEVEL, handlers=handlers)
+logging.basicConfig(level=baseSettings.OTHER_LIBRARIES_LOG_LEVEL, handlers=handlers)
 
 if os.name != "nt":
     import uvloop

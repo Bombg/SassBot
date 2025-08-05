@@ -1,25 +1,23 @@
 import time
 import requests
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 from bs4 import BeautifulSoup
 import logging
 from utils.StaticMethods import GetThumbnail
 from utils.StaticMethods import GetProxies
 
+baseSettings = Settings()
 logger = logging.getLogger(__name__)
-logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
 def isModelOnline(mfcUserName):
     isOnline = False
-    title = Constants.mfcDefaultTitle
+    title = baseSettings.mfcDefaultTitle
     tempThumbUrl = ""
-    icon = Constants.defaultIcon
+    icon = baseSettings.defaultIcon
     try:
-        if Constants.MFC_PROXY:
-            request = requests.get(f"https://share.myfreecams.com/{mfcUserName}", proxies=GetProxies(Constants.MFC_PROXY))
+        if baseSettings.MFC_PROXY:
+            request = requests.get(f"https://share.myfreecams.com/{mfcUserName}", proxies=GetProxies(baseSettings.MFC_PROXY))
         else:
             request = requests.get(f"https://share.myfreecams.com/{mfcUserName}")
         time.sleep(1)
@@ -32,5 +30,5 @@ def isModelOnline(mfcUserName):
         logger.warning("connection timed out to share.myfreecams.com. Bot detection or rate limited?")
     except requests.exceptions.SSLError:
         logger.warning("SSL Error when attempting to connect to MyFreeCams")
-    thumbUrl = GetThumbnail(tempThumbUrl, Constants.mfcThumbnail)
+    thumbUrl = GetThumbnail(tempThumbUrl, baseSettings.mfcThumbnail)
     return isOnline, title, thumbUrl, icon

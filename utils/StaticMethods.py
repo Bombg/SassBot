@@ -3,10 +3,7 @@ import os
 from utils.Database import Database
 import globals
 import datetime
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 from datetime import timedelta
 from datetime import date
 import re
@@ -16,9 +13,11 @@ import secrets
 import hashlib
 import base64
 from urllib.parse import urlencode, urlunparse, urlparse
+import hikari
 
+baseSettings = Settings()
 logger = logging.getLogger(__name__)
-logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
 def logCommand(funcName, ctx) -> None:
     file = open("commandLogs.txt", 'a')
@@ -34,7 +33,7 @@ def resetUnfinishedConfessions():
     unFinished = db.getUnfinishedConfessionReviews()
     if unFinished:
         for row in unFinished:
-            if timeToSeconds(row[1]) >= Constants.TIME_BEFORE_REVIEW_RESET:
+            if timeToSeconds(row[1]) >= baseSettings.TIME_BEFORE_REVIEW_RESET:
                 db.resetConfessionDateReviewed(row[0])
 
 def resetUnfinishedAppeals():
@@ -42,14 +41,15 @@ def resetUnfinishedAppeals():
     unFinished = db.getUnfinishedAppealReviews()
     if unFinished:
         for row in unFinished:
-            if timeToSeconds(row[1]) >= Constants.TIME_BEFORE_REVIEW_RESET:
+            if timeToSeconds(row[1]) >= baseSettings.TIME_BEFORE_REVIEW_RESET:
                 db.resetAppealDateReviewed(row[0])
 
 async def isPermission(ctx: tanjun.abc.SlashContext)-> bool:
     hasPermission = False
     roles = ctx.member.get_roles()
+    #canBan = ctx.member.permissions & hikari.Permissions.BAN_MEMBERS
     for role in roles:
-        if role.id in Constants.whiteListedRoleIDs or ctx.member.id in Constants.whiteListedRoleIDs:
+        if role.id in baseSettings.whiteListedRoleIDs or ctx.member.id in baseSettings.whiteListedRoleIDs:
             hasPermission = True
     if not hasPermission:
         ctx.set_ephemeral_default(True)
@@ -111,7 +111,7 @@ def smartRebroadcast() -> None:
     for platform in platforms:
         lastOnlineMessage,streamStartTime,streamEndTime,isRerun = db.getPlatformsRowValues(platform)
         secondsSinceLastMessage = timeToSeconds(lastOnlineMessage)
-        if secondsSinceLastMessage >= Constants.SECONDS_BETWEEN_SMART_ALERTS and streamStartTime > streamEndTime:
+        if secondsSinceLastMessage >= baseSettings.SECONDS_BETWEEN_SMART_ALERTS and streamStartTime > streamEndTime:
             logger.info(f"Smart alert for {platform}")
             globals.rebroadcast[platform] = 1
 
@@ -146,7 +146,7 @@ def getEmbedImage() -> str:
     if not twImgQue and twImgList:
         twImgQue = twImgList
     if not twImgList:
-        imageSrc = Constants.defaultThumbnail
+        imageSrc = baseSettings.defaultThumbnail
         logger.info("adding default image for embed since nothing is on the image list.")
     elif url:
         imageSrc = url
@@ -297,32 +297,32 @@ def GetProxies(proxyIpPort):
 def GetShortestActiveCheckTimer():
     timerLengths = []
     noDriverTimerLengths = []
-    if Constants.kickUserName and Constants.kickClientId:
-        timerLengths.append(Constants.KICK_CHECK_TIMER)
+    if baseSettings.kickUserName and baseSettings.kickClientId:
+        timerLengths.append(baseSettings.KICK_CHECK_TIMER)
     else:
-        noDriverTimerLengths.append(Constants.KICK_CHECK_TIMER)
-    if Constants.cbUserName:
-        timerLengths.append(Constants.CB_CHECK_TIMER)
-    if Constants.fansUserName:
-        noDriverTimerLengths.append(Constants.FANS_CHECK_TIMER)
-    if Constants.ofUserName:
-        noDriverTimerLengths.append(Constants.OF_CHECK_TIMER)
-    if Constants.ytUserName:
-        timerLengths.append(Constants.YT_CHECK_TIMER)
-    if Constants.twitchUserName:
-        timerLengths.append(Constants.TWITCH_CHECK_TIMER)
-    if Constants.cam4UserName:
-        timerLengths.append(Constants.CAM4_CHECK_TIMER)
-    if Constants.mfcUserName:
-        timerLengths.append(Constants.MFC_CHECK_TIMER)
-    if Constants.bcUserName:
-        timerLengths.append(Constants.BC_CHECK_TIMER)
-    if Constants.scUserName:
-        timerLengths.append(Constants.SC_CHECK_TIMER)
-    if Constants.epUserName:
-        timerLengths.append(Constants.EP_CHECK_TIMER)
-    if Constants.mvUserName:
-        timerLengths.append(Constants.MV_CHECK_TIMER)
+        noDriverTimerLengths.append(baseSettings.KICK_CHECK_TIMER)
+    if baseSettings.cbUserName:
+        timerLengths.append(baseSettings.CB_CHECK_TIMER)
+    if baseSettings.fansUserName:
+        noDriverTimerLengths.append(baseSettings.FANS_CHECK_TIMER)
+    if baseSettings.ofUserName:
+        noDriverTimerLengths.append(baseSettings.OF_CHECK_TIMER)
+    if baseSettings.ytUserName:
+        timerLengths.append(baseSettings.YT_CHECK_TIMER)
+    if baseSettings.twitchUserName:
+        timerLengths.append(baseSettings.TWITCH_CHECK_TIMER)
+    if baseSettings.cam4UserName:
+        timerLengths.append(baseSettings.CAM4_CHECK_TIMER)
+    if baseSettings.mfcUserName:
+        timerLengths.append(baseSettings.MFC_CHECK_TIMER)
+    if baseSettings.bcUserName:
+        timerLengths.append(baseSettings.BC_CHECK_TIMER)
+    if baseSettings.scUserName:
+        timerLengths.append(baseSettings.SC_CHECK_TIMER)
+    if baseSettings.epUserName:
+        timerLengths.append(baseSettings.EP_CHECK_TIMER)
+    if baseSettings.mvUserName:
+        timerLengths.append(baseSettings.MV_CHECK_TIMER)
     shortest = 999999999999999999
     ndShortest = 999999999999999999
     for timer in timerLengths:

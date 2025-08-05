@@ -2,28 +2,26 @@ import requests
 import json
 import json.decoder 
 import time
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 from utils.NoDriverBrowserCreator import getUserAgent
 import logging
 from utils.StaticMethods import GetThumbnail
 from utils.StaticMethods import GetProxies
 
+baseSettings = Settings()
 logger = logging.getLogger(__name__)
-logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
 def isModelOnline(cam4UserName):
-    title = Constants.cam4DefaultTitle
+    title = baseSettings.cam4DefaultTitle
     tempThumbUrl = ""
     isOnline = False
-    icon = Constants.defaultIcon
+    icon = baseSettings.defaultIcon
     agent = getUserAgent()
     try:
         headers = {"User-Agent": agent}
-        if Constants.CAM4_PROXY:
-            results = requests.get(f"https://www.cam4.com/rest/v1.0/search/performer/{cam4UserName}", headers=headers, proxies=GetProxies(Constants.CAM4_PROXY))
+        if baseSettings.CAM4_PROXY:
+            results = requests.get(f"https://www.cam4.com/rest/v1.0/search/performer/{cam4UserName}", headers=headers, proxies=GetProxies(baseSettings.CAM4_PROXY))
         else:
             results = requests.get(f"https://www.cam4.com/rest/v1.0/search/performer/{cam4UserName}", headers=headers)
         time.sleep(1)
@@ -38,5 +36,5 @@ def isModelOnline(cam4UserName):
         logger.warning("connection timed out to cam4 api. Bot detection or rate limited?")
     except requests.exceptions.SSLError:
         logger.warning("SSL Error when attempting to connect to Cam4")
-    thumbUrl = GetThumbnail(tempThumbUrl, Constants.cam4Thumbnail)
+    thumbUrl = GetThumbnail(tempThumbUrl, baseSettings.cam4Thumbnail)
     return isOnline, title, thumbUrl, icon

@@ -1,5 +1,6 @@
 secrets/token
 .env/
+.env
 __pycache__
 graphs
 cassbotDbDownloadScript.txt

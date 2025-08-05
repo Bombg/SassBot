@@ -1,7 +1,3 @@
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
 import time
 
 globalPlayString = ""

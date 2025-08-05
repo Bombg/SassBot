@@ -1,7 +1,4 @@
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 import logging
 import utils.NoDriverBrowserCreator as ndb
 import globals
@@ -16,8 +13,10 @@ import hikari
 import websockets
 from checkers import Kick as Kick
 
+baseSettings = Settings()
+
 logger = logging.getLogger(__name__)
-logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 #https://kick.com/{kickSlug}/clips/{clipId} 
 async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> None:
     db = Database()
@@ -28,14 +27,14 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
         globals.kickClipCursor = db.GetClipCursor()
     if globals.kickClipCursor:
         apiUrl = f"{apiUrl}?cursor={globals.kickClipCursor}"
-    browser = await ndb.GetBrowser(proxy=Constants.KICK_PROXY)
+    browser = await ndb.GetBrowser(proxy=baseSettings.KICK_PROXY)
     try:
         if globals.kickClipCursor in globals.kickVisitedCursors:
             logger.debug("browser out of order pre page load")
             return
-        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
+        await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
         page = await browser.get(apiUrl)
-        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
+        await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
         await page.save_screenshot("KickClipsScreenshot.jpg")
         content = await page.get_content()
         content = content.split('<body>')
@@ -58,7 +57,7 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
                 exeString = f'''SELECT clip_id FROM kick_clips WHERE clip_id='{clip['id']}' '''
                 creationDate = dt.strptime(clip['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
                 timeDiff = dt.now(timezone.utc) - creationDate
-                daysClipLookBack = Constants.kickClipDaysLookBack
+                daysClipLookBack = baseSettings.kickClipDaysLookBack
                 viewIncrease = 0
                 if not db.isExists(exeString):
                     if timeDiff < timedelta(days=daysClipLookBack):
@@ -92,7 +91,7 @@ async def AnnounceWinnersHandleData(kickSlug: str, rest:hikari.impl.RESTClientIm
                     f"     - clipped by: ** {mostViewsClipper.capitalize()} ** \n"\
                     f"     - ** {mostViewedClipUrl} **"
     if userViews and mostViewedUser and mostClipper and numClips and mostViewsTitle and mostViewsClipId:
-        await rest.create_message(channel=Constants.KICK_CLIPS_ANNOUNCEMENT_CHANNEL, content=messageContent)
+        await rest.create_message(channel=baseSettings.KICK_CLIPS_ANNOUNCEMENT_CHANNEL, content=messageContent)
     else:
         logger.warning("Weekly Kick Clip Data announcement cancelled. Data gathering interrupted or no data")
     db.createWeeklyKickClipsData(f"{isoYear}:{isoWeek}",mostViewsClipId, mostViewedUser, mostClipper)
@@ -107,11 +106,11 @@ async def connectKickWebSockets():
     'Sec-WebSocket-Extensions': 'permessage-deflate; client_max_window_bits',
     }
     PUSHER_WS_URL = 'wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0-rc2&flash=false'
-    CHATROOM_CHANNEL = f'chatrooms.{Constants.kickChatroomId}.v2' #f'chatrooms.{ChatroomId}.v2'  # App\\Events\\ChatMessageEvent
-    CHATROOMV_TWO_CHANNEL  = f'chatroom_{Constants.kickChatroomId}' # f'chatroom_{ChatroomlId}' GiftedSubscriptionsEvent RewardRedeemedEvent
-    CHATROOM_DOT_ID = f'chatrooms.{Constants.kickChatroomId}' # App\\Events\\ChatMessageSentEvent but this is for gifted subs
-    CHANNEL_CHANNEL = f'channel.{Constants.kickChannelId}'  # f'channel.{ChannelId}' App\\Events\\ChannelSubscriptionEvent, App\\Events\\LuckyUsersWhoGotGiftSubscriptionsEvent, App\\Events\\StreamerIsLive, App\\Events\\StopStreamBroadcast
-    CHANNEL_CHANNEL_UNDER = f'channel_{Constants.kickChannelId}' #GiftsLeaderboardUpdated
+    CHATROOM_CHANNEL = f'chatrooms.{baseSettings.kickChatroomId}.v2' #f'chatrooms.{ChatroomId}.v2'  # App\\Events\\ChatMessageEvent
+    CHATROOMV_TWO_CHANNEL  = f'chatroom_{baseSettings.kickChatroomId}' # f'chatroom_{ChatroomlId}' GiftedSubscriptionsEvent RewardRedeemedEvent
+    CHATROOM_DOT_ID = f'chatrooms.{baseSettings.kickChatroomId}' # App\\Events\\ChatMessageSentEvent but this is for gifted subs
+    CHANNEL_CHANNEL = f'channel.{baseSettings.kickChannelId}'  # f'channel.{ChannelId}' App\\Events\\ChannelSubscriptionEvent, App\\Events\\LuckyUsersWhoGotGiftSubscriptionsEvent, App\\Events\\StreamerIsLive, App\\Events\\StopStreamBroadcast
+    CHANNEL_CHANNEL_UNDER = f'channel_{baseSettings.kickChannelId}' #GiftsLeaderboardUpdated
     channels = [CHATROOM_CHANNEL, CHATROOMV_TWO_CHANNEL, CHATROOM_DOT_ID, CHANNEL_CHANNEL, CHANNEL_CHANNEL_UNDER]
     #{'event': 'pusher:error', 'data': {'code': 4200, 'message': 'Please reconnect immediately'}}
     db = Database()

@@ -2,10 +2,7 @@ import hikari.errors
 import tanjun
 import utils.StaticMethods as StaticMethods
 import time
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 from utils.Database import Database
 from datetime import datetime
 from decorators.Permissions import Permissions
@@ -23,15 +20,16 @@ import globals
 import itertools
 import miru
 
+baseSettings = Settings()
 component = tanjun.Component()
 moderationGroup = tanjun.slash_command_group("zmod", "commands only moderators can use").add_check(StaticMethods.isPermission)
-moderationGroupY = tanjun.slash_command_group("ymod", "commands only moderators can use").add_check(StaticMethods.isPermission)
+moderationGroupY = tanjun.slash_command_group("ymod", "commands only moderators can use").add_check(StaticMethods.isPermission )
 
 @moderationGroup.as_sub_command("confess-button", "A forever confess button to submit confessions", always_defer=True)
 @CommandLogger
 async def ConfessButton(ctx: tanjun.abc.SlashContext) -> None:
     view = MiruViews.ConfessButton()
-    await ctx.respond(content = Constants.confessButtonMessage, components=view)
+    await ctx.respond(content = baseSettings.confessButtonMessage, components=view)
     message = await ctx.fetch_last_response()
     await view.start(message)
     await view.wait()
@@ -40,7 +38,7 @@ async def ConfessButton(ctx: tanjun.abc.SlashContext) -> None:
 @CommandLogger
 async def BanAppealButton(ctx: tanjun.abc.SlashContext) -> None:
     view = MiruViews.BanAppealButton()
-    await ctx.respond(content=Constants.banAppealButtonMessage, components=view,)
+    await ctx.respond(content=baseSettings.banAppealButtonMessage, components=view,)
     message = await ctx.fetch_last_response()
     await view.start(message)
     await view.wait()
@@ -49,7 +47,7 @@ async def BanAppealButton(ctx: tanjun.abc.SlashContext) -> None:
 @CommandLogger
 async def ConnectKickButton(ctx: tanjun.abc.SlashContext) -> None:
     view = MiruViews.ConnectKick()
-    content = Constants.kickConnectButtonMessage
+    content = baseSettings.kickConnectButtonMessage
     await ctx.respond(content=content, components=view)
     message = await ctx.fetch_last_response()
     await view.start(message)
@@ -76,8 +74,9 @@ async def SearchKickClips(ctx: tanjun.abc.SlashContext, title:str):
     else:
         ctx.respond("bad input")
 
-@moderationGroup.as_sub_command("member", "The member to select.")
-@tanjun.as_slash_command("kick-get-from-discord", "Get the Kick username for a specified Discord Username", default_to_ephemeral=True, always_defer=True)
+
+@tanjun.with_member_slash_option("member", "The member to select")
+@moderationGroup.as_sub_command("kick-get-from-discord", "Get the Kick username for a specified Discord Username",default_to_ephemeral=True, always_defer=True)
 @CommandLogger
 async def GetDiscordKick(ctx: tanjun.abc.SlashContext, member: hikari.Member) -> None:
     db = Database()
@@ -133,7 +132,7 @@ async def ManualConnectKickAccount(ctx: tanjun.abc.SlashContext, member: hikari.
         await ctx.respond("bad data entry. Try again")
 
 async def ConnectKickAccount(ctx: miru.ViewContext) -> None:
-    if not Constants.kickClientId or not Constants.kickClientSecret:
+    if not baseSettings.kickClientId or not baseSettings.kickClientSecret:
         await ctx.respond("Kick API not set up")
         return
     codeVerifier = StaticMethods.GetCodeVerifier()
@@ -147,9 +146,9 @@ async def ConnectKickAccount(ctx: miru.ViewContext) -> None:
     stateIdVerifier = {oauthState:[discordId,codeVerifier]}
     globals.kickOauth.update(stateIdVerifier)
     kickOauthAuthorization = 'https://id.kick.com/oauth/authorize'
-    redirectUrl = Constants.kickRedirectUrl
+    redirectUrl = baseSettings.kickRedirectUrl
     params = {
-                "client_id":Constants.kickClientId,
+                "client_id":baseSettings.kickClientId,
                 "redirect_uri":redirectUrl,
                 "response_type":"code",
                 "scope":"user:read",
@@ -201,12 +200,12 @@ async def testNotification(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[h
     StaticMethods.logCommand("testNotification", ctx)
     messageContent = "Hooray, I can post here! Permissions looking good. Deleting this message after 60 seconds"
     embedMaker = EmbedCreator(
-                                    f"{Constants.streamerName} is now live on test platform!", 
+                                    f"{baseSettings.streamerName} is now live on test platform!", 
                                     "Test Title", 
                                     "https://www.google.com/", 
                                     'images/platformImages/twitchImage.png', 
-                                    Constants.twitchEmbedColor, 
-                                    Constants.defaultIcon, 
+                                    baseSettings.twitchEmbedColor, 
+                                    baseSettings.defaultIcon, 
                                     "TestUserName"
                                 )
     task = asyncio.create_task(embedMaker.getEmbed())
@@ -292,7 +291,7 @@ async def tempTitle(ctx: tanjun.abc.SlashContext, title: str, platform: str, acc
     else:
         await ctx.respond(f"platform name input incorrectly. Use one from this list {platforms}")
 
-@moderationGroup.as_sub_command("stream-stats", f"Get stats on how much {Constants.streamerName} has been streaming.", default_to_ephemeral=True, always_defer=True)
+@moderationGroup.as_sub_command("stream-stats", f"Get stats on how much {baseSettings.streamerName} has been streaming.", default_to_ephemeral=True, always_defer=True)
 @CommandLogger
 async def streamStats(ctx: tanjun.abc.SlashContext) -> None:
     weekData = StaticMethods.getWeekStreamingMinutes(date.today())
@@ -371,7 +370,7 @@ async def pinImage(ctx: tanjun.abc.SlashContext, imgurl: str, hours: int) -> Non
 @moderationGroup.as_sub_command("rebroadcast", "Resend online notification to your preset discord channel, assuming the streamer is online.", default_to_ephemeral=True, always_defer= True)
 @CommandLogger
 async def rebroadcast(ctx: tanjun.abc.Context) -> None:
-    await ctx.respond("Online Notifications should be resent when the next online check for each platform is made (could be a few minutes), assuming " + Constants.streamerName + " is online.")
+    await ctx.respond("Online Notifications should be resent when the next online check for each platform is made (could be a few minutes), assuming " + baseSettings.streamerName + " is online.")
     StaticMethods.setRebroadcast()
 
 @tanjun.with_str_slash_option("imgurl", "Url of the image you wish to be embedded. Will also be pinned")
@@ -379,7 +378,7 @@ async def rebroadcast(ctx: tanjun.abc.Context) -> None:
 @CommandLogger
 async def rebroadcastWithImage(ctx: tanjun.abc.SlashContext, imgurl: str) -> None:
     await ctx.respond(f"Added {imgurl} to the embed image list and will rebroadcast when the next online check is made. (could be minutes)")
-    StaticMethods.pinImage(imgurl, Constants.PIN_TIME_SHORT)
+    StaticMethods.pinImage(imgurl, baseSettings.PIN_TIME_SHORT)
     StaticMethods.setRebroadcast()
 
 @moderationGroup.as_sub_command("image-list-show", "Show urls of images that are on the list to be embedded", default_to_ephemeral=True, always_defer= True)
@@ -418,7 +417,7 @@ async def remImgList(ctx: tanjun.abc.SlashContext, url: str) -> None:
         await ctx.respond(f"{url} could not be found in the image embed list. Nothing was removed.")
 
 @component.with_slash_command
-@tanjun.as_slash_command("stream-status", "Find out what " +Constants.streamerName + " is currently doing", default_to_ephemeral=True, always_defer= True)
+@tanjun.as_slash_command("stream-status", "Find out what " +baseSettings.streamerName + " is currently doing", default_to_ephemeral=True, always_defer= True)
 @CommandLogger
 async def streamStatus(ctx: tanjun.abc.Context) -> None:
     db = Database()
@@ -426,16 +425,16 @@ async def streamStatus(ctx: tanjun.abc.Context) -> None:
     streamingOn = StaticMethods.checkOnline(db)
     if not streamingOn:
         if lastOffline == 0:
-            await ctx.respond(Constants.streamerName + " isn't currently streaming , but check out her offline content! \n Links: "+ Constants.linkTreeUrl)
+            await ctx.respond(baseSettings.streamerName + " isn't currently streaming , but check out her offline content! \n Links: "+ baseSettings.linkTreeUrl)
         else:
             hours, minutes = StaticMethods.timeToHoursMinutes(lastOffline)
-            await ctx.respond(Constants.streamerName + " isn't currently streaming and has been offline for H:" + str(hours) + " M:" + str(minutes) + ", but check out her offline content! \n Links: "+ Constants.linkTreeUrl)
+            await ctx.respond(baseSettings.streamerName + " isn't currently streaming and has been offline for H:" + str(hours) + " M:" + str(minutes) + ", but check out her offline content! \n Links: "+ baseSettings.linkTreeUrl)
     else:
         hours, minutes = StaticMethods.timeToHoursMinutes(lastOnline)
-        await ctx.respond(Constants.streamerName + " is currently streaming on: \n " + streamingOn + " and has been online for H:" + str(hours) + " M:" + str(minutes) + "\n Links: " + Constants.linkTreeUrl)
+        await ctx.respond(baseSettings.streamerName + " is currently streaming on: \n " + streamingOn + " and has been online for H:" + str(hours) + " M:" + str(minutes) + "\n Links: " + baseSettings.linkTreeUrl)
     tHours, tMinutes = StaticMethods.timeToHoursMinutesTotalTime(totalStreamTime)
-    date = datetime.fromtimestamp(Constants.RECORD_KEEPING_START_DATE)
-    await ctx.respond(Constants.streamerName + " has streamed a grand total of H:" + str(tHours) + " M:" + str(tMinutes) + " since records have been kept starting on " + str(date)) 
+    date = datetime.fromtimestamp(baseSettings.RECORD_KEEPING_START_DATE)
+    await ctx.respond(baseSettings.streamerName + " has streamed a grand total of H:" + str(tHours) + " M:" + str(tMinutes) + " since records have been kept starting on " + str(date)) 
 
 @tanjun.with_int_slash_option("epocstart", "The epoc time in seconds when the subathon started", default=0)
 @moderationGroup.as_sub_command("subathon-start", "Start a subathon timer", default_to_ephemeral=True, always_defer= True)
