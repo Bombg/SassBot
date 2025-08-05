@@ -9,7 +9,7 @@ services:
   sassbot:
     image: ghcr.io/bombg/sassbot:latest
     volumes:
-      - /home/bombg/Repos/SassBot/AppConstants.py:/opt/SassBot/AppConstants.py
+      - /home/bombg/Repos/SassBot/.env:/opt/SassBot/.env
       - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
       - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
       - /home/bombg/Repos/SassBot/Fae/FaeIcon.png:/opt/SassBot/images/errIcon.png
@@ -25,7 +25,7 @@ services:
 #   sassbot:
 #     image: ghcr.io/bombg/sassbot:latest
 #     volumes:
-#       - /home/bombg/Repos/SassBot/AppConstants.py:/opt/SassBot/AppConstants.py
+#       - /home/bombg/Repos/SassBot/.env:/opt/SassBot/.env
 #       - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
 #       - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
 #       - /home/bombg/Repos/SassBot/Fae/FaeIcon.png:/opt/SassBot/images/errIcon.png
@@ -45,7 +45,7 @@ services:
 #     image: ghcr.io/bombg/sassbot:experimental
 #     container_name: Faebot
 #     volumes:
-#       - /home/bombg/Repos/SassBot/AppConstants.py:/opt/SassBot/AppConstants.py
+#       - /home/bombg/Repos/SassBot/.env:/opt/SassBot/.env
 #       - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
 #       - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
 #       - /home/bombg/Repos/SassBot/Fae/FaeIcon.png:/opt/SassBot/images/errIcon.png
@@ -58,7 +58,7 @@ services:
 #       - /home/bombg/Repos/SassBot/commandLogs.txt:/opt/SassBot/commandLogs.txt
 #       - /home/bombg/Repos/SassBot/deletedMessageLogs.txt:/opt/SassBot/deletedMessageLogs.txt
 #     ports:
-#       - 5060:5060 # webhook/health
+#       - 6061:6061 # webhook/health
 #     restart: unless-stopped
 #     networks:
 #       - gluetun_default

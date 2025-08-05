@@ -5,7 +5,7 @@
 SASSBOT_LOG_LEVEL = 20 # DEBUG = 10, INFO = 20, WARNING = 30, ERROR = 40, CRITICAL = 50
 OTHER_LIBRARIES_LOG_LEVEL = 20 # DEBUG = 10, INFO = 20, WARNING = 30, ERROR = 40, CRITICAL = 50
 
-SECRET = 0  #REQUIRED: Discord bot secret token
+SECRET = ''  #REQUIRED: Discord bot secret token
 GUILD_ID = 0 #REQUIRED: Guild ID of the discord server.
 whiteListedRoleIDs = [] #REQUIRED:  IDs of Roles you wish to be white listed for some commands. You can also add user IDs if you want to add an individual without a role
 MOD_ROLE_ID = 0 # COMMAND:Used to ping mods to take action on an approved ban appeal

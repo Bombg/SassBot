@@ -63,18 +63,18 @@
 - Test commands
     - /test-permission - test if Sassbot has the necessary permissions to post in the specified channel ID.
 - Kick commands
-    - /kick-connect-button - a forever button that uses Kick's oath to connect someone Kick/Discord accounts
+    - /kick-connect-button - a forever button that uses Kick's oath to connect someone's Kick/Discord accounts
     - /kick-clip-search - search through logged Kick clips. (wont work until clips have been scanned)
     - /kick-get-from-discord - Get the Kick usernername of a Discord member 
     - /kick-manual-connect - Manually connect someone's Kick account if you're sure who they are
 
 ### How to set up the bot:
 
-1. Go to https://discord.com/developers and set up an app and get a token. Put that token in .envExample file with the var SECRET (see .envExample).
+1. Go to https://discord.com/developers and set up an app and get a token. Put that token in .envExample file with the var SECRET.
 2. At https://discord.com/developers/ - generate an invite code under oauth2 to invite your bot to your server. Under scope make sure bot is checked.
     Give the bot permissions you want it to have. At minimum it'll need to be able to post messages and embeds
 3. Go to the bot section in the developers portal and turn on all the intents.
-4. In the .envExample file, change the GUILD_ID value to the guild id of your server, and each platform NOTIFICATION_CHANNEL_ID to the channel ID you want alerts posted to.
+4. In the .envExample file, change the GUILD_ID value to the guild id of your server, and each platform NOTIFICATION_CHANNEL_ID's to the channel ID you want alerts posted to.
     To easily get both of these IDs, in discord advanced options turn on developer mode. After that you can right click servers/channels and a new option to copy the IDs will be available.
     Also edit and add vairus URLs to your streamer in .envExample. Everything is described in comments.
     - After editing .envExample rename it to .env - This will be used before default values. 
