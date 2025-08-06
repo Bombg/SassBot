@@ -239,7 +239,7 @@ async def ParseChannelSubscriptionEvent(db:Database, data):
         giftedUstring = CreateGiftedUString(["self"],userName,1)
         await asyncio.sleep(5)
         if not isGiftedAlreadyExist(giftedUstring):
-            logger.warning(f"ChannelSubscriptionEvent:{giftedUstring} not inserted")
+            logger.debug(f"ChannelSubscriptionEvent:CHECK:{giftedUstring} Inserted or not")
     else:
         logger.debug(f"ChannelSubscriptionEvent(gifted version): insertion? may be reserved for anon gifts?")
         logger.debug(data)
