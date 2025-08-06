@@ -160,7 +160,7 @@ async def ConnectKickAccount(ctx: miru.ViewContext) -> None:
     view = MiruViews.DiscordKickConnectButton(fullUrl)
     await ctx.respond(components=view,flags=hikari.MessageFlag.EPHEMERAL)
     count = 0
-    while oauthState in globals.kickOauth and count <= 60:
+    while oauthState in globals.kickOauth and count <= 300:
         count +=1
         await asyncio.sleep(2)
     await ctx.interaction.delete_initial_response()
