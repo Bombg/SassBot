@@ -48,6 +48,8 @@ async def isPermission(ctx: tanjun.abc.SlashContext)-> bool:
     hasPermission = False
     roles = ctx.member.get_roles()
     #canBan = ctx.member.permissions & hikari.Permissions.BAN_MEMBERS
+    if not baseSettings.whiteListedRoleIDs:
+        logger.warning("No one in whiteListedRoleIDs, no one can use mod commands")
     for role in roles:
         if role.id in baseSettings.whiteListedRoleIDs or ctx.member.id in baseSettings.whiteListedRoleIDs:
             hasPermission = True

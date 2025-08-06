@@ -520,6 +520,9 @@ async def AddKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> Non
         logger.warning("Don't have permission to change roles or own role isn't high enough")
 
 async def HandleShortSubRoles(rest:hikari.impl.RESTClientImpl, db:Database, shortSubbers:dict):
+    if not baseSettings.kickShortRoleId:
+        logger.warning("kickShortRoleId has no value. Can't manage roles. Give it a role ID or set hasRolePermission to False")
+        return
     for k,v in shortSubbers.items():
         discordId = db.GetDiscordKickConnection(k)
         if discordId:
@@ -537,6 +540,9 @@ async def HandleShortSubRoles(rest:hikari.impl.RESTClientImpl, db:Database, shor
                 db.InsertShortRoleDate(k, roledate=lastSubDate)
 
 async def HandleLongSubRoles(rest:hikari.impl.RESTClientImpl, db:Database, longSubbers:dict):
+    if not baseSettings.kickLongRoleId:
+        logger.warning("kickLongRoleId has no value. Can't manage roles. Give it a role ID or set hasRolePermission to False")
+        return
     for k,v in longSubbers.items():
         discordId = db.GetDiscordKickConnection(k)
         if discordId:
