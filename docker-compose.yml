@@ -10,7 +10,6 @@ services:
     image: ghcr.io/bombg/sassbot:latest
     volumes:
       - /home/bombg/Repos/SassBot/.env:/opt/SassBot/.env
-      - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
       - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
       - /home/bombg/Repos/SassBot/Fae/FaeIcon.png:/opt/SassBot/images/errIcon.png
       - /home/bombg/Repos/SassBot/Fae/FaeErr.jpg:/opt/SassBot/images/twitErrImg.jpg
@@ -26,7 +25,6 @@ services:
 #     image: ghcr.io/bombg/sassbot:latest
 #     volumes:
 #       - /home/bombg/Repos/SassBot/.env:/opt/SassBot/.env
-#       - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
 #       - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
 #       - /home/bombg/Repos/SassBot/Fae/FaeIcon.png:/opt/SassBot/images/errIcon.png
 #       - /home/bombg/Repos/SassBot/Fae/FaeErr.jpg:/opt/SassBot/images/twitErrImg.jpg
@@ -46,7 +44,6 @@ services:
 #     container_name: Faebot
 #     volumes:
 #       - /home/bombg/Repos/SassBot/.env:/opt/SassBot/.env
-#       - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
 #       - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
 #       - /home/bombg/Repos/SassBot/Fae/FaeIcon.png:/opt/SassBot/images/errIcon.png
 #       - /home/bombg/Repos/SassBot/Fae/FaeErr.jpg:/opt/SassBot/images/twitErrImg.jpg
