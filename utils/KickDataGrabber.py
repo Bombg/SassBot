@@ -58,7 +58,6 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
                 creationDate = dt.strptime(clip['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
                 timeDiff = dt.now(timezone.utc) - creationDate
                 daysClipLookBack = baseSettings.kickClipDaysLookBack
-                viewIncrease = 0
                 if not db.isExists(exeString):
                     if timeDiff < timedelta(days=daysClipLookBack):
                         db.addTempKickClipToTable(clip['id'], clip['livestream_id'],clip['channel']['slug'], clip['creator']['slug'], clip['created_at'], clip['title'], clip['views'], clip['category']['slug'])
