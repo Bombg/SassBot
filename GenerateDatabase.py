@@ -122,7 +122,7 @@ def CreatePlatformAccountsTable(cur):
                 )
             ''')
 
-if __name__ == "__main__":
+def GenerateDatabase():
     conn = sqlite3.connect("sassBot.db")
     cur = conn.cursor()
     cur.execute('''CREATE TABLE IF NOT EXISTS platforms
@@ -212,3 +212,6 @@ if __name__ == "__main__":
 
     cur.close()
     conn.close()
+
+if __name__ == "__main__":
+    GenerateDatabase()

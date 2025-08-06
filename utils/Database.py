@@ -8,6 +8,7 @@ import utils.StaticMethods as StaticMethods
 import logging
 from DefaultConstants import Settings as Settings
 import GenerateDatabase
+import os
 
 baseSettings = Settings()
 
@@ -18,6 +19,8 @@ class Database:
     
     def connectCursor(self):
         try:
+            if not os.path.exists("sassBot.db"):
+                GenerateDatabase.GenerateDatabase()
             conn = sqlite3.connect("sassBot.db")
             cur = conn.cursor()
         except sqlite3.OperationalError as e:
