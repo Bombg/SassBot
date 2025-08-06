@@ -357,3 +357,11 @@ def EncodeParamsWithUrl(params: dict, url:str) -> str:
     parsedUrl = urlparse(url)
     fullUrl = urlunparse(parsedUrl._replace(query=encoded_params))
     return fullUrl
+
+def GetKickClipUrlFromClipId(clipId:str) -> str:
+    clipUrl = ""
+    if clipId:
+        db = Database()
+        slug = db.GetChannelSlugFromClipId(clipId)
+        clipUrl = f'https://kick.com/{slug}/clips/{clipId}'
+    return clipUrl

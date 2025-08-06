@@ -25,6 +25,43 @@ component = tanjun.Component()
 moderationGroup = tanjun.slash_command_group("zmod", "commands only moderators can use").add_check(StaticMethods.isPermission)
 moderationGroupY = tanjun.slash_command_group("ymod", "commands only moderators can use").add_check(StaticMethods.isPermission )
 
+async def KickUserAutoCompelte(ctx: tanjun.abc.AutocompleteContext, value:str) -> None:
+    db = Database()
+    kickUsers = db.GetKickUsersAndId()
+    choices = [
+                name for name in kickUsers if value.lower() in name.lower()
+            ]
+    await ctx.set_choices({name: name for name in choices[:25]})
+
+@component.with_slash_command
+@tanjun.with_str_slash_option("author", "The username of the clip author you wish to search for", autocomplete=KickUserAutoCompelte)
+@tanjun.with_int_slash_option("amount", "How many clips do you wish to see?", default=20)
+@tanjun.as_slash_command("kick-clip-search-author", "Get clips by author", always_defer=True, default_to_ephemeral=True)
+async def KickClipAuthorSearch(ctx: tanjun.abc.SlashContext, author:str, amount:int) -> None:
+    if author:
+        stepAmount = 20
+        db = Database()
+        clipIds = db.GetKickClipByAuthor(author)
+        clipUrls = []
+        urls = 0
+        totalAmount = 0
+        extra = 0
+        for clipId in clipIds:
+            clipUrls.append(StaticMethods.GetKickClipUrlFromClipId(clipId))
+            urls += 1
+            totalAmount += 1
+            if urls == stepAmount and totalAmount < amount:
+                await ctx.respond(clipUrls)
+                clipUrls = []
+                urls = 0
+            elif totalAmount == amount and clipUrls:
+                await ctx.respond(clipUrls)
+            elif totalAmount > amount:
+                extra += 1
+        await ctx.respond(f"There's {extra} more entries. Use larger amount var to see more. Currently set to {amount}")
+    else:
+        await ctx.respond("improper input")
+
 @moderationGroup.as_sub_command("confess-button", "A forever confess button to submit confessions", always_defer=True)
 @CommandLogger
 async def ConfessButton(ctx: tanjun.abc.SlashContext) -> None:
@@ -66,9 +103,9 @@ async def KickClipAutoComplete(ctx: tanjun.abc.AutocompleteContext, value:str) -
 async def SearchKickClips(ctx: tanjun.abc.SlashContext, title:str):
     db = Database()
     if title:
-        slug = db.GetChannelSlugFromClipId(title)
-        if slug:
-            await ctx.respond(f'https://kick.com/{slug}/clips/{title}')
+        clipUrl = StaticMethods.GetKickClipUrlFromClipId(title)
+        if clipUrl:
+            await ctx.respond(clipUrl)
         else:
             ctx.respond("bad input")
     else:
@@ -98,14 +135,6 @@ async def eventSubscribe(ctx: tanjun.abc.SlashContext, kickuserid:int, eventname
     import checkers.Kick as Kick
     Kick.subscribeWebhooks(kickuserid,eventname)
     await ctx.respond("This is a testing command. Nothin will show in discord")
-
-async def KickUserAutoCompelte(ctx: tanjun.abc.AutocompleteContext, value:str) -> None:
-    db = Database()
-    kickUsers = db.GetKickUsersAndId()
-    choices = [
-                name for name in kickUsers if value.lower() in name.lower()
-            ]
-    await ctx.set_choices({name: name for name in choices[:25]})
 
 @tanjun.with_member_slash_option("member", "The member to select.")
 @tanjun.with_str_slash_option("kickuser", "Select Kick user.", autocomplete=KickUserAutoCompelte)

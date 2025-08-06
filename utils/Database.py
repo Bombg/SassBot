@@ -34,6 +34,19 @@ class Database:
                     StaticMethods.rebootServer()
         return conn, cur
     
+    def GetKickClipByAuthor(self, kickSlug):
+        clipIds = []
+        self.createKickClipsTable()
+        conn, cur = self.connectCursor()
+        rowVals = (kickSlug,)
+        exeString = '''SELECT clip_id FROM kick_clips where clip_creator_slug=? ORDER BY creation_date DESC'''
+        cur.execute(exeString, rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0] != None:
+            for clipId in fetch:
+                clipIds.append(clipId[0])
+        return clipIds
+    
     def GetPlatformNames(self):
         conn, cur = self.connectCursor()
         exeString = '''SELECT platform_name FROM platforms'''
