@@ -65,6 +65,7 @@
 - Kick commands
     - /kick-connect-button - a forever button that uses Kick's oath to connect someone's Kick/Discord accounts
     - /kick-clip-search - search through logged Kick clips. (wont work until clips have been scanned)
+    - /kick-clip-search-author - search clips by author
     - /kick-get-from-discord - Get the Kick usernername of a Discord member 
     - /kick-manual-connect - Manually connect someone's Kick account if you're sure who they are
 
