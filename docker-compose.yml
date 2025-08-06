@@ -57,8 +57,6 @@ services:
 #     ports:
 #       - 6061:6061 # webhook/health
 #     restart: unless-stopped
-#     networks:
-#       - gluetun_default
 #     logging:
 #       driver: "json-file"
 #       options:
