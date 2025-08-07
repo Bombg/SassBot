@@ -176,6 +176,7 @@ async def ManualConnectKickAccount(ctx: tanjun.abc.SlashContext, member: hikari.
     else:
         await ctx.respond("bad data entry. Try again")
 
+@CommandLogger
 async def ConnectKickAccount(ctx: miru.ViewContext) -> None:
     if not baseSettings.kickClientId or not baseSettings.kickClientSecret:
         await ctx.respond("Kick API not set up")
