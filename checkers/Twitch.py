@@ -3,21 +3,19 @@ import json
 from bs4 import BeautifulSoup
 import time
 import logging
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 from utils.StaticMethods import GetThumbnail
 
+baseSettings = Settings()
 logger = logging.getLogger(__name__)
-logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
 def isModelOnline(twitchChannelName: str):
     twitchChannelName = twitchChannelName.lower()
     title = "placeholder twitch title"
     tempThumbUrl = ''
     isOnline = False
-    icon = Constants.defaultIcon
+    icon = baseSettings.defaultIcon
     try:
         isOnline = IsOnline(twitchChannelName)
         time.sleep(1)
@@ -38,7 +36,7 @@ def isModelOnline(twitchChannelName: str):
         logger.warning("SSL Error when attempting to connect to Twitch")
     except TypeError:
         logger.warning("twitch user banned or doesn't exist")
-    thumbUrl = GetThumbnail(tempThumbUrl, Constants.twitchThumbnail)
+    thumbUrl = GetThumbnail(tempThumbUrl, baseSettings.twitchThumbnail)
     return isOnline, title, thumbUrl, icon
 
 def getIcon(soup):

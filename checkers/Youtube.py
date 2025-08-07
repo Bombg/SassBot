@@ -2,22 +2,20 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import logging
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 import time
 from utils.StaticMethods import GetThumbnail
 
+baseSettings = Settings()
 logger = logging.getLogger(__name__)
-logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
 def isModelOnline(ytUserName):
     ytUrl = f"https://www.youtube.com/@{ytUserName}/live"
     online = False
     title =  "placeholder youtube title"
     tempThumbUrl = ""
-    icon = Constants.defaultIcon
+    icon = baseSettings.defaultIcon
     try:
         page = requests.get(ytUrl, cookies={'CONSENT': 'YES+42'})
         soup = BeautifulSoup(page.content, "html.parser")
@@ -37,7 +35,7 @@ def isModelOnline(ytUserName):
         logger.warning("connection timed out to Youtube. Bot detection or rate limited?")
     except requests.exceptions.SSLError:
         logger.warning("SSL Error when attempting to connect to Youtube")
-    thumbUrl = GetThumbnail(tempThumbUrl, Constants.ytThumbnail)
+    thumbUrl = GetThumbnail(tempThumbUrl, baseSettings.ytThumbnail)
     return online,title, thumbUrl, icon
 
 def getIconJson(scripts):

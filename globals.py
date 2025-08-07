@@ -1,7 +1,3 @@
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
 import time
 
 globalPlayString = ""
@@ -34,6 +30,11 @@ kickUserIds = {} # slug:userId
 kickProfilePics = {} # slug:url
 kickEventIds = []
 kickPublicKey = ""
+kickClipCursor = ""
+kickGiftUStrings = []
+kickOauth = {}
+kickLastWebhookHeaders = ''
+kickVisitedCursors = []
 
 lastCheckTime = time.time()
 lastNoDriverCheckTime = time.time()

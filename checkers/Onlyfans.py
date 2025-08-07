@@ -1,7 +1,4 @@
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 import re
 import asyncio
 import nodriver as uc
@@ -10,36 +7,33 @@ import globals
 import logging
 from utils.StaticMethods import GetThumbnail
 
+baseSettings = Settings()
 logger = logging.getLogger(__name__)
-logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
 async def isModelOnline(ofUserName):
     isOnline = False
     ofUrl = f"https://onlyfans.com/{ofUserName}"
-    title = Constants.ofDefaultTitle
+    title = baseSettings.ofDefaultTitle
     tempThumbUrl = ""
-    icon = Constants.defaultIcon
+    icon = baseSettings.defaultIcon
     try:
-        browser = await ndb.GetBrowser(proxy=Constants.OF_PROXY)
-        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
+        browser = await ndb.GetBrowser(proxy=baseSettings.OF_PROXY)
+        await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
         page = await browser.get(ofUrl, new_window=True)
-        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
+        await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
         await page.save_screenshot("Ofscreenshot.jpg")
         isOnline = await IsLiveBadge(page)
         icon  = await GetIcon(page)
-        await page.close()
-        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
-        browser.stop()
-        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
-        globals.browserOpen = False
+        await ndb.CloseNDBrowser(browser, page)
     except Exception as e:
         logger.warning(f"Error getting browser for Onylyfans: {e}")
         globals.browserOpen = False
-    thumbUrl = GetThumbnail(tempThumbUrl, Constants.ofThumbnail)
+    thumbUrl = GetThumbnail(tempThumbUrl, baseSettings.ofThumbnail)
     return isOnline, title, thumbUrl, icon
 
 async def GetIcon(page:uc.Tab):
-    icon = Constants.defaultIcon
+    icon = baseSettings.defaultIcon
     reString = r'^https:\/\/.+avatar.jpg$'
     try:
         imageElements = await page.find_all("data-v-325c6981")

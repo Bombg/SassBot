@@ -3,12 +3,11 @@ import hikari
 from utils.Database import Database
 from datetime import timedelta
 import plugins.commands as commands
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 import tanjun
 import random
+
+baseSettings = Settings()
 
 class ConfessionReView(miru.View):
     def __init__(self, *, timeout: float | int | timedelta | None = 120, autodefer: bool = True, confessionId, tanCtx: tanjun.abc.SlashContext, confession:str,rest: hikari.impl.RESTClientImpl,title) -> None:
@@ -23,13 +22,13 @@ class ConfessionReView(miru.View):
     async def approveButton(self, button: miru.Button, ctx: miru.ViewContext) -> None:
         self.db.reviewConfession(self.confessionId,1,ctx.member.id,ctx.member.display_name)
         content = f"## {self.confessionId}:{self.title}\n``` {self.confession} ```"
-        await self.rest.create_message(channel=Constants.CONFESSTION_CHANNEL_ID, content=content)
+        await self.rest.create_message(channel=baseSettings.CONFESSTION_CHANNEL_ID, content=content)
         self.stop()
     @miru.button(label="Approve&Next", style=hikari.ButtonStyle.SUCCESS)
     async def approveAndReview(self, button: miru.Button, ctx: miru.ViewContext) -> None:
         self.db.reviewConfession(self.confessionId,1,ctx.member.id,ctx.member.display_name)
         content = f"## {self.confessionId}:{self.title}\n``` {self.confession} ```"
-        await self.rest.create_message(channel=Constants.CONFESSTION_CHANNEL_ID, content=content)
+        await self.rest.create_message(channel=baseSettings.CONFESSTION_CHANNEL_ID, content=content)
         self.stop()
         await commands.confessReview(self.tanCtx, self.rest)
     @miru.button(label="Pass&Next", style=hikari.ButtonStyle.SECONDARY)
@@ -57,14 +56,14 @@ class AppealReView(miru.View):
     @miru.button(label="Approve&Finish", style=hikari.ButtonStyle.SUCCESS)
     async def approveButton(self, button: miru.Button, ctx: miru.ViewContext) -> None:
         self.db.reviewAppeal(self.appealId,1,ctx.member.id,ctx.member.display_name)
-        content = f"## {self.appealId}:{self.title}\n``` {self.appeal} ```\n<@&{Constants.MOD_ROLE_ID}> Ban appeal approved. Please react to this message to show unban action has been carried out"
-        await self.rest.create_message(channel=Constants.APPEAL_CHANNEL_ID, content=content, role_mentions=True)
+        content = f"## {self.appealId}:{self.title}\n``` {self.appeal} ```\n<@&{baseSettings.MOD_ROLE_ID}> Ban appeal approved. Please react to this message to show unban action has been carried out"
+        await self.rest.create_message(channel=baseSettings.APPEAL_CHANNEL_ID, content=content, role_mentions=True)
         self.stop()
     @miru.button(label="Approve&Next", style=hikari.ButtonStyle.SUCCESS)
     async def approveAndReview(self, button: miru.Button, ctx: miru.ViewContext) -> None:
         self.db.reviewAppeal(self.appealId,1,ctx.member.id,ctx.member.display_name)
-        content = f"## {self.appealId}:{self.title}\n``` {self.appeal} ```\n<@&{Constants.MOD_ROLE_ID}> Ban appeal approved. Please react to this message to show unban action has been carried out"
-        await self.rest.create_message(channel=Constants.APPEAL_CHANNEL_ID, content=content, role_mentions=True)
+        content = f"## {self.appealId}:{self.title}\n``` {self.appeal} ```\n<@&{baseSettings.MOD_ROLE_ID}> Ban appeal approved. Please react to this message to show unban action has been carried out"
+        await self.rest.create_message(channel=baseSettings.APPEAL_CHANNEL_ID, content=content, role_mentions=True)
         self.stop()
         await commands.appealReview(self.tanCtx, self.rest)
     @miru.button(label="Pass&Next", style=hikari.ButtonStyle.SECONDARY)
@@ -121,3 +120,30 @@ def createConfessionEmbed(confessionId, confession, title):
             )
         ).add_field(name="Confession/Question", value=confession)
     return embed
+
+class DiscordKickConnectButton(miru.View):
+    def __init__(self,link) -> None:
+        super().__init__(timeout=None, autodefer=True)
+        self.add_item(miru.Button(label="Connect Kick Account", url=link, style=hikari.ButtonStyle.LINK))
+
+class ConnectKick(miru.View):
+    def __init__(self) -> None:
+        self.db = Database()
+        super().__init__(timeout=None, autodefer=True)
+    @miru.button(label="Link Kick Account", style=hikari.ButtonStyle.SUCCESS, custom_id="ForeverKick")
+    async def KickForeverButton(self, button: miru.Button, ctx: miru.ViewContext) -> None:
+        await commands.ConnectKickAccount(ctx)
+
+class BanAppealButton(miru.View):
+    def __init__(self) -> None:
+        super().__init__(timeout=None, autodefer=True)
+    @miru.button(label="Appeal Ban", style=hikari.ButtonStyle.DANGER, custom_id="BanAppeal")
+    async def BanAppealButton(self, button:miru.Button, ctx: miru.ViewContext) -> None:
+        await commands.BanAppeal(ctx)
+
+class ConfessButton(miru.View):
+    def __init__(self) -> None:
+        super().__init__(timeout=None, autodefer=True)
+    @miru.button(label="✝ Confess ✝", style=hikari.ButtonStyle.DANGER, custom_id="Confess")
+    async def ConfessButton(self, button:miru.Button, ctx: miru.ViewContext) -> None:
+        await commands.confess(ctx)

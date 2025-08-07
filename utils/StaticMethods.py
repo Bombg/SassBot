@@ -3,18 +3,21 @@ import os
 from utils.Database import Database
 import globals
 import datetime
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 from datetime import timedelta
 from datetime import date
 import re
 import tanjun
 import logging
+import secrets
+import hashlib
+import base64
+from urllib.parse import urlencode, urlunparse, urlparse
+import hikari
 
+baseSettings = Settings()
 logger = logging.getLogger(__name__)
-logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
 def logCommand(funcName, ctx) -> None:
     file = open("commandLogs.txt", 'a')
@@ -30,7 +33,7 @@ def resetUnfinishedConfessions():
     unFinished = db.getUnfinishedConfessionReviews()
     if unFinished:
         for row in unFinished:
-            if timeToSeconds(row[1]) >= Constants.TIME_BEFORE_REVIEW_RESET:
+            if timeToSeconds(row[1]) >= baseSettings.TIME_BEFORE_REVIEW_RESET:
                 db.resetConfessionDateReviewed(row[0])
 
 def resetUnfinishedAppeals():
@@ -38,17 +41,21 @@ def resetUnfinishedAppeals():
     unFinished = db.getUnfinishedAppealReviews()
     if unFinished:
         for row in unFinished:
-            if timeToSeconds(row[1]) >= Constants.TIME_BEFORE_REVIEW_RESET:
+            if timeToSeconds(row[1]) >= baseSettings.TIME_BEFORE_REVIEW_RESET:
                 db.resetAppealDateReviewed(row[0])
 
 async def isPermission(ctx: tanjun.abc.SlashContext)-> bool:
     hasPermission = False
     roles = ctx.member.get_roles()
+    #canBan = ctx.member.permissions & hikari.Permissions.BAN_MEMBERS
+    if not baseSettings.whiteListedRoleIDs:
+        logger.warning("No one in whiteListedRoleIDs, no one can use mod commands")
     for role in roles:
-        if role.id in Constants.whiteListedRoleIDs or ctx.member.id in Constants.whiteListedRoleIDs:
+        if role.id in baseSettings.whiteListedRoleIDs or ctx.member.id in baseSettings.whiteListedRoleIDs:
             hasPermission = True
     if not hasPermission:
-        await ctx.respond("You don't have permission to do this",)
+        ctx.set_ephemeral_default(True)
+        await ctx.respond("You don't have permission to do this")
     return hasPermission
 
 def isRerun(title:str) -> bool:
@@ -101,12 +108,12 @@ def getWeekStreamingMinutes(startingDate: date, minutesDict = {}):
     return weekMinutes
 
 def smartRebroadcast() -> None:
-    platforms = ['chaturbate','onlyfans','fansly','twitch','youtube','kick','cam4','mfc','bongacams', 'stripchat','eplay','manyvids']
     db = Database()
+    platforms = db.GetPlatformNames()
     for platform in platforms:
         lastOnlineMessage,streamStartTime,streamEndTime,isRerun = db.getPlatformsRowValues(platform)
         secondsSinceLastMessage = timeToSeconds(lastOnlineMessage)
-        if secondsSinceLastMessage >= Constants.SECONDS_BETWEEN_SMART_ALERTS and streamStartTime > streamEndTime:
+        if secondsSinceLastMessage >= baseSettings.SECONDS_BETWEEN_SMART_ALERTS and streamStartTime > streamEndTime:
             logger.info(f"Smart alert for {platform}")
             globals.rebroadcast[platform] = 1
 
@@ -141,7 +148,7 @@ def getEmbedImage() -> str:
     if not twImgQue and twImgList:
         twImgQue = twImgList
     if not twImgList:
-        imageSrc = Constants.defaultThumbnail
+        imageSrc = baseSettings.defaultThumbnail
         logger.info("adding default image for embed since nothing is on the image list.")
     elif url:
         imageSrc = url
@@ -156,20 +163,10 @@ def unPin() -> None:
 
 def setRebroadcast() -> None:
     logger.info("rebroadcast: On")
-    globals.rebroadcast = {
-        "chaturbate":1,
-        "onlyfans":1,
-        "fansly":1,
-        "twitch":1,
-        "youtube":1,
-        "kick":1,
-        "cam4":1,
-        "mfc":1,
-        "bongacams":1,
-        "stripchat":1,
-        "eplay":1,
-        "manyvids":1
-}
+    db = Database()
+    platforms = db.GetPlatformNames()
+    for platform in platforms:
+        globals.rebroadcast[platform] = 1
 
 def addImageListQue(url: str) -> None:
     db = Database()
@@ -302,32 +299,32 @@ def GetProxies(proxyIpPort):
 def GetShortestActiveCheckTimer():
     timerLengths = []
     noDriverTimerLengths = []
-    if Constants.kickUserName and Constants.kickClientId:
-        timerLengths.append(Constants.KICK_CHECK_TIMER)
+    if baseSettings.kickUserName and baseSettings.kickClientId:
+        timerLengths.append(baseSettings.KICK_CHECK_TIMER)
     else:
-        noDriverTimerLengths.append(Constants.KICK_CHECK_TIMER)
-    if Constants.cbUserName:
-        timerLengths.append(Constants.CB_CHECK_TIMER)
-    if Constants.fansUserName:
-        noDriverTimerLengths.append(Constants.FANS_CHECK_TIMER)
-    if Constants.ofUserName:
-        noDriverTimerLengths.append(Constants.OF_CHECK_TIMER)
-    if Constants.ytUserName:
-        timerLengths.append(Constants.YT_CHECK_TIMER)
-    if Constants.twitchUserName:
-        timerLengths.append(Constants.TWITCH_CHECK_TIMER)
-    if Constants.cam4UserName:
-        timerLengths.append(Constants.CAM4_CHECK_TIMER)
-    if Constants.mfcUserName:
-        timerLengths.append(Constants.MFC_CHECK_TIMER)
-    if Constants.bcUserName:
-        timerLengths.append(Constants.BC_CHECK_TIMER)
-    if Constants.scUserName:
-        timerLengths.append(Constants.SC_CHECK_TIMER)
-    if Constants.epUserName:
-        timerLengths.append(Constants.EP_CHECK_TIMER)
-    if Constants.mvUserName:
-        timerLengths.append(Constants.MV_CHECK_TIMER)
+        noDriverTimerLengths.append(baseSettings.KICK_CHECK_TIMER)
+    if baseSettings.cbUserName:
+        timerLengths.append(baseSettings.CB_CHECK_TIMER)
+    if baseSettings.fansUserName:
+        noDriverTimerLengths.append(baseSettings.FANS_CHECK_TIMER)
+    if baseSettings.ofUserName:
+        noDriverTimerLengths.append(baseSettings.OF_CHECK_TIMER)
+    if baseSettings.ytUserName:
+        timerLengths.append(baseSettings.YT_CHECK_TIMER)
+    if baseSettings.twitchUserName:
+        timerLengths.append(baseSettings.TWITCH_CHECK_TIMER)
+    if baseSettings.cam4UserName:
+        timerLengths.append(baseSettings.CAM4_CHECK_TIMER)
+    if baseSettings.mfcUserName:
+        timerLengths.append(baseSettings.MFC_CHECK_TIMER)
+    if baseSettings.bcUserName:
+        timerLengths.append(baseSettings.BC_CHECK_TIMER)
+    if baseSettings.scUserName:
+        timerLengths.append(baseSettings.SC_CHECK_TIMER)
+    if baseSettings.epUserName:
+        timerLengths.append(baseSettings.EP_CHECK_TIMER)
+    if baseSettings.mvUserName:
+        timerLengths.append(baseSettings.MV_CHECK_TIMER)
     shortest = 999999999999999999
     ndShortest = 999999999999999999
     for timer in timerLengths:
@@ -341,3 +338,30 @@ def GetShortestActiveCheckTimer():
 class EndpointFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
         return record.args and len(record.args) >= 3 and record.args[2] != "/health"
+
+def GetCodeVerifier():
+    codeVerifier = secrets.token_urlsafe(64)
+    return codeVerifier
+
+def GetOauthState():
+    return secrets.token_urlsafe(32)
+
+def GetHashedCodeVerifier(codeVerifier):
+    return hashlib.sha256(codeVerifier.encode('utf-8')).digest()
+
+def GetCodeChallenge(hashedVerifier):
+    return base64.urlsafe_b64encode(hashedVerifier).rstrip(b'=').decode('utf-8')
+
+def EncodeParamsWithUrl(params: dict, url:str) -> str:
+    encoded_params = urlencode(params)
+    parsedUrl = urlparse(url)
+    fullUrl = urlunparse(parsedUrl._replace(query=encoded_params))
+    return fullUrl
+
+def GetKickClipUrlFromClipId(clipId:str) -> str:
+    clipUrl = ""
+    if clipId:
+        db = Database()
+        slug = db.GetChannelSlugFromClipId(clipId)
+        clipUrl = f'https://kick.com/{slug}/clips/{clipId}'
+    return clipUrl

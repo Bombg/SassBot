@@ -4,10 +4,7 @@ import json
 import time
 import utils.NoDriverBrowserCreator as ndb
 import globals
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 import logging
 from utils.StaticMethods import GetThumbnail
 import requests
@@ -16,17 +13,18 @@ from cryptography.hazmat.primitives import hashes,serialization
 from cryptography.exceptions import InvalidSignature
 import base64
 
+baseSettings = Settings()
 logger = logging.getLogger(__name__)
-logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
 async def isModelOnline(kickUserName):
     isOnline, title, tempThumbUrl, icon = setDefaultStreamValues()
     apiUrl = f"https://kick.com/api/v1/channels/{kickUserName}"
     try:
-        browser = await ndb.GetBrowser(proxy=Constants.KICK_PROXY)
-        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
+        browser = await ndb.GetBrowser(proxy=baseSettings.KICK_PROXY)
+        await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
         page = await browser.get(apiUrl)
-        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
+        await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
         await page.save_screenshot("KickScreenshot.jpg")
         content = await page.get_content()
         content = content.split('<body>')
@@ -35,22 +33,18 @@ async def isModelOnline(kickUserName):
         else:
             jsonText = content[1].split('</body></html>')
             isOnline, title, tempThumbUrl, icon = getStreamInfo(jsonText)
-        await page.close()
-        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
-        browser.stop()
-        await asyncio.sleep(1*Constants.NODRIVER_WAIT_MULTIPLIER)
-        globals.browserOpen = False
+        await ndb.CloseNDBrowser(browser,page)
     except Exception as e:
         logger.warning(f"error getting browser for Kick: {e}")
         globals.browserOpen = False
-    thumbUrl = GetThumbnail(tempThumbUrl, Constants.kickThumbnail)
+    thumbUrl = GetThumbnail(tempThumbUrl, baseSettings.kickThumbnail)
     return isOnline, title, thumbUrl, icon
 
 def setDefaultStreamValues():
     isOnline = False
     title = "place holder kick title, this should never show up unless coder fucked up"
     thumbUrl = ""
-    icon = Constants.defaultIcon
+    icon = baseSettings.defaultIcon
     return isOnline, title, thumbUrl, icon
 
 def getStreamInfo(jsonText):
@@ -69,15 +63,18 @@ def getStreamInfo(jsonText):
     return isOnline,title,thumbUrl,icon
 
 def isModelOnlineAPI(kickUserName):
-    apiResponse = getChannelInfoResponse(kickUserName)
+    apiResponse = getChannelInfoResponse([kickUserName])
     isOnline, title, icon, thumbUrl = getApiStreamingVals(kickUserName, apiResponse)
 
     return isOnline, title, thumbUrl, icon
 
-def getChannelInfoResponse(kickUserName):
+def getChannelInfoResponse(kickUserNames:list):
     apiHeaders={"Authorization": getAccessToken(),"Accept":'application/json'}
     apiUrl = "https://api.kick.com/public/v1/channels"
-    params = {"slug":[kickUserName]}
+    for i in range(len(kickUserNames)):
+        kickUserNames[i] = kickUserNames[i].lower()
+        kickUserNames[i] = kickUserNames[i].replace("_", "-")
+    params = {"slug":[kickUserNames]}
     apiResponse = requests.get(apiUrl, headers=apiHeaders, params=params)
     if apiResponse.status_code == 401:
         logger.debug("401 w/kick attempting to get new access code")
@@ -94,7 +91,7 @@ def getApiStreamingVals(kickUserName:str, apiResponse: requests.Response):
         isOnline = apiData["data"][0]["stream"]["is_live"]
         tempThumbUrl = apiData["data"][0]["stream"]["thumbnail"]
         title = apiData["data"][0]["stream_title"]
-        thumbUrl = GetThumbnail(tempThumbUrl, Constants.kickThumbnail)
+        thumbUrl = GetThumbnail(tempThumbUrl, baseSettings.kickThumbnail)
         if kickUserName.lower() in globals.kickProfilePics:
             icon = globals.kickProfilePics[kickUserName.lower()]
         if not kickUserName in globals.kickUserIds:
@@ -111,12 +108,12 @@ def getAccessToken():
         authorizationUrl = 'https://id.kick.com/oauth/token'
         tokenJson = {
                     "grant_type":"client_credentials",
-                    "client_id": Constants.kickClientId,
-                    "client_secret":Constants.kickClientSecret
+                    "client_id": baseSettings.kickClientId,
+                    "client_secret":baseSettings.kickClientSecret
         }
         response = requests.post(authorizationUrl, headers=headers, data=tokenJson)
-        data = response.json()
         if response.status_code == 200:
+            data = response.json()
             accessToken = data["access_token"]
             expiresIn = data["expires_in"]
             tokenType = data["token_type"]
@@ -187,6 +184,7 @@ def GetWebhookSubs()-> dict:
     return respJson
 
 def DeleteAllWebhooks():
+    if not baseSettings.kickClientId or not baseSettings.kickClientSecret: return
     subs = GetWebhookSubs()
     if subs and 'data' in subs:
         subIds = []
@@ -239,3 +237,15 @@ def getKickPublicKey()-> rsa.RSAPublicKey:
     publicKey = getPublicKey()
     publicKey = serialization.load_pem_public_key(publicKey)
     return publicKey
+
+def GetUserInfoFromToken(token:str):
+    apiHeaders={"Authorization": token,"Accept":'application/json'}
+    apiUrl = "https://api.kick.com/public/v1/users"
+    #params = {"id":""}
+    apiResponse = requests.get(apiUrl, headers=apiHeaders)
+    if apiResponse.status_code == 401:
+        logger.debug("401 w/kick attempting to get new access code")
+        globals.kickAccessToken = None
+        apiHeaders={"Authorization": getAccessToken(),"Accept":'application/json'}
+        apiResponse = requests.get(apiUrl, headers=apiHeaders)
+    return apiResponse

@@ -2,12 +2,16 @@ from utils.Database import Database
 import matplotlib.pyplot as plt
 import os
 from datetime import date
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 from datetime import datetime
 from datetime import timedelta
+import matplotlib.image as mpimg
+import numpy as np
+import matplotlib.cbook as cbook
+import requests
+from matplotlib.gridspec import GridSpec
+
+baseSettings = Settings()
 
 def createUserDayGraph(inputDate: str, days = 1) -> None:
     db = Database()
@@ -88,7 +92,7 @@ def addOnlineCols(presencesDict):
                     newFaceColor = getFaceColor(v['streaming'])
                     nextkey = dictKeys[dictKeys.index(k) + 1]
                     if newFaceColor not in labels:
-                        plt.axvspan(k, nextkey, facecolor=newFaceColor, alpha=0.25,zorder=3, label = Constants.streamerName + " Streaming " + v['streaming'] )
+                        plt.axvspan(k, nextkey, facecolor=newFaceColor, alpha=0.25,zorder=3, label = baseSettings.streamerName + " Streaming " + v['streaming'] )
                         labels.append(newFaceColor)
                     else:
                         plt.axvspan(k, nextkey, facecolor=newFaceColor, alpha=0.25,zorder=3)
@@ -102,27 +106,27 @@ def getFaceColor(streamingValues: str):
     elif 'Kick' in streamingValues:
         faceColor = "g"
     elif "OF" in streamingValues:
-        faceColor = Constants.ofEmbedColor
+        faceColor = baseSettings.ofEmbedColor
     elif "Fans" in streamingValues:
-        faceColor = Constants.fansEmbedColor
+        faceColor = baseSettings.fansEmbedColor
     elif "CB" in streamingValues:
-        faceColor = Constants.cbEmbedColor
+        faceColor = baseSettings.cbEmbedColor
     elif "YT" in streamingValues:
-        faceColor = Constants.ytEmbedColor
+        faceColor = baseSettings.ytEmbedColor
     elif "Twitch" in streamingValues:
-        faceColor = Constants.ytEmbedColor
+        faceColor = baseSettings.ytEmbedColor
     elif "Cam4" in streamingValues:
-        faceColor = Constants.cam4EmbedColor
+        faceColor = baseSettings.cam4EmbedColor
     elif "MFC" in streamingValues:
-        faceColor = Constants.mfcEmbedColor
+        faceColor = baseSettings.mfcEmbedColor
     elif "BC" in streamingValues:
-        faceColor = Constants.bcEmbedColor
+        faceColor = baseSettings.bcEmbedColor
     elif "SC" in streamingValues:
-        faceColor = Constants.scEmbedColor
+        faceColor = baseSettings.scEmbedColor
     elif "EP" in streamingValues:
-        faceColor = Constants.epEmbedColor
+        faceColor = baseSettings.epEmbedColor
     elif "MV" in streamingValues:
-        faceColor = Constants.mvEmbedColor
+        faceColor = baseSettings.mvEmbedColor
     return faceColor
 
 def getLastWeekList(lastWeekPresencesDict, x):
@@ -172,3 +176,48 @@ def getTodaysLists(presencesDict):
             yOnline.append(None)
             yIdle.append(None)
     return x,yTotalUsers,yDnd,yOnline,yIdle
+
+def GetEmoteStatsImage(prefix, days):
+    db = Database()
+    emoteNames, images, numbers = db.GetAllKickEmotesWithPrefix(prefix, days)
+    i = 0
+    if not os.path.exists("graphs"):
+        os.makedirs("graphs")
+    for image in  images:
+        response = requests.get(image)
+        if response.status_code == 200:
+            fileName = f"graphs/testImg{i}.jpg"
+            f = open(fileName, "wb")
+            f.write(response.content)
+            f.close()
+            images[i] = fileName
+            i += 1
+    
+    fig = plt.figure(figsize=(4, len(emoteNames) * .5))
+    gs = GridSpec(nrows=len(images), ncols=3, width_ratios=[1, 1, 1],wspace=0.1, hspace=0.1)
+    for i in range(len(images)):
+        # --- Column 1: Title ---
+        axTitle = fig.add_subplot(gs[i, 0])
+        axTitle.text(0.5, 0.5, emoteNames[i], ha='center', va='center', fontsize=8)
+        axTitle.axis('off') 
+
+        # --- Column 2: Image ---
+        ax_img = fig.add_subplot(gs[i, 1])
+        try:
+            with open(images[i], 'rb') as f:
+                img = plt.imread(f)
+            ax_img.imshow(img)
+        except Exception as e:
+            ax_img.text(0.5, 0.5, 'Image not found', ha='center', va='center')
+            print(f"Could not load image {images[i]}: {e}")
+        ax_img.axis('off')
+
+        # --- Column 3: Number ---
+        ax_num = fig.add_subplot(gs[i, 2])
+        ax_num.text(0.5, 0.5, str(numbers[i]), ha='center', va='center', fontsize=24)
+        ax_num.axis('off')
+    
+    plt.tight_layout()
+    path = f"graphs/emoteStats.png"
+    plt.savefig(path)
+    return path

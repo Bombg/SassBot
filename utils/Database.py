@@ -6,18 +6,22 @@ from datetime import date
 from datetime import timedelta
 import utils.StaticMethods as StaticMethods
 import logging
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
+import GenerateDatabase
+import os
+import re
+
+baseSettings = Settings()
 
 class Database:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+        self.logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
     
     def connectCursor(self):
         try:
+            if not os.path.exists("sassBot.db"):
+                GenerateDatabase.GenerateDatabase()
             conn = sqlite3.connect("sassBot.db")
             cur = conn.cursor()
         except sqlite3.OperationalError as e:
@@ -31,41 +35,669 @@ class Database:
                     StaticMethods.rebootServer()
         return conn, cur
     
+    def GetAllKickEmotesWithPrefix(self, emotePrefix:str, days:int):
+        emoteList = {}
+        urls = {}
+        self.createKickChatTable()
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT content, date FROM kick_chat ORDER BY date DESC'''
+        cur.execute(exeString)
+        row = cur.fetchone()
+        # subTime = datetime.datetime.fromisoformat(row[4])
+        # shortThreshhold = datetime.datetime.now(datetime.timezone.utc) - timedelta(hours=hours)
+        reString = r'\[emote:\d+:' + emotePrefix + r'[a-zA-Z]+\]'
+        reStringTwo = emotePrefix + r'[a-zA-Z]+'
+        reStringNumber = r'\d+'
+        flag = True
+        while row and flag:
+            msgSentAt = datetime.datetime.fromisoformat(row[1])
+            threshold = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=days)
+            if msgSentAt > threshold:
+                emotes = re.findall(reString, row[0])
+                if emotes:
+                    for emote in emotes:
+                        em = re.findall(reStringTwo, emote)
+                        em = em[0]
+                        emoteId = re.findall(reStringNumber, emote)
+                        if not em in emoteList:
+                            emoteList[em] = 0
+                        emoteList[em] += 1
+                        urls[em] = f"https://files.kick.com/emotes/{emoteId[0]}/fullsize"
+            else:
+                flag = False
+            row = cur.fetchone()
+        cur.close()
+        conn.close()
+        emoteList= dict(sorted(emoteList.items(), key=lambda item: item[1], reverse=True))
+        emoteNames = []
+        emoteUrls = []
+        emoteUses = []
+        for emote, num in emoteList.items():
+            emoteNames.append(emote)
+            emoteUrls.append(urls[emote])
+            emoteUses.append(num)
+        return emoteNames, emoteUrls, emoteUses
+    
+    def InsertKickChatToTable(self, kickId:int, kickSlug:str, content:str, identity:str, date:str, repliedto:str, channel:str):
+        self.createKickChatTable()
+        conn, cur = self.connectCursor()
+        rowVals = (kickId, kickSlug.lower(), content, identity, date, repliedto, channel)
+        exeString = '''INSERT INTO kick_chat (kick_id, kick_slug, content, identity, date, replied_to, channel) VALUES (?,?,?,?,?,?,?) '''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def GetKickClipByAuthor(self, kickSlug):
+        clipIds = []
+        self.createKickClipsTable()
+        conn, cur = self.connectCursor()
+        rowVals = (kickSlug,)
+        exeString = '''SELECT clip_id FROM kick_clips where clip_creator_slug=? ORDER BY creation_date DESC'''
+        cur.execute(exeString, rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0] != None:
+            for clipId in fetch:
+                clipIds.append(clipId[0])
+        return clipIds
+    
+    def GetPlatformNames(self):
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT platform_name FROM platforms'''
+        cur.execute(exeString)
+        fetch = cur.fetchall()
+        platformNames = []
+        for name in fetch:
+            platformNames.append(name[0])
+        return platformNames
+    
+    def GetKickClipRow(self, clipId):
+        self.createKickClipsTable()
+        conn, cur = self.connectCursor()
+        rowVals = (clipId,)
+        exeString = '''SELECT * from kick_clips WHERE clip_id=? '''
+        cur.execute(exeString,rowVals)
+        fetch = cur.fetchall()
+        cur.close()
+        conn.close()
+        return fetch
+        
+    
+    def CalculateWeeklyKickClipWinners(self):
+        self.createTempClipsTable()
+        self.createKickClipsHeroesTable()
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT clip_id, livestream_id, channel_slug, clip_creator_slug, creation_date, title, views, category_slug FROM temp_kick_clips ORDER BY creation_date DESC'''
+        cur.execute(exeString)
+        row = cur.fetchone()
+        clippersClipped = {}
+        clippersViews = {}
+        mostViews = 0
+        mostViewsTitle = ""
+        mostViewsClipper = ""
+        mostViewsClipId = ""
+        clipIdViews = {}
+        clipdsToAdd = []
+        while row:
+            clipId, livestreamId, channelSlug, creatorSlug, creationDate, title, views, category = row
+            oldClipRow = self.GetKickClipRow(clipId)
+            if oldClipRow:
+                oldclipId, oldlivestreamId, oldchannelSlug, oldcreatorSlug, oldcreationDate, oldtitle, oldviews, oldcategory = oldClipRow[0]
+                clipIdViews[clipId] = views
+            else:
+                oldviews = 0
+                clipdsToAdd.append(row)
+                if not creatorSlug in clippersClipped:
+                    clippersClipped[creatorSlug] = []
+                clippersClipped[creatorSlug].append(clipId)
+            if not creatorSlug in clippersViews:
+                clippersViews[creatorSlug] = 0
+            viewIncrease = views - oldviews
+            clippersViews[creatorSlug] += viewIncrease
+            if viewIncrease > mostViews:
+                mostViews = viewIncrease
+                mostViewsClipper = creatorSlug
+                mostViewsTitle = title
+                mostViewsClipId = clipId
+            row = cur.fetchone()
+        mostViewedClipper, clipperViews = self.GetMostViewedKickClipper(clippersViews)
+        mostClippedClipper, numClips = self.GetMostKickClipper(clippersClipped)
+        exeString = '''DROP TABLE temp_kick_clips'''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
+        self.UpdateOldKickClipViews(clipIdViews)
+        self.AddTempClipsToDb(clipdsToAdd)
+        return mostViews, mostViewsTitle, mostViewsClipper, mostViewsClipId, mostViewedClipper, clipperViews, mostClippedClipper, numClips
+    
+    def AddTempClipsToDb(self, clipsToAdd:list):
+        for row in clipsToAdd:
+            clipId, livestreamId, channelSlug, creatorSlug, creationDate, title, views, category = row
+            self.addKickClipToTable(clipId,livestreamId,channelSlug,creatorSlug,creationDate,title,views,category)
+
+    def UpdateOldKickClipViews(self, clipIdViews:dict):
+        for clipId, views in clipIdViews.items():
+            self.updateKickClipViews(clipId,views)
+
+    def GetMostViewedKickClipper(self, clipperViews:dict):
+        mostViews = 0
+        user = ''
+        for clipperSlug, views in clipperViews.items():
+            if views > mostViews:
+                mostViews = views
+                user = clipperSlug
+        return  user, mostViews
+    
+    def GetMostKickClipper(self, clipperClips):
+        mostClips = 0
+        user = ''
+        for clipperSlug, numClips in clipperClips.items():
+            if len(numClips) > mostClips:
+                mostClips = len(numClips)
+                user = clipperSlug
+        return user, mostClips
+
+    
+    def addTempKickClipToTable(self, clipId:str, livestreamId:int, channelSlug:str, clipCreatorSlug:str, creationDate:str, title:str, views:int, categorySlug:str) -> None:
+        self.createTempClipsTable()
+        conn, cur = self.connectCursor()
+        rowVals = (clipId, livestreamId, channelSlug, clipCreatorSlug, creationDate, title, views, categorySlug)
+        exeString = f'''INSERT INTO temp_kick_clips (clip_id, livestream_id, channel_slug, clip_creator_slug, creation_date, title, views, category_slug) VALUES (?,?,?,?,?,?,?,?) ON CONFLICT(clip_id) DO NOTHING'''
+        cur.execute(exeString,rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def createTempClipsTable(self):
+        conn, cur = self.connectCursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS temp_kick_clips
+                (
+                    clip_id TEXT PRIMARY KEY,
+                    livestream_id INTEGER,
+                    channel_slug TEXT,
+                    clip_creator_slug TEXT,
+                    creation_date TEXT,
+                    title TEXT,
+                    views INTEGER,
+                    category_slug TEXT
+                )
+        ''')
+        conn.commit()
+        cur.close()
+        conn.close()
+
+
+    def GetChannelSlugFromClipId(self, clipId):
+        self.createKickClipsTable()
+        slug = ''
+        conn, cur = self.connectCursor()
+        rowVal = (clipId,)
+        exeString = '''SELECT channel_slug FROM kick_clips WHERE clip_id=? '''
+        cur.execute(exeString, rowVal)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            slug = fetch[0][0]
+        cur.close()
+        conn.close()
+        return slug
+
+    
+    def GetKickClipIdTitles(self):
+        self.createKickClipsTable()
+        conn, cur = self.connectCursor()
+        titleIdDict = {}
+        exeString = '''SELECT clip_id, title FROM kick_clips '''
+        cur.execute(exeString)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            for touple in fetch:
+                titleIdDict[touple[1]] = touple[0]
+        cur.close()
+        conn.close()
+        return titleIdDict
+    
+    def InsertClipCursor(self,cursor:str):
+        self.createKickClipsTable()
+        conn, cur = self.connectCursor()
+        rowVal = (cursor,"greenLight")
+        exeString = '''UPDATE kick_clips SET channel_slug=? WHERE clip_id=?'''
+        cur.execute(exeString,rowVal)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def GetClipCursor(self):
+        self.createKickClipsTable()
+        conn, cur = self.connectCursor()
+        cursor = ''
+        rowVal = ("greenLight",)
+        exeString = '''SELECT channel_slug FROM kick_clips WHERE clip_id=?'''
+        cur.execute(exeString,rowVal)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            cursor = fetch[0][0]
+        cur.close()
+        conn.close()
+        return cursor
+    
+    def isClipRowCountZero(self):
+        self.createKickClipsTable()
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT COUNT(*) from kick_clips '''
+        cur.execute(exeString)
+        count = cur.fetchone()[0]
+        cur.close()
+        conn.close()
+        return count == 0
+    
+    def isClipsFullyScanned(self):
+        self.createKickClipsTable()
+        conn, cur = self.connectCursor()
+        isScanned = True
+        rowVals = ("greenLight",)
+        exeString = '''SELECT clip_id from kick_clips where clip_id=? '''
+        cur.execute(exeString, rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            isScanned = False
+        cur.close()
+        conn.close()
+        return isScanned
+    
+    def MarkClipsFullyScanned(self):
+        self.createKickClipsTable()
+        conn, cur = self.connectCursor()
+        rowVals = ("greenLight",)
+        exeString = '''DELETE FROM kick_clips WHERE clip_id=?'''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def GetLastSubDate(self,kickId) -> str:
+        self.createKickSubTable()
+        subDate = ''
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT sub_id,user_id, date_iso from kick_subs ORDER BY sub_id DESC'''
+        cur.execute(exeString)
+        row = cur.fetchone()
+        while row and not subDate:
+            if row[1] == kickId:
+                subDate = row[2]
+            row = cur.fetchone()
+        cur.close()
+        conn.close()
+        return subDate
+
+    
+    def GetKickSlugFromId(self, kickId:int) -> str:
+        self.createKickUserTable()
+        kickSlug = ""
+        conn, cur = self.connectCursor()
+        rowVals = (kickId,)
+        exeString = '''SELECT slug FROM kick_users WHERE id=? '''
+        cur.execute(exeString, rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            kickSlug = fetch[0][0]
+        cur.close()
+        conn.close()
+        return kickSlug
+    
+    def GetKickIdFromSlug(self, kickSlug:str) -> int:
+        id = 0
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        rowVals = (kickSlug,)
+        exeString = '''SELECT id FROM kick_users WHERE slug=? '''
+        cur.execute(exeString, rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            if fetch[0][0] > 0:
+                id = fetch[0][0]
+        cur.close()
+        conn.close()
+        return id
+
+    
+    def GetKickUsersAndId(self):
+        kickUsers = {}
+        conn, cur = self.connectCursor()
+        self.createKickUserTable()
+        exeString = '''SELECT id,slug from kick_users '''
+        cur.execute(exeString)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            for user in fetch:
+                if user[0] > 0: #dummy kick accounts id < 0
+                    kickUsers[user[1]] = user[0]
+        cur.close()
+        conn.close()
+        return kickUsers
+    
+    def CreateAccountConnectionsTable(self):
+        conn, cur = self.connectCursor()
+        GenerateDatabase.CreateAccountConnectionsTable(cur)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def isHasShortDate(self,kickId):
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        hasDate = False
+        rowVals = (kickId,)
+        exeString = f'''SELECT short_role_date FROM kick_users WHERE id=?'''
+        cur.execute(exeString,rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            hasDate = True
+        cur.close()
+        conn.close()
+        return hasDate
+    
+    def GetShortDate(self,kickId):
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        hasDate = False
+        rowVals = (kickId,)
+        exeString = f'''SELECT short_role_date FROM kick_users WHERE id=?'''
+        cur.execute(exeString,rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            hasDate = fetch[0][0]
+        cur.close()
+        conn.close()
+        return hasDate
+    
+    def GetLongDate(self,kickId):
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        hasDate = False
+        rowVals = (kickId,)
+        exeString = f'''SELECT long_role_date FROM kick_users WHERE id=?'''
+        cur.execute(exeString,rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            hasDate = fetch[0][0]
+        cur.close()
+        conn.close()
+        return hasDate
+
+    def isHasLongDate(self,kickId):
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        hasDate = False
+        rowVals = (kickId,)
+        exeString = f'''SELECT long_role_date FROM kick_users WHERE id=?'''
+        cur.execute(exeString,rowVals)
+        fetch = cur.fetchall()
+        if fetch and fetch[0][0] != None:
+            hasDate = True
+        cur.close()
+        conn.close()
+        return hasDate
+    
+    def InsertLongRoleDate(self,kickId, roledate = datetime.datetime.now(datetime.timezone.utc).isoformat()):
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        rowVals = (roledate, kickId)
+        exeString = f'''UPDATE kick_users SET long_role_date=? WHERE id=?'''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+
+    def InsertShortRoleDate(self,kickId, roledate = datetime.datetime.now(datetime.timezone.utc).isoformat()):
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        rowVals = (roledate, kickId)
+        exeString = f'''UPDATE kick_users SET short_role_date=? WHERE id=?'''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def GetDiscordKickConnection(self,kickId):
+        self.CreateAccountConnectionsTable()
+        discordId = 0
+        conn, cur = self.connectCursor()
+        rowVals = (kickId,)
+        exeString = f'''SELECT discord_id FROM account_connections WHERE kick_id=? '''
+        cur.execute(exeString,rowVals)
+        fetch = cur.fetchall()
+        if fetch:
+            discordId = fetch[0][0]
+        cur.close()
+        conn.close()
+        return discordId
+    
+    def GetKickDiscordConnection(self,discordId):
+        self.CreateAccountConnectionsTable()
+        kickId = 0
+        conn, cur = self.connectCursor()
+        rowVals = (discordId,)
+        exeString = f'''SELECT kick_id FROM account_connections WHERE discord_id=? '''
+        cur.execute(exeString,rowVals)
+        fetch = cur.fetchall()
+        if fetch:
+            kickId = fetch[0][0]
+        cur.close()
+        conn.close()
+        return kickId
+    
+    def GetSubTimeHours(self,hours, subTreshhold):
+        self.createKickSubTable()
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT * from kick_subs ORDER BY sub_id DESC'''
+        cur.execute(exeString)
+        row = cur.fetchone()
+        shortSubCounts = {}
+        idNameDict = {}
+        while row:
+            subTime = datetime.datetime.fromisoformat(row[4])
+            shortThreshhold = datetime.datetime.now(datetime.timezone.utc) - timedelta(hours=hours)
+            if row[1] not in idNameDict:
+                idNameDict[row[1]] = row[2]
+            if subTime > shortThreshhold: # larger is newer
+                if row[1] not in shortSubCounts:
+                    shortSubCounts[row[1]] = 0
+                shortSubCounts[row[1]] += row[3]
+            else:
+                break
+            row = cur.fetchone()
+        cur.close()
+        conn.close()
+        shortList = {}
+        for id in shortSubCounts:
+            if shortSubCounts[id] >= subTreshhold:
+                shortList[id] = idNameDict[id]
+        return shortList
+    
+    def GetSubTimeDays(self,days, subThreshold):
+        self.createKickSubTable()
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT * from kick_subs ORDER BY sub_id DESC'''
+        cur.execute(exeString)
+        row = cur.fetchone()
+        longSubCounts = {}
+        idNameDict = {}
+        while row:
+            subTime = datetime.datetime.fromisoformat(row[4])
+            longThreshhold = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=days)
+            if row[1] not in idNameDict:
+                idNameDict[row[1]] = row[2]
+            if subTime > longThreshhold: # larger is newer
+                if row[1] not in longSubCounts:
+                    longSubCounts[row[1]] = 0
+                longSubCounts[row[1]] += row[3]
+            else:
+                break
+            row = cur.fetchone()
+        cur.close()
+        conn.close()
+        longList = {}
+        for id in longSubCounts:
+            if longSubCounts[id] >= subThreshold:
+                longList[id] = idNameDict[id]
+        return longList
+    
+    def createKickChatTable(self):
+        conn, cur = self.connectCursor()
+        GenerateDatabase.CreateKickChatTable(cur)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def createDiscordUserTable(self):
+        conn, cur = self.connectCursor()
+        GenerateDatabase.CreateDiscordUsersTable(cur)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def createKickUserTable(self):
+        conn, cur = self.connectCursor()
+        GenerateDatabase.CreateKickUsersTable(cur)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def createKickSubTable(self):
+        conn, cur = self.connectCursor()
+        GenerateDatabase.CreateKickSubsTable(cur)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def createConnectionsTable(self):
+        conn, cur = self.connectCursor()
+        GenerateDatabase.CreateAccountConnectionsTable(cur)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def insertDiscordKickAccountConnection(self, discordId:int, kickId:int):
+        self.createConnectionsTable()
+        conn, cur = self.connectCursor()
+        rowVals = (discordId, kickId)
+        exeString = '''INSERT INTO account_connections (discord_id, kick_id) VALUES (?,?) ON CONFLICT(discord_id) DO UPDATE SET kick_id = excluded.kick_id'''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    
+    def insertDiscordUser(self,userId:int, userName:str):
+        self.createDiscordUserTable()
+        conn, cur = self.connectCursor()
+        rowVals = (userId, userName)
+        exeString = '''INSERT INTO discord_users (id, user_name) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET user_name = excluded.user_name'''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def insertKickUser(self, userId:int, slug:str, channelId:int = None, chatroomId:int = None, refreshToken:str = None, email:str = None):
+        self.createKickUserTable()
+        conn, cur = self.connectCursor()
+        slug = slug.lower()
+        rowVals = (userId, slug, channelId, chatroomId, refreshToken, email)
+        exeString = '''INSERT INTO kick_users (id, slug, channel_id, chatroom_id, refresh_token, email) 
+                        VALUES(?,?,?,?,?,?) 
+                        ON CONFLICT(id) DO UPDATE SET 
+                        slug = COALESCE(excluded.slug, slug),
+                        channel_id= COALESCE(excluded.channel_id, channel_id),
+                        chatroom_id= COALESCE(excluded.chatroom_id, chatroom_id),
+                        refresh_token= COALESCE(excluded.refresh_token, refresh_token),
+                        email= COALESCE(excluded.email, email)
+                    '''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def insertKickSub(self, gifterId:int, gifterSlug:str, numGifted:int, date:str, channel:str, selfSub = 0):
+        self.createKickSubTable()
+        gifterSlug = gifterSlug.lower()
+        self.insertKickUser(gifterId,gifterSlug)
+        conn, cur = self.connectCursor()
+        rowVals = (gifterId, gifterSlug, numGifted, date, channel, selfSub)
+        exeString = '''INSERT INTO kick_subs (user_id, user_slug, num_gifted, date_iso, channel, self) VALUES(?,?,?,?,?,?)'''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    # Kick Clips Table Methods
+    def createKickClipsHeroesTable(self):
+        conn,cur = self.connectCursor()
+        GenerateDatabase.CreateKickClipsHeroesTable(cur)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def createKickClipsTable(self):
+        conn,cur = self.connectCursor()
+        GenerateDatabase.CreateKickClipsTable(cur)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def createWeeklyKickClipsData(self,yearWeek:str, mostViewedClip:str, mostViewedClipper:str, mostClips:str):
+        self.createKickClipsHeroesTable()
+        conn, cur = self.connectCursor()
+        rowVals = (yearWeek, mostViewedClip, mostViewedClipper, mostClips)
+        exeString = '''INSERT INTO kick_clips_heroes (year_week, most_viewed_clip, most_viewed_clipper, most_clips) VALUES (?,?,?,?)'''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def updateKickClipViews(self, clipId:str, views:int) -> None:
+        conn, cur = self.connectCursor()
+        exeString = f'''UPDATE kick_clips SET views={views} WHERE clip_id='{clipId}' '''
+        cur.execute(exeString)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def getKickClipViews(self,clipId:str, channel_slug:str) -> int:
+        self.createKickClipsTable()
+        views = 0
+        conn, cur = self.connectCursor()
+        exeString = f'''SELECT views FROM kick_clips WHERE channel_slug='{channel_slug}' AND clip_id='{clipId}' '''
+        cur.execute(exeString)
+        previousViews = cur.fetchall()
+        if previousViews:
+            views = previousViews[0][0]
+        cur.close()
+        conn.close()
+        return views
+
+    def addKickClipToTable(self, clipId:str, livestreamId:int, channelSlug:str, clipCreatorSlug:str, creationDate:str, title:str, views:int, categorySlug:str) -> None:
+        self.createKickClipsTable()
+        conn, cur = self.connectCursor()
+        rowVals = (clipId, livestreamId, channelSlug, clipCreatorSlug, creationDate, title, views, categorySlug)
+        exeString = f'''INSERT INTO kick_clips (clip_id, livestream_id, channel_slug, clip_creator_slug, creation_date, title, views, category_slug) VALUES (?,?,?,?,?,?,?,?)'''
+        cur.execute(exeString,rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
     # Confessions & Appeals Table Methods
     def createAppealsTable(self):
         conn,cur = self.connectCursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS appeals
-                (
-                    appeal_id INTEGER PRIMARY KEY,
-                    appeal TEXT,
-                    appeal_title TEXT,
-                    appeal_status INTEGER,
-                    appealer_id INTEGER,
-                    appealer_name TEXT,
-                    reviewer_id INTEGER,
-                    reviewer_name TEXT,
-                    date_added INTEGER,
-                    date_reviewed INTEGER
-                )
-            ''')
+        GenerateDatabase.CreateAppealsTable(cur)
         conn.commit()
         cur.close()
         conn.close()
 
     def createConfessionsTable(self):
         conn,cur = self.connectCursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS confessions
-                (
-                    confession_id INTEGER PRIMARY KEY,
-                    confession TEXT,
-                    confession_title TEXT,
-                    review_status INTEGER,
-                    reviewer_id INTEGER,
-                    reviewer_name TEXT,
-                    date_added INTEGER,
-                    date_reviewed INTEGER
-                )
-            ''')
+        GenerateDatabase.CreateConfessionsTable(cur)
         conn.commit()
         cur.close()
         conn.close()
@@ -281,19 +913,7 @@ class Database:
 
     def createPlatformAccountsTable(self) -> None:
         conn,cur = self.connectCursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS platform_accounts
-                (
-                    account_name TEXT NOT NULL,
-                    platform_name TEXT NOT NULL, 
-                    last_online_message REAL,
-                    last_stream_start_time REAL,
-                    last_stream_end_time REAL,
-                    temp_title TEXT,
-                    temp_title_time REAL,
-                    PRIMARY KEY (account_name, platform_name),
-                    FOREIGN KEY(platform_name) REFERENCES platforms(platform_name)
-                )
-            ''')
+        GenerateDatabase.CreatePlatformAccountsTable(cur)
         conn.commit()
         cur.close()
         conn.close()
@@ -658,7 +1278,7 @@ class Database:
             value = cur.fetchall()
             isExists = value[0][0]
         except sqlite3.OperationalError:
-            self.logger.warning("error when checking if col exists, perhaps no data yet")
+            self.logger.debug("error when checking if col exists, perhaps no data yet")
         cur.close()
         conn.close()
         return isExists

@@ -7,14 +7,13 @@ import ctypes, os
 import platform
 import psutil
 import logging
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 from nodriver import *
 
+baseSettings = Settings()
+
 logger = logging.getLogger(__name__)
-logger.setLevel(Constants.SASSBOT_LOG_LEVEL)
+logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
 def KillUnconncetedBrowsers():
     PROCNAMES = ["google-chrome",
@@ -33,7 +32,7 @@ def KillUnconncetedBrowsers():
                 proc.kill()
                 logger.warning(e)
     if numBrowserProcesses > 0:
-        logger.info(f"Tried to kill {numBrowserProcesses} browser processes.")
+        logger.debug(f"Tried to kill {numBrowserProcesses} browser processes.")
 
 def getUserAgent():
         userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/127.0.2651.105"
@@ -48,33 +47,34 @@ def getUserAgent():
 
 async def GetBrowser(proxy=""):
     while globals.browserOpen:
-        await asyncio.sleep(2 * Constants.NODRIVER_WAIT_MULTIPLIER)
+        await asyncio.sleep(2 * baseSettings.NODRIVER_WAIT_MULTIPLIER)
     try:
         globals.browserOpen = True
-        await asyncio.sleep(1 * Constants.NODRIVER_WAIT_MULTIPLIER)
+        await asyncio.sleep(1 * baseSettings.NODRIVER_WAIT_MULTIPLIER)
         toSandbox = not IsRoot()
         toHeadless = False if platform.system() == "Linux" else True
         dataDir = "/ndTemp" if platform.system() == "Linux" else None
         if proxy:
             browser = await uc.start(sandbox=toSandbox,
                                 headless=toHeadless,
-                                browser_args=[f'--proxy-server={proxy}','--mute-audio','--disable-3d-apis','--disable-dev-shm-usage','--disable-gpu','--disable-blink-features=AutomationControlled'],
-                                retries = Constants.NODRIVER_BROWSER_CONNECT_RETRIES,
+                                browser_args=[f'--proxy-server={proxy}','--mute-audio','--disable-3d-apis','--disable-dev-shm-usage','--disable-gpu'],
+                                retries = baseSettings.NODRIVER_BROWSER_CONNECT_RETRIES,
                                 user_data_dir=dataDir
                                 )
         else:
             browser = await uc.start(sandbox=toSandbox,
                                 headless=toHeadless,
-                                retries = Constants.NODRIVER_BROWSER_CONNECT_RETRIES,
+                                browser_args=['--mute-audio','--disable-3d-apis','--disable-dev-shm-usage','--disable-gpu'],
+                                retries = baseSettings.NODRIVER_BROWSER_CONNECT_RETRIES,
                                 user_data_dir=dataDir
                                 )
+        return browser
     except Exception as e:
         logger.warning(f"error creating browser in GetBrowser: {e}")
-        await asyncio.sleep(1 *  Constants.NODRIVER_WAIT_MULTIPLIER)
+        await asyncio.sleep(1 *  baseSettings.NODRIVER_WAIT_MULTIPLIER)
         KillUnconncetedBrowsers()
-        await asyncio.sleep(1 *  Constants.NODRIVER_WAIT_MULTIPLIER)
+        await asyncio.sleep(1 *  baseSettings.NODRIVER_WAIT_MULTIPLIER)
         globals.browserOpen = False
-    return browser
 
 # Taken from https://github.com/ultrafunkamsterdam/nodriver/blob/1bb6003c7f0db4d3ec05fdf3fc8c8e0804260103/nodriver/core/config.py#L240
 def IsRoot():
@@ -89,3 +89,12 @@ def IsRoot():
         return os.getuid() == 0
     except AttributeError:
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
+
+async def CloseNDBrowser(browser, page):
+    await page.close()
+    await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
+    browser.stop()
+    await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
+    if platform.system() == "Linux":
+        KillUnconncetedBrowsers()
+    globals.browserOpen = False

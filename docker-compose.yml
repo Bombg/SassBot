@@ -9,8 +9,7 @@ services:
   sassbot:
     image: ghcr.io/bombg/sassbot:latest
     volumes:
-      - /home/bombg/Repos/SassBot/AppConstants.py:/opt/SassBot/AppConstants.py
-      - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
+      - /home/bombg/Repos/SassBot/.env:/opt/SassBot/.env
       - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
       - /home/bombg/Repos/SassBot/Fae/FaeIcon.png:/opt/SassBot/images/errIcon.png
       - /home/bombg/Repos/SassBot/Fae/FaeErr.jpg:/opt/SassBot/images/twitErrImg.jpg
@@ -25,8 +24,7 @@ services:
 #   sassbot:
 #     image: ghcr.io/bombg/sassbot:latest
 #     volumes:
-#       - /home/bombg/Repos/SassBot/AppConstants.py:/opt/SassBot/AppConstants.py
-#       - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
+#       - /home/bombg/Repos/SassBot/.env:/opt/SassBot/.env
 #       - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
 #       - /home/bombg/Repos/SassBot/Fae/FaeIcon.png:/opt/SassBot/images/errIcon.png
 #       - /home/bombg/Repos/SassBot/Fae/FaeErr.jpg:/opt/SassBot/images/twitErrImg.jpg
@@ -45,8 +43,7 @@ services:
 #     image: ghcr.io/bombg/sassbot:experimental
 #     container_name: Faebot
 #     volumes:
-#       - /home/bombg/Repos/SassBot/AppConstants.py:/opt/SassBot/AppConstants.py
-#       - /home/bombg/Repos/SassBot/secrets:/opt/SassBot/secrets
+#       - /home/bombg/Repos/SassBot/.env:/opt/SassBot/.env
 #       - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
 #       - /home/bombg/Repos/SassBot/Fae/FaeIcon.png:/opt/SassBot/images/errIcon.png
 #       - /home/bombg/Repos/SassBot/Fae/FaeErr.jpg:/opt/SassBot/images/twitErrImg.jpg
@@ -58,10 +55,8 @@ services:
 #       - /home/bombg/Repos/SassBot/commandLogs.txt:/opt/SassBot/commandLogs.txt
 #       - /home/bombg/Repos/SassBot/deletedMessageLogs.txt:/opt/SassBot/deletedMessageLogs.txt
 #     ports:
-#       - 5060:5060 # webhook/health
+#       - 6061:6061 # webhook/health
 #     restart: unless-stopped
-#     networks:
-#       - gluetun_default
 #     logging:
 #       driver: "json-file"
 #       options:
@@ -70,14 +65,14 @@ services:
 #       test: curl --fail http://localhost:5060/health || exit 1
 #       interval: 30s        # Check every 30 seconds
 #       timeout: 10s         # Allow up to 10 seconds for response
-#       start_period: 30s    # Wait 30 seconds before first check
+#       start_period: 90s    # Wait 90 seconds before first check
 #       retries: 3           # Mark unhealthy after 3 consecutive failures
 #   autoheal:
 #     deploy:
 #       replicas: 1
 #     environment:
 #       AUTOHEAL_CONTAINER_LABEL: all
-#       AUTOHEAL_START_PERIOD: 60
+#       AUTOHEAL_START_PERIOD: 90
 #     image: willfarrell/autoheal:latest
 #     network_mode: none
 #     restart: always

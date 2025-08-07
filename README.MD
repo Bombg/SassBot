@@ -15,6 +15,8 @@
 - ManyVids
 ### Features
 - Get notifications when your streamer is online sent to a discord channel
+- Track Kick subs and give roles for subbing
+- Track and search Kick clips
 - Rerun detection/support. If stream titles contains a variation of rerun/rr/not live then it will be detected as a rerun.
     - by default reruns won't be announced, but you can choose to announce them to custom roles just for reruns
 - Track multiple accounts per platform. (for example, if they have a paid and free account)
@@ -28,6 +30,7 @@
 - Send alerts during peak discord usage times
 - ... and many more!
 ### Commands
+- Whitelisted commands are prefixed with /zmod or /ymod
 - /stream-status - See if your streamer is currently offline or online. Shows time online/offline and total time streamed.
 - /ping-toggle - Toggle for role pings in online announcements. This is defaulted to false, so set true if you want role pings
 - /announce-rerun-toggle - Toggle if reruns will be announced. If a title contains a variation of rr/rerun/not live then the stream will be detected as a rerun.
@@ -50,40 +53,49 @@
     - /users-graph Get a graph of online/dnd/idle/ users in your discord. The data is mainly used to send out alerts but why not use it for graphs as well!
         - Has two optional arguements, InputDate and Days. InputDate defaults to todays date and days (to include in graph) defaults to 1. 
     - /stream-stats Shows total time streamed for the week, two weeks, and four weeks for each platform.
-- Anonymous questions/confessions
+- Anonymous questions/confessions/appeals
     - /confess - unlogged and anonymous confession that a user can post to a channel via the bot. Must be reviewed first
     - /confess-review - whitelisted roles/people can review submitted confessions and approve or deny them. 
         - approved confessions/questions are posted to a preset channel immediately
+    - /confess-button - a forever button that does the same thing as /confess
+    - /ban-appeal-button - a forever button that allows someone to submit a ban appeal
+    - /appeal-review - review a submitted ban appeal
 - Test commands
-    - /test-permission - test if Sassbot has the necessary permissions to post in the specified channel ID. 
+    - /test-permission - test if Sassbot has the necessary permissions to post in the specified channel ID.
+- Kick commands
+    - /kick-connect-button - a forever button that uses Kick's oath to connect someone's Kick/Discord accounts
+    - /kick-clip-search - search through logged Kick clips. (wont work until clips have been scanned)
+    - /kick-clip-search-author - search clips by author
+    - /kick-get-from-discord - Get the Kick usernername of a Discord member 
+    - /kick-manual-connect - Manually connect someone's Kick account if you're sure who they are
+    - /kick-emote-report - Get information about a specific emote prefix
 
 ### How to set up the bot:
 
-1. Go to https://discord.com/developers and set up an app and get a token. Put that token in a file called token (no file extension needed), and put that file in a subfolder called secrets.
+1. Go to https://discord.com/developers and set up an app and get a token. Put that token in .envExample file with the var SECRET.
 2. At https://discord.com/developers/ - generate an invite code under oauth2 to invite your bot to your server. Under scope make sure bot is checked.
     Give the bot permissions you want it to have. At minimum it'll need to be able to post messages and embeds
 3. Go to the bot section in the developers portal and turn on all the intents.
-4. In the Constants.py file, change the GUILD_ID value to the guild id of your server, and each platform NOTIFICATION_CHANNEL_ID to the channel ID you want alerts posted to.
+4. In the .envExample file, change the GUILD_ID value to the guild id of your server, and each platform NOTIFICATION_CHANNEL_ID's to the channel ID you want alerts posted to.
     To easily get both of these IDs, in discord advanced options turn on developer mode. After that you can right click servers/channels and a new option to copy the IDs will be available.
-    Also edit and add vairus URLs to your streamer in Constants.py. Everything is described in comments.
-    - After editing constants you can create a copy called AppConstants.py - This will be used before DefaultConstants.py. So you can pull changes without stashing or overwriting
-5. Generate the database with 'python GenerateDatabase.py' or 'python3 GenerateDatabase.py'
-6. Replace images in the image folder with those of your streamer, but keep same file names.
+    Also edit and add vairus URLs to your streamer in .envExample. Everything is described in comments.
+    - After editing .envExample rename it to .env - This will be used before default values. 
+5. Replace images in the image folder with those of your streamer, but keep same file names. OR change their paths in .env
     - images/errIcon.png - icon used for embeds if there is an issue getting one from the platform, or if one doesn't exist
     - images/twitErrImg.jpg - default photo used for embeds if no other thumbnail or photo can be grabbed from the image list (if its empty)
     - images/avatars/calmStreamer.png - Bot avatar if streamer has streamed within the MIN_TIME_BEFORE_AVATAR_CHANGE time frame (default 48 hours)
     - images/avatars/pissedStreamer.png - Bot avatar if streamer hasn't streamed within the MIN_TIME_BEFORE_AVATAR_CHANGE time frame
-7. Make sure you have python 3.10 installed.
+6. Make sure you have python 3.10 installed.
     - make sure you have Chrome/Chromium another browser may work but not tested. 
     - Make sure Xvfb is installed if on Linux. Xephyr, or Xvnc may work but untested 
     - run command 'pip install -r requirements.txt' 
-8. Start the bot: 'python3 run.py' or 'python run.py'
+7. Start the bot: 'python3 run.py' or 'python run.py'
 
 ### How To: Docker Compose or Portainer
 
 1. Install Docker
 2. Install Docker Compose and/or Portainer
-3. Complete steps 1-6 above in the "how to set up the bot" section
+3. Complete steps 1-5 above in the "how to set up the bot" section
 4. Edit docker-compose.yml and follow the commented instructions
 5. If using docker compose, from the Sassbot directory start it via "sudo docker compose up -d"
 6. If using Portainer go to stacks > add stack 
@@ -98,6 +110,30 @@
 4. If the requesting ip is in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 8/7/2025
+    - .env file now used instead of AppConstants
+        - .envExample included to show what vars .env can have
+        - Moved bot token from secrets/token to .env SECRET var
+        - This will allow future updates where things won't break on update if new vars are added
+        - This also means the vars can be changed via docker environment vars as well
+    - Lots of new features below. Check .envExample for new vars for them
+    - Whitelisted commands renamed into groups
+        - commands that require whitelist permission are now under zmod and ymod
+    - Bot now collects Kick clip data
+        - kick-clip-search command
+        - announces clip stats to KICK_CLIPS_ANNOUNCEMENT_CHANNEL
+    - Can connect Kick accounts to Discord accounts
+        - Must have webhook constants set up and have callback URL set up in constants
+        - zmod kick-connect-button for a button that persists across restarts
+        - zmod kick-manual-connect if you wish to do it manually
+    - Bot now collects Kick sub and chat data
+        - can now give and take two different roles based off sub counts
+            - check long/short role options in constants
+        - Automatically happens when discord account is connected to Kick
+        - If not connected, roles are still dropped after set time if manually given
+        - get emote info based off prefix
+    - No longer need to run GenerateDatabase on setup
+    - New requirements in requirements.txt
 - 7/13/2025
     - Added a heatlh endpoint at /health
         - WebhookPort must be set for this to work

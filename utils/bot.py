@@ -1,14 +1,12 @@
 import hikari
 import tanjun
-try:
-    from AppConstants import Constants as Constants
-except ImportError:
-    from DefaultConstants import Constants as Constants
+from DefaultConstants import Settings as Settings
 import miru
 
+baseSettings = Settings()
+
 def getToken():
-    with open("./secrets/token") as file:
-        token = file.read().strip()
+    token = baseSettings.SECRET
     return str(token)
 
 def build_bot() -> hikari.GatewayBot:
@@ -25,7 +23,7 @@ def make_client(bot: hikari.GatewayBot) -> tanjun.Client:
         tanjun.Client.from_gateway_bot(
             bot,
             mention_prefix=True,
-            declare_global_commands=Constants.GUILD_ID
+            declare_global_commands=baseSettings.GUILD_ID
         )
     ).add_prefix("!")
     client.load_modules("plugins.checks")
