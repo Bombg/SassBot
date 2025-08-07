@@ -1,6 +1,6 @@
 # You don't need to include all of these. They're here for an example. Delete any lines you don't plan on using (unless marked as REQUIRED)
 # Commands that require a non default value will be marked with COMMAND
-# Any values you see are the default
+# Any values you see are the default. This means any row/var you remove from the .env will use that value
 
 SASSBOT_LOG_LEVEL = 20 # DEBUG = 10, INFO = 20, WARNING = 30, ERROR = 40, CRITICAL = 50
 OTHER_LIBRARIES_LOG_LEVEL = 20 # DEBUG = 10, INFO = 20, WARNING = 30, ERROR = 40, CRITICAL = 50
@@ -32,7 +32,7 @@ CONFESS_REVIEW_COMMAND_ID = 0  #COMMAND
 APPEAL_COMMAND_ID = 0  #COMMAND
 APPEAL_REVIEW_COMMAND_ID = 0  #COMMAND
 
-KICK_PROXY = "" #Chrome/Chromium doesn't support authenticated proxies
+KICK_PROXY = "" #Chrome/Chromium doesn't support authenticated proxies. non API version. If you use API proxy isn't used
 FANS_PROXY = "" #Chrome/Chromium doesn't support authenticated proxies
 OF_PROXY = "" #Chrome/Chromium doesn't support authenticated proxies
 # Everything below assumed is a socks5 proxy- socks5:// is concatenated to the front

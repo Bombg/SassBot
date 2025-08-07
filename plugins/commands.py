@@ -25,6 +25,18 @@ component = tanjun.Component()
 moderationGroup = tanjun.slash_command_group("zmod", "commands only moderators can use").add_check(StaticMethods.isPermission)
 moderationGroupY = tanjun.slash_command_group("ymod", "commands only moderators can use").add_check(StaticMethods.isPermission )
 
+@tanjun.with_str_slash_option("prefix", "prefix of the emote you want to check")
+@tanjun.with_int_slash_option("days", "number of days to look back", default=30)
+@moderationGroupY.as_sub_command("kick-emote-report", "Get stats on kick emotes of a given prefix", default_to_ephemeral=True, always_defer=True)
+@CommandLogger
+async def KickEmoteLookUp(ctx: tanjun.abc.SlashContext, prefix:str, days:int) -> None:
+    if prefix and days:
+        path = DataGrapher.GetEmoteStatsImage(prefix, days)
+        file = hikari.File(path)
+        await ctx.respond(file)
+    else:
+        await ctx.respond("bad input")
+
 async def KickUserAutoCompelte(ctx: tanjun.abc.AutocompleteContext, value:str) -> None:
     db = Database()
     kickUsers = db.GetKickUsersAndId()
@@ -37,6 +49,7 @@ async def KickUserAutoCompelte(ctx: tanjun.abc.AutocompleteContext, value:str) -
 @tanjun.with_str_slash_option("author", "The username of the clip author you wish to search for", autocomplete=KickUserAutoCompelte)
 @tanjun.with_int_slash_option("amount", "How many clips do you wish to see?", default=20)
 @tanjun.as_slash_command("kick-clip-search-author", "Get clips by author", always_defer=True, default_to_ephemeral=True)
+@CommandLogger
 async def KickClipAuthorSearch(ctx: tanjun.abc.SlashContext, author:str, amount:int) -> None:
     if author:
         stepAmount = 20

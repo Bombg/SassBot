@@ -5,6 +5,11 @@ from datetime import date
 from DefaultConstants import Settings as Settings
 from datetime import datetime
 from datetime import timedelta
+import matplotlib.image as mpimg
+import numpy as np
+import matplotlib.cbook as cbook
+import requests
+from matplotlib.gridspec import GridSpec
 
 baseSettings = Settings()
 
@@ -171,3 +176,48 @@ def getTodaysLists(presencesDict):
             yOnline.append(None)
             yIdle.append(None)
     return x,yTotalUsers,yDnd,yOnline,yIdle
+
+def GetEmoteStatsImage(prefix, days):
+    db = Database()
+    emoteNames, images, numbers = db.GetAllKickEmotesWithPrefix(prefix, days)
+    i = 0
+    if not os.path.exists("graphs"):
+        os.makedirs("graphs")
+    for image in  images:
+        response = requests.get(image)
+        if response.status_code == 200:
+            fileName = f"graphs/testImg{i}.jpg"
+            f = open(fileName, "wb")
+            f.write(response.content)
+            f.close()
+            images[i] = fileName
+            i += 1
+    
+    fig = plt.figure(figsize=(4, len(emoteNames) * .5))
+    gs = GridSpec(nrows=len(images), ncols=3, width_ratios=[1, 1, 1],wspace=0.1, hspace=0.1)
+    for i in range(len(images)):
+        # --- Column 1: Title ---
+        axTitle = fig.add_subplot(gs[i, 0])
+        axTitle.text(0.5, 0.5, emoteNames[i], ha='center', va='center', fontsize=8)
+        axTitle.axis('off') 
+
+        # --- Column 2: Image ---
+        ax_img = fig.add_subplot(gs[i, 1])
+        try:
+            with open(images[i], 'rb') as f:
+                img = plt.imread(f)
+            ax_img.imshow(img)
+        except Exception as e:
+            ax_img.text(0.5, 0.5, 'Image not found', ha='center', va='center')
+            print(f"Could not load image {images[i]}: {e}")
+        ax_img.axis('off')
+
+        # --- Column 3: Number ---
+        ax_num = fig.add_subplot(gs[i, 2])
+        ax_num.text(0.5, 0.5, str(numbers[i]), ha='center', va='center', fontsize=24)
+        ax_num.axis('off')
+    
+    plt.tight_layout()
+    path = f"graphs/emoteStats.png"
+    plt.savefig(path)
+    return path

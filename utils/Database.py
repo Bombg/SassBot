@@ -9,6 +9,7 @@ import logging
 from DefaultConstants import Settings as Settings
 import GenerateDatabase
 import os
+import re
 
 baseSettings = Settings()
 
@@ -33,6 +34,49 @@ class Database:
                     self.logger.critical("File descriptor leak detected. Rebooting")
                     StaticMethods.rebootServer()
         return conn, cur
+    
+    def GetAllKickEmotesWithPrefix(self, emotePrefix:str, days:int):
+        emoteList = {}
+        urls = {}
+        self.createKickChatTable()
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT content, date FROM kick_chat ORDER BY date DESC'''
+        cur.execute(exeString)
+        row = cur.fetchone()
+        # subTime = datetime.datetime.fromisoformat(row[4])
+        # shortThreshhold = datetime.datetime.now(datetime.timezone.utc) - timedelta(hours=hours)
+        reString = r'\[emote:\d+:' + emotePrefix + r'[a-zA-Z]+\]'
+        reStringTwo = emotePrefix + r'[a-zA-Z]+'
+        reStringNumber = r'\d+'
+        flag = True
+        while row and flag:
+            msgSentAt = datetime.datetime.fromisoformat(row[1])
+            threshold = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=days)
+            if msgSentAt > threshold:
+                emotes = re.findall(reString, row[0])
+                if emotes:
+                    for emote in emotes:
+                        em = re.findall(reStringTwo, emote)
+                        em = em[0]
+                        emoteId = re.findall(reStringNumber, emote)
+                        if not em in emoteList:
+                            emoteList[em] = 0
+                        emoteList[em] += 1
+                        urls[em] = f"https://files.kick.com/emotes/{emoteId[0]}/fullsize"
+            else:
+                flag = False
+            row = cur.fetchone()
+        cur.close()
+        conn.close()
+        emoteList= dict(sorted(emoteList.items(), key=lambda item: item[1], reverse=True))
+        emoteNames = []
+        emoteUrls = []
+        emoteUses = []
+        for emote, num in emoteList.items():
+            emoteNames.append(emote)
+            emoteUrls.append(urls[emote])
+            emoteUses.append(num)
+        return emoteNames, emoteUrls, emoteUses
     
     def InsertKickChatToTable(self, kickId:int, kickSlug:str, content:str, identity:str, date:str, repliedto:str, channel:str):
         self.createKickChatTable()
