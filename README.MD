@@ -68,6 +68,7 @@
     - /kick-clip-search-author - search clips by author
     - /kick-get-from-discord - Get the Kick usernername of a Discord member 
     - /kick-manual-connect - Manually connect someone's Kick account if you're sure who they are
+    - /kick-emote-report - Get information about a specific emote prefix
 
 ### How to set up the bot:
 
@@ -123,11 +124,12 @@
         - Must have webhook constants set up and have callback URL set up in constants
         - zmod kick-connect-button for a button that persists across restarts
         - zmod kick-manual-connect if you wish to do it manually
-    - Bot now collects Kick sub data
+    - Bot now collects Kick sub and chat data
         - can now give and take two different roles based off sub counts
             - check long/short role options in constants
         - Automatically happens when discord account is connected to Kick
         - If not connected, roles are still dropped after set time if manually given
+        - get emote info based off prefix
     - No longer need to run GenerateDatabase on setup
 - 7/13/2025
     - Added a heatlh endpoint at /health

@@ -165,9 +165,9 @@ kickOathCallbackEndpoint = "/callback"
 kickClientId = ''
 kickClientSecret =''
 # Kick clip and sub tracking vars. Kick API needs to be set up to use the stuff below. Sub monitoring, clip monitoring, connecting kick to discord, auto roles for subs
-kickChatroomId = '' # https://kick.com/api/v2/channels/<KICKUSERNAME> go here to get the ID's needed
+kickChatroomId = '' # https://kick.com/api/v2/channels/<KICKUSERNAME> go here to get the ID's needed. There's three ID's per channel. UserId, ChannelId, and ChatroomId. UserId isn't needed
 kickChannelId = ''
-kickRedirectUrl = '' #Must match EXACTLY with the redirect URL entered into kick dev dashboard
+kickRedirectUrl = '' #Must match EXACTLY with the redirect URL entered into kick dev dashboard. Make sure kickOathCallbackEndpoint is part of the url.
 kickDiscordRedirect = '' # Discord link to the server the user has connected their kick account to.
 hasRolePermissions = False # if the bot has permissions to change roles for kick sub roles 
 kickLongRoleId = 0 #IDs for the roles you give to people who sub. Long is for days/month/months long roles
