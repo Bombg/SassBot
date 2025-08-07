@@ -110,10 +110,12 @@
 4. If the requesting ip is in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
-- 8/6/2025
+- 8/7/2025
     - .env file now used instead of AppConstants
         - .envExample included to show what vars .env can have
         - Moved bot token from secrets/token to .env SECRET var
+        - This will allow future updates where things won't break on update if new vars are added
+        - This also means the vars can be changed via docker environment vars as well
     - Lots of new features below. Check .envExample for new vars for them
     - Whitelisted commands renamed into groups
         - commands that require whitelist permission are now under zmod and ymod

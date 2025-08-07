@@ -89,10 +89,10 @@ async def AnnounceWinnersHandleData(kickSlug: str, rest:hikari.impl.RESTClientIm
                     f"- ** {mostViewsTitle.capitalize()} **  with ** {mostViews} ** views gained\n" \
                     f"     - clipped by: ** {mostViewsClipper.capitalize()} ** \n"\
                     f"     - ** {mostViewedClipUrl} **"
-    if userViews and mostViewedUser and mostClipper and numClips and mostViewsTitle and mostViewsClipId:
+    if userViews and mostViewedUser and mostClipper and numClips and mostViewsTitle and mostViewsClipId and baseSettings.KICK_CLIPS_ANNOUNCEMENT_CHANNEL:
         await rest.create_message(channel=baseSettings.KICK_CLIPS_ANNOUNCEMENT_CHANNEL, content=messageContent)
     else:
-        logger.warning("Weekly Kick Clip Data announcement cancelled. Data gathering interrupted or no data")
+        logger.warning("Weekly Kick Clip Data announcement cancelled. Data gathering interrupted, no data, or announcement channel not set")
     db.createWeeklyKickClipsData(f"{isoYear}:{isoWeek}",mostViewsClipId, mostViewedUser, mostClipper)
 
 async def connectKickWebSockets():

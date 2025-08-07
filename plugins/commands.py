@@ -19,11 +19,14 @@ from utils.EmbedCreator import EmbedCreator
 import globals
 import itertools
 import miru
+import logging
 
 baseSettings = Settings()
 component = tanjun.Component()
 moderationGroup = tanjun.slash_command_group("zmod", "commands only moderators can use").add_check(StaticMethods.isPermission)
 moderationGroupY = tanjun.slash_command_group("ymod", "commands only moderators can use").add_check(StaticMethods.isPermission )
+logger = logging.getLogger(__name__)
+logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
 @tanjun.with_str_slash_option("prefix", "prefix of the emote you want to check")
 @tanjun.with_int_slash_option("days", "number of days to look back", default=30)
@@ -211,12 +214,16 @@ async def ConnectKickAccount(ctx: miru.ViewContext) -> None:
 
 @CommandLogger
 async def BanAppeal(ctx: miru.ViewContext) -> None:
-    view = MiruViews.AppealModalView(autodefer=False)
-    await ctx.respond("Pre-type your ban appeal and then hit the submit button when you are ready to submit it.\n Button will time out after a few mins, so re-push button if it doesn't work", components=view, flags=hikari.MessageFlag.EPHEMERAL)
-    message = await ctx.get_last_response()
-    await view.start(message)
-    await view.wait()
-    await ctx.interaction.delete_initial_response()
+    if baseSettings.MOD_ROLE_ID and baseSettings.APPEAL_CHANNEL_ID:
+        view = MiruViews.AppealModalView(autodefer=False)
+        await ctx.respond("Pre-type your ban appeal and then hit the submit button when you are ready to submit it.\n Button will time out after a few mins, so re-push button if it doesn't work", components=view, flags=hikari.MessageFlag.EPHEMERAL)
+        message = await ctx.get_last_response()
+        await view.start(message)
+        await view.wait()
+        await ctx.interaction.delete_initial_response()
+    else:
+        await ctx.respond("Can't do that. Command isn't set up correctly. Tell an admin/mod", flags=hikari.MessageFlag.EPHEMERAL)
+        logger.warning("BanAppeal can't be used. MOD_ROLE_ID and APPEAL_CHANNEL_ID not set")
 
 @moderationGroupY.as_sub_command("appeal-review", "View appeals that need to be reviewd for approval or denial",default_to_ephemeral= True, always_defer= True)
 @CommandLogger
@@ -280,17 +287,23 @@ async def confessReview(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[hika
 @component.with_slash_command
 @tanjun.as_slash_command("confess", "Anonymously post a confession or question to the confessions channel.", always_defer= True, default_to_ephemeral= True)
 async def confess(ctx: tanjun.abc.SlashContext) -> None:
-    content = "Pre-type your Confession/Question and then hit the submit button when you are ready to submit it.\n Button will time out after a few mins, so re-type command if it doesn't work"
-    view = MiruViews.ConfessionModalView(autodefer=False)
-    if isinstance(ctx, tanjun.abc.SlashContext):
-        await ctx.respond(content=content, components=view)
+    if baseSettings.CONFESSTION_CHANNEL_ID:
+        content = "Pre-type your Confession/Question and then hit the submit button when you are ready to submit it.\n Button will time out after a few mins, so re-type command if it doesn't work"
+        view = MiruViews.ConfessionModalView(autodefer=False)
+        if isinstance(ctx, tanjun.abc.SlashContext):
+            await ctx.respond(content=content, components=view)
+        else:
+            await ctx.respond(content=content, components=view, flags = hikari.MessageFlag.EPHEMERAL)
+        message = await ctx.fetch_last_response() if isinstance(ctx, tanjun.abc.SlashContext) else await ctx.get_last_response()
+        await view.start(message)
+        await view.wait()
+        await ctx.interaction.delete_initial_response()
     else:
-        await ctx.respond(content=content, components=view, flags = hikari.MessageFlag.EPHEMERAL)
-    message = await ctx.fetch_last_response() if isinstance(ctx, tanjun.abc.SlashContext) else await ctx.get_last_response()
-    await view.start(message)
-    await view.wait()
-    await ctx.interaction.delete_initial_response()
-
+        logger.warning("CONFESS can't be uesed. CONFESSION_CHANNEL_ID not yet")
+        if isinstance(ctx, tanjun.abc.SlashContext):
+            await ctx.respond("Can't do that. Command isn't set up correctly. Tell admin/mod")
+        else:
+            await ctx.respond("Can't do that. Command isn't set up correctly. Tell admin/mod", flags = hikari.MessageFlag.EPHEMERAL)
 @tanjun.with_bool_slash_option("rerunannounce","True if you want rerun pings False if not")
 @moderationGroup.as_sub_command("announce-rerun-toggle", "Toggle whether or not the bot will announce reruns", default_to_ephemeral=True, always_defer=True)
 @CommandLogger
