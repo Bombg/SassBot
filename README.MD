@@ -133,6 +133,7 @@
         - If not connected, roles are still dropped after set time if manually given
         - get emote info based off prefix
     - No longer need to run GenerateDatabase on setup
+    - New requirements in requirements.txt
 - 7/13/2025
     - Added a heatlh endpoint at /health
         - WebhookPort must be set for this to work
