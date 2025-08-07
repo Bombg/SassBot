@@ -34,6 +34,16 @@ class Database:
                     StaticMethods.rebootServer()
         return conn, cur
     
+    def InsertKickChatToTable(self, kickId:int, kickSlug:str, content:str, identity:str, date:str, repliedto:str, channel:str):
+        self.createKickChatTable()
+        conn, cur = self.connectCursor()
+        rowVals = (kickId, kickSlug.lower(), content, identity, date, repliedto, channel)
+        exeString = '''INSERT INTO kick_chat (kick_id, kick_slug, content, identity, date, replied_to, channel) VALUES (?,?,?,?,?,?,?) '''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
     def GetKickClipByAuthor(self, kickSlug):
         clipIds = []
         self.createKickClipsTable()
@@ -489,6 +499,13 @@ class Database:
             if longSubCounts[id] >= subThreshold:
                 longList[id] = idNameDict[id]
         return longList
+    
+    def createKickChatTable(self):
+        conn, cur = self.connectCursor()
+        GenerateDatabase.CreateKickChatTable(cur)
+        conn.commit()
+        cur.close()
+        conn.close()
     
     def createDiscordUserTable(self):
         conn, cur = self.connectCursor()

@@ -6,6 +6,21 @@ import sqlite3
 #BLOB = bytes
 #NULL = none
 
+def CreateKickChatTable(cur):
+    cur.execute('''CREATE TABLE IF NOT EXISTS kick_chat
+                (
+                    id INTEGER PRIMARY KEY,
+                    kick_id INTEGER,
+                    kick_slug TEXT,
+                    content TEXT,
+                    identity TEXT,
+                    date TEXT,
+                    replied_to TEXT,
+                    channel TEXT,
+                    FOREIGN KEY (kick_id) REFERENCES kick_users(id)
+                )
+    ''')
+
 def CreateKickUsersTable(cur):
     cur.execute('''CREATE TABLE IF NOT EXISTS kick_users
             (

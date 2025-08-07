@@ -219,6 +219,13 @@ def ParseChatMessageEvent(db:Database, data):
         logger.debug(f"TODO: {data}")
     elif data['type'] != "celebration" and data['type'] != "reply" and data['type'] != "message":
         logger.debug(f"TODO:{data}")
+    elif data['type'] =='message':
+        identity = data['sender']['identity']
+        db.InsertKickChatToTable(userId, userName, message, json.dumps(identity),data['created_at'],None,channel)
+    elif data['type'] =='reply':
+        identity = data['sender']['identity']
+        repliedTo = data['metadata']
+        db.InsertKickChatToTable(userId, userName, message, json.dumps(identity),data['created_at'],json.dumps(repliedTo),channel)
 
 def ParseLuckyUsersWhoGotGiftSubscriptionsEvent(db:Database, data):
     #{'event': 'App\\Events\\LuckyUsersWhoGotGiftSubscriptionsEvent', 'data': '{"channel":{"id":17425723,"user_id":18312333,"slug":"nelkboys","is_banned":false,"playback_url":"https:\\/\\/fa723fc1b171.us-west-2.playback.live-video.net\\/api\\/video\\/v1\\/us-west-2.196233775518.channel.ze6nVEIVJ53v.m3u8","name_updated_at":null,"vod_enabled":true,"subscription_enabled":true,"is_affiliate":true,"can_host":true,"chatroom":{"id":17172694,"chatable_type":"App\\\\Models\\\\Channel","channel_id":17425723,"created_at":"2023-08-25T17:13:46.000000Z","updated_at":"2025-07-02T17:19:50.000000Z","chat_mode_old":"public","chat_mode":"public","slow_mode":true,"chatable_id":17425723,"followers_mode":true,"subscribers_mode":false,"emotes_mode":false,"message_interval":5,"following_min_duration":180}},"usernames":["kernanator","OhDollar","UZJ100","slimetimelive","m1nt710","k8dot","ginja47ninja","jbizzle007","MEATTIP","Danni2g","big_fat_black_testicles","DIZOTIZY","ck_certified","fletchyflipem","tturtlees","NickelinDime","ZACHROCK9","duey_17","1stScoop","PurpleArmyCX","Yettipnw","Jackyboy13","Beau4","nickv4","Iceman299","Dats_Lvke","Walidq695","chamoney2","Kushaug","Charredd","Cherts","ckmitch","Mattsark","Bee_Lu","Cman12","Scarcerow","EyezChico","Pizza_farts","BurgerGrease","BigCabbyDaddy","Chess_zebra","Denver7","BS3VEN","KyleRousseau38","KyleMay","HoonieStonebag","Kongwtf","brianc12","MyManTitsSlap","dkny25"],"gifter_username":"astra555"}', 'channel': 'channel.17425723'}
