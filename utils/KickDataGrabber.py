@@ -20,6 +20,44 @@ logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 #https://kick.com/{kickSlug}/clips/{clipId} 
 async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> None:
     db = Database()
+    try:
+        apiUrl = GetApiCheckGlobals(db, kickSlug)
+        results = Kick.GetIntApiJsonTls(apiUrl)
+        if not results or 'clips' not in results:
+            logger.warning("Couldn't retreive Kick clips: non 200 status, cloudflare bot detection?")
+            return
+        if 'nextCursor' in results:
+            if globals.kickClipCursor in globals.kickVisitedCursors:
+                logger.debug("browser out of order after page load")
+                return
+            globals.kickVisitedCursors.append(globals.kickClipCursor)
+            globals.kickClipCursor = results['nextCursor']
+            logger.debug(f"grabbing clip data from {apiUrl} and going again at cursor: {results['nextCursor']}")
+        else:
+            db.MarkClipsFullyScanned()
+        for clip in results['clips']:
+            exeString = f'''SELECT clip_id FROM kick_clips WHERE clip_id='{clip['id']}' '''
+            creationDate = dt.strptime(clip['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
+            timeDiff = dt.now(timezone.utc) - creationDate
+            daysClipLookBack = baseSettings.kickClipDaysLookBack
+            if not db.isExists(exeString):
+                if timeDiff < timedelta(days=daysClipLookBack):
+                    db.addTempKickClipToTable(clip['id'], clip['livestream_id'],clip['channel']['slug'], clip['creator']['slug'], clip['created_at'], clip['title'], clip['views'], clip['category']['slug'])
+                else:
+                    db.addKickClipToTable(clip['id'], clip['livestream_id'],clip['channel']['slug'], clip['creator']['slug'], clip['created_at'], clip['title'], clip['views'], clip['category']['slug'])
+            elif timeDiff < timedelta(days=daysClipLookBack):
+                db.addTempKickClipToTable(clip['id'], clip['livestream_id'],clip['channel']['slug'], clip['creator']['slug'], clip['created_at'], clip['title'], clip['views'], clip['category']['slug'])
+            elif db.isClipsFullyScanned():
+                globals.kickClipCursor = ""
+        if not db.isClipsFullyScanned():
+            db.InsertClipCursor(results['nextCursor'])
+        if not globals.kickClipCursor:
+            await AnnounceWinnersHandleData(kickSlug, rest, db) 
+    except Exception as e:
+        logger.exception(e)
+        globals.browserOpen = False
+
+def GetApiCheckGlobals(db: Database, kickSlug):
     apiUrl = f"https://kick.com/api/v2/channels/{kickSlug}/clips"
     if db.isClipRowCountZero():
         db.addKickClipToTable("greenLight",None,None,None,None,None,None,None)
@@ -27,53 +65,26 @@ async def CollectClipData(kickSlug:str, rest: hikari.impl.RESTClientImpl) -> Non
         globals.kickClipCursor = db.GetClipCursor()
     if globals.kickClipCursor:
         apiUrl = f"{apiUrl}?cursor={globals.kickClipCursor}"
+    return apiUrl
+    
+async def GetClipResultsNd(db:Database, apiUrl):
     browser = await ndb.GetBrowser(proxy=baseSettings.KICK_PROXY)
-    try:
-        if globals.kickClipCursor in globals.kickVisitedCursors:
-            logger.debug("browser out of order pre page load")
-            return
-        await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
-        page = await browser.get(apiUrl)
-        await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
-        await page.save_screenshot("KickClipsScreenshot.jpg")
-        content = await page.get_content()
-        content = content.split('<body>')
-        if len(content) < 2:
-            logger.warning("error with clip checker. user is banned,wrong username supplied, or cloudflare bot detection")
-        else:
-            jsonText = content[1].split('</body></html>')
-            results = json.loads(jsonText[0])
-            await ndb.CloseNDBrowser(browser, page)
-            if 'nextCursor' in results:
-                if globals.kickClipCursor in globals.kickVisitedCursors:
-                    logger.debug("browser out of order after page load")
-                    return
-                globals.kickVisitedCursors.append(globals.kickClipCursor)
-                globals.kickClipCursor = results['nextCursor']
-                logger.debug(f"grabbing clip data from {apiUrl} and going again at cursor: {results['nextCursor']}")
-            else:
-                db.MarkClipsFullyScanned()
-            for clip in results['clips']:
-                exeString = f'''SELECT clip_id FROM kick_clips WHERE clip_id='{clip['id']}' '''
-                creationDate = dt.strptime(clip['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
-                timeDiff = dt.now(timezone.utc) - creationDate
-                daysClipLookBack = baseSettings.kickClipDaysLookBack
-                if not db.isExists(exeString):
-                    if timeDiff < timedelta(days=daysClipLookBack):
-                        db.addTempKickClipToTable(clip['id'], clip['livestream_id'],clip['channel']['slug'], clip['creator']['slug'], clip['created_at'], clip['title'], clip['views'], clip['category']['slug'])
-                    else:
-                        db.addKickClipToTable(clip['id'], clip['livestream_id'],clip['channel']['slug'], clip['creator']['slug'], clip['created_at'], clip['title'], clip['views'], clip['category']['slug'])
-                elif timeDiff < timedelta(days=daysClipLookBack):
-                    db.addTempKickClipToTable(clip['id'], clip['livestream_id'],clip['channel']['slug'], clip['creator']['slug'], clip['created_at'], clip['title'], clip['views'], clip['category']['slug'])
-                elif db.isClipsFullyScanned():
-                    globals.kickClipCursor = ""
-            if not db.isClipsFullyScanned():
-                db.InsertClipCursor(results['nextCursor'])
-            if not globals.kickClipCursor:
-                await AnnounceWinnersHandleData(kickSlug, rest, db) 
-    except Exception as e:
-        logger.exception(e)
-        globals.browserOpen = False
+    if globals.kickClipCursor in globals.kickVisitedCursors:
+        logger.debug("browser out of order pre page load")
+        return
+    await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
+    page = await browser.get(apiUrl)
+    await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
+    await page.save_screenshot("KickClipsScreenshot.jpg")
+    content = await page.get_content()
+    content = content.split('<body>')
+    if len(content) < 2:
+        logger.warning("error with clip checker. user is banned,wrong username supplied, or cloudflare bot detection")
+    else:
+        jsonText = content[1].split('</body></html>')
+        results = json.loads(jsonText[0])
+    await ndb.CloseNDBrowser(browser, page)
+    return results
 
 async def AnnounceWinnersHandleData(kickSlug: str, rest:hikari.impl.RESTClientImpl, db:Database):
     today = datetime.date.today()

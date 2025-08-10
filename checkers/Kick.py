@@ -12,6 +12,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa,padding
 from cryptography.hazmat.primitives import hashes,serialization
 from cryptography.exceptions import InvalidSignature
 import base64
+import tls_client
 
 baseSettings = Settings()
 logger = logging.getLogger(__name__)
@@ -21,24 +22,31 @@ async def isModelOnline(kickUserName):
     isOnline, title, tempThumbUrl, icon = setDefaultStreamValues()
     apiUrl = f"https://kick.com/api/v1/channels/{kickUserName}"
     try:
-        browser = await ndb.GetBrowser(proxy=baseSettings.KICK_PROXY)
-        await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
-        page = await browser.get(apiUrl)
-        await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
-        await page.save_screenshot("KickScreenshot.jpg")
-        content = await page.get_content()
-        content = content.split('<body>')
-        if len(content) < 2:
-            logger.warning("error with kick checker. user is banned,wrong username supplied, or cloudflare bot detection")
+        apiJson = GetIntApiJsonTls(apiUrl)
+        if apiJson:
+            isOnline, title, tempThumbUrl, icon = getStreamInfo(apiJson)
         else:
-            jsonText = content[1].split('</body></html>')
-            isOnline, title, tempThumbUrl, icon = getStreamInfo(jsonText)
-        await ndb.CloseNDBrowser(browser,page)
+            logger.warning("error with kick checker. user is banned,wrong username supplied, or cloudflare bot detection")
     except Exception as e:
         logger.warning(f"error getting browser for Kick: {e}")
         globals.browserOpen = False
     thumbUrl = GetThumbnail(tempThumbUrl, baseSettings.kickThumbnail)
     return isOnline, title, thumbUrl, icon
+
+async def GetNdJson(apiUrl):
+    results = ""
+    browser = await ndb.GetBrowser(proxy=baseSettings.KICK_PROXY)
+    await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
+    page = await browser.get(apiUrl)
+    await asyncio.sleep(1*baseSettings.NODRIVER_WAIT_MULTIPLIER)
+    await page.save_screenshot("KickScreenshot.jpg")
+    content = await page.get_content()
+    content = content.split('<body>')
+    await ndb.CloseNDBrowser(browser,page)
+    if len(content) >= 2:
+        jsonText = content[1].split('</body></html>')
+        results = json.loads(jsonText[0])
+    return results
 
 def setDefaultStreamValues():
     isOnline = False
@@ -47,17 +55,18 @@ def setDefaultStreamValues():
     icon = baseSettings.defaultIcon
     return isOnline, title, thumbUrl, icon
 
-def getStreamInfo(jsonText):
+def getStreamInfo(results):
     isOnline, title, thumbUrl, icon = setDefaultStreamValues()
     try:
-        results = json.loads(jsonText[0])
-        if results['livestream']:
+        if 'livestream' in results and results['livestream']:
             title = results['livestream']['session_title']
             title = title.replace("&amp;","&")
             title = title.replace("&lt;", "<")
             thumbUrl = results['livestream']['thumbnail']['url']#+ "#" + str(int(time.time()))
             icon = results['user']['profile_pic']
             isOnline = True
+        else:
+            logger.warning("error with kick checker. user is banned,wrong username supplied, or cloudflare bot detection")
     except json.decoder.JSONDecodeError:
         logger.warning("no json at kick api, bot detection site down, or cloudflare bot detection")
     return isOnline,title,thumbUrl,icon
@@ -249,3 +258,19 @@ def GetUserInfoFromToken(token:str):
         apiHeaders={"Authorization": getAccessToken(),"Accept":'application/json'}
         apiResponse = requests.get(apiUrl, headers=apiHeaders)
     return apiResponse
+
+def GetIntApiJsonTls(apiUrl:str) -> json:
+    headers = {
+    'Origin': 'https://kick.com',
+    'Cache-Control': 'no-cache',
+    'Accept-Language': 'en-GB,en;q=0.9,af-ZA;q=0.8,af;q=0.7,en-US;q=0.6',
+    'Pragma': 'no-cache',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
+    'Sec-WebSocket-Extensions': 'permessage-deflate; client_max_window_bits',
+    }
+    r = tls_client.Session(client_identifier="chrome_120", random_tls_extension_order=True)
+    r.headers = headers 
+    url = apiUrl
+    r.headers["X-CLIENT-TOKEN"] = "e1393935a959b4020a4491574f6490129f678acdaa92760471263db43487f823"
+    response = r.get(url, headers=headers)
+    return response.json() if response.status_code == 200 else None

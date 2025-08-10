@@ -110,6 +110,11 @@
 4. If the requesting ip is in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 8/10/2025
+    - Day or two after last release Kick got more strict with some non public APIs
+    - Fixed non api Kick checker
+    - Fixed Kick clips module
+    - new module requirement in requirements.txt
 - 8/7/2025
     - .env file now used instead of AppConstants
         - .envExample included to show what vars .env can have

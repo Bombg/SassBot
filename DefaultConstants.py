@@ -1,5 +1,13 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import model_validator
+from typing import Optional
+
 #from typing import ClassVar # ClassVar[int] - not changeable by .env and no instantiation required
+#from pydantic import computed_field
+#   @computed_field
+#     @property
+#     def onlineString(self) -> str:
+#         return f"{self.streamerName} is online"
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8', extra='ignore')
@@ -221,32 +229,64 @@ class Settings(BaseSettings):
     
     # This is the text that will appear above the embed. Role mentions will be added before this text, and a link to the stream will be added after
     # i.e. @everyone <AboveEmbedTextGoesHere> https://kick.com/StreamerName
-    kickAboveEmbedText:str =  f"{streamerName} is live on Kick!"
-    fansAboveEmbedText:str =  f"{streamerName} is live on Fansly!"
-    ofAboveEmbedText:str =  f"{streamerName} is live on Onlyfans!"
-    cbAboveEmbedText:str =  f"{streamerName} is live on Chaturbate!"
-    ytAboveEmbedText:str =  f"{streamerName} is live on YouTube!"
-    twitchAboveEmbedText:str =  f"{streamerName} is live on Twitch!"
-    cam4AboveEmbedText:str =  f"{streamerName} is live on Cam4!"
-    mfcAboveEmbedText:str =  f"{streamerName} is live on MyFreeCams!"
-    bcAboveEmbedText:str =  f"{streamerName} is live on BongaCams!"
-    scAboveEmbedText:str =  f"{streamerName} is live on StripChat!"
-    epAboveEmbedText:str =  f"{streamerName} is live on ePlay!"
-    mvAboveEmbedText:str =  f"{streamerName} is live on ManyVids!"
+    kickAboveEmbedText:Optional[str] = None
+    fansAboveEmbedText:Optional[str] = None
+    ofAboveEmbedText:Optional[str] = None
+    cbAboveEmbedText:Optional[str] = None
+    ytAboveEmbedText:Optional[str] = None
+    twitchAboveEmbedText:Optional[str] = None
+    cam4AboveEmbedText:Optional[str] = None
+    mfcAboveEmbedText:Optional[str] = None
+    bcAboveEmbedText:Optional[str] = None
+    scAboveEmbedText:Optional[str] = None
+    epAboveEmbedText:Optional[str] = None
+    mvAboveEmbedText:Optional[str] = None
+
+    @model_validator(mode="after")
+    def CreateAboveEmbedText(self):
+        self.kickAboveEmbedText = f"{self.streamerName} is live on Kick!"
+        self.fansAboveEmbedText= f"{self.streamerName} is live on Fansly!"
+        self.ofAboveEmbedText = f"{self.streamerName} is live on Onlyfans!"
+        self.cbAboveEmbedText = f"{self.streamerName} is live on Chaturbate!"
+        self.ytAboveEmbedText = f"{self.streamerName} is live on YouTube!"
+        self.twitchAboveEmbedText = f"{self.streamerName} is live on Twitch!"
+        self.cam4AboveEmbedText = f"{self.streamerName} is live on Cam4!"
+        self.mfcAboveEmbedText = f"{self.streamerName} is live on MyFreeCams!"
+        self.bcAboveEmbedText = f"{self.streamerName} is live on BongaCams!"
+        self.scAboveEmbedText = f"{self.streamerName} is live on StripChat!"
+        self.epAboveEmbedText = f"{self.streamerName} is live on ePlay!"
+        self.mvAboveEmbedText = f"{self.streamerName} is live on ManyVids!"
+        return self
 
     # This is small text that will appear below the title, and above the main image inside the embed.
-    kickBelowTitleText:str =  f"{streamerName} is now live on Kick!"
-    fansBelowTitleText:str =  f"{streamerName} is now live on Fansly!"
-    ofBelowTitleText:str =  f"{streamerName} is now live on Onlyfans!"
-    cbBelowTitleText:str =  f"{streamerName} is now live on Chaturbate!"
-    ytBelowTitleText:str =  f"{streamerName} is now live on YouTube!"
-    twitchBelowTitleText:str =  f"{streamerName} is now live on Twitch!"
-    cam4BelowTitleText:str =  f"{streamerName} is now live on Cam4!"
-    mfcBelowTitleText:str =  f"{streamerName} is now live on MyFreeCams!"
-    bcBelowTitleText:str =  f"{streamerName} is now live on BongaCams!"
-    scBelowTitleText:str =  f"{streamerName} is now live on StripChat!"
-    epBelowTitleText:str =  f"{streamerName} is now live on ePlay!"
-    mvBelowTitleText:str = f"{streamerName} is now live on ManyVids!"
+    kickBelowTitleText:Optional[str] =None
+    fansBelowTitleText:Optional[str] = None
+    ofBelowTitleText:Optional[str] = None
+    cbBelowTitleText:Optional[str] = None
+    ytBelowTitleText:Optional[str] = None
+    twitchBelowTitleText:Optional[str] = None
+    cam4BelowTitleText:Optional[str] =None
+    mfcBelowTitleText:Optional[str] = None
+    bcBelowTitleText:Optional[str] = None
+    scBelowTitleText:Optional[str] = None
+    epBelowTitleText:Optional[str] = None
+    mvBelowTitleText:Optional[str] = None
+
+    @model_validator(mode="after")
+    def CreateBelowTitleText(self):
+        self.kickBelowTitleText = f"{self.streamerName} is now live on Kick!"
+        self.fansBelowTitleText = f"{self.streamerName} is now live on Fansly!"
+        self.ofBelowTitleText = f"{self.streamerName} is now live on Onlyfans!"
+        self.cbBelowTitleText = f"{self.streamerName} is now live on Chaturbate!"
+        self.ytBelowTitleText = f"{self.streamerName} is now live on YouTube!"
+        self.twitchBelowTitleText = f"{self.streamerName} is now live on Twitch!"
+        self.cam4BelowTitleText = f"{self.streamerName} is now live on Cam4!"
+        self.mfcBelowTitleText = f"{self.streamerName} is now live on MyFreeCams!"
+        self.bcBelowTitleText = f"{self.streamerName} is now live on BongaCams!"
+        self.scBelowTitleText = f"{self.streamerName} is now live on StripChat!"
+        self.epBelowTitleText = f"{self.streamerName} is now live on ePlay!"
+        self.mvBelowTitleText = f"{self.streamerName} is now live on ManyVids!"
+        return self
 
     # Leave empty strings if you want to use default thumbnail behavior; which is: (1)pull thumbnail from platform, (2)if it doesn't exist use image from image list, (3)if list empty use defaultThumbnail
     # Add your own image path/url if you want to exclusively use the same image over and over for a specific platform's thumbnail
