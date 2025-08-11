@@ -70,6 +70,23 @@
     - /kick-manual-connect - Manually connect someone's Kick account if you're sure who they are
     - /kick-emote-report - Get information about a specific emote prefix
 
+## Quick Setup Example
+- Read 'How to set up the bot' section if you don't know how to get some of these vars.
+- Check .envExamples for a full list of all vars.
+```yml
+services:
+  sassbot:
+    image: ghcr.io/bombg/sassbot:latest
+    container_name: Sassbot
+    restart: unless-stopped
+    environment:
+      SECRET: 'token' # string, the bot token you are given by discord
+      GUILD_ID: discordGuildIdHere # int, the guild ID of the discord server the bot is in
+      whiteListedRoleIDs: '[id1,id2]' # int, User IDs and/or Role IDs of white listed people/roles
+      KICK_NOTIFICATION_CHANNEL_ID: channelId # int, id of the notification channel for Kick
+      kickUserName: '["kickUserName"]' # str, user name of the Kick streamer
+```
+
 ### How to set up the bot:
 
 1. Go to https://discord.com/developers and set up an app and get a token. Put that token in .envExample file with the var SECRET.
