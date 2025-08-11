@@ -72,6 +72,7 @@
 
 ## Quick Setup Example
 - Read 'How to set up the bot' section if you don't know how to get some of these vars.
+    - This assumes you have some knowledge of Discord/Docker/. If unsure, skip this section.
 - Check .envExamples for a full list of all vars.
 ```yml
 services:
