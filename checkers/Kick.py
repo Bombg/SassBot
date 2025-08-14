@@ -63,8 +63,6 @@ def getStreamInfo(results):
             thumbUrl = results['livestream']['thumbnail']['url']#+ "#" + str(int(time.time()))
             icon = results['user']['profile_pic']
             isOnline = True
-        else:
-            logger.warning("error with kick checker. user is banned,wrong username supplied, or cloudflare bot detection")
     except json.decoder.JSONDecodeError:
         logger.warning("no json at kick api, bot detection site down, or cloudflare bot detection")
     return isOnline,title,thumbUrl,icon
