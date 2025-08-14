@@ -13,7 +13,6 @@ import secrets
 import hashlib
 import base64
 from urllib.parse import urlencode, urlunparse, urlparse
-import hikari
 
 baseSettings = Settings()
 logger = logging.getLogger(__name__)
@@ -100,7 +99,7 @@ def getWeekStreamingMinutes(startingDate: date, minutesDict = {}):
                             if "RR" in v['streaming']:
                                 weekMinutes["TotalTimeStreamingReruns"] += minutesBetweenOnlineChecks
                             for platform in platforms:
-                                if platform in v['streaming'] and not "RR-" + platform in v['streaming']:
+                                if platform in v['streaming'] and "RR-" + platform not in v['streaming']:
                                     weekMinutes[platform] += minutesBetweenOnlineChecks
                                     notOnlyRerunsFlag = True
                         if notOnlyRerunsFlag:
@@ -262,7 +261,7 @@ def timeToHoursMinutesTotalTime(totalTime: float) -> int:
     return totalTimeHours, leftoverMinutes
 
 def timeToSeconds(newTime: float) -> int:
-    if newTime == None:
+    if newTime is None:
         newTime = 0
     totalTime = time.time() - newTime
     totalTime = int(totalTime)

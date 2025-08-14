@@ -5,7 +5,6 @@ import time
 from DefaultConstants import Settings as Settings
 from utils.Database import Database
 from datetime import datetime
-from decorators.Permissions import Permissions
 from decorators.CommandLogger import CommandLogger
 from datetime import date
 from datetime import timedelta
@@ -117,7 +116,6 @@ async def KickClipAutoComplete(ctx: tanjun.abc.AutocompleteContext, value:str) -
 @tanjun.as_slash_command("kick-clip-search", "Search for a kick clip", default_to_ephemeral=True, always_defer=True)
 @CommandLogger
 async def SearchKickClips(ctx: tanjun.abc.SlashContext, title:str):
-    db = Database()
     if title:
         clipUrl = StaticMethods.GetKickClipUrlFromClipId(title)
         if clipUrl:
@@ -210,7 +208,7 @@ async def ConnectKickAccount(ctx: miru.ViewContext) -> None:
         count +=1
         await asyncio.sleep(2)
     await ctx.interaction.delete_initial_response()
-    if not oauthState in globals.kickOauth:
+    if oauthState not in globals.kickOauth:
         await ctx.respond("Success", flags=hikari.MessageFlag.EPHEMERAL)
 
 @CommandLogger

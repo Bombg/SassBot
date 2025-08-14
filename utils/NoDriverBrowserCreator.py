@@ -3,12 +3,12 @@ import random
 import nodriver as uc
 import globals
 import asyncio
-import ctypes, os
+import ctypes
+import os
 import platform
 import psutil
 import logging
 from DefaultConstants import Settings as Settings
-from nodriver import *
 
 baseSettings = Settings()
 
@@ -41,7 +41,7 @@ def getUserAgent():
             userAgentsJson = page.json()
             userAgent = random.choice(userAgentsJson)
             page.close()
-        except:
+        except Exception:
             logger.warning("Trouble getting user agent from jnrbsn's github. Using default")
         return userAgent
 

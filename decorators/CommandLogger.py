@@ -1,4 +1,3 @@
-from typing import Any
 import tanjun
 from datetime import datetime
 import time
