@@ -159,7 +159,7 @@ async def connectKickWebSockets():
                         #{'event': 'RewardRedeemedEvent', 'data': '{"reward_title":"da bears","user_id":1502053,"channel_id":20309633,"username":"Bombg","user_input":"","reward_background_color":"#1475E1"}', 'channel': 'chatroom_20041545'}
                         data = json.loads(data['data'])
                         redeemed = data['reward_title']
-                        redeemInput = data['user_input']
+                        #redeemInput = data['user_input']
                         redeemerId = data['user_id']
                         redeemerUserName = data['username']
                         logger.debug(f"{redeemerUserName}:{redeemerId} redeemed {redeemed}")
@@ -241,16 +241,16 @@ def ParseChatMessageEvent(db:Database, data):
 def ParseLuckyUsersWhoGotGiftSubscriptionsEvent(db:Database, data):
     #{'event': 'App\\Events\\LuckyUsersWhoGotGiftSubscriptionsEvent', 'data': '{"channel":{"id":17425723,"user_id":18312333,"slug":"nelkboys","is_banned":false,"playback_url":"https:\\/\\/fa723fc1b171.us-west-2.playback.live-video.net\\/api\\/video\\/v1\\/us-west-2.196233775518.channel.ze6nVEIVJ53v.m3u8","name_updated_at":null,"vod_enabled":true,"subscription_enabled":true,"is_affiliate":true,"can_host":true,"chatroom":{"id":17172694,"chatable_type":"App\\\\Models\\\\Channel","channel_id":17425723,"created_at":"2023-08-25T17:13:46.000000Z","updated_at":"2025-07-02T17:19:50.000000Z","chat_mode_old":"public","chat_mode":"public","slow_mode":true,"chatable_id":17425723,"followers_mode":true,"subscribers_mode":false,"emotes_mode":false,"message_interval":5,"following_min_duration":180}},"usernames":["kernanator","OhDollar","UZJ100","slimetimelive","m1nt710","k8dot","ginja47ninja","jbizzle007","MEATTIP","Danni2g","big_fat_black_testicles","DIZOTIZY","ck_certified","fletchyflipem","tturtlees","NickelinDime","ZACHROCK9","duey_17","1stScoop","PurpleArmyCX","Yettipnw","Jackyboy13","Beau4","nickv4","Iceman299","Dats_Lvke","Walidq695","chamoney2","Kushaug","Charredd","Cherts","ckmitch","Mattsark","Bee_Lu","Cman12","Scarcerow","EyezChico","Pizza_farts","BurgerGrease","BigCabbyDaddy","Chess_zebra","Denver7","BS3VEN","KyleRousseau38","KyleMay","HoonieStonebag","Kongwtf","brianc12","MyManTitsSlap","dkny25"],"gifter_username":"astra555"}', 'channel': 'channel.17425723'}
     data = json.loads(data['data'])
-    userName = data['gifter_username']
-    giftList = data['usernames']
-    numGifted = len(giftList)
-    logger.debug(f"LuckyUsersWhoGotGiftSubscriptionsEvent: Check for insertions or handle")
+    #userName = data['gifter_username']
+    #giftList = data['usernames']
+    #numGifted = len(giftList)
+    logger.debug("LuckyUsersWhoGotGiftSubscriptionsEvent: Check for insertions or handle")
 
 async def ParseChannelSubscriptionEvent(db:Database, data):
     #{"event":"App\\Events\\ChannelSubscriptionEvent","data":"{\"user_ids\":[62315363,2872386,3225896,59025745,2398519,2086888,2086799],\"username\":\"\",\"channel_id\":31335859}","channel":"channel.31335859"}
     #{'event': 'App\\Events\\ChannelSubscriptionEvent', 'data': '{"user_ids":[67477867],"username":"noahwjbrennan","channel_id":17425723}', 'channel': 'channel.17425723'}
     data = json.loads(data['data'])
-    userId = data['user_ids'][0] 
+    #userId = data['user_ids'][0] 
     userName = data['username'] # if userName is null perhaps they got gifted and not self sub
     if userName:
         giftedUstring = CreateGiftedUString(["self"],userName,1)
@@ -258,7 +258,7 @@ async def ParseChannelSubscriptionEvent(db:Database, data):
         if not isGiftedAlreadyExist(giftedUstring):
             logger.debug(f"ChannelSubscriptionEvent:CHECK:{giftedUstring} Inserted or not")
     else:
-        logger.debug(f"ChannelSubscriptionEvent(gifted version): insertion? may be reserved for anon gifts?")
+        logger.debug("ChannelSubscriptionEvent(gifted version): insertion? may be reserved for anon gifts?")
         logger.debug(data)
 
 def ParseGiftedSubscriptionsEvent(db:Database, data):
@@ -266,7 +266,7 @@ def ParseGiftedSubscriptionsEvent(db:Database, data):
     channel = data['channel']
     data = json.loads(data['data'])
     userName = data['gifter_username'] # Only event sometimes?
-    totalGifted = data['gifter_total'] # num gifted overall in channel over time (200,300 etc)
+    #totalGifted = data['gifter_total'] # num gifted overall in channel over time (200,300 etc)
     numGifted = len(data['gifted_usernames'])
     giftedList = data['gifted_usernames']
     giftedUString = CreateGiftedUString(giftedList, userName, numGifted)
@@ -314,7 +314,8 @@ def isGiftedAlreadyExist(giftedUString):
 
 def CreateGiftedUString(giftedList:list, gifter:str, numGifted:int) -> str:
     # numGifted:Gifter:Giftee1:Giftee2... in alphabetical
-    if not giftedList or not gifter or not numGifted: return ""
+    if not giftedList or not gifter or not numGifted: 
+        return ""
     giftedList.sort()
     giftedUString = f"{numGifted}:{gifter.lower()}"
     for giftee in giftedList:

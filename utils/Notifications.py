@@ -23,8 +23,8 @@ class Notifications:
         task = asyncio.create_task(embedMaker.getEmbed())
         ofEmbed = await task
         db = Database()
-        db.updatePlatformRowCol("onlyfans","last_online_message",time.time())
-        db.updatePlatformAccountRowCol("onlyfans",ofUserName,"last_online_message",time.time())
+        db.SetPlatformLastOnlineMessage("onlyfans",time.time())
+        db.SetPlatformAccountLastOnlineMessage("onlyfans",ofUserName,time.time())
         IS_PING = db.getPing()
         rolesToPing = baseSettings.OF_RERUN_ROLES_TO_PING if isRerun else baseSettings.OF_ROLES_TO_PING
         messageContent = rolesToPing + ofOnlineText if IS_PING else ofOnlineText
@@ -46,8 +46,8 @@ class Notifications:
         task = asyncio.create_task(embedMaker.getEmbed())
         cbEmbed = await task
         db = Database()
-        db.updatePlatformRowCol("chaturbate","last_online_message",time.time())
-        db.updatePlatformAccountRowCol("chaturbate",cbUserName,"last_online_message",time.time())
+        db.SetPlatformLastOnlineMessage("chaturbate",time.time())
+        db.SetPlatformAccountLastOnlineMessage("chaturbate",cbUserName,time.time())
         IS_PING = db.getPing()
         rolesToPing = baseSettings.CB_RERUN_ROLES_TO_PING if isRerun else baseSettings.CB_ROLES_TO_PING
         messageContent = rolesToPing + cbOnlineText if IS_PING else cbOnlineText
@@ -68,8 +68,8 @@ class Notifications:
         task = asyncio.create_task(embedMaker.getEmbed())
         fansEmbed = await task
         db = Database()
-        db.updatePlatformRowCol("fansly","last_online_message",time.time())
-        db.updatePlatformAccountRowCol("fansly",fansUserName,"last_online_message",time.time())
+        db.SetPlatformLastOnlineMessage("fansly",time.time())
+        db.SetPlatformAccountLastOnlineMessage("fansly",fansUserName,time.time())
         IS_PING = db.getPing()
         rolesToPing = baseSettings.FANS_RERUN_ROLES_TO_PING if isRerun else baseSettings.FANS_ROLES_TO_PING
         messageContent = rolesToPing + fansOnlineText if IS_PING else fansOnlineText
@@ -91,8 +91,8 @@ class Notifications:
         task = asyncio.create_task(embedMaker.getEmbed())
         twitchEmbed = await task
         db = Database()
-        db.updatePlatformRowCol("twitch","last_online_message",time.time())
-        db.updatePlatformAccountRowCol("twitch",twitchUserName,"last_online_message",time.time())
+        db.SetPlatformLastOnlineMessage("twitch",time.time())
+        db.SetPlatformAccountLastOnlineMessage("twitch",twitchUserName,time.time())
         IS_PING = db.getPing()
         rolesToPing = baseSettings.TWITCH_RERUN_ROLES_TO_PING if isRerun else baseSettings.TWITCH_ROLES_TO_PING
         messageContent = rolesToPing + twitchOnlineText if IS_PING else twitchOnlineText
@@ -114,8 +114,8 @@ class Notifications:
         task = asyncio.create_task(embedMaker.getEmbed())
         ytEmbed = await task
         db = Database()
-        db.updatePlatformRowCol("youtube","last_online_message",time.time())
-        db.updatePlatformAccountRowCol("youtube",ytUserName,"last_online_message",time.time())
+        db.SetPlatformLastOnlineMessage("youtube",time.time())
+        db.SetPlatformAccountLastOnlineMessage("youtube",ytUserName,time.time())
         IS_PING = db.getPing()
         rolesToPing = baseSettings.YT_RERUN_ROLES_TO_PING if isRerun else baseSettings.YT_ROLES_TO_PING
         messageContent = rolesToPing + ytOnlineText if IS_PING else ytOnlineText
@@ -137,8 +137,8 @@ class Notifications:
         task = asyncio.create_task(embedMaker.getEmbed())
         kickEmbed = await task
         db = Database()
-        db.updatePlatformRowCol("kick","last_online_message",time.time())
-        db.updatePlatformAccountRowCol("kick",kickUserName,"last_online_message",time.time())
+        db.SetPlatformLastOnlineMessage("kick",time.time())
+        db.SetPlatformAccountLastOnlineMessage("kick",kickUserName,time.time())
         IS_PING = db.getPing()
         rolesToPing = baseSettings.KICK_RERUN_ROLES_TO_PING if isRerun else baseSettings.KICK_ROLES_TO_PING
         messageContent = rolesToPing + kickOnlineText if IS_PING else kickOnlineText
@@ -160,8 +160,8 @@ class Notifications:
         task = asyncio.create_task(embedMaker.getEmbed())
         cam4Embed = await task
         db = Database()
-        db.updatePlatformRowCol("cam4","last_online_message",time.time())
-        db.updatePlatformAccountRowCol("cam4",cam4UserName,"last_online_message",time.time())
+        db.SetPlatformLastOnlineMessage("cam4",time.time())
+        db.SetPlatformAccountLastOnlineMessage("cam4",cam4UserName,time.time())
         IS_PING = db.getPing()
         rolesToPing = baseSettings.CAM4_RERUN_ROLES_TO_PING if isRerun else baseSettings.CAM4_ROLES_TO_PING
         messageContent = rolesToPing + cam4OnlineText if IS_PING else cam4OnlineText
@@ -183,8 +183,8 @@ class Notifications:
         task = asyncio.create_task(embedMaker.getEmbed())
         mfcEmbed = await task
         db = Database()
-        db.updatePlatformRowCol("mfc","last_online_message",time.time())
-        db.updatePlatformAccountRowCol("mfc",mfcUserName,"last_online_message",time.time())
+        db.SetPlatformLastOnlineMessage("mfc",time.time())
+        db.SetPlatformAccountLastOnlineMessage("mfc",mfcUserName,time.time())
         IS_PING = db.getPing()
         rolesToPing = baseSettings.MFC_RERUN_ROLES_TO_PING if isRerun else baseSettings.MFC_ROLES_TO_PING
         messageContent = rolesToPing + mfcOnlineText if IS_PING else mfcOnlineText
@@ -206,8 +206,8 @@ class Notifications:
         task = asyncio.create_task(embedMaker.getEmbed())
         bcEmbed = await task
         db = Database()
-        db.updatePlatformRowCol("bongacams","last_online_message",time.time())
-        db.updatePlatformAccountRowCol("bongacams",bcUserName,"last_online_message",time.time())
+        db.SetPlatformLastOnlineMessage("bongacams",time.time())
+        db.SetPlatformAccountLastOnlineMessage("bongacams",bcUserName,time.time())
         IS_PING = db.getPing()
         rolesToPing = baseSettings.BC_RERUN_ROLES_TO_PING if isRerun else baseSettings.BC_ROLES_TO_PING
         messageContent = rolesToPing + bcOnlineText if IS_PING else bcOnlineText
@@ -229,8 +229,8 @@ class Notifications:
         task = asyncio.create_task(embedMaker.getEmbed())
         scEmbed = await task
         db = Database()
-        db.updatePlatformRowCol("stripchat","last_online_message",time.time())
-        db.updatePlatformAccountRowCol("stripchat",scUserName,"last_online_message",time.time())
+        db.SetPlatformLastOnlineMessage("stripchat",time.time())
+        db.SetPlatformAccountLastOnlineMessage("stripchat",scUserName,time.time())
         IS_PING = db.getPing()
         rolesToPing = baseSettings.SC_RERUN_ROLES_TO_PING if isRerun else baseSettings.SC_ROLES_TO_PING
         messageContent = rolesToPing + scOnlineText if IS_PING else scOnlineText
@@ -252,8 +252,8 @@ class Notifications:
         task = asyncio.create_task(embedMaker.getEmbed())
         epEmbed = await task
         db = Database()
-        db.updatePlatformRowCol("eplay","last_online_message",time.time())
-        db.updatePlatformAccountRowCol("eplay",epUserName,"last_online_message",time.time())
+        db.SetPlatformLastOnlineMessage("eplay",time.time())
+        db.SetPlatformAccountLastOnlineMessage("eplay",epUserName,time.time())
         IS_PING = db.getPing()
         rolesToPing = baseSettings.EP_RERUN_ROLES_TO_PING if isRerun else baseSettings.EP_ROLES_TO_PING
         messageContent = rolesToPing + epOnlineText if IS_PING else epOnlineText
@@ -275,8 +275,8 @@ class Notifications:
         task = asyncio.create_task(embedMaker.getEmbed())
         mvEmbed = await task
         db = Database()
-        db.updatePlatformRowCol("manyvids","last_online_message",time.time())
-        db.updatePlatformAccountRowCol("manyvids",mvUserName,"last_online_message",time.time())
+        db.SetPlatformLastOnlineMessage("manyvids",time.time())
+        db.SetPlatformAccountLastOnlineMessage("manyvids",mvUserName,time.time())
         IS_PING = db.getPing()
         rolesToPing = baseSettings.MV_RERUN_ROLES_TO_PING if isRerun else baseSettings.MV_ROLES_TO_PING
         messageContent = rolesToPing + mvOnlineText if IS_PING else mvOnlineText

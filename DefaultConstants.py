@@ -157,7 +157,7 @@ class Settings(BaseSettings):
     epUserName:list[str] = []
     mvUserName:list[str] = [] #case sensitive if you want the the avatar to be pulled
 
-    twitchUrl:str = f"https://www.example.com" #Add a valid url here or else the presence won't update properly
+    twitchUrl:str = "https://www.example.com" #Add a valid url here or else the presence won't update properly
 
     banAppealButtonMessage:str = "# To appeal a ban, click the button below and fill out the form"
     confessButtonMessage:str = "# Submit your anonymous confessions"
@@ -188,14 +188,14 @@ class Settings(BaseSettings):
     kickSubsLongLookBackDays:int = 31 # Days, how far back to look into sub history to go towards threshold
     kickLongDateRolePeriod:int = 31 # Days, how long user keeps the role before its removed
     kickShortTimeRolePeriod:int = 14 # Hours, how long user keeps role before it's removed
-    kickConnectButtonMessage:str = f"# Connect your Kick and Discord Accounts! \n ### This will allow you to gain special Discord roles when you sub on Kick"
+    kickConnectButtonMessage:str = "# Connect your Kick and Discord Accounts! \n ### This will allow you to gain special Discord roles when you sub on Kick"
     kickClipDaysLookBack:int = 30 # Number of days to look back for the weekly clip announcement
 
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
     # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. 
     # I've found this responds more reliably when you narrow down the search more. So add region, and any tags your model always uses
     cbJsonLimit:int = 500 # 500 is max. 100 is default. Limit tag will be added so that's not needed
-    cbApiUrl:str = f"https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica"
+    cbApiUrl:str = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=3pmuc&client_ip=request_ip&gender=f&region=northamerica"
     
     # Colors the line that runs vertically on the left side of the embed. Also used to color graphs
     kickEmbedColor:str = "#52fb19"

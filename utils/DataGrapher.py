@@ -1,13 +1,9 @@
 from utils.Database import Database
 import matplotlib.pyplot as plt
 import os
-from datetime import date
 from DefaultConstants import Settings as Settings
 from datetime import datetime
 from datetime import timedelta
-import matplotlib.image as mpimg
-import numpy as np
-import matplotlib.cbook as cbook
 import requests
 from matplotlib.gridspec import GridSpec
 
@@ -218,6 +214,6 @@ def GetEmoteStatsImage(prefix, days):
         ax_num.axis('off')
     
     plt.tight_layout()
-    path = f"graphs/emoteStats.png"
+    path = "graphs/emoteStats.png"
     plt.savefig(path)
     return path

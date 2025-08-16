@@ -1,5 +1,4 @@
 import hikari
-import asyncio
 from DefaultConstants import Settings as Settings
 import utils.StaticMethods as StaticMethods
 

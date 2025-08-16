@@ -33,7 +33,7 @@ kickPublicKey = ""
 kickClipCursor = ""
 kickGiftUStrings = []
 kickOauth = {}
-kickLastWebhookHeaders = ''
+kickLastAlertWebhook = 0
 kickVisitedCursors = []
 
 lastCheckTime = time.time()

@@ -1,7 +1,5 @@
 import asyncio
-import nodriver as uc
 import json
-import time
 import utils.NoDriverBrowserCreator as ndb
 import globals
 from DefaultConstants import Settings as Settings
@@ -65,8 +63,6 @@ def getStreamInfo(results):
             thumbUrl = results['livestream']['thumbnail']['url']#+ "#" + str(int(time.time()))
             icon = results['user']['profile_pic']
             isOnline = True
-        else:
-            logger.warning("error with kick checker. user is banned,wrong username supplied, or cloudflare bot detection")
     except json.decoder.JSONDecodeError:
         logger.warning("no json at kick api, bot detection site down, or cloudflare bot detection")
     return isOnline,title,thumbUrl,icon
@@ -103,7 +99,7 @@ def getApiStreamingVals(kickUserName:str, apiResponse: requests.Response):
         thumbUrl = GetThumbnail(tempThumbUrl, baseSettings.kickThumbnail)
         if kickUserName.lower() in globals.kickProfilePics:
             icon = globals.kickProfilePics[kickUserName.lower()]
-        if not kickUserName in globals.kickUserIds:
+        if kickUserName not in globals.kickUserIds:
             globals.kickUserIds[kickUserName] = userId
             subscribeWebhooks(globals.kickUserIds[kickUserName], "livestream.status.updated")
         logger.debug(apiData)
@@ -124,7 +120,7 @@ def getAccessToken():
         if response.status_code == 200:
             data = response.json()
             accessToken = data["access_token"]
-            expiresIn = data["expires_in"]
+            #expiresIn = data["expires_in"]
             tokenType = data["token_type"]
             globals.kickAccessToken = tokenType + " " + accessToken
         else:
@@ -193,7 +189,8 @@ def GetWebhookSubs()-> dict:
     return respJson
 
 def DeleteAllWebhooks():
-    if not baseSettings.kickClientId or not baseSettings.kickClientSecret: return
+    if not baseSettings.kickClientId or not baseSettings.kickClientSecret: 
+        return
     subs = GetWebhookSubs()
     if subs and 'data' in subs:
         subIds = []

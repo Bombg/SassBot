@@ -71,13 +71,13 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, us
         isOnline = isOnline if db.getRerunAnnounce() else False
         isRerun = True
     logger.debug(platformName + " +Offline|-Online: " + str((-1 * secondsSinceStreamStartTime) if isOnline else secondsSinceStreamEndTime))
-    if isOnline == True:
+    if isOnline:
         db.setRerun(isRerun, platformName)
         if secondsSinceStreamEndTime >= baseSettings.WAIT_BETWEEN_MESSAGES and secondsSinceLastMessage >= baseSettings.WAIT_BETWEEN_MESSAGES and streamEndTime >= streamStartTime:
             logger.info(f"{platformName}: Sending Notification")
             await platformNotifFunc(rest, title, thumbUrl, icon, userName, isRerun)
-            db.updatePlatformRowCol(platformName,"last_stream_start_time",time.time())
-            db.updatePlatformAccountRowCol(platformName, userName,"last_stream_start_time",time.time())
+            db.SetPlatformLastStreamStartTime(platformName,time.time())
+            db.SetPlatformAccountLastStreamStartTime(platformName, userName,time.time())
             globals.rebroadcast[platformName] = 0
         elif secondsSinceLastMessage >= baseSettings.ONLINE_MESSAGE_REBROADCAST_TIME or globals.rebroadcast[platformName]:
             logger.info(f"{platformName}: Rebroadcast Command or Rebroadcast_TIME Notification sent")
@@ -85,13 +85,13 @@ async def platformChecker(isOnlineFunc: Callable,platformNotifFunc: Callable, us
             lastOnlineMessage = time.time()
             globals.rebroadcast[platformName] = 0
         elif streamEndTime >= streamStartTime:
-            db.updatePlatformRowCol(platformName,"last_stream_start_time",time.time())
-            db.updatePlatformAccountRowCol(platformName,userName,"last_stream_start_time",time.time())
-    elif isOnline == False:
+            db.SetPlatformLastStreamStartTime(platformName,time.time())
+            db.SetPlatformAccountLastStreamStartTime(platformName,userName,time.time())
+    elif not isOnline:
         db.setRerun(isRerun, platformName)
         if streamEndTime <= streamStartTime:
-            db.updatePlatformRowCol(platformName,"last_stream_end_time",time.time())
-            db.updatePlatformAccountRowCol(platformName,userName,"last_stream_end_time",time.time())
+            db.SetPlatformLastStreamEndTime(platformName,time.time())
+            db.SetPlatformAccountLastStreamEndTime(platformName,userName,time.time())
         globals.rebroadcast[platformName] = 0
 
 @component.with_schedule
@@ -277,7 +277,7 @@ async def presenceGrabber(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> 
     async for member in members:
         memberCount += 1
         presence = member.get_presence()
-        if presence != None:
+        if presence is not None:
             status = presence.visible_status
             statusStr = str(status)
             if statusStr in statusCounts:
@@ -359,7 +359,8 @@ app = FastAPI()
 @component.with_schedule
 @tanjun.as_interval(30, max_runs=1)
 async def startWebhookServer(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if not baseSettings.webhookPort or not baseSettings.webhookHostIp: return
+    if not baseSettings.webhookPort or not baseSettings.webhookHostIp: 
+        return
     Kick.DeleteAllWebhooks() # Kick stops sending webhooks to a server that hasn't responded (down or restart). Deleting and resubbing fixes that
     app.state.restClient = rest
     await checkKick(rest)
@@ -402,7 +403,7 @@ async def OAuthCallback(code: str = None, state: str = None, error: str = None):
             status_code=401, 
             detail=f"Authorization failed. Error: {error}"
         )
-    if not state or not state in globals.kickOauth:
+    if not state or state not in globals.kickOauth:
         logger.debug("oauth state didn't match")
         raise HTTPException(
             status_code=403, 
@@ -446,8 +447,9 @@ async def OAuthCallback(code: str = None, state: str = None, error: str = None):
     return RedirectResponse(url=baseSettings.kickDiscordRedirect)
 
 async def processWebhookData(body, headers):
-    if 'kick-event-type' not in headers or headers == globals.kickLastWebhookHeaders: return
-    globals.kickLastWebhookHeaders = headers
+    if 'kick-event-type' not in headers or time.time() - globals.kickLastAlertWebhook < baseSettings.WAIT_BETWEEN_MESSAGES: 
+        return
+    globals.kickLastAlertWebhook = time.time()
     if Kick.verifyWebhook(headers, body):
         logger.debug("verified kick webhook")
         if headers['kick-event-type'] == "livestream.status.updated":
@@ -486,7 +488,8 @@ async def memberLogger(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> Non
 @component.with_schedule
 @tanjun.as_interval(30, max_runs=1)
 async def startKickWebsocket(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if not baseSettings.kickChatroomId or not baseSettings.kickChannelId: return
+    if not baseSettings.kickChatroomId or not baseSettings.kickChannelId: 
+        return
     lastLaunchTime = time.time()
     maxRetries = 3
     maxRetryWindow = 30
@@ -505,7 +508,8 @@ async def startKickWebsocket(rest: alluka.Injected[hikari.impl.RESTClientImpl]) 
 @component.with_schedule
 @tanjun.as_interval(baseSettings.ROLE_ADD_REMOVE_TIMER)
 async def AddKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if not baseSettings.hasRolePermissions: return
+    if not baseSettings.hasRolePermissions: 
+        return
     db = Database()
     subsShortThreshold = baseSettings.kickSubsShortThreshold
     subsShortLookBackHours = baseSettings.kickSubsShortLookBackHours
@@ -566,7 +570,8 @@ async def HandleLongSubRoles(rest:hikari.impl.RESTClientImpl, db:Database, longS
 @component.with_schedule
 @tanjun.as_interval(baseSettings.ROLE_ADD_REMOVE_TIMER)
 async def RemoveKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if not baseSettings.hasRolePermissions:return
+    if not baseSettings.hasRolePermissions:
+        return
     db = Database()
     longDateRolePeriod = baseSettings.kickLongDateRolePeriod
     shortTimeRolePeriod = baseSettings.kickShortTimeRolePeriod

@@ -24,7 +24,7 @@ class Database:
                 GenerateDatabase.GenerateDatabase()
             conn = sqlite3.connect("sassBot.db")
             cur = conn.cursor()
-        except sqlite3.OperationalError as e:
+        except sqlite3.OperationalError:
             try:
                 f = open("testingForLeak.txt", 'w')
                 f.close()
@@ -34,20 +34,6 @@ class Database:
                     self.logger.critical("File descriptor leak detected. Rebooting")
                     StaticMethods.rebootServer()
         return conn, cur
-    
-    def GetKickSlugFromId(self, kickId):
-        slug = ""
-        self.createKickUserTable()
-        conn, cur = self.connectCursor()
-        rowVals = (kickId,)
-        exeString = '''SELECT slug FROM kick_users WHERE id=?'''
-        cur.execute(exeString, rowVals)
-        fetch = cur.fetchall()
-        if fetch and fetch[0][0] != None:
-            slug = fetch[0][0]
-        cur.close()
-        conn.close()
-        return slug
     
     def GetAllKickEmotesWithPrefix(self, emotePrefix:str, days:int):
         emoteList = {}
@@ -73,7 +59,7 @@ class Database:
                         em = re.findall(reStringTwo, emote)
                         em = em[0]
                         emoteId = re.findall(reStringNumber, emote)
-                        if not em in emoteList:
+                        if em not in emoteList:
                             emoteList[em] = 0
                         emoteList[em] += 1
                         urls[em] = f"https://files.kick.com/emotes/{emoteId[0]}/fullsize"
@@ -110,7 +96,7 @@ class Database:
         exeString = '''SELECT clip_id FROM kick_clips where clip_creator_slug=? ORDER BY creation_date DESC'''
         cur.execute(exeString, rowVals)
         fetch = cur.fetchall()
-        if fetch and fetch[0] != None:
+        if fetch and fetch[0] is not None:
             for clipId in fetch:
                 clipIds.append(clipId[0])
         return clipIds
@@ -161,10 +147,10 @@ class Database:
             else:
                 oldviews = 0
                 clipdsToAdd.append(row)
-                if not creatorSlug in clippersClipped:
+                if creatorSlug not in clippersClipped:
                     clippersClipped[creatorSlug] = []
                 clippersClipped[creatorSlug].append(clipId)
-            if not creatorSlug in clippersViews:
+            if creatorSlug not in clippersViews:
                 clippersViews[creatorSlug] = 0
             viewIncrease = views - oldviews
             clippersViews[creatorSlug] += viewIncrease
@@ -217,7 +203,7 @@ class Database:
         self.createTempClipsTable()
         conn, cur = self.connectCursor()
         rowVals = (clipId, livestreamId, channelSlug, clipCreatorSlug, creationDate, title, views, categorySlug)
-        exeString = f'''INSERT INTO temp_kick_clips (clip_id, livestream_id, channel_slug, clip_creator_slug, creation_date, title, views, category_slug) VALUES (?,?,?,?,?,?,?,?) ON CONFLICT(clip_id) DO NOTHING'''
+        exeString = '''INSERT INTO temp_kick_clips (clip_id, livestream_id, channel_slug, clip_creator_slug, creation_date, title, views, category_slug) VALUES (?,?,?,?,?,?,?,?) ON CONFLICT(clip_id) DO NOTHING'''
         cur.execute(exeString,rowVals)
         conn.commit()
         cur.close()
@@ -250,7 +236,7 @@ class Database:
         exeString = '''SELECT channel_slug FROM kick_clips WHERE clip_id=? '''
         cur.execute(exeString, rowVal)
         fetch = cur.fetchall()
-        if fetch and fetch[0][0] != None:
+        if fetch and fetch[0][0] is not None:
             slug = fetch[0][0]
         cur.close()
         conn.close()
@@ -264,7 +250,7 @@ class Database:
         exeString = '''SELECT clip_id, title FROM kick_clips '''
         cur.execute(exeString)
         fetch = cur.fetchall()
-        if fetch and fetch[0][0] != None:
+        if fetch and fetch[0][0] is not None:
             for touple in fetch:
                 titleIdDict[touple[1]] = touple[0]
         cur.close()
@@ -289,7 +275,7 @@ class Database:
         exeString = '''SELECT channel_slug FROM kick_clips WHERE clip_id=?'''
         cur.execute(exeString,rowVal)
         fetch = cur.fetchall()
-        if fetch and fetch[0][0] != None:
+        if fetch and fetch[0][0] is not None:
             cursor = fetch[0][0]
         cur.close()
         conn.close()
@@ -313,7 +299,7 @@ class Database:
         exeString = '''SELECT clip_id from kick_clips where clip_id=? '''
         cur.execute(exeString, rowVals)
         fetch = cur.fetchall()
-        if fetch and fetch[0][0] != None:
+        if fetch and fetch[0][0] is not None:
             isScanned = False
         cur.close()
         conn.close()
@@ -353,7 +339,7 @@ class Database:
         exeString = '''SELECT slug FROM kick_users WHERE id=? '''
         cur.execute(exeString, rowVals)
         fetch = cur.fetchall()
-        if fetch and fetch[0][0] != None:
+        if fetch and fetch[0][0] is not None:
             kickSlug = fetch[0][0]
         cur.close()
         conn.close()
@@ -367,7 +353,7 @@ class Database:
         exeString = '''SELECT id FROM kick_users WHERE slug=? '''
         cur.execute(exeString, rowVals)
         fetch = cur.fetchall()
-        if fetch and fetch[0][0] != None:
+        if fetch and fetch[0][0] is not None:
             if fetch[0][0] > 0:
                 id = fetch[0][0]
         cur.close()
@@ -382,7 +368,7 @@ class Database:
         exeString = '''SELECT id,slug from kick_users '''
         cur.execute(exeString)
         fetch = cur.fetchall()
-        if fetch and fetch[0][0] != None:
+        if fetch and fetch[0][0] is not None:
             for user in fetch:
                 if user[0] > 0: #dummy kick accounts id < 0
                     kickUsers[user[1]] = user[0]
@@ -402,10 +388,10 @@ class Database:
         conn, cur = self.connectCursor()
         hasDate = False
         rowVals = (kickId,)
-        exeString = f'''SELECT short_role_date FROM kick_users WHERE id=?'''
+        exeString = '''SELECT short_role_date FROM kick_users WHERE id=?'''
         cur.execute(exeString,rowVals)
         fetch = cur.fetchall()
-        if fetch and fetch[0][0] != None:
+        if fetch and fetch[0][0] is not None:
             hasDate = True
         cur.close()
         conn.close()
@@ -416,10 +402,10 @@ class Database:
         conn, cur = self.connectCursor()
         hasDate = False
         rowVals = (kickId,)
-        exeString = f'''SELECT short_role_date FROM kick_users WHERE id=?'''
+        exeString = '''SELECT short_role_date FROM kick_users WHERE id=?'''
         cur.execute(exeString,rowVals)
         fetch = cur.fetchall()
-        if fetch and fetch[0][0] != None:
+        if fetch and fetch[0][0] is not None:
             hasDate = fetch[0][0]
         cur.close()
         conn.close()
@@ -430,10 +416,10 @@ class Database:
         conn, cur = self.connectCursor()
         hasDate = False
         rowVals = (kickId,)
-        exeString = f'''SELECT long_role_date FROM kick_users WHERE id=?'''
+        exeString = '''SELECT long_role_date FROM kick_users WHERE id=?'''
         cur.execute(exeString,rowVals)
         fetch = cur.fetchall()
-        if fetch and fetch[0][0] != None:
+        if fetch and fetch[0][0] is not None:
             hasDate = fetch[0][0]
         cur.close()
         conn.close()
@@ -444,10 +430,10 @@ class Database:
         conn, cur = self.connectCursor()
         hasDate = False
         rowVals = (kickId,)
-        exeString = f'''SELECT long_role_date FROM kick_users WHERE id=?'''
+        exeString = '''SELECT long_role_date FROM kick_users WHERE id=?'''
         cur.execute(exeString,rowVals)
         fetch = cur.fetchall()
-        if fetch and fetch[0][0] != None:
+        if fetch and fetch[0][0] is not None:
             hasDate = True
         cur.close()
         conn.close()
@@ -457,7 +443,7 @@ class Database:
         self.createKickUserTable()
         conn, cur = self.connectCursor()
         rowVals = (roledate, kickId)
-        exeString = f'''UPDATE kick_users SET long_role_date=? WHERE id=?'''
+        exeString = '''UPDATE kick_users SET long_role_date=? WHERE id=?'''
         cur.execute(exeString, rowVals)
         conn.commit()
         cur.close()
@@ -468,7 +454,7 @@ class Database:
         self.createKickUserTable()
         conn, cur = self.connectCursor()
         rowVals = (roledate, kickId)
-        exeString = f'''UPDATE kick_users SET short_role_date=? WHERE id=?'''
+        exeString = '''UPDATE kick_users SET short_role_date=? WHERE id=?'''
         cur.execute(exeString, rowVals)
         conn.commit()
         cur.close()
@@ -479,7 +465,7 @@ class Database:
         discordId = 0
         conn, cur = self.connectCursor()
         rowVals = (kickId,)
-        exeString = f'''SELECT discord_id FROM account_connections WHERE kick_id=? '''
+        exeString = '''SELECT discord_id FROM account_connections WHERE kick_id=? '''
         cur.execute(exeString,rowVals)
         fetch = cur.fetchall()
         if fetch:
@@ -493,7 +479,7 @@ class Database:
         kickId = 0
         conn, cur = self.connectCursor()
         rowVals = (discordId,)
-        exeString = f'''SELECT kick_id FROM account_connections WHERE discord_id=? '''
+        exeString = '''SELECT kick_id FROM account_connections WHERE discord_id=? '''
         cur.execute(exeString,rowVals)
         fetch = cur.fetchall()
         if fetch:
@@ -695,7 +681,7 @@ class Database:
         self.createKickClipsTable()
         conn, cur = self.connectCursor()
         rowVals = (clipId, livestreamId, channelSlug, clipCreatorSlug, creationDate, title, views, categorySlug)
-        exeString = f'''INSERT INTO kick_clips (clip_id, livestream_id, channel_slug, clip_creator_slug, creation_date, title, views, category_slug) VALUES (?,?,?,?,?,?,?,?)'''
+        exeString = '''INSERT INTO kick_clips (clip_id, livestream_id, channel_slug, clip_creator_slug, creation_date, title, views, category_slug) VALUES (?,?,?,?,?,?,?,?)'''
         cur.execute(exeString,rowVals)
         conn.commit()
         cur.close()
@@ -720,7 +706,7 @@ class Database:
         self.createAppealsTable()
         conn,cur = self.connectCursor()
         rowVals = (appeal, appealTitle, appealerId, appealerName, time.time())
-        exeString = f'''INSERT INTO appeals (appeal,appeal_title, appealer_id, appealer_name, date_added) VALUES (?,?,?,?,?)'''
+        exeString = '''INSERT INTO appeals (appeal,appeal_title, appealer_id, appealer_name, date_added) VALUES (?,?,?,?,?)'''
         cur.execute(exeString,rowVals)
         conn.commit()
         cur.close()
@@ -730,7 +716,7 @@ class Database:
         self.createConfessionsTable()
         conn,cur = self.connectCursor()
         rowVals = (confession, title, time.time())
-        exeString = f'''INSERT INTO confessions (confession,confession_title, date_added) VALUES (?,?,?)'''
+        exeString = '''INSERT INTO confessions (confession,confession_title, date_added) VALUES (?,?,?)'''
         cur.execute(exeString,rowVals)
         conn.commit()
         cur.close()
@@ -775,8 +761,9 @@ class Database:
     def setConfessionDateReviewed(self, confessionId):
         self.createConfessionsTable()
         conn, cur = self.connectCursor()
-        exeString = f'''UPDATE confessions SET date_reviewed={time.time()} WHERE confession_id={confessionId} '''
-        cur.execute(exeString)
+        rowVal = (time.time(),confessionId)
+        exeString = '''UPDATE confessions SET date_reviewed=? WHERE confession_id=? '''
+        cur.execute(exeString,rowVal)
         conn.commit()
         cur.close()
         conn.close()
@@ -784,8 +771,9 @@ class Database:
     def setAppealDateReviewed(self, appealId):
         self.createAppealsTable()
         conn, cur = self.connectCursor()
-        exeString = f'''UPDATE appeals SET date_reviewed={time.time()} WHERE appeal_id={appealId} '''
-        cur.execute(exeString)
+        rowVal = (time.time(),appealId)
+        exeString = '''UPDATE appeals SET date_reviewed=? WHERE appeal_id=? '''
+        cur.execute(exeString, rowVal)
         conn.commit()
         cur.close()
         conn.close()
@@ -794,7 +782,7 @@ class Database:
         self.createConfessionsTable()
         conn, cur = self.connectCursor()
         values = (approveDeny, reviewerId, reviewerName, time.time(), confessionId)
-        exeString = f'''UPDATE confessions SET review_status=?, reviewer_id=?, reviewer_name=?, date_reviewed=? WHERE confession_id=? '''
+        exeString = '''UPDATE confessions SET review_status=?, reviewer_id=?, reviewer_name=?, date_reviewed=? WHERE confession_id=? '''
         cur.execute(exeString,values)
         conn.commit()
         cur.close()
@@ -804,7 +792,7 @@ class Database:
         self.createAppealsTable()
         conn, cur = self.connectCursor()
         values = (approveDeny, reviewerId, reviewerName, time.time(), appealId)
-        exeString = f'''UPDATE appeals SET appeal_status=?, reviewer_id=?, reviewer_name=?, date_reviewed=? WHERE appeal_id=? '''
+        exeString = '''UPDATE appeals SET appeal_status=?, reviewer_id=?, reviewer_name=?, date_reviewed=? WHERE appeal_id=? '''
         cur.execute(exeString,values)
         conn.commit()
         cur.close()
@@ -813,7 +801,7 @@ class Database:
     def getUnfinishedConfessionReviews(self):
         self.createConfessionsTable()
         conn, cur = self.connectCursor()
-        exeString = f'''SELECT confession_id, date_reviewed FROM confessions WHERE review_status IS NULL AND date_reviewed IS NOT NULL '''
+        exeString = '''SELECT confession_id, date_reviewed FROM confessions WHERE review_status IS NULL AND date_reviewed IS NOT NULL '''
         cur.execute(exeString)
         value = cur.fetchall()
         cur.close()
@@ -823,7 +811,7 @@ class Database:
     def getUnfinishedAppealReviews(self):
         self.createAppealsTable()
         conn, cur = self.connectCursor()
-        exeString = f'''SELECT appeal_id, date_reviewed FROM appeals WHERE appeal_status IS NULL AND date_reviewed IS NOT NULL '''
+        exeString = '''SELECT appeal_id, date_reviewed FROM appeals WHERE appeal_status IS NULL AND date_reviewed IS NOT NULL '''
         cur.execute(exeString)
         value = cur.fetchall()
         cur.close()
@@ -833,8 +821,9 @@ class Database:
     def resetAppealDateReviewed(self, appealId):
         self.createAppealsTable()
         conn, cur = self.connectCursor()
-        exeString = f'''UPDATE appeals SET date_reviewed=NULL WHERE appeal_id={appealId} '''
-        cur.execute(exeString)
+        rowVal = (appealId,)
+        exeString = '''UPDATE appeals SET date_reviewed=NULL WHERE appeal_id=? '''
+        cur.execute(exeString,rowVal)
         conn.commit()
         cur.close()
         conn.close()
@@ -842,8 +831,9 @@ class Database:
     def resetConfessionDateReviewed(self, confessionId):
         self.createConfessionsTable()
         conn, cur = self.connectCursor()
-        exeString = f'''UPDATE confessions SET date_reviewed=NULL WHERE confession_id={confessionId} '''
-        cur.execute(exeString)
+        rowVal = (confessionId,)
+        exeString = '''UPDATE confessions SET date_reviewed=NULL WHERE confession_id=? '''
+        cur.execute(exeString, rowVal)
         conn.commit()
         cur.close()
         conn.close()
@@ -874,8 +864,9 @@ class Database:
         title = ""
         titleTime = 0
         conn,cur = self.connectCursor()
-        exeString = f'''SELECT temp_title, temp_title_time FROM platform_accounts WHERE platform_name='{platform}' AND account_name='{accountName}' '''
-        cur.execute(exeString)
+        rowVals = (platform, accountName)
+        exeString = '''SELECT temp_title, temp_title_time FROM platform_accounts WHERE platform_name=? AND account_name=? '''
+        cur.execute(exeString, rowVals)
         values = cur.fetchall()
         if values:
             title = values[0][0]
@@ -887,12 +878,12 @@ class Database:
     def getPlatformAccountNames(self,platform:str):
         conn,cur = self.connectCursor()
         names= []
-        exeString = f'''SELECT account_name FROM platform_accounts WHERE platform_name='{platform}' '''
-        if self.isExists(exeString):
-            cur.execute(exeString)
-            namesList = cur.fetchall()
-            for name in namesList:
-                names.append(name[0])
+        rowVals = (platform,)
+        exeString = '''SELECT account_name FROM platform_accounts WHERE platform_name=? '''
+        cur.execute(exeString,rowVals)
+        namesList = cur.fetchall()
+        for name in namesList:
+            names.append(name[0])
         cur.close()
         conn.close()
         return names
@@ -906,9 +897,10 @@ class Database:
         self.createPlatformAccountsTable()
         self.checkAddTitleCols()
         conn,cur = self.connectCursor()
+        rowVals = (title, time.time(), platform, accountName)
         if self.doesAccountExist(platform, accountName):
-            exeString = f'''UPDATE platform_accounts SET temp_title='{title}', temp_title_time={time.time()} WHERE platform_name='{platform}' AND account_name='{accountName}' '''
-            cur.execute(exeString)
+            exeString = '''UPDATE platform_accounts SET temp_title=?, temp_title_time=? WHERE platform_name=? AND account_name=? '''
+            cur.execute(exeString,rowVals)
             conn.commit()
             cur.close()
             conn.close()
@@ -944,20 +936,42 @@ class Database:
     def getPlatformAccountsRowValues(self, platformName, accountName):
         self.createPlatformAccountsTable()
         conn,cur = self.connectCursor()
-        exeString = f'''SELECT last_online_message,last_stream_start_time,last_stream_end_time FROM platform_accounts WHERE platform_name='{platformName}' AND account_name='{accountName}' '''
-        if not self.isExists(exeString):
+        rowVals = (platformName, accountName)
+        exeString = '''SELECT last_online_message,last_stream_start_time,last_stream_end_time FROM platform_accounts WHERE platform_name=? AND account_name=? '''
+        if not self.isExists(exeString, rowVals=rowVals):
             self.createNewPlatformAccount(accountName, platformName)
-        cur.execute(exeString)
+        cur.execute(exeString,rowVals)
         value = cur.fetchall()
         cur.close()
         conn.close()
         return value[0][0],value[0][1],value[0][2]
     
-    def updatePlatformAccountRowCol(self,platformName,accountName,col,newValue):
+    def SetPlatformAccountLastOnlineMessage(self, platformName:str, accountName:str, time:int):
+        self.createPlatformAccountsTable()
+        conn, cur = self.connectCursor()
+        rowVals = (time, platformName, accountName)
+        exeString = '''UPDATE platform_accounts SET last_online_message=? WHERE platform_name=? AND account_name=? '''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    def SetPlatformAccountLastStreamStartTime(self,platformName:str, accountName:str, time:int):
+        self.createPlatformAccountsTable()
+        conn, cur = self.connectCursor()
+        rowVals = (time, platformName, accountName)
+        exeString = '''UPDATE platform_accounts SET last_stream_start_time=? WHERE platform_name=? AND account_name=? '''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def SetPlatformAccountLastStreamEndTime(self, platformName:str, accountName:str, time:int):
         self.createPlatformAccountsTable()
         conn,cur = self.connectCursor()
-        exeString = f'''UPDATE platform_accounts SET {col}={newValue} WHERE platform_name='{platformName}' AND account_name='{accountName}' '''
-        cur.execute(exeString)
+        rowVals = (time,platformName, accountName)
+        exeString = '''UPDATE platform_accounts SET last_stream_end_time=? WHERE platform_name=? AND account_name=? '''
+        cur.execute(exeString, rowVals)
         conn.commit()
         cur.close()
         conn.close()
@@ -967,8 +981,9 @@ class Database:
         self.checkAddRerunCols()
         conn,cur = self.connectCursor()
         tFalse = 1 if isRerun else 0
-        exeString = f'''UPDATE platforms SET rerun_playing={tFalse} WHERE platform_name='{platform}' '''
-        cur.execute(exeString)
+        rowVals = (tFalse, platform)
+        exeString = '''UPDATE platforms SET rerun_playing=? WHERE platform_name=? '''
+        cur.execute(exeString, rowVals)
         conn.commit()
         cur.close()
         conn.close()
@@ -977,37 +992,49 @@ class Database:
         isRerun = 0
         self.checkAddRerunCols()
         conn, cur = self.connectCursor()
-        exeString = f'''SELECT rerun_playing FROM platforms WHERE platform_name='{platform}' '''
-        cur.execute(exeString)
+        rowVals = (platform,)
+        exeString = '''SELECT rerun_playing FROM platforms WHERE platform_name=? '''
+        cur.execute(exeString, rowVals)
         value = cur.fetchall()
         cur.close()
         conn.close()
-        if value[0][0] != None:
+        if value[0][0] is not None:
             isRerun = value[0][0]
         return isRerun
-
-    def updatePlatformRowCol(self,rowKey,col,newValue):
-        conn,cur = self.connectCursor()
-        exeString = f'''UPDATE platforms SET {col}={newValue} WHERE platform_name='{rowKey}' '''
-        cur.execute(exeString)
+    
+    def SetPlatformLastOnlineMessage(self, paltformname, time):
+        conn, cur = self.connectCursor()
+        rowVals = (time, paltformname)
+        exeString = '''UPDATE platforms SET last_online_message=? WHERE platform_name=? '''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def SetPlatformLastStreamEndTime(self, platformName, time):
+        conn, cur = self.connectCursor()
+        rowVals = (time, platformName)
+        exeString = '''UPDATE platforms SET last_stream_end_time=? WHERE platform_name=? '''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def SetPlatformLastStreamStartTime(self, platformName, time):
+        conn, cur = self.connectCursor()
+        rowVals = (time, platformName)
+        exeString = '''UPDATE platforms SET last_stream_start_time=? WHERE platform_name=? '''
+        cur.execute(exeString, rowVals)
         conn.commit()
         cur.close()
         conn.close()
 
-    def getPlatformsRowCol(self, rowKey, col):
-        conn,cur = self.connectCursor()
-        exeString = f'''SELECT {col} FROM platforms WHERE platform_name='{rowKey}' '''
-        cur.execute(exeString)
-        value = cur.fetchall()
-        cur.close()
-        conn.close()
-        return value[0][0]
-    
     def getPlatformsRowValues(self, platformName):
         self.checkAddPlatformRow(platformName)
         conn,cur = self.connectCursor()
-        exeString = f'''SELECT last_online_message,last_stream_start_time,last_stream_end_time FROM platforms WHERE platform_name='{platformName}' '''
-        cur.execute(exeString)
+        rowVal = (platformName,)
+        exeString = '''SELECT last_online_message,last_stream_start_time,last_stream_end_time FROM platforms WHERE platform_name=? '''
+        cur.execute(exeString,rowVal)
         value = cur.fetchall()
         cur.close()
         conn.close()
@@ -1015,8 +1042,9 @@ class Database:
         return value[0][0],value[0][1],value[0][2], isRerun
     
     def checkAddPlatformRow(self,platformName):
-        exeString = f'''SELECT * FROM platforms WHERE platform_name='{platformName}' '''
-        isExists = self.isExists(exeString)
+        exeString = '''SELECT * FROM platforms WHERE platform_name=? '''
+        rowVal = (platformName,)
+        isExists = self.isExists(exeString, rowVals=rowVal)
         if not isExists:
             conn,cur = self.connectCursor()
             rowVals =(platformName,0,0,0)
@@ -1029,8 +1057,9 @@ class Database:
     def startSubathon(self,epochTime):
         conn,cur = self.connectCursor()
         subTrue = 1
-        exeString = f'''UPDATE subathon SET subathon={subTrue}, start_time={epochTime}  '''
-        cur.execute(exeString)
+        rowVals = (subTrue, epochTime)
+        exeString = '''UPDATE subathon SET subathon=?, start_time=?  '''
+        cur.execute(exeString,rowVals)
         conn.commit()
         cur.close()
         conn.close()
@@ -1038,15 +1067,16 @@ class Database:
     def endSubathon(self,epochTime):
         conn,cur = self.connectCursor()
         subFalse = 0
-        exeString = f'''UPDATE subathon SET subathon={subFalse}, end_time={epochTime}  '''
-        cur.execute(exeString)
+        rowVals = (subFalse, epochTime)
+        exeString = '''UPDATE subathon SET subathon=?, end_time=?  '''
+        cur.execute(exeString, rowVals)
         conn.commit()
         cur.close()
         conn.close()
 
     def getSubathonStatus(self):
         conn,cur = self.connectCursor()
-        exeString = f'''SELECT subathon,start_time,end_time FROM subathon'''
+        exeString = '''SELECT subathon,start_time,end_time FROM subathon'''
         cur.execute(exeString)
         value = cur.fetchall()
         cur.close()
@@ -1062,7 +1092,7 @@ class Database:
     
     def getSubathonLongest(self):
         conn,cur = self.connectCursor()
-        exeString = f'''SELECT longest_subathon FROM subathon'''
+        exeString = '''SELECT longest_subathon FROM subathon'''
         cur.execute(exeString)
         value = cur.fetchall()
         cur.close()
@@ -1071,7 +1101,7 @@ class Database:
     
     def getSubathonLongestTime(self):
         conn,cur = self.connectCursor()
-        exeString = f'''SELECT longest_subathon,longest_subathon_time FROM subathon'''
+        exeString = '''SELECT longest_subathon,longest_subathon_time FROM subathon'''
         cur.execute(exeString)
         value = cur.fetchall()
         cur.close()
@@ -1080,8 +1110,9 @@ class Database:
     
     def setLongestSubathon(self,subathonLength,subathonStartTime):
         conn,cur = self.connectCursor()
-        exeString = f'''UPDATE subathon SET longest_subathon={subathonLength},longest_subathon_time={subathonStartTime}  '''
-        cur.execute(exeString)
+        rowVals = (subathonLength, subathonStartTime)
+        exeString = '''UPDATE subathon SET longest_subathon=?,longest_subathon_time=?  '''
+        cur.execute(exeString, rowVals)
         conn.commit()
         cur.close()
         conn.close()
@@ -1091,8 +1122,9 @@ class Database:
         self.checkAddRerunCols()
         conn,cur = self.connectCursor()
         tFalse = 1 if isAnnounce else 0
-        exeString = f'''UPDATE stream SET rerun_ping={tFalse}'''
-        cur.execute(exeString)
+        rowVals = (tFalse,)
+        exeString = '''UPDATE stream SET rerun_ping=?'''
+        cur.execute(exeString,rowVals)
         conn.commit()
         cur.close()
         conn.close()
@@ -1101,18 +1133,18 @@ class Database:
         isRerun = 0
         self.checkAddRerunCols()
         conn, cur = self.connectCursor()
-        exeString = f'''SELECT rerun_ping FROM stream '''
+        exeString = '''SELECT rerun_ping FROM stream '''
         cur.execute(exeString)
         value = cur.fetchall()
         cur.close()
         conn.close()
-        if value[0][0] != None:
+        if value[0][0] is not None:
             isRerun = value[0][0]
         return isRerun
 
     def getStreamTableValues(self):
         conn,cur = self.connectCursor()
-        exeString = f'''SELECT last_online,last_offline,last_stream_length FROM stream'''
+        exeString = '''SELECT last_online,last_offline,last_stream_length FROM stream'''
         cur.execute(exeString)
         value = cur.fetchall()
         cur.close()
@@ -1121,31 +1153,34 @@ class Database:
     
     def setStreamLastOnline(self,lastOnline):
         conn,cur = self.connectCursor()
-        exeString = f'''UPDATE stream SET last_online={lastOnline} '''
-        cur.execute(exeString)
+        rowVal = (lastOnline,)
+        exeString = '''UPDATE stream SET last_online=? '''
+        cur.execute(exeString,rowVal)
         conn.commit()
         cur.close()
         conn.close()
     
     def setStreamLastOffline(self,lastOffline):
         conn,cur = self.connectCursor()
-        exeString = f'''UPDATE stream SET last_offline={lastOffline} '''
-        cur.execute(exeString)
+        rowVal = (lastOffline,)
+        exeString = '''UPDATE stream SET last_offline=? '''
+        cur.execute(exeString,rowVal)
         conn.commit()
         cur.close()
         conn.close()
     
     def setStreamLastStreamLength(self,lastStreamLength):
         conn,cur = self.connectCursor()
-        exeString = f'''UPDATE stream SET last_stream_length={lastStreamLength} '''
-        cur.execute(exeString)
+        rowVal = (lastStreamLength,)
+        exeString = '''UPDATE stream SET last_stream_length=? '''
+        cur.execute(exeString, rowVal)
         conn.commit()
         cur.close()
         conn.close()
     
     def getTwImgStuff(self):
         conn,cur = self.connectCursor()
-        exeString = f'''SELECT tw_img_list,tw_img_queue, img_banned_list FROM stream'''
+        exeString = '''SELECT tw_img_list,tw_img_queue, img_banned_list FROM stream'''
         cur.execute(exeString)
         value = cur.fetchall()
         if value[0][2] is None:
@@ -1165,8 +1200,9 @@ class Database:
     def setBannedList(self, bannedList):
         conn,cur = self.connectCursor()
         bannedListDump = json.dumps(bannedList)
-        exeString = f'''UPDATE stream SET img_banned_list='{bannedListDump}' '''
-        cur.execute(exeString)
+        rowVal = (bannedListDump,)
+        exeString = '''UPDATE stream SET img_banned_list=? '''
+        cur.execute(exeString,rowVal)
         conn.commit()
         cur.close()
         conn.close()
@@ -1174,8 +1210,9 @@ class Database:
     def setTwImgList(self,twImgList):
         conn,cur = self.connectCursor()
         twImgListDump = json.dumps(twImgList)
-        exeString = f'''UPDATE stream SET tw_img_list='{twImgListDump}' '''
-        cur.execute(exeString)
+        rowVal = (twImgListDump,)
+        exeString = '''UPDATE stream SET tw_img_list=? '''
+        cur.execute(exeString,rowVal)
         conn.commit()
         cur.close()
         conn.close()
@@ -1183,23 +1220,25 @@ class Database:
     def setTwImgQueue(self,twImgQueue):
         conn,cur = self.connectCursor()
         twImgQueueDump = json.dumps(twImgQueue)
-        exeString = f'''UPDATE stream SET tw_img_queue='{twImgQueueDump}' '''
-        cur.execute(exeString)
+        rowVal = (twImgQueueDump,)
+        exeString = '''UPDATE stream SET tw_img_queue=? '''
+        cur.execute(exeString,rowVal)
         conn.commit()
         cur.close()
         conn.close()
 
     def setImgPin(self, epochTime: int, url: str) -> None:
         conn,cur = self.connectCursor()
-        exeString = f'''UPDATE stream SET img_pin={epochTime}, img_pin_url='{url}' '''
-        cur.execute(exeString)
+        rowVals = (epochTime, url)
+        exeString = '''UPDATE stream SET img_pin=?, img_pin_url=? '''
+        cur.execute(exeString, rowVals)
         conn.commit()
         cur.close()
         conn.close()
     
     def getImgPin(self):
         conn,cur = self.connectCursor()
-        exeString = f'''SELECT img_pin, img_pin_url FROM stream '''
+        exeString = '''SELECT img_pin, img_pin_url FROM stream '''
         cur.execute(exeString)
         value = cur.fetchall()
         cur.close()
@@ -1208,7 +1247,7 @@ class Database:
     
     def getPing(self):
         conn,cur = self.connectCursor()
-        exeString = f'''SELECT everyone_ping FROM stream '''
+        exeString = '''SELECT everyone_ping FROM stream '''
         cur.execute(exeString)
         value = cur.fetchall()
         ping = False
@@ -1221,24 +1260,27 @@ class Database:
     def setPing(self, ifPing: bool) -> None:
         conn,cur = self.connectCursor()
         ping = 1 if ifPing else 0
-        exeString = f'''UPDATE stream SET everyone_ping={ping} '''
-        cur.execute(exeString)
+        rowVal = (ping,)
+        exeString = '''UPDATE stream SET everyone_ping=? '''
+        cur.execute(exeString, rowVal)
         conn.commit()
         cur.close()
         conn.close()
     
     # User_Presence_Stats Table Methods
     def isPresDateExists(self, dataDate: date) -> bool:
-        exeString = f'''SELECT user_presences FROM user_presence_stats WHERE date='{dataDate}' '''
-        isExists = self.isExists(exeString)
+        rowVal = (dataDate,)
+        exeString = '''SELECT user_presences FROM user_presence_stats WHERE date=? '''
+        isExists = self.isExists(exeString, rowVal)
         return isExists
     
     def getPresenceDay(self,dataDate: date) -> dict:
         conn,cur = self.connectCursor()
         presenceDict = {}
-        exeString = f'''SELECT user_presences FROM user_presence_stats WHERE date='{dataDate}' '''
-        if self.isExists(exeString):
-            cur.execute(exeString)
+        rowVal = (dataDate,)
+        exeString = '''SELECT user_presences FROM user_presence_stats WHERE date=? '''
+        if self.isExists(exeString, rowVals=rowVal):
+            cur.execute(exeString,rowVal)
             value = cur.fetchall()
             presenceDict = json.loads(value[0][0])
         elif str(dataDate) == str(date.today()):
@@ -1256,8 +1298,9 @@ class Database:
     def setPresenceDay(self, dataDate: date, presenceDict: dict) -> None:
         conn,cur = self.connectCursor()
         presenceDictDump = json.dumps(presenceDict)
-        exeString = f'''UPDATE user_presence_stats SET user_presences='{presenceDictDump}' WHERE date = '{dataDate}' '''
-        cur.execute(exeString)
+        rowVals = (presenceDictDump, dataDate)
+        exeString = '''UPDATE user_presence_stats SET user_presences=? WHERE date = ? '''
+        cur.execute(exeString,rowVals)
         conn.commit()
         cur.close()
         conn.close()
@@ -1283,12 +1326,15 @@ class Database:
         return value
     
     # Helper Functions
-    def isExists(self,query: str) -> bool:
+    def isExists(self,query: str,rowVals = ()) -> bool:
         conn,cur = self.connectCursor()
         exists = f"SELECT EXISTS({query})"
         isExists = False
         try:
-            cur.execute(exists)
+            if not rowVals:
+                cur.execute(exists)
+            else:
+                cur.execute(exists,rowVals)
             value = cur.fetchall()
             isExists = value[0][0]
         except sqlite3.OperationalError:
