@@ -4,7 +4,7 @@
 # /home/bombg/Repos/SassBot/Constants.py:/opt/SassBot/Constants.py 
 # Becomes
 # /Example/Repos/SassBot/Constants.py:/opt/SassBot/Constants.py -- Right side of the colon stays the same
-# Make sure you've edited Constants, created the /secrets/token file AND generated the database before you start the image (Follow intructions Steps 1-6)
+# Make sure you've created the .env and added vars to it from .envExamples (or rename .envExamples to .env) (Follow intructions Steps 1-5)
 services:
   sassbot:
     image: ghcr.io/bombg/sassbot:latest
