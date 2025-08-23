@@ -40,8 +40,8 @@ services:
 
 # services:
 #   sassbot:
-#     image: ghcr.io/bombg/sassbot:experimental
-#     container_name: Faebot
+#     image: ghcr.io/bombg/sassbot:latest
+#     container_name: Sassbot
 #     volumes:
 #       - /home/bombg/Repos/SassBot/.env:/opt/SassBot/.env
 #       - /home/bombg/Repos/SassBot/sassBot.db:/opt/SassBot/sassBot.db
@@ -62,7 +62,7 @@ services:
 #       options:
 #          max-size: "50m"
 #     healthcheck:
-#       test: curl --fail http://localhost:5060/health || exit 1
+#       test: curl --fail http://localhost:6061/health || exit 1
 #       interval: 30s        # Check every 30 seconds
 #       timeout: 10s         # Allow up to 10 seconds for response
 #       start_period: 90s    # Wait 90 seconds before first check
