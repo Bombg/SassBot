@@ -27,6 +27,20 @@ moderationGroupY = tanjun.slash_command_group("ymod", "commands only moderators 
 logger = logging.getLogger(__name__)
 logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
+@tanjun.with_int_slash_option("days", "Number of days to look back", default=30)
+@moderationGroupY.as_sub_command("kick-prefix-report", "Get most common emote prixes used in chat", default_to_ephemeral=True, always_defer=True)
+@CommandLogger
+async def KickPrefixLookUp(ctx: tanjun.abc.SlashContext, days:int) -> None:
+    maxListLength = 1800
+    db = Database()
+    prefixes = db.GetAllEmotePrefixUsage(days)
+    prefixList = ""
+    for prefix, number in prefixes.items():
+        prefixList += f"{prefix}:{number}" +"\n"
+        if len(prefixList) > maxListLength:
+            break
+    await ctx.respond(content = prefixList)
+
 @tanjun.with_str_slash_option("prefix", "prefix of the emote you want to check")
 @tanjun.with_int_slash_option("days", "number of days to look back", default=30)
 @moderationGroupY.as_sub_command("kick-emote-report", "Get stats on kick emotes of a given prefix", default_to_ephemeral=True, always_defer=True)

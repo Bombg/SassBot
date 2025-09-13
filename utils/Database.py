@@ -10,6 +10,7 @@ from DefaultConstants import Settings as Settings
 import GenerateDatabase
 import os
 import re
+from difflib import SequenceMatcher
 
 baseSettings = Settings()
 
@@ -35,6 +36,58 @@ class Database:
                     StaticMethods.rebootServer()
         return conn, cur
     
+    def GetAllEmotePrefixUsage(self, days:int):
+        self.createKickChatTable()
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT content, date FROM kick_chat ORDER BY date DESC'''
+        cur.execute(exeString)
+        reString = r"\[emote:\d+:[a-zA-Z]+\]"
+        row = cur.fetchone()
+        flag = True
+        prefixCounts = {}
+        minUserLength = 4
+        emoteSet = set()
+        while row and flag:
+            msgSentAt = datetime.datetime.fromisoformat(row[1])
+            threshold = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=days)
+            if msgSentAt > threshold:
+                emotes = re.findall(reString, row[0])
+                for emote in emotes:
+                    emote = emote.replace("[","")
+                    emote = emote.replace("]", "")
+                    emote = emote.split(":")[2]
+                    emoteSet.add(emote)
+                    for setEmote in emoteSet:
+                        match = SequenceMatcher(None, setEmote, emote).find_longest_match()
+                        if match.size >= minUserLength and match.size < len(emote) and match.a == 0 and match.b == 0:
+                            prefix = emote[match.b : match.b + match.size]
+                            if prefix not in prefixCounts:
+                                prefixCounts[prefix] = 0
+                            prefixCounts[prefix] +=1
+                            break
+            else:
+                flag = False
+            row = cur.fetchone()
+        prefixCounts = dict(sorted(prefixCounts.items(), key=lambda item: item[1], reverse=True))
+        newCounts = {}
+        hasDouble = {}
+        cur.close()
+        conn.close()
+        for prefix, count in prefixCounts.items():
+            hasDouble[prefix] = False
+            for prefixTwo, countTwo in prefixCounts.items():
+                match = SequenceMatcher(None, prefix, prefixTwo).find_longest_match()
+                if prefixCounts[prefixTwo] > 0 and prefix != prefixTwo and match.size >= minUserLength and match.a == 0 and match.b == 0 and (match.size == len(prefix) or match.size == len(prefixTwo)) :
+                    if prefix not in newCounts:
+                        newCounts[prefix] = count
+                    newCounts[prefix] += countTwo
+                    prefixCounts[prefixTwo] = 0
+                    hasDouble[prefix] = True
+            if not hasDouble[prefix] and prefixCounts[prefix] > 0:
+                newCounts[prefix] = count
+            prefixCounts[prefix] = 0
+        return newCounts
+
     def GetAllKickEmotesWithPrefix(self, emotePrefix:str, days:int):
         emoteList = {}
         urls = {}

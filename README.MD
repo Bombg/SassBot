@@ -69,6 +69,7 @@
     - /kick-get-from-discord - Get the Kick usernername of a Discord member 
     - /kick-manual-connect - Manually connect someone's Kick account if you're sure who they are
     - /kick-emote-report - Get information about a specific emote prefix
+    - /kick-prefix-report - Get the most common emote prefixes used in chat
 
 ## Quick Setup Example
 - Read 'How to set up the bot' section if you don't know how to get some of these vars.
@@ -129,6 +130,9 @@ services:
 4. If the requesting ip is in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 9/13/2025
+    - Added kick-prefix-report command
+        - Lists the most common emote prefixes used in chat
 - 8/10/2025
     - Day or two after last release Kick got more strict with some non public APIs
     - Fixed non api Kick checker
