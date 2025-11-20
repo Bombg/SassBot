@@ -599,7 +599,7 @@ class Database:
         row = cur.fetchone()
         shortSubCounts = {}
         idNameDict = {}
-        kicksPerSubEquivalent = 500
+        kicksPerSubEquivalent = baseSettings.kickKicksToSub
         while row:
             subTime = datetime.datetime.fromisoformat(row[4])
             shortThreshhold = datetime.datetime.now(datetime.timezone.utc) - timedelta(hours=hours)
@@ -648,7 +648,7 @@ class Database:
         row = cur.fetchone()
         longSubCounts = {}
         idNameDict = {}
-        kicksPerSubEquivalent = 500
+        kicksPerSubEquivalent = baseSettings.kickKicksToSub
         while row:
             subTime = datetime.datetime.fromisoformat(row[4])
             longThreshhold = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=days)
