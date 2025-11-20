@@ -382,7 +382,33 @@ class Database:
         cur.close()
         conn.close()
         return subDate
-
+    
+    def GetLastKicksDate(self,kickId) -> str:
+        self.createKickKicksTable()
+        subDate = ''
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT kicks_id,user_id, date_iso from kick_kicks ORDER BY kicks_id DESC'''
+        cur.execute(exeString)
+        row = cur.fetchone()
+        while row and not subDate:
+            if row[1] == kickId:
+                subDate = row[2]
+            row = cur.fetchone()
+        cur.close()
+        conn.close()
+        return subDate
+    
+    def GetLastSubKicksDate(self, kickId):
+        lastSubDate = self.GetLastSubDate(kickId)
+        lastSubDateObj = datetime.datetime.fromisoformat(lastSubDate)
+        lastKicksDate = self.GetLastKicksDate(kickId)
+        lastKicksDateObj = datetime.datetime.fromisoformat(lastKicksDate)
+        lastDate = ""
+        if lastSubDateObj > lastKicksDateObj:
+            lastDate = lastSubDate
+        else:
+            lastDate = lastKicksDate
+        return lastDate
     
     def GetKickSlugFromId(self, kickId:int) -> str:
         self.createKickUserTable()
@@ -541,7 +567,7 @@ class Database:
         conn.close()
         return kickId
     
-    def GetSubTimeHours(self,hours, subTreshhold):
+    def GetSubTimeHours(self,hours):
         self.createKickSubTable()
         conn, cur = self.connectCursor()
         exeString = '''SELECT * from kick_subs ORDER BY sub_id DESC'''
@@ -563,13 +589,34 @@ class Database:
             row = cur.fetchone()
         cur.close()
         conn.close()
-        shortList = {}
-        for id in shortSubCounts:
-            if shortSubCounts[id] >= subTreshhold:
-                shortList[id] = idNameDict[id]
-        return shortList
+        return shortSubCounts,idNameDict
     
-    def GetSubTimeDays(self,days, subThreshold):
+    def GetKicksTimeHours(self,hours):
+        self.createKickKicksTable()
+        conn, cur = self.connectCursor()
+        exeString = '''SELECT * from kick_kicks ORDER BY kicks_id DESC'''
+        cur.execute(exeString)
+        row = cur.fetchone()
+        shortSubCounts = {}
+        idNameDict = {}
+        kicksPerSubEquivalent = 500
+        while row:
+            subTime = datetime.datetime.fromisoformat(row[4])
+            shortThreshhold = datetime.datetime.now(datetime.timezone.utc) - timedelta(hours=hours)
+            if row[1] not in idNameDict:
+                idNameDict[row[1]] = row[2]
+            if subTime > shortThreshhold: # larger is newer
+                if row[1] not in shortSubCounts:
+                    shortSubCounts[row[1]] = 0
+                shortSubCounts[row[1]] += row[3] / kicksPerSubEquivalent
+            else:
+                break
+            row = cur.fetchone()
+        cur.close()
+        conn.close()
+        return shortSubCounts, idNameDict
+    
+    def GetSubTimeDays(self,days):
         self.createKickSubTable()
         conn, cur = self.connectCursor()
         exeString = '''SELECT * from kick_subs ORDER BY sub_id DESC'''
@@ -591,11 +638,74 @@ class Database:
             row = cur.fetchone()
         cur.close()
         conn.close()
+        return longSubCounts, idNameDict
+    
+    def GetKicksTimeDays(self, days):
+        self.createKickKicksTable()
+        conn, cur = self.connectCursor()
+        exeString = """SELECT * from kick_kicks ORDER BY kicks_id DESC"""
+        cur.execute(exeString)
+        row = cur.fetchone()
+        longSubCounts = {}
+        idNameDict = {}
+        kicksPerSubEquivalent = 500
+        while row:
+            subTime = datetime.datetime.fromisoformat(row[4])
+            longThreshhold = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=days)
+            #row[1] - id
+            #row[2] = name
+            #row[3] = kicksgifted
+            if row[1] not in idNameDict:
+                idNameDict[row[1]] = row[2]
+            if subTime > longThreshhold:  # larger is newer
+                if row[1] not in longSubCounts:
+                    longSubCounts[row[1]] = 0
+                longSubCounts[row[1]] += row[3] / kicksPerSubEquivalent
+            else:
+                break
+            row = cur.fetchone()
+        cur.close()
+        conn.close()
+        return longSubCounts, idNameDict
+    
+    def GetKicksSubsLongList(self, days, subThreshold):
+        subsLongList, subsIdNameDict  = self.GetSubTimeDays(days)
+        kicksLongList, kicksIdNameDict = self.GetKicksTimeDays(days)
+        idNameDict = subsIdNameDict | kicksIdNameDict
+        longSubCounts = subsLongList.copy()
+        for k, v in kicksLongList.items():
+            if k in longSubCounts:
+                longSubCounts[k] = longSubCounts[k] + v
+            else:
+                longSubCounts[k] = v
         longList = {}
         for id in longSubCounts:
             if longSubCounts[id] >= subThreshold:
                 longList[id] = idNameDict[id]
         return longList
+    
+    def GetKicksSubsShortList(self, hours, subThreshold):
+        subsShortList, subsIdNameDict  = self.GetSubTimeHours(hours)
+        kicksShortList, kicksIdNameDict = self.GetKicksTimeHours(hours)
+        idNameDict = subsIdNameDict | kicksIdNameDict
+        shortSubCounts = subsShortList.copy()
+        for k, v in kicksShortList.items():
+            if k in shortSubCounts:
+                shortSubCounts[k] = shortSubCounts[k] + v
+            else:
+                shortSubCounts[k] = v
+        shortList = {}
+        for id in shortSubCounts:
+            if shortSubCounts[id] >= subThreshold:
+                shortList[id] = idNameDict[id]
+        return shortList
+
+    def createKickKicksTable(self):
+        conn, cur = self.connectCursor()
+        GenerateDatabase.CreateKickKicksTable(cur)
+        conn.commit()
+        cur.close()
+        conn.close()
     
     def createKickChatTable(self):
         conn, cur = self.connectCursor()
@@ -667,6 +777,18 @@ class Database:
                         refresh_token= COALESCE(excluded.refresh_token, refresh_token),
                         email= COALESCE(excluded.email, email)
                     '''
+        cur.execute(exeString, rowVals)
+        conn.commit()
+        cur.close()
+        conn.close()
+    
+    def insertKickKicks(self, gifterId:int, gifterSlug:str, numKicks:int, date:str, channel:str):
+        self.createKickKicksTable()
+        gifterSlug = gifterSlug.lower()
+        self.insertKickUser(gifterId, gifterSlug)
+        conn, cur = self.connectCursor()
+        rowVals = (gifterId, gifterSlug, numKicks, date, channel)
+        exeString = """INSERT INTO kick_kicks (user_id, user_slug, kicks_gifted, date_iso, channel) VALUES(?,?,?,?,?)"""
         cur.execute(exeString, rowVals)
         conn.commit()
         cur.close()
