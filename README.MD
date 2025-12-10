@@ -130,6 +130,8 @@ services:
 4. If the requesting ip is in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 12/10/2025
+    - Added support for Kick Kicks for roles
 - 9/13/2025
     - Added kick-prefix-report command
         - Lists the most common emote prefixes used in chat

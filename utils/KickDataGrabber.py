@@ -176,6 +176,23 @@ async def connectKickWebSockets():
                     elif data['event'] == 'GiftsLeaderboardUpdated':
                         #{"event":"GiftsLeaderboardUpdated","data":"{\"leaderboard\":[{\"user_id\":3315987,\"username\":\"TH3_ST4B_H4PPY\",\"quantity\":2469},{\"user_id\":4984014,\"username\":\"Andygreenwood2014\",\"quantity\":2312},{\"user_id\":538703,\"username\":\"GamerGabe\",\"quantity\":806},{\"user_id\":960630,\"username\":\"edubz5184\",\"quantity\":514},{\"user_id\":35809627,\"username\":\"LaskaTheDanishViking\",\"quantity\":416},{\"user_id\":43644314,\"username\":\"peque5040\",\"quantity\":390},{\"user_id\":26634199,\"username\":\"StrawHat85\",\"quantity\":312},{\"user_id\":38875468,\"username\":\"Psycilocibin\",\"quantity\":290},{\"user_id\":49795136,\"username\":\"Ridindirty001\",\"quantity\":252},{\"user_id\":45092496,\"username\":\"kingblackshaft\",\"quantity\":250}],\"weekly_leaderboard\":[{\"user_id\":8348691,\"username\":\"allehej\",\"quantity\":40},{\"user_id\":3315987,\"username\":\"TH3_ST4B_H4PPY\",\"quantity\":25},{\"user_id\":32793864,\"username\":\"Gator6989\",\"quantity\":5},{\"user_id\":45092496,\"username\":\"kingblackshaft\",\"quantity\":5},{\"user_id\":4984014,\"username\":\"Andygreenwood2014\",\"quantity\":5},{\"user_id\":3450843,\"username\":\"Lukeus\",\"quantity\":2},{\"user_id\":1903856,\"username\":\"the_fire_tiger\",\"quantity\":2},{\"user_id\":69907818,\"username\":\"R1ckyBoo\",\"quantity\":1}],\"monthly_leaderboard\":[{\"user_id\":3315987,\"username\":\"TH3_ST4B_H4PPY\",\"quantity\":277},{\"user_id\":4984014,\"username\":\"Andygreenwood2014\",\"quantity\":182},{\"user_id\":43644314,\"username\":\"peque5040\",\"quantity\":115},{\"user_id\":45092496,\"username\":\"kingblackshaft\",\"quantity\":113},{\"user_id\":538703,\"username\":\"GamerGabe\",\"quantity\":50},{\"user_id\":63805513,\"username\":\"CrispRat\",\"quantity\":48},{\"user_id\":8348691,\"username\":\"allehej\",\"quantity\":46},{\"user_id\":960630,\"username\":\"edubz5184\",\"quantity\":40},{\"user_id\":1848562,\"username\":\"hitemup1234\",\"quantity\":20},{\"user_id\":3450843,\"username\":\"Lukeus\",\"quantity\":12}],\"gifter_id\":69907818,\"gifter_username\":\"R1ckyBoo\",\"gifted_quantity\":1}","channel":"channel_1143439"}
                         pass
+                    elif data['event'] == 'KicksGifted':
+                        ParseKicksGiftedEvent(db, data)                        
+                    elif data['event'] == 'KicksLeaderboardUpdated':
+                        #{'event': 'KicksLeaderboardUpdated', 'data': '{"gifts_lifetime":[{"user_id":50081317,"username":"ZaddyFreak","quantity":10000},{"user_id":27933716,"username":"BBhunter86","quantity":10000},{"user_id":20704883,"username":"monkzyy","quantity":10000},{"user_id":1528851,"username":"liltreytrey25","quantity":5350},{"user_id":61188410,"username":"CassioPie1","quantity":4000},{"user_id":2853400,"username":"justdavid787","quantity":360},{"user_id":910050,"username":"Wrldbryan","quantity":173},{"user_id":963284,"username":"Xizyna","quantity":150},{"user_id":86432167,"username":"durdydelight","quantity":150},{"user_id":241561,"username":"ace3412","quantity":150}],"gifts_lifetime_enabled":true,"gifts_week":[{"user_id":86432167,"username":"durdydelight","quantity":150}],"gifts_week_enabled":true,"gifts_month":[{"user_id":61188410,"username":"CassioPie1","quantity":4000},{"user_id":86432167,"username":"durdydelight","quantity":150},{"user_id":56298,"username":"jakehusdon","quantity":111},{"user_id":81061923,"username":"3brave","quantity":100},{"user_id":17929566,"username":"onlyzenni","quantity":63},{"user_id":30397973,"username":"Pedro766","quantity":10},{"user_id":13230564,"username":"FKTwelve","quantity":10},{"user_id":3528468,"username":"OhLookItsMax","quantity":4}],"gifts_month_enabled":true}', 'channel': 'channel_1228709'}
+                        pass
+                    elif data['event'] == 'pusher_internal:subscription_succeeded':
+                        #{'event': 'pusher_internal:subscription_succeeded', 'data': '{}', 'channel': 'chatrooms.1221707.v2'}
+                        logger.debug(f"Pusher Sub: {data}")
+                    elif data['event'] == 'PinnedMessageCreatedEvent':
+                        #{'event': 'App\\Events\\PinnedMessageCreatedEvent', 'data': '{"message":{"id":"e562b651-e5a0-4bbc-9eb2-0fb626fb2e94","chatroom_id":1221707,"content":"\\u2764\\ufe0f MY YOUTUBE CHANNEL\\u2764\\ufe0f\\nhttps:\\/\\/www.youtube.com\\/@litneyspears_","type":"message","created_at":"2025-11-17T08:04:17+00:00","sender":{"id":1160406,"username":"BotRix","slug":"botrix","identity":{"color":"#75FD46","badges":[{"type":"moderator","text":"Moderator"},{"type":"verified","text":"Verified channel"}]}},"metadata":null},"duration":"1200","pinnedBy":{"id":1270821,"username":"LitneySpears","slug":"litneyspears","identity":{"color":"#F2708A","badges":[{"type":"broadcaster","text":"Broadcaster","active":true},{"type":"sub_gifter","text":"Sub Gifter","count":2,"active":true},{"type":"verified","text":"Verified channel","active":true}]}}}', 'channel': 'chatrooms.1221707.v2'}
+                        pass
+                    elif data['event'] == 'StopStreamBroadcast':
+                        #{'event': 'App\\Events\\StopStreamBroadcast', 'data': '{"livestream":{"id":83889007,"channel":{"id":1228709,"is_banned":false}}}', 'channel': 'channel.1228709'}
+                        pass
+                    elif data['event'] == 'StreamerIsLive':
+                        #{'event': 'App\\Events\\StreamerIsLive', 'data': '{"livestream":{"id":83393265,"channel_id":1228709,"session_title":"PLUMP BOOTY SOLD HERE\\ud83d\\udcb0\\ud83c\\udf51 | !S !OF","source":null,"created_at":"2025-11-14T03:20:39.000000Z"}}', 'channel': 'channel.1228709'}
+                        pass
                     else:
                         logger.debug(f"TODO: {data}")
                         # saneEvent = data['event'].replace("\\", "-")
@@ -188,6 +205,15 @@ async def connectKickWebSockets():
         logger.exception(f"Connection closed. Code: {e.code}, Reason: {e.reason}")
     except Exception as e:
         logger.exception(f"An error occurred: {e}")
+
+def ParseKicksGiftedEvent(db:Database, data):
+    channel = data['channel']
+    data = json.loads(data['data'])
+    userName = data['sender']['username']
+    userId = data['sender']['id']
+    numKicks = data['gift']['amount']
+    currentDate = datetime.datetime.now(datetime.timezone.utc)
+    db.insertKickKicks(userId, userName, numKicks, currentDate, channel)
 
 def ParseSubscriptionEvent(db:Database, data):
     #{"event":"App\\Events\\SubscriptionEvent","data":"{\"chatroom_id\":31047538,\"username\":\"The_D0ctor\",\"months\":1}","channel":"chatrooms.31047538.v2"}

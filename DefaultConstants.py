@@ -190,6 +190,7 @@ class Settings(BaseSettings):
     kickShortTimeRolePeriod:int = 14 # Hours, how long user keeps role before it's removed
     kickConnectButtonMessage:str = "# Connect your Kick and Discord Accounts! \n ### This will allow you to gain special Discord roles when you sub on Kick"
     kickClipDaysLookBack:int = 30 # Number of days to look back for the weekly clip announcement
+    kickKicksToSub:int = 500 # Number of kicks to equal one Kick sub.
 
     #affiliate api link to see online users in cb https://chaturbate.com/affiliates/promotools/api_usersonline/
     # This makes assumptions thaty may not be true for your model, so go to the link above and make an API url for yourself. 

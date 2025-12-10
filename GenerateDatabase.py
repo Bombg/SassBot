@@ -6,6 +6,19 @@ import sqlite3
 #BLOB = bytes
 #NULL = none
 
+def CreateKickKicksTable(cur):
+    cur.execute("""CREATE TABLE IF NOT EXISTS kick_kicks
+            (
+                kicks_id INTEGER PRIMARY KEY,
+                user_id INTEGER,
+                user_slug TEXT,
+                kicks_gifted INTEGER,
+                date_iso TEXT,
+                channel TEXT,
+                FOREIGN KEY(user_id) REFERENCES kick_users(id)
+            )
+    """)
+
 def CreateKickChatTable(cur):
     cur.execute('''CREATE TABLE IF NOT EXISTS kick_chat
                 (
@@ -193,6 +206,7 @@ def GenerateDatabase():
     CreateDiscordUsersTable(cur)
     CreateAccountConnectionsTable(cur)
     CreateKickSubsTable(cur)
+    CreateKickKicksTable(cur)
 
     platform_list =[
                     ("chaturbate",0,0,0),

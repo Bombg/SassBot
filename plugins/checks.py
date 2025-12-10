@@ -515,8 +515,8 @@ async def AddKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> Non
     subsShortLookBackHours = baseSettings.kickSubsShortLookBackHours
     subsLongThreshold = baseSettings.kickSubsLongThreshold
     subsLongLookBackDays = baseSettings.kickSubsLongLookBackDays
-    shortSubbers = db.GetSubTimeHours(subsShortLookBackHours, subsShortThreshold)
-    longSubbers = db.GetSubTimeDays(subsLongLookBackDays,subsLongThreshold)
+    shortSubbers = db.GetKicksSubsShortList(subsShortLookBackHours, subsShortThreshold)
+    longSubbers = db.GetKicksSubsLongList(subsLongLookBackDays,subsLongThreshold)
     try:
         await HandleShortSubRoles(rest, db, shortSubbers)
         await HandleLongSubRoles(rest, db, longSubbers)
@@ -539,7 +539,7 @@ async def HandleShortSubRoles(rest:hikari.impl.RESTClientImpl, db:Database, shor
                     isExist = True
             if not isExist and not db.isHasShortDate(k):
                 logger.debug("adding short role")
-                lastSubDate = db.GetLastSubDate(k)
+                lastSubDate = db.GetLastSubKicksDate(k)
                 await member.add_role(roleId)
                 db.InsertShortRoleDate(k, roledate=lastSubDate)
 
@@ -561,7 +561,7 @@ async def HandleLongSubRoles(rest:hikari.impl.RESTClientImpl, db:Database, longS
                 if not isExist and not db.isHasLongDate(k):
                     logger.debug("adding long role")
                     await member.add_role(roleId)
-                    lastSubDate = db.GetLastSubDate(k)
+                    lastSubDate = db.GetLastSubKicksDate(k)
                     db.InsertLongRoleDate(k, roledate=lastSubDate)
             except hikari.errors.NotFoundError:
                 #logger.debug("Not can't give or check role. Member left server")
