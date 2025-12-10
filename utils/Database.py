@@ -400,13 +400,18 @@ class Database:
     
     def GetLastSubKicksDate(self, kickId):
         lastSubDate = self.GetLastSubDate(kickId)
-        lastSubDateObj = datetime.datetime.fromisoformat(lastSubDate)
         lastKicksDate = self.GetLastKicksDate(kickId)
-        lastKicksDateObj = datetime.datetime.fromisoformat(lastKicksDate)
         lastDate = ""
-        if lastSubDateObj > lastKicksDateObj:
+        if lastSubDate and lastKicksDate:
+            lastSubDateObj = datetime.datetime.fromisoformat(lastSubDate)
+            lastKicksDateObj = datetime.datetime.fromisoformat(lastKicksDate)
+            if lastSubDateObj > lastKicksDateObj:
+                lastDate = lastSubDate
+            else:
+                lastDate = lastKicksDate
+        elif lastSubDate:
             lastDate = lastSubDate
-        else:
+        elif lastKicksDate:
             lastDate = lastKicksDate
         return lastDate
     
