@@ -570,8 +570,8 @@ async def HandleLongSubRoles(rest:hikari.impl.RESTClientImpl, db:Database, longS
 @component.with_schedule
 @tanjun.as_interval(baseSettings.ROLE_ADD_REMOVE_TIMER)
 async def RemoveKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if not baseSettings.hasRolePermissions:
-        return
+    # if not baseSettings.hasRolePermissions:
+    #     return
     db = Database()
     longDateRolePeriod = baseSettings.kickLongDateRolePeriod
     shortTimeRolePeriod = baseSettings.kickShortTimeRolePeriod
@@ -594,6 +594,8 @@ async def RemoveKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> 
 async def CheckRemoveLongRole(db:Database, longDateRolePeriod, member, kickId):
     longDate = db.GetLongDate(kickId)
     if longDate: 
+        if not baseSettings.hasRolePermissions:
+            return
         longDate = datetime.datetime.fromisoformat(longDate)
         threshhold = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=longDateRolePeriod)
         if longDate < threshhold:
@@ -605,7 +607,9 @@ async def CheckRemoveLongRole(db:Database, longDateRolePeriod, member, kickId):
 
 async def CheckRemoveShortRole(db:Database, shortDateRolePeriod, member, kickId):
     shortDate = db.GetShortDate(kickId)
-    if shortDate: 
+    if shortDate:
+        if not not baseSettings.hasRolePermissions:
+            return
         shortDate = datetime.datetime.fromisoformat(shortDate)
         threshhold = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=shortDateRolePeriod)
         if shortDate < threshhold:
