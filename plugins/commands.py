@@ -30,26 +30,32 @@ logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 @moderationGroupY.as_sub_command("short-role-report","Get number of days, hours, minutes someone has had a short role", default_to_ephemeral=True, always_defer=True)
 @CommandLogger
 async def ShortRoleReport(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    db = Database()
-    shortList = ""
-    async for member in rest.fetch_members(baseSettings.GUILD_ID):
-        kickId = db.GetKickDiscordConnection(member.id)
-        dummyKickId = member.id * -1
-        shortDate = ""
-        if baseSettings.kickShortRoleId in member.role_ids:
-            if kickId:
-                shortDate = db.GetShortDate(kickId)
-            else:
-                shortDate = db.GetShortDate(dummyKickId)
-            shortTimeString = GetShortRoleString(shortDate)
-            if shortTimeString:
-                names = ""
-                if member.nickname:
-                    names = f"{member.nickname}:{member.global_name}"
+    if not baseSettings.hasRolePermissions:
+        db = Database()
+        shortList = ""
+        async for member in rest.fetch_members(baseSettings.GUILD_ID):
+            kickId = db.GetKickDiscordConnection(member.id)
+            dummyKickId = member.id * -1
+            shortDate = ""
+            if baseSettings.kickShortRoleId in member.role_ids:
+                if kickId:
+                    shortDate = db.GetShortDate(kickId)
                 else:
-                    names = f"{member.global_name}"
-                shortList = shortList +  f"{names}:{shortTimeString}" + "\n" 
-    await ctx.respond(shortList) 
+                    shortDate = db.GetShortDate(dummyKickId)
+                shortTimeString = GetShortRoleString(shortDate)
+                if shortTimeString:
+                    names = ""
+                    if member.nickname:
+                        names = f"{member.nickname}:{member.global_name}"
+                    else:
+                        names = f"{member.global_name}"
+                    shortList = shortList +  f"{names}:{shortTimeString}" + "\n" 
+        if shortList:
+            await ctx.respond(shortList) 
+        else:
+            await ctx.respond("No one has the short role currently")
+    else:
+        await ctx.respond("This command only works if bot has no role permissions and thus isn't managing roles")
 
 def GetShortRoleString(shortDate:str) -> str:
     shortTimeString = ""
