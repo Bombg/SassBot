@@ -44,15 +44,15 @@ async def ShortRoleReport(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[hi
                     shortDate = db.GetShortDate(dummyKickId)
                 shortTimeString = GetShortRoleString(shortDate)
                 if shortTimeString:
-                    names = ""
-                    if member.nickname:
-                        names = f"{member.nickname}:{member.global_name}"
-                    elif member.global_name:
-                        names = f"{member.global_name}:"
-                    elif member.display_name:
-                        names = f"{member.display_name}"
-                    else:
-                        names = f"{member.id}"
+                    names = f"<@{member.id}>"
+                    # if member.nickname:
+                    #     names = f"{member.nickname}:{member.global_name}"
+                    # elif member.global_name:
+                    #     names = f"{member.global_name}:"
+                    # elif member.display_name:
+                    #     names = f"{member.display_name}"
+                    # else:
+                    #     names = f"{member.id}"
                     shortList = shortList +  f"{names}:{shortTimeString}" + "\n" 
         if shortList:
             await ctx.respond(shortList) 
