@@ -26,8 +26,7 @@ async def isModelOnline(kickUserName):
         else:
             logger.warning("error with kick checker. user is banned,wrong username supplied, or cloudflare bot detection")
     except Exception as e:
-        logger.warning(f"error getting browser for Kick: {e}")
-        globals.browserOpen = False
+        logger.warning(f"error getting api info for Kick: {e}")
     thumbUrl = GetThumbnail(tempThumbUrl, baseSettings.kickThumbnail)
     return isOnline, title, thumbUrl, icon
 

@@ -2,10 +2,11 @@ import requests
 import json
 import time
 from DefaultConstants import Settings as Settings
-from utils.NoDriverBrowserCreator import getUserAgent
 import logging
 from utils.StaticMethods import GetThumbnail
+import tls_client
 from utils.StaticMethods import GetProxies
+from utils.NoDriverBrowserCreator import getUserAgent
 
 baseSettings = Settings()
 logger = logging.getLogger(__name__)
@@ -20,17 +21,18 @@ def isModelOnline(scUserName):
     headers = {"User-Agent": agent}
     try:
         if baseSettings.SC_PROXY:
-            page = requests.get(f'https://stripchat.com/api/vr/v2/models/username/{scUserName}', headers=headers, proxies=GetProxies(baseSettings.SC_PROXY))
+            page = requests.get(f"https://stripchat.com/api/front/v2/models/username/{scUserName}/cam", headers=headers, proxies=GetProxies(baseSettings.SC_PROXY))
         else:
-            page = requests.get(f'https://stripchat.com/api/vr/v2/models/username/{scUserName}', headers=headers)
+            page = requests.get(f"https://stripchat.com/api/front/v2/models/username/{scUserName}/cam",headers=headers)
         time.sleep(1)
         if page.status_code == 200:
             try:
                 scJson = page.json()
-                isOnline = True if scJson['model']['status']  != 'off' else False
-                icon = scJson['model']['avatarUrl']
-                title = scJson['goal']['description'] if scJson['goal']['description'] else baseSettings.scDefaultTitle
-                tempThumbUrl = scJson['model']['previewUrl'] + "?" + str(int(time.time()))
+                isOnline = True if scJson["user"]["user"]["status"] != "off" else False
+                icon = scJson["user"]["user"]["avatarUrl"]
+                title = scJson['cam']["goal"]["description"] if scJson['cam']["goal"]["description"] else baseSettings.scDefaultTitle
+                tempThumbUrl = scJson['user']['user']['previewUrl'] + "?" + str(int(time.time()))
+                thumbUrl = GetThumbnail(tempThumbUrl, baseSettings.scThumbnail)
             except json.decoder.JSONDecodeError:
                 pass
     except requests.exceptions.ConnectTimeout:
