@@ -26,7 +26,7 @@ def isModelOnline(mvUserName):
         else:
             page = requests.get(pageUrl, headers=headers)
         soup = BeautifulSoup(page.content, "html.parser")
-        onlineStatus = soup.find("div", {"class":"status_box__v1drl"})
+        onlineStatus = soup.find("div", {"class": "status-module-scss-module__NEXQla__box"})
         if onlineStatus:
             logger.debug(onlineStatus.text)
         else:
