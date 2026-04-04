@@ -4,7 +4,6 @@ import time
 from DefaultConstants import Settings as Settings
 import logging
 from utils.StaticMethods import GetThumbnail
-import tls_client
 from utils.StaticMethods import GetProxies
 from utils.NoDriverBrowserCreator import getUserAgent
 
@@ -30,7 +29,7 @@ def isModelOnline(scUserName):
                 scJson = page.json()
                 isOnline = True if scJson["user"]["user"]["status"] != "off" else False
                 icon = scJson["user"]["user"]["avatarUrl"]
-                title = scJson['cam']["goal"]["description"] if scJson['cam']["goal"]["description"] else baseSettings.scDefaultTitle
+                title = scJson['cam']["goal"]["description"] if scJson['cam']["goal"] else baseSettings.scDefaultTitle
                 tempThumbUrl = scJson['user']['user']['previewUrl'] + "?" + str(int(time.time()))
                 thumbUrl = GetThumbnail(tempThumbUrl, baseSettings.scThumbnail)
             except json.decoder.JSONDecodeError:
