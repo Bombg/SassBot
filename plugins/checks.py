@@ -578,13 +578,13 @@ async def RemoveKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> 
     async for member in rest.fetch_members(baseSettings.GUILD_ID):
         kickId = db.GetKickDiscordConnection(member.id)
         dummyKickId = member.id * -1
-        if baseSettings.kickLongRoleId in member.role_ids:
+        if baseSettings.kickLongRoleId in member.role_ids and baseSettings.hasRolePermissions:
             if kickId:
                 await CheckRemoveLongRole(db, longDateRolePeriod, member, kickId)
             else: 
                 db.insertKickUser(dummyKickId, member.username)
                 await CheckRemoveLongRole(db, longDateRolePeriod, member, dummyKickId)
-        if baseSettings.kickShortRoleId in member.role_ids:
+        if baseSettings.kickShortRoleId in member.role_ids and baseSettings.hasRolePermissions:
             if kickId:
                 await CheckRemoveShortRole(db, shortTimeRolePeriod, member, kickId)
             else:
@@ -619,7 +619,7 @@ async def CheckRemoveLongRole(db:Database, longDateRolePeriod, member, kickId):
 async def CheckRemoveShortRole(db:Database, shortDateRolePeriod, member, kickId):
     shortDate = db.GetShortDate(kickId)
     if shortDate:
-        if not not baseSettings.hasRolePermissions:
+        if not baseSettings.hasRolePermissions:
             return
         shortDate = datetime.datetime.fromisoformat(shortDate)
         threshhold = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=shortDateRolePeriod)
