@@ -27,6 +27,32 @@ moderationGroupY = tanjun.slash_command_group("ymod", "commands only moderators 
 logger = logging.getLogger(__name__)
 logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
+@moderationGroupY.as_sub_command("long-role-report","Get number of days, hours, minutes someone has had a long role",default_to_ephemeral=True,always_defer=True)
+@CommandLogger
+async def LongRoleReport(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    if not baseSettings.hasRolePermissions:
+        db = Database()
+        longList = ""
+        async for member in rest.fetch_members(baseSettings.GUILD_ID):
+            kickId = db.GetKickDiscordConnection(member.id)
+            dummyKickId = member.id * -1
+            longDate = ""
+            if baseSettings.kickLongRoleId in member.role_ids:
+                if kickId:
+                    longDate = db.GetLongDate(kickId)
+                else:
+                    longDate = db.GetLongDate(dummyKickId)
+                longTimeString = GetShortRoleString(longDate)
+                if longTimeString:
+                    names = f"<@{member.id}>"
+                    longList = longList + f"{names}:{longTimeString}" + "\n"
+        if longList:
+            await ctx.respond(longList)
+        else:
+            await ctx.respond("No one has the long role currently")
+    else:
+        await ctx.respond("This command only works if bot has no role permissions and thus isn't managing roles")
+
 @moderationGroupY.as_sub_command("short-role-report","Get number of days, hours, minutes someone has had a short role", default_to_ephemeral=True, always_defer=True)
 @CommandLogger
 async def ShortRoleReport(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
@@ -45,14 +71,6 @@ async def ShortRoleReport(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[hi
                 shortTimeString = GetShortRoleString(shortDate)
                 if shortTimeString:
                     names = f"<@{member.id}>"
-                    # if member.nickname:
-                    #     names = f"{member.nickname}:{member.global_name}"
-                    # elif member.global_name:
-                    #     names = f"{member.global_name}:"
-                    # elif member.display_name:
-                    #     names = f"{member.display_name}"
-                    # else:
-                    #     names = f"{member.id}"
                     shortList = shortList +  f"{names}:{shortTimeString}" + "\n" 
         if shortList:
             await ctx.respond(shortList) 
