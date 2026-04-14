@@ -27,6 +27,71 @@ moderationGroupY = tanjun.slash_command_group("ymod", "commands only moderators 
 logger = logging.getLogger(__name__)
 logger.setLevel(baseSettings.SASSBOT_LOG_LEVEL)
 
+@moderationGroupY.as_sub_command("long-role-report","Get number of days, hours, minutes someone has had a long role",default_to_ephemeral=True,always_defer=True)
+@CommandLogger
+async def LongRoleReport(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    if not baseSettings.hasRolePermissions:
+        db = Database()
+        longList = ""
+        async for member in rest.fetch_members(baseSettings.GUILD_ID):
+            kickId = db.GetKickDiscordConnection(member.id)
+            dummyKickId = member.id * -1
+            longDate = ""
+            if baseSettings.kickLongRoleId in member.role_ids:
+                if kickId:
+                    longDate = db.GetLongDate(kickId)
+                else:
+                    longDate = db.GetLongDate(dummyKickId)
+                longTimeString = GetShortRoleString(longDate)
+                if longTimeString:
+                    names = f"<@{member.id}>"
+                    longList = longList + f"{names}:{longTimeString}" + "\n"
+        if longList:
+            await ctx.respond(longList)
+        else:
+            await ctx.respond("No one has the long role currently")
+    else:
+        await ctx.respond("This command only works if bot has no role permissions and thus isn't managing roles")
+
+@moderationGroupY.as_sub_command("short-role-report","Get number of days, hours, minutes someone has had a short role", default_to_ephemeral=True, always_defer=True)
+@CommandLogger
+async def ShortRoleReport(ctx: tanjun.abc.SlashContext, rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
+    if not baseSettings.hasRolePermissions:
+        db = Database()
+        shortList = ""
+        async for member in rest.fetch_members(baseSettings.GUILD_ID):
+            kickId = db.GetKickDiscordConnection(member.id)
+            dummyKickId = member.id * -1
+            shortDate = ""
+            if baseSettings.kickShortRoleId in member.role_ids:
+                if kickId:
+                    shortDate = db.GetShortDate(kickId)
+                else:
+                    shortDate = db.GetShortDate(dummyKickId)
+                shortTimeString = GetShortRoleString(shortDate)
+                if shortTimeString:
+                    names = f"<@{member.id}>"
+                    shortList = shortList +  f"{names}:{shortTimeString}" + "\n" 
+        if shortList:
+            await ctx.respond(shortList) 
+        else:
+            await ctx.respond("No one has the short role currently")
+    else:
+        await ctx.respond("This command only works if bot has no role permissions and thus isn't managing roles")
+
+def GetShortRoleString(shortDate:str) -> str:
+    shortTimeString = ""
+    from datetime import timezone as timezone
+    if shortDate:
+        shortDate = datetime.fromisoformat(shortDate)
+        now = datetime.now(timezone.utc)
+        diff = abs(shortDate - now)
+        days = diff.days
+        hours = diff.seconds // 3600
+        minutes = (diff.seconds % 3600) // 60
+        shortTimeString = f"{days} days, {hours} hours, {minutes} minutes"
+    return shortTimeString
+
 @tanjun.with_int_slash_option("days", "Number of days to look back", default=30)
 @moderationGroupY.as_sub_command("kick-prefix-report", "Get most common emote prixes used in chat", default_to_ephemeral=True, always_defer=True)
 @CommandLogger

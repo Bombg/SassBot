@@ -70,6 +70,8 @@
     - /kick-manual-connect - Manually connect someone's Kick account if you're sure who they are
     - /kick-emote-report - Get information about a specific emote prefix
     - /kick-prefix-report - Get the most common emote prefixes used in chat
+    - /short-role-report - IF bot doesn't have role permissions set in .env, show who has short roles and for how long
+    - /long-role-report - IF bot doesn't have role permissions set in .env, show who has long roles and for how long
 
 ## Quick Setup Example
 - Read 'How to set up the bot' section if you don't know how to get some of these vars.
@@ -130,6 +132,12 @@ services:
 4. If the requesting ip is in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 4/13/26 
+    - Fixed Manyvids checker
+    - Fixed Stripchat Checker
+    - added commands to keep track of long/short roles if bot doesn't have role perms
+        - /short-role-report
+        - /long-role-report
 - 12/10/2025
     - Added support for Kick Kicks for roles
 - 9/13/2025

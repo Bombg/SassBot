@@ -570,8 +570,8 @@ async def HandleLongSubRoles(rest:hikari.impl.RESTClientImpl, db:Database, longS
 @component.with_schedule
 @tanjun.as_interval(baseSettings.ROLE_ADD_REMOVE_TIMER)
 async def RemoveKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> None:
-    if not baseSettings.hasRolePermissions:
-        return
+    # if not baseSettings.hasRolePermissions:
+    #     return
     db = Database()
     longDateRolePeriod = baseSettings.kickLongDateRolePeriod
     shortTimeRolePeriod = baseSettings.kickShortTimeRolePeriod
@@ -584,16 +584,39 @@ async def RemoveKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> 
             else: 
                 db.insertKickUser(dummyKickId, member.username)
                 await CheckRemoveLongRole(db, longDateRolePeriod, member, dummyKickId)
+        elif not baseSettings.hasRolePermissions:
+            id = ""
+            if kickId:
+                id = kickId
+            else:
+                id = dummyKickId
+            longDate = db.GetLongDate(id)
+            if longDate:
+                logger.debug(f"{member.username} doesn't have long role. Removing date from db (no role permission mode)")
+                db.InsertLongRoleDate(id, roledate=None)
         if baseSettings.kickShortRoleId in member.role_ids:
             if kickId:
                 await CheckRemoveShortRole(db, shortTimeRolePeriod, member, kickId)
             else:
                 db.insertKickUser(dummyKickId, member.username)
                 await CheckRemoveShortRole(db,  shortTimeRolePeriod, member, dummyKickId)
+        elif not baseSettings.hasRolePermissions:
+            id = ""
+            if kickId:
+                id = kickId
+            else:
+                id = dummyKickId
+            shortDate = db.GetShortDate(id)
+            if shortDate:
+                logger.debug(f"{member.username} doesn't have short role. Removing date from db. (no role permission mode)")
+                db.InsertShortRoleDate(id, roledate=None)
+
 
 async def CheckRemoveLongRole(db:Database, longDateRolePeriod, member, kickId):
     longDate = db.GetLongDate(kickId)
     if longDate: 
+        if not baseSettings.hasRolePermissions:
+            return
         longDate = datetime.datetime.fromisoformat(longDate)
         threshhold = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=longDateRolePeriod)
         if longDate < threshhold:
@@ -605,12 +628,14 @@ async def CheckRemoveLongRole(db:Database, longDateRolePeriod, member, kickId):
 
 async def CheckRemoveShortRole(db:Database, shortDateRolePeriod, member, kickId):
     shortDate = db.GetShortDate(kickId)
-    if shortDate: 
+    if shortDate:
+        if not baseSettings.hasRolePermissions:
+            return
         shortDate = datetime.datetime.fromisoformat(shortDate)
         threshhold = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=shortDateRolePeriod)
         if shortDate < threshhold:
             logger.debug(f"{member.username} kick Short sub role expired. Removing")
             await member.remove_role(baseSettings.kickShortRoleId)
-            db.InsertLongRoleDate(kickId,roledate=None)
+            db.InsertShortRoleDate(kickId,roledate=None)
     else:
         db.InsertShortRoleDate(kickId)
