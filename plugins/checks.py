@@ -584,6 +584,16 @@ async def RemoveKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> 
             else: 
                 db.insertKickUser(dummyKickId, member.username)
                 await CheckRemoveLongRole(db, longDateRolePeriod, member, dummyKickId)
+        elif not baseSettings.hasRolePermissions:
+            id = ""
+            if kickId:
+                id = kickId
+            else:
+                id = dummyKickId
+            longDate = db.GetLongDate(id)
+            if longDate:
+                logger.debug(f"{member.username} doesn't have long role. Removing date from db (no role permission mode)")
+                db.InsertLongRoleDate(id, roledate=None)
         if baseSettings.kickShortRoleId in member.role_ids:
             if kickId:
                 await CheckRemoveShortRole(db, shortTimeRolePeriod, member, kickId)
@@ -597,13 +607,9 @@ async def RemoveKickRoles(rest: alluka.Injected[hikari.impl.RESTClientImpl]) -> 
             else:
                 id = dummyKickId
             shortDate = db.GetShortDate(id)
-            longDate = db.GetLongDate(id)
             if shortDate:
                 logger.debug(f"{member.username} doesn't have short role. Removing date from db. (no role permission mode)")
                 db.InsertShortRoleDate(id, roledate=None)
-            if longDate:
-                logger.debug(f"{member.username} doesn't have long role. Removing date from db (no role permission mode)")
-                db.InsertLongRoleDate(id, roledate=None)
 
 
 async def CheckRemoveLongRole(db:Database, longDateRolePeriod, member, kickId):
