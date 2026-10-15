@@ -1,8 +1,8 @@
-FROM python:3.11.3-slim AS build
+FROM python:3.11-slim-bookworm AS build
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Build dummy packages to skip installing them and their dependencies -- Copied from FlareSolverr
-RUN apt update -y && apt install -y git \
+RUN apt-get update -y && apt-get install -y git \
     && apt-get install -y --no-install-recommends equivs \
     && equivs-control libgl1-mesa-dri \
     && printf 'Section: misc\nPriority: optional\nStandards-Version: 3.9.2\nPackage: libgl1-mesa-dri\nVersion: 99.0.0\nDescription: Dummy package for libgl1-mesa-dri\n' >> libgl1-mesa-dri \
@@ -21,7 +21,7 @@ RUN pip install -r requirements.txt && \
     pip install uvloop
 
 # Buidling final image, moving over venv
-FROM python:3.11.3-slim
+FROM python:3.11-slim-bookworm
 ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /opt/SassBot
