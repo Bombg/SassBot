@@ -132,6 +132,8 @@ services:
 4. If the requesting ip is in a state that requires age verification, some of these checkers wont work. 
 
 ### Update History
+- 10/14/26
+    - Fixed Kick integration (updated pusher key)
 - 4/13/26 
     - Fixed Manyvids checker
     - Fixed Stripchat Checker

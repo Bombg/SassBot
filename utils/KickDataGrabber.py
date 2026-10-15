@@ -115,7 +115,8 @@ async def connectKickWebSockets():
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
     'Sec-WebSocket-Extensions': 'permessage-deflate; client_max_window_bits',
     }
-    PUSHER_WS_URL = 'wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0-rc2&flash=false'
+    PUSHER_KEY = "34bf7a0ff419a2a775b9"
+    PUSHER_WS_URL = f'wss://ws-us2.pusher.com/app/{PUSHER_KEY}?protocol=7&client=js&version=8.4.0-rc2&flash=false'
     CHATROOM_CHANNEL = f'chatrooms.{baseSettings.kickChatroomId}.v2' #f'chatrooms.{ChatroomId}.v2'  # App\\Events\\ChatMessageEvent
     CHATROOMV_TWO_CHANNEL  = f'chatroom_{baseSettings.kickChatroomId}' # f'chatroom_{ChatroomlId}' GiftedSubscriptionsEvent RewardRedeemedEvent
     CHATROOM_DOT_ID = f'chatrooms.{baseSettings.kickChatroomId}' # App\\Events\\ChatMessageSentEvent but this is for gifted subs
